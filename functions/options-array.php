@@ -92,17 +92,25 @@ function swp_pro_options_display($swp_options) {
 			'size'		=> 'two-thirds',
 			'name'		=> __( 'Minimum Shares' ,'social-warfare' ),
 			'default'	=> 0,
-			'divider'	=> true,
+			'divider'	=> false,
 			'premium'	=> true
+		),
+		'share_counts_divider' => array(
+				'type'	  => 'divider',
+				'premium' => false
 		),
 		'swp_twitter_card' => array(
 			'type'		=> 'checkbox',
 			'size'		=> 'two-thirds',
 			'content'	=> __( 'Twitter Cards' ,'social-warfare' ),
 			'header'	=> true,
-			'divider'	=> true,
+			'divider'	=> false,
 			'default'	=> true,
 			'premium'	=> true
+		),
+		'swp_twitter_card_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
 		),
 		'position_title' => array(
 			'type' 		=> 'title',
@@ -169,7 +177,8 @@ function swp_pro_options_display($swp_options) {
 	);
 
 	$swp_options['options']['swp_display']['pinit_divider'] = array(
-		'type'		=> 'divider'
+		'type'		=> 'divider',
+		'premium'   => true
 	);
 
 	$swp_options['options']['swp_display']['pinit_title'] = array(
@@ -252,7 +261,8 @@ function swp_pro_options_display($swp_options) {
 	//);
 
 	$swp_options['options']['swp_display']['yummly_divider'] = array(
-		'type'		=> 'divider'
+		'type'		=> 'divider',
+		'premium'   => true
 	);
 
 	$swp_options['options']['swp_display']['yummly_cat_title'] = array(
@@ -627,7 +637,8 @@ function swp_pro_options_styles($swp_options) {
 			'dep_val'	=> array('top','bottom')
 		),
 		'click_to_tweet_divider' => array(
-			'type' => 'divider'
+			'type'    => 'divider',
+			'premium' => true
 		),
 		'click_to_tweet_title' => array(
 			'type' => 'title',
@@ -708,10 +719,7 @@ function swp_pro_options_social_identity($swp_options) {
 			'type'		=> 'input',
 			'size'		=> 'two-thirds',
 			'name'		=> __( 'Facebook App ID' , 'social-warfare' )
-		),
-		'social_identity_divider' => array(
-			'type'		=> 'divider'
-		),
+		)
 		/*
 		'social_authentication_title' => array(
 			'type' 		=> 'title',
@@ -761,8 +769,11 @@ function swp_pro_options_advanced($swp_options) {
 			'title' 		=> __( 'Frame Buster' , 'social-warfare' ),
 			'description' 	=> __( 'If you want to stop content pirates from framing your content, turn this on.' , 'social-warfare' ),
 			'size'			=> 'two-thirds-advanced',
-			'default'		=> true,
-			'divider'		=> true
+			'default'		=> true
+		),
+		'frame_buster_divider' => array(
+				'type'	  => 'divider',
+				'premium' => false
 		),
 		'linkShortening' => array(
 			'type'			=> 'checkbox',
@@ -776,9 +787,13 @@ function swp_pro_options_advanced($swp_options) {
 			'type'		=> 'authentication',
 			'link'		=> 'https://bitly.com/oauth/authorize?client_id=96c9b292c5503211b68cf4ab53f6e2f4b6d0defb&state='.admin_url( 'admin-ajax.php' ).'&redirect_uri=https://warfareplugins.com/bitly_oauth.php',
 			'name'		=> __( 'Connect Your Bitly Account' , 'social-warfare' ),
-			'divider'	=> true,
+			'divider'	=> false,
 			'dependant'	=> 'bitly_access_token',
 			'premium'	=> true
+		),
+		'bitly_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
 		),
 		'analytics_title'	=> array(
 			'type'		=> 'title',
@@ -817,11 +832,15 @@ function swp_pro_options_advanced($swp_options) {
 			'type'		=> 'input',
 			'size'		=> 'two-thirds',
 			'name'		=> __( 'UTM Campaign' , 'social-warfare' ),
-			'divider' 	=> true,
+			'divider' 	=> false,
 			'default'	=> 'SocialWarfare',
 			'dep'		=> 'googleAnalytics',
 			'dep_val'	=> array(true),
 			'premium'	=> true
+		),
+		'analytics_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
 		),
 		'share_recovery_title' => array(
 			'type'		=> 'title',
@@ -926,10 +945,14 @@ function swp_pro_options_advanced($swp_options) {
 			'size'		=> 'two-thirds',
 			'name' 		=> __( 'Current Domain' , 'social-warfare' ),
 			'default' 	=> '',
-			'divider'	=> true,
+			'divider'	=> false,
 			'dep'		=> 'recover_shares',
 			'dep_val'	=> array(true),
 			'premium'	=> true
+		),
+		'share_recovery_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
 		),
 		'caching_method_title' => array(
 			'type'		=> 'title',
@@ -986,8 +1009,12 @@ function swp_pro_options_registration($swp_options) {
 	$swp_options['options']['swp_registration'] = array(
 		'plugin_registration' => array(
 			'type'			=> 'plugin_registration',
-			'divider'		=> true,
+			'divider'		=> false,
 			'premium'	=> true
+		),
+		'registration_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
 		),
 		'activate_tweet_counts' => array(
 			'type'			=> 'tweet_counts',
