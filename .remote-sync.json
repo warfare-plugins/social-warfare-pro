@@ -1,0 +1,15 @@
+{
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "warfareplugins.com",
+  "target": "/public_html/beta/wp-content/plugins/social-warfare-pro/",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "warfarep",
+  "password": "ght%rde#aq#$VVWVkt5!A",
+  "watch": [],
+  "transport": "ftp"
+}
