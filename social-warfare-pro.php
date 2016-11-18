@@ -18,27 +18,32 @@ define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 
-/**
- * Include the necessary files
- */
-require_once SWPP_PLUGIN_DIR . '/meta-box/meta-box.php';
-require_once SWPP_PLUGIN_DIR . '/functions/utility.php';
-require_once SWPP_PLUGIN_DIR . '/functions/registration.php';
-require_once SWPP_PLUGIN_DIR . '/functions/post-options.php';
-require_once SWPP_PLUGIN_DIR . '/functions/header-meta-tags.php';
-require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
-/**
- * Include the networks files
- */
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/yummly.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/email.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/whatsapp.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/pocket.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
+function swpp_initiate_plugin() {
+    if(defined('SWP_VERSION')):
+        /**
+         * Include the necessary files
+         */
+        require_once SWPP_PLUGIN_DIR . '/meta-box/meta-box.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/utility.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/registration.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/post-options.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/header-meta-tags.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
+        /**
+         * Include the networks files
+         */
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/yummly.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/email.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/whatsapp.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/pocket.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
+    endif;
+}
+add_action( 'plugins_loaded' , 'swpp_initiate_plugin' , 10 );
 /**
  * Coming soon
  */
