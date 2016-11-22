@@ -357,7 +357,7 @@ function swp_twitter_card_values($info) {
 			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
 		elseif ( !empty( $yoast_twitter_image ) ) :
 			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
-		elseif($info['meta_tag_values']['og_image']):
+		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
 
@@ -397,7 +397,9 @@ function swp_twitter_card_html($info) {
 		$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
 		$info['html_output'] .= PHP_EOL . '<meta name="twitter:title" content="' . trim( $info['meta_tag_values']['twitter_title'] ) . '">';
 		$info['html_output'] .= PHP_EOL . '<meta name="twitter:description" content="' . trim( $info['meta_tag_values']['twitter_description'] ) . '">';
-		$info['html_output'] .= PHP_EOL . '<meta name="twitter:image" content="' . trim( $info['meta_tag_values']['twitter_image'] ) . '">';
+		if( !empty($info['meta_tag_values']['twitter_image']) ):
+			$info['html_output'] .= PHP_EOL . '<meta name="twitter:image" content="' . trim( $info['meta_tag_values']['twitter_image'] ) . '">';
+		endif;
 		if ( !empty( $info['meta_tag_values']['twitter_site'] ) ) :
 			$info['html_output'] .= PHP_EOL . '<meta name="twitter:site" content="' . trim( $info['meta_tag_values']['twitter_site'] ) . '">';
 		endif;
@@ -426,7 +428,7 @@ function swp_output_custom_color( $info ) {
 	endif;
 
 	if ( $swp_user_options['dColorSet'] == 'ccOutlines' || $swp_user_options['iColorSet'] == 'ccOutlines' || $swp_user_options['oColorSet'] == 'ccOutlines' ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_ccOutlines a, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_ccOutlines:hover a { color:' . $info['swp_user_options']['customColor'] . '; }
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_ccOutlines a, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_ccOutlines:hover a { color:' . $swp_user_options['customColor'] . '; }
 .nc_socialPanel.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $swp_user_options['customColor'] . '; } </style>';
 
 	endif;
@@ -436,7 +438,7 @@ function swp_output_custom_color( $info ) {
 	endif;
 
 	if ( $swp_user_options['floatStyleSource'] == false && ( $swp_user_options['sideDColorSet'] == 'ccOutlines' || $swp_user_options['sideIColorSet'] == 'ccOutlines' || $swp_user_options['sideOColorSet'] == 'ccOutlines' ) ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $info['swp_user_options']['sideCustomColor'] . '; }
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $swp_user_options['sideCustomColor'] . '; }
 .nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $swp_user_options['sideCustomColor'] . '; } </style>';
 
 		endif;
