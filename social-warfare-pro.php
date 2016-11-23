@@ -24,7 +24,7 @@ function swpp_initiate_plugin() {
         /**
          * Include the necessary files
          */
-        require_once SWPP_PLUGIN_DIR . '/meta-box/meta-box.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
         require_once SWPP_PLUGIN_DIR . '/functions/utility.php';
         require_once SWPP_PLUGIN_DIR . '/functions/registration.php';
         require_once SWPP_PLUGIN_DIR . '/functions/post-options.php';
@@ -33,7 +33,6 @@ function swpp_initiate_plugin() {
         require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
     endif;
 }
-
 /**
  * Include the networks files
  * These all setup hooks so they don't need to be delayed by the function above
@@ -48,6 +47,17 @@ require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
 require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
 require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
 
+/**
+ * A class for checking for plugin updates
+ *
+ */
+require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php'
+$swpp_github_checker = PucFactory::getLatestClassVersion('PucGitHubChecker');
+$swpp_update_checker = new $swpp_github_checker(
+    'https://github.com/warfare-plugins/social-warfare-pro/',
+    __FILE__,
+    'master'
+);
 
 /**
  * Coming soon
