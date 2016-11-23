@@ -51,7 +51,7 @@ require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
  * A class for checking for plugin updates
  *
  */
-require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php'
+require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php';
 $swpp_github_checker = PucFactory::getLatestClassVersion('PucGitHubChecker');
 $swpp_update_checker = new $swpp_github_checker(
     'https://github.com/warfare-plugins/social-warfare-pro/',
