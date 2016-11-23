@@ -29,6 +29,7 @@ function swpp_initiate_plugin() {
         require_once SWPP_PLUGIN_DIR . '/functions/registration.php';
         require_once SWPP_PLUGIN_DIR . '/functions/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/functions/header-meta-tags.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/scripts.php';
         require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
     endif;
 }
