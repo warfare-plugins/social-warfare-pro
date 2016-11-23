@@ -47,24 +47,12 @@ function swp_pro_options_display($swp_options) {
 			),
 			'default'	=> 'manual',
 			'name'		=> __( 'Button Ordering' ,'social-warfare' ),
-			'divider'	=> true,
 			'premium'	=> true
 		),
-/*
-		'emphasize_icons' => array(
-			'type'		=> 'select',
-			'size'		=> 'two-thirds',
-			'content'	=> array(
-				'0' 	=> __( 'Don\'t Emphasize Any Buttons' ,'social-warfare' ),
-				'1' 	=> __( 'Emphasize the First Button' ,'social-warfare' ),
-				'2' 	=> __( 'Emphasize the First Two Buttons' ,'social-warfare' )
-			),
-			'default'	=> '0',
-			'name'		=> __( 'Emphasize Buttons' ,'social-warfare' ),
-			'divider'	=> true,
-			'premium'	=> true
+		'buttons_divider' => array(
+				'type'	  => 'divider',
+				'premium' => false
 		),
-*/
 		'share_counts_title' => array(
 			'type' 		=> 'title',
 			'content' 	=> __( 'Share Counts' ,'social-warfare' )
