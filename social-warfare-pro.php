@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  http://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     2.2.0
+ * Version:     2.2.1
  * Author:      Warfare Plugins
  * Author URI:  http://warfareplugins.com
  * Text Domain: social-warfare
@@ -14,7 +14,7 @@ defined( 'WPINC' ) || die;
 /**
  * Define plugin constants for use throughout the plugin (Version and Directories)
  */
-define( 'SWPP_VERSION', '2.2.0' );
+define( 'SWPP_VERSION', '2.2.1' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -32,21 +32,23 @@ function swpp_initiate_plugin() {
         require_once SWPP_PLUGIN_DIR . '/functions/header-meta-tags.php';
         require_once SWPP_PLUGIN_DIR . '/functions/scripts.php';
         require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
+
+        /**
+         * Include the networks files
+         * 
+         */
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/yummly.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/email.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/whatsapp.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/pocket.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
+
     endif;
 }
-/**
- * Include the networks files
- * These all setup hooks so they don't need to be delayed by the function above
- */
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/yummly.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/email.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/whatsapp.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/pocket.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
-require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
 
 /**
  * A class for checking for plugin updates

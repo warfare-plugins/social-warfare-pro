@@ -64,12 +64,12 @@ function swp_whatsapp_button_html( $array ) {
 		elseif ( (isset( $array['options']['newOrderOfIcons']['whatsapp'] ) && ! isset( $array['buttons'] ))
 		|| (isset( $array['buttons'] ) && isset( $array['buttons']['whatsapp'] ))  ) :
 
-			$array['totes'] += $array['shares']['whatsapp'];
+			$array['totes'] += intval( $array['shares']['whatsapp'] );
 			++$array['count'];
 
 			$array['resource']['whatsapp'] = '<div class="nc_tweetContainer swp_whatsapp" data-id="' . $array['count'] . '" data-network="whatsapp">';
 			$link = urlencode( urldecode( swp_process_url( $array['url'] , 'whatsapp' , $array['postID'] ) ) );
-			$array['resource']['whatsapp'] .= '<a rel="nofollow" target="_blank" href="whatsapp://send?text=' . $link . '" data-link="whatsapp://send?text=' . $link . '" class="nc_tweet noPop" data-action="share/whatsapp/share">';
+			$array['resource']['whatsapp'] .= '<a rel="nofollow" target="_blank" onclick="window.location = this.href;" href="whatsapp://send?text=' . $link . '" data-link="whatsapp://send?text=' . $link . '" class="nc_tweet noPop" data-action="share/whatsapp/share">';
 			if ( $array['options']['totesEach'] && $array['shares']['totes'] >= $array['options']['minTotes'] && $array['shares']['whatsapp'] > 0 ) :
 				$array['resource']['whatsapp'] .= '<span class="iconFiller">';
 				$array['resource']['whatsapp'] .= '<span class="spaceManWilly">';

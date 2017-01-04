@@ -131,7 +131,7 @@ function swp_buffer_button_html( $array ) {
 
 			endif;
 
-			$array['totes'] += $array['shares']['buffer'];
+			$array['totes'] += intval( $array['shares']['buffer'] );
 
 			++$array['count'];
 

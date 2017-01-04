@@ -186,6 +186,19 @@ We have a growing archive of <a href="https://warfareplugins.com/support" rel="f
 
 == Changelog ==
 
+= 2.2.1 (05 JAN 2017) =
+
+*Maintenance:*
+
+* Fixed the WhatsApp button.
+* Fixed some invalid integer warnings that appeared in PHP 7.1
+* Made it so the social shares columns only display on pages and posts admin pages.
+* Fixed a conflict with Yoast open graph tags on the archives pages.
+* Fixed a conflict with lazyload plugin and the pinterest image hover button.
+* Fixed a padding issue on the button counts for mobile.
+* Fixed the screen options tab from bumping into the header menu on our admin options page.
+* Fixed an issue with button outlines.
+
 = 2.2.0 (29 NOV 2016) =
 
 *Important:*

@@ -67,6 +67,10 @@ add_filter( 'swp_header_html'   , 'swp_output_custom_color'  , 15 );
  */
 function swp_open_graph_values($info){
 
+	if( false === is_singular() ) {
+		return $info;
+	}
+
 	global $swp_user_options;
 
 	/**
@@ -238,6 +242,10 @@ function swp_open_graph_values($info){
  */
 function swp_open_graph_html($info) {
 
+	if( false === is_singular() ) {
+		return $info;
+	}
+
 	// Check to ensure that we don't need to defer to Yoast
 	if(false === $info['yoast_og_setting']):
 
@@ -289,6 +297,10 @@ function swp_open_graph_html($info) {
  * @return array $info The modified array
  */
 function swp_twitter_card_values($info) {
+
+	if( false === is_singular() ) {
+		return $info;
+	}
 
 	global $swp_user_options;
 
@@ -391,6 +403,11 @@ function swp_twitter_card_values($info) {
 }
 
 function swp_twitter_card_html($info) {
+
+	if( false === is_singular() ) {
+		return $info;
+	}
+	
 	global $swp_user_options;
 
 	if ( is_singular() && $swp_user_options['swp_twitter_card'] ) :

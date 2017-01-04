@@ -79,7 +79,7 @@ function swp_tumblr_button_html( $array ) {
 		// If not, let's check if Facebook is activated and create the button HTML
 		elseif ( (isset( $array['options']['newOrderOfIcons']['tumblr'] ) && ! isset( $array['buttons'] )) || (isset( $array['buttons'] ) && isset( $array['buttons']['tumblr'] ))  ) :
 
-			$array['totes'] += $array['shares']['tumblr'];
+			$array['totes'] += intval( $array['shares']['tumblr'] );
 			++$array['count'];
 
 			// Collect the Title

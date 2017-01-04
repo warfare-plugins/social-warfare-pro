@@ -98,7 +98,7 @@ function swp_reddit_button_html( $array ) {
 		elseif ( (isset( $array['options']['newOrderOfIcons']['reddit'] ) && ! isset( $array['buttons'] )) || (isset( $array['buttons'] ) && isset( $array['buttons']['reddit'] ))  ) :
 
 			if ( isset( $array['shares']['reddit'] ) ) :
-				$array['totes'] += $array['shares']['reddit'];
+				$array['totes'] += intval( $array['shares']['reddit'] );
 			endif;
 			++$array['count'];
 

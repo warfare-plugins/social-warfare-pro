@@ -107,7 +107,7 @@ function swp_yummly_button_html( $array ) {
 
 				) :
 
-				$array['totes'] += $array['shares']['yummly'];
+				$array['totes'] += intval( $array['shares']['yummly'] );
 				++$array['count'];
 
 				// Let's create a title
