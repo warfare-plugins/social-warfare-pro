@@ -477,10 +477,6 @@ function swp_pro_options_styles($swp_options) {
 			'description' 	=> __( 'If you would like to activate floating share buttons, turn this on.' ,'social-warfare' ),
 			'size'			=> 'four-fourths'
 		),
-		'total_floating_description' => array(
-			'type' 		=> 'paragraph',
-			'content' 	=> __( 'If you would like to activate floating share buttons, turn this on.' ,'social-warfare' )
-		),
 		'floatOption' => array(
 			'type' => 'select',
 			'size' => 'two-fourths',
