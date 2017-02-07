@@ -35,7 +35,7 @@ function swpp_initiate_plugin() {
 
         /**
          * Include the networks files
-         * 
+         *
          */
         require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
         require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
@@ -49,6 +49,21 @@ function swpp_initiate_plugin() {
 
     endif;
 }
+
+/**
+ * A function to notify users that the versions of Social Warfare and Social Warfare Pro are mismatched.
+ *
+ * @since  2.2.0
+ * @return void
+ */
+function swp_mismatch_notification() {
+	global $swp_user_options;
+
+	if(defined('SWP_VERSION') && SWP_VERSION !== SWPP_VERSION):
+		echo '<div class="update-nag notice is-dismissable"><p>' . __( '<b>Important:</b> You are currently running Social Warfare v'.SWP_VERSION.' and Social Warfare - Pro v'.SWPP_VERSION.'. In order to avoid conflicts, these two version need to match in order to activate all of the plugins features. Please update the appropriate plugin so that both Social Warfare and Social Warfare - Pro are on the same version. For more information about this, <a href="https://warfareplugins.com/support/updating-social-warfare-social-warfare-pro/">please read this</a>. ', 'social-warfare' ) . '</p></div>';
+	endif;
+ }
+ add_action( 'admin_notices', 'swp_mismatch_notification' );
 
 /**
  * A class for checking for plugin updates
