@@ -251,7 +251,7 @@ function swp_open_graph_html($info) {
 
 		$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
 		$info['html_output'] .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
-		$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
+		$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim(htmlspecialchars(strip_tags($info['meta_tag_values']['og_description'] ))).'" />';
 
 		if( !empty( $info['meta_tag_values']['og_image'] ) ):
 			$info['html_output'] .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
@@ -413,7 +413,7 @@ function swp_twitter_card_html($info) {
 	if ( is_singular() && $swp_user_options['swp_twitter_card'] ) :
 		$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
 		$info['html_output'] .= PHP_EOL . '<meta name="twitter:title" content="' . trim( $info['meta_tag_values']['twitter_title'] ) . '">';
-		$info['html_output'] .= PHP_EOL . '<meta name="twitter:description" content="' . trim( $info['meta_tag_values']['twitter_description'] ) . '">';
+		$info['html_output'] .= PHP_EOL . '<meta name="twitter:description" content="' . trim(htmlspecialchars(strip_tags($info['meta_tag_values']['twitter_description'] ))) . '">';
 		if( !empty($info['meta_tag_values']['twitter_image']) ):
 			$info['html_output'] .= PHP_EOL . '<meta name="twitter:image" content="' . trim( $info['meta_tag_values']['twitter_image'] ) . '">';
 		endif;
