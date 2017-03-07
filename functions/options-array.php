@@ -822,6 +822,52 @@ function swp_pro_options_advanced($swp_options) {
 			'dep_val'	=> array(true),
 			'premium'	=> true
 		),
+		'advance_pinterest_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
+		),
+		'advanced_pinterest_title' => array(
+			'type'		=> 'title',
+			'content'	=> __( 'Advanced Pinterest Settings' , 'social-warfare' ),
+			'premium'	=> true
+		),
+		'advanced_pinterest_description' => array(
+			'type'		=> 'paragraph',
+			'content'	=> __( 'Use the following settings to gain maximum control over how your visitors are sharing your content to Pinterest. <br /><b>Pin Image for Browser Extensions:</b> Would you like to add a Pinterest image to the page that will be picked up by the Pinterest Browser Extension as well as other Pinterest-oriented Browser Extensions (such as Tailwind)? <br /><b>Pinterest Image Location:</b> Where do you want this browser extension Pinterest button to appear on each post? <br /><b>Pinterest Image Fallback: </b>What should Social Warfare do if you don\'t specify a custom Pinterest image on a blog post?' , 'social-warfare' ),
+			'premium'	=> true
+		),
+		'advanced_pinterest_image' => array(
+			'type'		=> 'checkbox',
+			'size'		=> 'two-thirds',
+			'content'	=> __( 'Pin Image for Browser Extensions' , 'social-warfare' ),
+			'default'	=> false,
+			'premium'	=> true
+		),
+		'advanced_pinterest_image_location'	=> array(
+			'type'				=> 'select',
+			'size'				=> 'two-thirds',
+			'name'				=> __( 'Pinterest Image Location' , 'social-warfare' ),
+			'content'			=> array(
+				'hidden'			=> __( 'Hidden' , 'social-warfare' ),
+				'top'				=> __( 'At the top of each post' , 'social-warfare' ),
+				'bottom'				=> __( 'At the bottom of each post' , 'social-warfare' )
+			),
+			'default'			=> 'hidden',
+			'dep'				=> 'advanced_pinterest_image',
+			'dep_val'			=> array(true),
+			'premium'			=> true
+		),
+		'advanced_pinterest_fallback'	=> array(
+			'type'				=> 'select',
+			'size'				=> 'two-thirds',
+			'name'				=> __( 'Pinterest Image Fallback' , 'social-warfare' ),
+			'content'			=> array(
+				'all'			=> __( 'Show a selection of all images on the page.' , 'social-warfare' ),
+				'featured'		=> __( 'Show my featured image.' , 'social-warfare' )
+			),
+			'default'			=> 'all',
+			'premium'			=> true
+		),
 		'analytics_divider' => array(
 				'type'	  => 'divider',
 				'premium' => true
