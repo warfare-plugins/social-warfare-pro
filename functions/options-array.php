@@ -665,7 +665,8 @@ function swp_pro_options_styles($swp_options) {
 
 /**
  * swp_options_social_identity An array of options for the social identity tab of the options page
- * @since 	2.0.0
+ * @since 	2.0.0 | Created | Unknown     | Rebuilt the entire Admin Options Page
+ * @since   2.2.4 | Updated | 03 MAR 2017 | Added the advanced Pinterest settings
  * @param  	array $swp_options The array of options
  * @return 	array $swp_options The modified array of options
  */
@@ -833,7 +834,7 @@ function swp_pro_options_advanced($swp_options) {
 		),
 		'advanced_pinterest_description' => array(
 			'type'		=> 'paragraph',
-			'content'	=> __( 'Use the following settings to gain maximum control over how your visitors are sharing your content to Pinterest. <br /><b>Pin Image for Browser Extensions:</b> Would you like to add a Pinterest image to the page that will be picked up by the Pinterest Browser Extension as well as other Pinterest-oriented Browser Extensions (such as Tailwind)? <br /><b>Pinterest Image Location:</b> Where do you want this browser extension Pinterest button to appear on each post? <br /><b>Pinterest Image Fallback: </b>What should Social Warfare do if you don\'t specify a custom Pinterest image on a blog post?' , 'social-warfare' ),
+			'content'	=> __( 'Get maximum control over how your visitors are sharing your content on Pinterest. <a href="#" target="_blank">Learn More.</a>' , 'social-warfare' ),
 			'premium'	=> true
 		),
 		'advanced_pinterest_image' => array(
