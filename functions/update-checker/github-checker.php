@@ -1,8 +1,8 @@
 <?php
 
-if ( !class_exists('PucGitHubChecker_3_1', false) ):
+if ( !class_exists('swp_PucGitHubChecker_3_1', false) ):
 
-class PucGitHubChecker_3_1 extends PluginUpdateChecker_3_1 {
+class swp_PucGitHubChecker_3_1 extends swp_PluginUpdateChecker_3_1 {
 	/**
 	 * @var string GitHub username.
 	 */
@@ -54,10 +54,10 @@ class PucGitHubChecker_3_1 extends PluginUpdateChecker_3_1 {
 	 * Retrieve details about the latest plugin version from GitHub.
 	 *
 	 * @param array $unusedQueryArgs Unused.
-	 * @return PluginInfo_3_1
+	 * @return swp_PluginInfo_3_1
 	 */
 	public function requestInfo($unusedQueryArgs = array()) {
-		$info = new PluginInfo_3_1();
+		$info = new swp_PluginInfo_3_1();
 		$info->filename = $this->pluginFile;
 		$info->slug = $this->slug;
 
@@ -359,7 +359,7 @@ class PucGitHubChecker_3_1 extends PluginUpdateChecker_3_1 {
 	 * Copy plugin metadata from a file header to a PluginInfo object.
 	 *
 	 * @param array $fileHeader
-	 * @param PluginInfo_3_1 $pluginInfo
+	 * @param swp_PluginInfo_3_1 $pluginInfo
 	 */
 	protected function setInfoFromHeader($fileHeader, $pluginInfo) {
 		$headerToPropertyMap = array(
@@ -390,7 +390,7 @@ class PucGitHubChecker_3_1 extends PluginUpdateChecker_3_1 {
 	 * Copy plugin metadata from the remote readme.txt file.
 	 *
 	 * @param string $ref GitHub tag or branch where to look for the readme.
-	 * @param PluginInfo_3_1 $pluginInfo
+	 * @param swp_PluginInfo_3_1 $pluginInfo
 	 */
 	protected function setInfoFromRemoteReadme($ref, $pluginInfo) {
 		$readmeTxt = $this->getRemoteFile('readme.txt', $ref);

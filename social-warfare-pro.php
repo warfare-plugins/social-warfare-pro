@@ -67,10 +67,11 @@ function swp_mismatch_notification() {
 
 /**
  * A class for checking for plugin updates
- *
+ *THIS IS WHAT NEEDS TO BE WHITE LABELLED
+ *MAKE SURE EVERYTHING IS UPDATED TO USE THE NEW FUNCTION NAMES
  */
 require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php';
-$swpp_github_checker = PucFactory::getLatestClassVersion('PucGitHubChecker');
+$swpp_github_checker = swp_PucFactory::getLatestClassVersion('PucGitHubChecker');
 $swpp_update_checker = new $swpp_github_checker(
     'https://github.com/warfare-plugins/social-warfare-pro/',
     __FILE__,
