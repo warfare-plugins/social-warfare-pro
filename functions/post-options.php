@@ -109,6 +109,15 @@ function swp_register_meta_boxes( $meta_boxes ) {
 				'clone' => false,
 				'max_file_uploads' => 1,
 			),
+			// Setup the Custom Tweet box.
+			array(
+				'name'  => '<i class="sw sw-twitter"></i> ' . __( 'Custom Tweet','social-warfare' ),
+				'desc'  => ( $twitter_id ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ),str_replace( '@','',$twitter_handle ),'<span class="counterNumber">140</span>' ) : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
+				'id'    => $prefix . 'customTweet',
+				'class' => $prefix . 'customTweetWrapper',
+				'type'  => 'textarea',
+				'clone' => false,
+			),
 			// Setup the pinterest description.
 			array(
 				'name'  => '<i class="sw sw-pinterest"></i>' . __( 'Pinterest Description','social-warfare' ),
@@ -118,14 +127,32 @@ function swp_register_meta_boxes( $meta_boxes ) {
 				'type'  => 'textarea',
 				'clone' => false,
 			),
-			// Setup the Custom Tweet box.
 			array(
-				'name'  => '<i class="sw sw-twitter"></i> ' . __( 'Custom Tweet','social-warfare' ),
-				'desc'  => ( $twitter_id ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ),str_replace( '@','',$twitter_handle ),'<span class="counterNumber">140</span>' ) : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
-				'id'    => $prefix . 'customTweet',
-				'class' => $prefix . 'customTweetWrapper',
-				'type'  => 'textarea',
+				'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Image for Browser Extensions','social-warfare' ),
+				'id'      => $prefix . 'advanced_pinterest_image',
+				'class'   => $prefix . 'advanced_pinterest_imageWrapper',
+				'type'    => 'select',
+				'options' => array(
+					'default' => __( 'Default','social-warfare' ),
+					'on'      => __( 'On','social-warfare' ),
+					'off'     => __( 'Off','social-warfare' ),
+				),
 				'clone' => false,
+				'std'   => 'default',
+			),
+			array(
+				'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Browser Image Location','social-warfare' ),
+				'id'      => $prefix . 'advanced_pinterest_image_location',
+				'class'   => $prefix . 'advanced_pinterest_image_locationWrapper',
+				'type'    => 'select',
+				'options' => array(
+					'default' => __( 'Default','social-warfare' ),
+					'hidden'  => __( 'Hidden','social-warfare' ),
+					'top'     => __( 'At the Top of the Post','social-warfare' ),
+					'bottom'  => __( 'At the Bottom of the Post','social-warfare' ),
+				),
+				'clone' => false,
+				'std'   => 'default',
 			),
 			// Set up the location on post options.
 			array(

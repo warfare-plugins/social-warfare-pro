@@ -665,7 +665,8 @@ function swp_pro_options_styles($swp_options) {
 
 /**
  * swp_options_social_identity An array of options for the social identity tab of the options page
- * @since 	2.0.0
+ * @since 	2.0.0 | Created | Unknown     | Rebuilt the entire Admin Options Page
+ * @since   2.2.4 | Updated | 03 MAR 2017 | Added the advanced Pinterest settings
  * @param  	array $swp_options The array of options
  * @return 	array $swp_options The modified array of options
  */
@@ -821,6 +822,52 @@ function swp_pro_options_advanced($swp_options) {
 			'dep'		=> 'googleAnalytics',
 			'dep_val'	=> array(true),
 			'premium'	=> true
+		),
+		'advance_pinterest_divider' => array(
+				'type'	  => 'divider',
+				'premium' => true
+		),
+		'advanced_pinterest_title' => array(
+			'type'		=> 'title',
+			'content'	=> __( 'Advanced Pinterest Settings' , 'social-warfare' ),
+			'premium'	=> true
+		),
+		'advanced_pinterest_description' => array(
+			'type'		=> 'paragraph',
+			'content'	=> __( 'Get maximum control over how your visitors are sharing your content on Pinterest. <a href="#" target="_blank">Learn More.</a>' , 'social-warfare' ),
+			'premium'	=> true
+		),
+		'advanced_pinterest_image' => array(
+			'type'		=> 'checkbox',
+			'size'		=> 'two-thirds',
+			'content'	=> __( 'Pin Image for Browser Extensions' , 'social-warfare' ),
+			'default'	=> false,
+			'premium'	=> true
+		),
+		'advanced_pinterest_image_location'	=> array(
+			'type'				=> 'select',
+			'size'				=> 'two-thirds',
+			'name'				=> __( 'Pinterest Image Location' , 'social-warfare' ),
+			'content'			=> array(
+				'hidden'			=> __( 'Hidden' , 'social-warfare' ),
+				'top'				=> __( 'At the top of each post' , 'social-warfare' ),
+				'bottom'				=> __( 'At the bottom of each post' , 'social-warfare' )
+			),
+			'default'			=> 'hidden',
+			'dep'				=> 'advanced_pinterest_image',
+			'dep_val'			=> array(true),
+			'premium'			=> true
+		),
+		'advanced_pinterest_fallback'	=> array(
+			'type'				=> 'select',
+			'size'				=> 'two-thirds',
+			'name'				=> __( 'Pinterest Image Fallback' , 'social-warfare' ),
+			'content'			=> array(
+				'all'			=> __( 'Show a selection of all images on the page.' , 'social-warfare' ),
+				'featured'		=> __( 'Show my featured image.' , 'social-warfare' )
+			),
+			'default'			=> 'all',
+			'premium'			=> true
 		),
 		'analytics_divider' => array(
 				'type'	  => 'divider',
