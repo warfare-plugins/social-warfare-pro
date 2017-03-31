@@ -31,7 +31,8 @@ function swp_pro_options_display($swp_options) {
 	$swp_options['options']['swp_display'] = array(
 		'social_networks_title' => array(
 			'type' 		=> 'title',
-			'content' 	=> __( 'Social Networks' ,'social-warfare' )
+			'content' 	=> __( 'Social Networks' ,'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-display-tab-social-networks/'
 		),
 		'social_networks_subtitle' => array(
 			'type'		=> 'paragraph',
@@ -55,7 +56,8 @@ function swp_pro_options_display($swp_options) {
 		),
 		'share_counts_title' => array(
 			'type' 		=> 'title',
-			'content' 	=> __( 'Share Counts' ,'social-warfare' )
+			'content' 	=> __( 'Share Counts' ,'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-display-tab-share-counts/'
 		),
 		'share_counts_subtitle' => array(
 			'type'		=> 'paragraph',
@@ -94,7 +96,8 @@ function swp_pro_options_display($swp_options) {
 			'header'	=> true,
 			'divider'	=> false,
 			'default'	=> true,
-			'premium'	=> true
+			'premium'	=> true,
+			'support'   => 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/'
 		),
 		'swp_twitter_card_divider' => array(
 				'type'	  => 'divider',
@@ -102,7 +105,8 @@ function swp_pro_options_display($swp_options) {
 		),
 		'position_title' => array(
 			'type' 		=> 'title',
-			'content' 	=> __( 'Position Share Buttons' ,'social-warfare' )
+			'content' 	=> __( 'Position Share Buttons' ,'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-display-tab-position-share-buttons/'
 		),
 		'position_subtitle' => array(
 			'type'		=> 'paragraph',
@@ -172,7 +176,8 @@ function swp_pro_options_display($swp_options) {
 	$swp_options['options']['swp_display']['pinit_title'] = array(
 		'type' 		=> 'title',
 		'content' 	=> __( 'Image Hover Pin Button' ,'social-warfare' ),
-		'premium'	=> true
+		'premium'	=> true,
+		'support'   => 'https://warfareplugins.com/support/options-page-display-tab-image-hover-pin-button/'
 	);
 
 	$swp_options['options']['swp_display']['pinit_description'] = array(
@@ -256,7 +261,8 @@ function swp_pro_options_display($swp_options) {
 	$swp_options['options']['swp_display']['yummly_cat_title'] = array(
 		'type' 		=> 'title',
 		'content' 	=> __( 'Yummly Display Control' ,'social-warfare' ),
-		'premium'	=> true
+		'premium'	=> true,
+		'support'   => 'https://warfareplugins.com/support/options-page-display-tab-yummly-display-control/'
 	);
 
 	$swp_options['options']['swp_display']['yummly_cat_description'] = array(
@@ -300,7 +306,8 @@ function swp_pro_options_styles($swp_options) {
 		'visual_options_title' => array(
 			'type' 		=> 'title',
 			'content' 	=> __( 'Visual Options' ,'social-warfare' ),
-			'premium'	=> true
+			'premium'	=> true,
+			'support'   => 'https://warfareplugins.com/support/options-page-styles-tab-visual-options/'
 		),
 		'visual_options_description' => array(
 			'type' 		=> 'paragraph',
@@ -430,8 +437,9 @@ function swp_pro_options_styles($swp_options) {
 			'content' => '<div class="nc_socialPanel swp_flatFresh swp_d_fullColor swp_i_fullColor swp_o_fullColor" data-position="both" data-float="floatNone" data-count="6" data-floatColor="#ffffff" data-scale="1" data-align="fullWidth"><div class="nc_tweetContainer googlePlus" data-id="2"><a target="_blank" href="https://plus.google.com/share?url=http%3A%2F%2Fwfa.re%2F1W28voz" data-link="https://plus.google.com/share?url=http%3A%2F%2Fwfa.re%2F1W28voz" class="nc_tweet"><span class="iconFiller"><span class="spaceManWilly"><i class="sw sw-google-plus"></i><span class="swp_share"> ' . __( '+1','social-warfare' ) . '</span></span></span><span class="swp_count">1.2K</span></a></div><div class="nc_tweetContainer twitter" data-id="3"><a href="https://twitter.com/share?original_referer=/&text=Ultimate+Social+Share+%23WordPress+plugin%21+Beautiful%2C+super+fast+%26+more+http%3A%2F%2Fwarfareplugins.com+pic.twitter.com%2FA2zcCJwZtO&url=/&via=WarfarePlugins" data-link="https://twitter.com/share?original_referer=/&text=Ultimate+Social+Share+%23WordPress+plugin%21+Beautiful%2C+super+fast+%26+more+http%3A%2F%2Fwarfareplugins.com+pic.twitter.com%2FA2zcCJwZtO&url=/&via=WarfarePlugins" class="nc_tweet"><span class="iconFiller"><span class="spaceManWilly"><i class="sw sw-twitter"></i><span class="swp_share"> ' . __( 'Tweet','social-warfare' ) . '</span></span></span><span class="swp_count">280</span></a></div><div class="nc_tweetContainer nc_pinterest" data-id="6"><a data-link="https://pinterest.com/pin/create/button/?url=https://warfareplugins.com/&media=https%3A%2F%2Fwarfareplugins.com%2Fwp-content%2Fuploads%2Fget-content-shared-735x1102.jpg&description=Customize+your+Pinterest+sharing+options%2C+create+easy+%22click+to+tweet%22+buttons+within+your+blog+posts%2C+beautiful+sharing+buttons+and+more.+Social+Warfare+is+the+ultimate+social+sharing+arsenal+for+WordPress%21" class="nc_tweet" data-count="0"><span class="iconFiller"><span class="spaceManWilly"><i class="sw sw-pinterest"></i><span class="swp_share"> ' . __( 'Pin','social-warfare' ) . '</span></span></span><span class="swp_count">104</span></a></div><div class="nc_tweetContainer swp_fb" data-id="4"><a target="_blank" href="http://www.facebook.com/share.php?u=http%3A%2F%2Fwfa.re%2F1W28vov" data-link="http://www.facebook.com/share.php?u=http%3A%2F%2Fwfa.re%2F1W28vov" class="nc_tweet"><span class="iconFiller"><span class="spaceManWilly"><i class="sw sw-facebook"></i><span class="swp_share"> ' . __( 'Share','social-warfare' ) . '</span></span></span><span class="swp_count">157</span></a></div><div class="nc_tweetContainer linkedIn" data-id="5"><a target="_blank" href="https://www.linkedin.com/cws/share?url=http%3A%2F%2Fwfa.re%2F1W28twH" data-link="https://www.linkedin.com/cws/share?url=http%3A%2F%2Fwfa.re%2F1W28twH" class="nc_tweet"><span class="iconFiller"><span class="spaceManWilly"><i class="sw sw-linkedin"></i><span class="swp_share"> ' . __( 'Share','social-warfare' ) . '</span></span></span><span class="swp_count">51</span></a></div><div class="nc_tweetContainer totes totesalt" data-id="6" ><span class="swp_count"><span class="swp_label">Shares</span> 1.8K</span></div></div>'
 		),
 		'total_counts_title' => array(
-			'type'	=> 'title',
-			'content' => __( 'Total Counts' ,'social-warfare' )
+			'type'	  => 'title',
+			'content' => __( 'Total Counts' ,'social-warfare' ),
+			'support' => 'https://warfareplugins.com/support/options-page-styles-tab-total-counts/'
 		),
 		'total_counts_description' => array(
 			'type' 		=> 'paragraph',
@@ -475,7 +483,8 @@ function swp_pro_options_styles($swp_options) {
 			'type'			=> 'checkbox',
 			'title' 		=> __( 'Floating Share Buttons' ,'social-warfare' ),
 			'description' 	=> __( 'If you would like to activate floating share buttons, turn this on.' ,'social-warfare' ),
-			'size'			=> 'four-fourths'
+			'size'			=> 'four-fourths',
+			'support'       => 'https://warfareplugins.com/support/options-page-styles-tab-floating-share-buttons/'
 		),
 		'floatOption' => array(
 			'type' => 'select',
@@ -627,7 +636,8 @@ function swp_pro_options_styles($swp_options) {
 		'click_to_tweet_title' => array(
 			'type' => 'title',
 			'content' => __( 'Click-to-Tweet Style' ,'social-warfare' ),
-			'premium' => true
+			'premium' => true,
+			'support' => 'https://warfareplugins.com/support/options-page-styles-tab-click-tweet-style/'
 		),
 		'click_to_tweet_description' => array(
 			'type' => 'paragraph',
@@ -679,7 +689,8 @@ function swp_pro_options_social_identity($swp_options) {
 	$swp_options['options']['swp_social_identity'] = array(
 		'social_identity_title' => array(
 			'type' 		=> 'title',
-			'content' 	=> __( 'Sitewide Identity' , 'social-warfare' )
+			'content' 	=> __( 'Sitewide Identity' , 'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-social-identity-tab-sitewide-identity/'
 		),
 		'social_identity_description' => array(
 			'type' 		=> 'paragraph',
@@ -754,7 +765,8 @@ function swp_pro_options_advanced($swp_options) {
 			'title' 		=> __( 'Frame Buster' , 'social-warfare' ),
 			'description' 	=> __( 'If you want to stop content pirates from framing your content, turn this on.' , 'social-warfare' ),
 			'size'			=> 'two-thirds-advanced',
-			'default'		=> true
+			'default'		=> true,
+			'support'       => 'https://warfareplugins.com/support/options-page-advanced-tab-frame-buster/'
 		),
 		'frame_buster_divider' => array(
 				'type'	  => 'divider',
@@ -766,7 +778,8 @@ function swp_pro_options_advanced($swp_options) {
 			'description' 	=> __( 'If you like to have all of your links automatically shortened, turn this on.' , 'social-warfare' ),
 			'size'			=> 'two-thirds-advanced',
 			'default'		=> false,
-			'premium'		=> true
+			'premium'		=> true,
+			'support'       => 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/'
 		),
 		'bitly_authentication' => array(
 			'type'		=> 'authentication',
@@ -783,7 +796,8 @@ function swp_pro_options_advanced($swp_options) {
 		'analytics_title'	=> array(
 			'type'		=> 'title',
 			'content'	=> __( 'Analytics Tracking' , 'social-warfare' ),
-			'premium'	=> true
+			'premium'	=> true,
+			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-analytics-tracking/'
 		),
 		'analtycis_description' => array(
 			'type'		=> 'paragraph',
@@ -830,7 +844,8 @@ function swp_pro_options_advanced($swp_options) {
 		'advanced_pinterest_title' => array(
 			'type'		=> 'title',
 			'content'	=> __( 'Advanced Pinterest Settings' , 'social-warfare' ),
-			'premium'	=> true
+			'premium'	=> true,
+			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-advanced-pinterest-settings/'
 		),
 		'advanced_pinterest_description' => array(
 			'type'		=> 'paragraph',
@@ -876,7 +891,8 @@ function swp_pro_options_advanced($swp_options) {
 		'share_recovery_title' => array(
 			'type'		=> 'title',
 			'content'	=> __( 'Share Recovery' , 'social-warfare' ),
-			'premium'	=> true
+			'premium'	=> true,
+			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-share-recovery/'
 		),
 		'share_recovery_description' => array(
 			'type'		=> 'paragraph',
@@ -987,7 +1003,8 @@ function swp_pro_options_advanced($swp_options) {
 		),
 		'caching_method_title' => array(
 			'type'		=> 'title',
-			'content'	=> __( 'Caching Method' , 'social-warfare' )
+			'content'	=> __( 'Caching Method' , 'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-caching-method/'
 		),
 		'caching_method_description' => array(
 			'type'		=> 'paragraph',
@@ -1007,7 +1024,8 @@ function swp_pro_options_advanced($swp_options) {
 		),
 		'full_content_title' => array(
 			'type'		=> 'title',
-			'content'	=> __( 'Full Content vs. Excerpts' , 'social-warfare' )
+			'content'	=> __( 'Full Content vs. Excerpts' , 'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-full-content-vs-excerpts/'
 		),
 		'full_content_description' => array(
 			'type'		=> 'paragraph',
