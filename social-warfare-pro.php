@@ -13,6 +13,7 @@ defined( 'WPINC' ) || die;
 
 /**
  * Define plugin constants for use throughout the plugin (Version and Directories)
+ *
  */
 define( 'SWPP_VERSION', '2.2.3' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
@@ -24,6 +25,7 @@ function swpp_initiate_plugin() {
     if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
         /**
          * Include the necessary files
+         *
          */
         require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
         require_once SWPP_PLUGIN_DIR . '/functions/utility.php';
@@ -52,6 +54,7 @@ function swpp_initiate_plugin() {
 
 /**
  * A function to notify users that the versions of Social Warfare and Social Warfare Pro are mismatched.
+ * 
  *
  * @since  2.2.0
  * @return void
