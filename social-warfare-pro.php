@@ -54,7 +54,7 @@ function swpp_initiate_plugin() {
 
 /**
  * A function to notify users that the versions of Social Warfare and Social Warfare Pro are mismatched.
- * 
+ *
  *
  * @since  2.2.0
  * @return void
@@ -69,9 +69,10 @@ function swp_mismatch_notification() {
  add_action( 'admin_notices', 'swp_mismatch_notification' );
 
 /**
- * A class for checking for plugin updates
- *THIS IS WHAT NEEDS TO BE WHITE LABELLED
- *MAKE SURE EVERYTHING IS UPDATED TO USE THE NEW FUNCTION NAMES
+ * The Plugin Update checker
+ *
+ * @since 2.0.0
+ * @access public
  */
 require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php';
 $swpp_github_checker = swp_PucFactory::getLatestClassVersion('PucGitHubChecker');
@@ -80,8 +81,3 @@ $swpp_update_checker = new $swpp_github_checker(
     __FILE__,
     'master'
 );
-
-/**
- * Coming soon
- */
-// require_once SWP_PLUGIN_DIR . '/functions/media-options.php';
