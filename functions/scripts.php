@@ -3,7 +3,7 @@
  * Register and enqueue plugin scripts and styles.
  *
  * @package   Social Warfare - Pro\Functions
- * @copyright Copyright (c) 2016, Warfare Plugins, LLC
+ * @copyright Copyright (c) 2017, Warfare Plugins, LLC
  * @license   GPL-3.0+
  * @since     1.0.0
  */
