@@ -28,12 +28,12 @@ function swpp_initiate_plugin() {
          *
          */
         require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/utility.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/registration.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/post-options.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/header-meta-tags.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/scripts.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/options-array.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/admin/registration.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/header-meta-tags.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/admin/options-array.php';
 
         /**
          * Include the networks files
