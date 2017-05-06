@@ -8,6 +8,7 @@
  * @license   GPL-3.0+
  * @since     1.0.0 | Created | Unknown
  * @since     2.2.4 | Updated | 05 MAY 2017 | Added the Open Graph og:type Values settings
+ * @since     2.2.4 | Updated | 05 MAY 2017 | Added default values for Yummly terms settings
  */
 
 defined( 'WPINC' ) || die;
@@ -287,6 +288,8 @@ function swp_pro_options_display($swp_options) {
 		'name'		=> __( 'Yummly Terms' ,'social-warfare' ),
 		'primary'	=> 'yummly_categories',
 		'secondary' => 'yummly_tags',
+		'default'   => '',
+		'default_2' => '',
 		'premium'	=> true
 	);
 
