@@ -28,7 +28,7 @@ function swp_get_site_url() {
 /**
  * A function to queue up the function that will add the Pinterest image for browser extensions
  *
- * @since 2.2.3 | Created | 09 MAR 2017
+ * @since 2.2.4 | Created | 09 MAR 2017
  * @param none
  * @return none
  */
@@ -57,9 +57,49 @@ function swp_insert_pinterest_image( $content ) {
 	// Fetch the user's settings
 	global $swp_user_options, $post;
 	$post_id = $post->ID;
+	$swp_advanced_pin_image = get_post_meta( $post_id , 'swp_advanced_pinterest_image' , true );
+	$swp_advanced_pin_image_location = get_post_meta( $post_id , 'swp_advanced_pinterest_image_location' , true );
+
+	/**
+	 * A conditional to see if this feature should be turned on or off on a given post
+	 *
+	 */
+	// First check to see if it's turned on on the post
+	if( false !== $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
+		$status = true;
+
+	// Second check to see if it's turned off on the post
+	elseif( false !== $swp_advanced_pin_image && 'off' === $swp_advanced_pin_image ):
+		$status = false;
+
+	// Third check if it's turned on or off in the options
+	elseif( isset( $swp_user_options['advanced_pinterest_image'] ) && true === $swp_user_options['advanced_pinterest_image'] ):
+		$status = $swp_user_options['advanced_pinterest_image'];
+
+	// Fourth, if nothing matches, turn it off
+	else:
+		$status = false;
+	endif;
+
+	/**
+	 * A conditional to see where the image should be displayed
+	 *
+	 */
+	// First check to see if it's set at the post level
+	if( false !== $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image ):
+		$location = $swp_advanced_pin_image_location;
+
+	// Second, see if it's set in the options
+	elseif( isset( $swp_user_options['advanced_pinterest_image_location'] ):
+		$location = $swp_user_options['advanced_pinterest_image_location'];
+
+	// Third, if nothing is set, set it to hidden.
+	else:
+		$location = 'hidden';
+	endif;
 
 	// First make sure this feature is activated
-	if( isset( $swp_user_options['advanced_pinterest_image'] ) && true === $swp_user_options['advanced_pinterest_image'] ):
+	if( true === $status ):
 
 		// Collect the user's custom defined Pinterest specific Image
 		$pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
@@ -86,7 +126,7 @@ function swp_insert_pinterest_image( $content ) {
 			$permalink = get_the_permalink();
 
 			// Check if this image is hidden and add display:none to it.
-			if( isset( $swp_user_options['advanced_pinterest_image_location'] ) && 'hidden' === $swp_user_options['advanced_pinterest_image_location'] ) :
+			if( 'hidden' === $location ) :
 
 				// Compile the image
 				$image_html = '<img style="display:none;" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
@@ -95,18 +135,18 @@ function swp_insert_pinterest_image( $content ) {
 				$content .= $image_html;
 
 			// Check if the this image is not hidden and do not add display:none to it.
-			elseif( isset( $swp_user_options['advanced_pinterest_image_location'] ) && 'hidden' !== $swp_user_options['advanced_pinterest_image_location'] ) :
+			elseif( 'hidden' !== $location ) :
 
 				// Compile the image
 				$image_html = '<img class="no_pin" src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
 
 				// Add the visible image to the top of the content
-				if('top' === $swp_user_options['advanced_pinterest_image_location']):
+				if('top' === $location):
 					$content = $image_html . $content;
 				endif;
 
 				// Add the visible image to the bottom of the content
-				if('bottom' === $swp_user_options['advanced_pinterest_image_location']):
+				if('bottom' === $location):
 					$content .= $image_html;
 				endif;
 
