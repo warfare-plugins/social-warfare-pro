@@ -141,11 +141,13 @@ function swp_open_graph_values($info){
 	 * Open Graph Type
 	 *
 	 */
-	$og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
-	if( $og_type ):
-		$info['meta_tag_values']['og_type'] = $og_type;
+	$swp_post_type = get_post_type();
+	$og_type_from_global_options = $swp_user_options['swp_og_type_'.$swp_post_type];
+	$og_type_from_custom_field = get_post_meta( $info['postID'] , 'swp_og_type' , true );
+	if( $og_type_from_custom_field ):
+		$info['meta_tag_values']['og_type'] = $og_type_from_custom_field;
 	else:
- 		$info['meta_tag_values']['og_type'] = 'article';
+ 		$info['meta_tag_values']['og_type'] = $og_type_from_global_options;
 	endif;
 
 	/**
