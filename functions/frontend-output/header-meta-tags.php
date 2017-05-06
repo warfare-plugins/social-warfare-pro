@@ -3,9 +3,10 @@
  * Register and output open graph tags, Twitter cards, custom color CSS, and the icon fonts.
  *
  * @package   SocialWarfare\Functions
- * @copyright Copyright (c) 2016, Warfare Plugins, LLC
+ * @copyright Copyright (c) 2017, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     1.0.0
+ * @since     1.0.0 | Created | Uknown
+ * @since     2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
  */
 
 defined( 'WPINC' ) || die;
@@ -139,7 +140,7 @@ function swp_open_graph_values($info){
 
 	/**
 	 * Open Graph Type
-	 *
+	 * @since 2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
 	 */
 	$swp_post_type = get_post_type();
 	$og_type_from_global_options = $swp_user_options['swp_og_type_'.$swp_post_type];
