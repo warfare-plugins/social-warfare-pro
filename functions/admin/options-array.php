@@ -6,7 +6,8 @@
  * @package   SocialWarfare\Functions
  * @copyright Copyright (c) 2017, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     1.0.0
+ * @since     1.0.0 | Created | Unknown
+ * @since     2.2.4 | Updated | 05 MAY 2017 | Added the Open Graph og:type Values settings
  */
 
 defined( 'WPINC' ) || die;
@@ -14,6 +15,7 @@ defined( 'WPINC' ) || die;
 /**
  * swp_options_display An array of options for the display tab of the options page
  * @since 	2.0.0
+ * @access  public
  * @param  	array $swp_options The array of options
  * @return 	array $swp_options The modified array of options
  */
@@ -677,6 +679,7 @@ function swp_pro_options_styles($swp_options) {
  * swp_options_social_identity An array of options for the social identity tab of the options page
  * @since 	2.0.0 | Created | Unknown     | Rebuilt the entire Admin Options Page
  * @since   2.2.4 | Updated | 03 MAR 2017 | Added the advanced Pinterest settings
+ * @since   2.2.4 | Updated | 05 MAY 2017 | Added the Open Graph og:type Values settings
  * @param  	array $swp_options The array of options
  * @return 	array $swp_options The modified array of options
  */
@@ -715,7 +718,7 @@ function swp_pro_options_social_identity($swp_options) {
 			'type'		=> 'input',
 			'size'		=> 'two-thirds',
 			'name'		=> __( 'Facebook App ID' , 'social-warfare' )
-		)
+		),
 		/*
 		'social_authentication_title' => array(
 			'type' 		=> 'title',
@@ -740,8 +743,64 @@ function swp_pro_options_social_identity($swp_options) {
 			'link'		=> '#',
 			'name'		=> 'Connect Your Google Account'
 		) */
-
+		'og_type_divider' => array(
+			'type'    => 'divider',
+			'premium' => true
+		),
+		'og_type_title' => array(
+			'type'		=> 'title',
+			'content'	=> __( 'Open Graph og:type Values' , 'social-warfare' )
+		),
+		'og_type_description' => array(
+			'type'		=> 'paragraph',
+			'content'	=> __( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.' , 'social-warfare' )
+		)
 	);
+
+	// Get the public post Types
+	$swp_post_types = swp_get_post_types();
+
+	if(!empty($swp_post_types)):
+
+		// Loop through the Custom Post Type Options
+		foreach($swp_post_types as $swp_post_type):
+			$swp_options['options']['swp_social_identity']['swp_og_type_'.$swp_post_type] = array(
+				'type'		=> 'select',
+				'size'		=> 'two-thirds',
+				'name'		=> ucfirst($swp_post_type),
+				'primary'	=> 'location_'.$swp_post_type,
+				'content'	=> array(
+					'article'  => 'article',
+					'book'  => 'book',
+					'books.author'  => 'books.author',
+					'books.book'  => 'books.book',
+					'books.genre'  => 'books.genre',
+					'business.business'  => 'business.business',
+					'fitness.course'  => 'fitness.course',
+					'game.achievement'  => 'game.achievement',
+					'music.album'  => 'music.album',
+					'music.playlist'  => 'music.playlist',
+					'music.radio_station'  => 'music.radio_station',
+					'music.song'  => 'music.song',
+					'place'  => 'place',
+					'product'  => 'product',
+					'product.group'  => 'product.group',
+					'product.item'  => 'product.item',
+					'profile'  => 'profile',
+					'restaurant.menu'  => 'restaurant.menu',
+					'restaurant.menu_item'  => 'restaurant.menu_item',
+					'restaurant.menu_section'  => 'restaurant.menu_section',
+					'restaurant.restaurant'  => 'restaurant.restaurant',
+					'video.episode'  => 'video.episode',
+					'video.movie'  => 'video.movie',
+					'video.other'  => 'video.other',
+					'video.tv_show'  => 'video.tv_show',
+				),
+				'default'   => 'article',
+				'premium'   => true
+			);
+		endforeach;
+	endif;
 
 	return $swp_options;
 
@@ -837,7 +896,7 @@ function swp_pro_options_advanced($swp_options) {
 			'dep_val'	=> array(true),
 			'premium'	=> true
 		),
-		'advance_pinterest_divider' => array(
+		'advanced_pinterest_divider' => array(
 				'type'	  => 'divider',
 				'premium' => true
 		),
@@ -1036,7 +1095,8 @@ function swp_pro_options_advanced($swp_options) {
 			'size'				=> 'two-thirds',
 			'content'				=> __( 'Full Content?' , 'social-warfare' ),
 			'default'			=> false,
-			'premium'			=> false
+			'premium'			=> false,
+			'divider'			=> false
 		)
 	);
 
