@@ -5,7 +5,9 @@
  * @package   SocialWarfare\Functions
  * @copyright Copyright (c) 2017, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     2.1.0
+ * @since     2.1.0 | Created | Unknown
+ * @since     2.2.4 | Updated | 09 MAR 2017 | Created the advanced Pinterest image functions
+ * @since     2.2.4 | Updated | 05 MAY 2017 | Made the advanced pinterest settings work with the post options
  */
 
 /**
