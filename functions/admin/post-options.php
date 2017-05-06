@@ -129,8 +129,8 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			),
 			array(
 				'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Image for Browser Extensions','social-warfare' ),
-				'id'      => $prefix . 'advanced_pinterest_image',
-				'class'   => $prefix . 'advanced_pinterest_imageWrapper',
+				'id'      => 'swp_advanced_pinterest_image',
+				'class'   => 'swp_advanced_pinterest_imageWrapper',
 				'type'    => 'select',
 				'options' => array(
 					'default' => __( 'Default','social-warfare' ),
@@ -142,8 +142,8 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			),
 			array(
 				'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Browser Image Location','social-warfare' ),
-				'id'      => $prefix . 'advanced_pinterest_image_location',
-				'class'   => $prefix . 'advanced_pinterest_image_locationWrapper',
+				'id'      => 'swp_advanced_pinterest_image_location',
+				'class'   => 'swp_advanced_pinterest_image_locationWrapper',
 				'type'    => 'select',
 				'options' => array(
 					'default' => __( 'Default','social-warfare' ),
