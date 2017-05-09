@@ -88,7 +88,7 @@ function swp_insert_pinterest_image( $content ) {
 	 *
 	 */
 	// First check to see if it's set at the post level
-	if( false !== $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image ):
+	if( false !== $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image_location ):
 		$location = $swp_advanced_pin_image_location;
 
 	// Second, see if it's set in the options
