@@ -752,7 +752,8 @@ function swp_pro_options_social_identity($swp_options) {
 		),
 		'og_type_title' => array(
 			'type'		=> 'title',
-			'content'	=> __( 'Open Graph og:type Values' , 'social-warfare' )
+			'content'	=> __( 'Open Graph og:type Values' , 'social-warfare' ),
+			'support'   => 'https://warfareplugins.com/support/options-page-social-identity-tab-open-graph-ogtype-values/'
 		),
 		'og_type_description' => array(
 			'type'		=> 'paragraph',
