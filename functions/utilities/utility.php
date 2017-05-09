@@ -67,7 +67,7 @@ function swp_insert_pinterest_image( $content ) {
 	 *
 	 */
 	// First check to see if it's turned on on the post
-	if( 'false' != $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
+	if( false != $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
 		$status = true;
 
 	// Second check to see if it's turned off on the post
