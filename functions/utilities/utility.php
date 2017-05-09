@@ -67,11 +67,11 @@ function swp_insert_pinterest_image( $content ) {
 	 *
 	 */
 	// First check to see if it's turned on on the post
-	if( false != $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
+	if( '' != $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
 		$status = true;
 
 	// Second check to see if it's turned off on the post
-	elseif( false != $swp_advanced_pin_image && 'off' === $swp_advanced_pin_image ):
+	elseif( '' != $swp_advanced_pin_image && 'off' === $swp_advanced_pin_image ):
 		$status = false;
 
 	// Third check if it's turned on or off in the options
@@ -88,7 +88,7 @@ function swp_insert_pinterest_image( $content ) {
 	 *
 	 */
 	// First check to see if it's set at the post level
-	if( false != $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image_location ):
+	if( '' != $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image_location ):
 		$location = $swp_advanced_pin_image_location;
 
 	// Second, see if it's set in the options
