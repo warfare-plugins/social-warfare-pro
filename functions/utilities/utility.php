@@ -131,7 +131,7 @@ function swp_insert_pinterest_image( $content ) {
 			if( 'hidden' === $location ) :
 
 				// Compile the image
-				$image_html = '<img style="display:none;" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
+				$image_html = '<img class="no_pin swp_hidden_pin_image" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
 
 				// Add the hidden image to the content string
 				$content .= $image_html;
@@ -140,7 +140,7 @@ function swp_insert_pinterest_image( $content ) {
 			elseif( 'hidden' !== $location ) :
 
 				// Compile the image
-				$image_html = '<img class="no_pin" src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
+				$image_html = '<img src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" />';
 
 				// Add the visible image to the top of the content
 				if('top' === $location):
