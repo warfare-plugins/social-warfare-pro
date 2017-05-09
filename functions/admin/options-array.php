@@ -906,13 +906,13 @@ function swp_pro_options_advanced($swp_options) {
 		),
 		'advanced_pinterest_title' => array(
 			'type'		=> 'title',
-			'content'	=> __( 'Advanced Pinterest Settings (Beta)' , 'social-warfare' ),
+			'content'	=> __( 'Advanced Pinterest Settings' , 'social-warfare' ),
 			'premium'	=> true,
 			'support'   => 'https://warfareplugins.com/support/options-page-advanced-tab-advanced-pinterest-settings/'
 		),
 		'advanced_pinterest_description' => array(
 			'type'		=> 'paragraph',
-			'content'	=> __( 'Get maximum control over how your visitors are sharing your content on Pinterest. These settings are currently in beta which means that they may not yet work properly 100% of the time.' , 'social-warfare' ),
+			'content'	=> __( 'Get maximum control over how your visitors are sharing your content on Pinterest.' , 'social-warfare' ),
 			'premium'	=> true
 		),
 		'advanced_pinterest_image' => array(
