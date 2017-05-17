@@ -143,6 +143,9 @@ function swp_open_graph_values($info){
 	 * @since 2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
 	 */
 	$swp_post_type = get_post_type();
+	if(!isset($swp_user_options['swp_og_type_'.$swp_post_type])):
+		$swp_user_options['swp_og_type_'.$swp_post_type] = 'article';
+	endif;
 	$og_type_from_global_options = $swp_user_options['swp_og_type_'.$swp_post_type];
 	$og_type_from_custom_field = get_post_meta( $info['postID'] , 'swp_og_type' , true );
 	if( $og_type_from_custom_field ):
