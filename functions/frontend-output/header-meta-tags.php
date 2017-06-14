@@ -179,7 +179,7 @@ function swp_open_graph_values($info){
 	elseif ( !empty( $yoast_seo_description ) ) :
 		$info['meta_tag_values']['og_description'] = $yoast_seo_description;
 	else :
-		$info['meta_tag_values']['og_description'] = convert_smart_quotes( htmlspecialchars_decode( swp_get_excerpt_by_id( $info['postID'] ) ) ) ;
+		$info['meta_tag_values']['og_description'] = html_decode( convert_smart_quotes( htmlspecialchars_decode( swp_get_excerpt_by_id( $info['postID'] ) ) ) );
 	endif;
 
 	/**
