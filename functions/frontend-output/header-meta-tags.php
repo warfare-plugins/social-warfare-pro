@@ -159,7 +159,7 @@ function swp_open_graph_values($info){
 	 *
 	 */
 	if ( !empty( $custom_og_title ) ) :
-		$info['meta_tag_values']['og_title'] = $custom_og_title;
+		$info['meta_tag_values']['og_title'] = apply_filters( 'the_content' , $custom_og_title );
 	elseif ( !empty( $yoast_og_title )) :
 		$info['meta_tag_values']['og_title'] = $yoast_og_title;
 	elseif ( !empty( $yoast_seo_title ) ) :
