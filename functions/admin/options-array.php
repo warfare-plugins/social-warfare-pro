@@ -247,6 +247,34 @@ function swp_pro_options_display($swp_options) {
 		'dep_val'	=> array(true)
 	);
 
+	$swp_options['options']['swp_display']['pinit_image_source'] = array(
+		'type'		=> 'select',
+		'name'		=> __( 'Image Source' ,'social-warfare' ),
+		'content'	=> array(
+			'image' 		=> __( 'Pin the image' ,'social-warfare' ),
+			'custom'	    => __( 'Pin the Custom Pin Image' ,'social-warfare' )
+		),
+		'default'	=> 'image',
+		'size'		=> 'two-fourths',
+		'premium'	=> true,
+		'dep' 		=> 'pinit_toggle',
+		'dep_val'	=> array(true)
+	);
+
+	$swp_options['options']['swp_display']['pinit_image_description'] = array(
+		'type'		=> 'select',
+		'name'		=> __( 'Description Source' ,'social-warfare' ),
+		'content'	=> array(
+			'alt_text'    => __( 'The Image Alt Text' ,'social-warfare' ),
+			'custom'      => __( 'Custom Pin Description' ,'social-warfare' )
+		),
+		'default'	=> 'alt_text',
+		'size'		=> 'two-fourths',
+		'premium'	=> true,
+		'dep' 		=> 'pinit_toggle',
+		'dep_val'	=> array(true)
+	);
+
 	//$swp_options['options']['swp_display']['pinit_custom_image'] = array(
 	//	'type'		=> 'image_upload',
 	//	'name'		=> 'Custom Image',
@@ -899,6 +927,15 @@ function swp_pro_options_advanced($swp_options) {
 			'dep'		=> 'googleAnalytics',
 			'dep_val'	=> array(true),
 			'premium'	=> true
+		),
+		'utm_on_pins' => array(
+			'type'			=> 'checkbox',
+			'content' 		=> __( 'UTM Tracking on Pins' , 'social-warfare' ),
+			'size'			=> 'two-thirds',
+			'default'		=> false,
+			'dep'		    => 'googleAnalytics',
+			'dep_val'	    => array(true),
+			'premium'		=> true
 		),
 		'advanced_pinterest_divider' => array(
 				'type'	  => 'divider',
