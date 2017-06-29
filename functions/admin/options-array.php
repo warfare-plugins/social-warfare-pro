@@ -265,7 +265,7 @@ function swp_pro_options_display($swp_options) {
 		'type'		=> 'select',
 		'name'		=> __( 'Description Source' ,'social-warfare' ),
 		'content'	=> array(
-			'alt_text'    => __( 'The Image Alt Text' ,'social-warfare' ),
+			'alt_text'    => __( 'Image ALT text' ,'social-warfare' ),
 			'custom'      => __( 'Custom Pin Description' ,'social-warfare' )
 		),
 		'default'	=> 'alt_text',
