@@ -1174,6 +1174,8 @@ function swp_pro_options_registration($swp_options) {
 	$swp_options['options']['swp_registration'] = array(
 		'plugin_registration' => array(
 			'type'			=> 'plugin_registration',
+			'addon_name'    => 'Social Warfare - Pro',
+			'product_id'    => 56935,
 			'divider'		=> false,
 			'premium'	=> true
 		),

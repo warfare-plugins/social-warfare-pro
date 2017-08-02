@@ -33,20 +33,46 @@ function swp_get_registration_key( $domain, $context = 'api' ) {
  * @return bool True if the plugin is registered, false otherwise.
  */
 function is_swp_registered() {
-	static $is_registered;
 
-	if ( null === $is_registered ) {
-		$options = get_option( 'socialWarfareOptions' );
+	$options = get_option( 'socialWarfareOptions' );
 
-		$domain = swp_get_site_url();
-		$key = swp_get_registration_key( $domain, 'db' );
+	$is_registered = false;
 
-		$is_registered = false;
+	if( !empty($options['pro_license_key']) && true === get_transient('swp_pro_license_key_valid') ) {
 
-		// If the Premium Code is currently set....
-		// if ( isset( $options['premiumCode'] ) && $key === $options['premiumCode'] ) {
-		if ( isset( $options['premiumCode'] ) && $options['premiumCode'] != '' ) {
-			$is_registered = true;
+		$is_registered = true;
+
+	} elseif( !empty($options['pro_license_key']) ){
+
+		if ( false === ( $value = get_transient( 'swp_pro_license_key_checked' ) ) ) {
+			$store_url = 'http://edd.warfareplugins.com';
+			$license = $options['pro_license_key'];
+			$api_params = array(
+				'edd_action' => 'check_license',
+				'license' => $license,
+				'item_id' => 56935,
+				'url' => home_url()
+			);
+			$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
+		  	if ( is_wp_error( $response ) ) {
+				return false;
+		  	}
+
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			echo '<script>console.log('.json_encode($license_data).')</script>';
+
+			if( $license_data->license == 'valid' ) {
+				$is_registered = true;
+				set_transient( 'swp_pro_license_key_valid', true , WEEK_IN_SECONDS );
+
+				// this license is still valid
+			} else {
+				$is_registered = false;
+				set_transient( 'swp_pro_license_key_valid', false , WEEK_IN_SECONDS );
+				// this license is no longer valid
+			}
+
 		}
 	}
 
@@ -88,58 +114,116 @@ function swp_get_registration_api( $args = array(), $decode = true ) {
  * Attempt to register the plugin.
  *
  * @since  2.1.0
- * @param  string $email The email to use during unregistration.
- * @param  string $domain The domain to use during unregistration.
- * @return bool
+ * @since  2.3.0 Hooked registration into the new EDD Software Licensing API
+ * @param  none
+ * @return JSON Encoded Array (Echoed) - The Response from the EDD API
+ *
  */
-function swp_register_plugin( $email, $domain ) {
-	$response = swp_get_registration_api( array(
-		'activity'         => 'register',
-		'emailAddress'     => $email,
-		'domain'           => $domain,
-		'registrationCode' => swp_get_registration_key( $domain ),
-	) );
+add_action( 'wp_ajax_swp_register_plugin', 'swp_register_plugin' );
+function swp_register_plugin() {
 
-	if ( ! $response ) {
-		return false;
+	// Check to ensure that license key was passed into the function
+	if(!empty($_POST['pro_license_key'])) {
+
+		// Grab the license key so we can use it below
+		$license = $_POST['pro_license_key'];
+
+		// Set up the paramaters for a ping back to the store
+		$store_url = 'https://edd.warfareplugins.com';
+		$api_params = array(
+			'edd_action' => 'activate_license',
+			'license' => $license,
+			'item_id' => 56935,
+			'url' => home_url(),
+		);
+
+		// Ping the store back home and ask for a response for the activation attempt
+		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
+	  	if ( is_wp_error( $response ) ) {
+			return false;
+	  	}
+
+		// Decode the response so we can actually look at it
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		// If the license is valid store it in the database
+		if( $license_data->license == 'valid' ) {
+
+			$options = get_option( 'socialWarfareOptions' );
+			$options['pro_license_key'] = $license;
+			update_option( 'socialWarfareOptions' , $options );
+
+			echo json_encode($license_data);
+			wp_die();
+
+		// If the license is not valid
+		} else {
+			echo json_encode($license_data);
+			wp_die();
+		}
 	}
 
-	if ( 'success' === $response['status'] ) {
-		swp_update_option( 'emailAddress', $email );
-		swp_update_option( 'premiumCode', $response['premiumCode'] );
-		return $response;
-	}
+	wp_die();
 
-	return false;
 }
 
 /**
  * Attempt to unregister the plugin.
  *
  * @since  2.1.0
- * @param  string $email The email to use during unregistration.
- * @param  string $key The premium key code to be unregistered.
- * @return bool
+ * @sincc  2.3.0 Hooked into the EDD Software Licensing API
+ * @param  none
+ * @return JSON Encoded Array (Echoed) - The Response from the EDD API
  */
-function swp_unregister_plugin( $email, $key ) {
-	$response = swp_get_registration_api( array(
-		'activity'     => 'unregister',
-		'emailAddress' => $email,
-		'premiumCode'  => $key,
-	) );
+add_action( 'wp_ajax_swp_unregister_plugin', 'swp_unregister_plugin' );
+function swp_unregister_plugin() {
 
-	if ( ! $response ) {
-		return false;
+	$options = get_option( 'socialWarfareOptions' );
+
+	// Check to ensure that license key was passed into the function
+	if(empty($options['pro_license_key'])) {
+		echo 'success';
+	} else {
+
+		// Grab the license key so we can use it below
+		$license = $options['pro_license_key'];
+
+		// Set up the paramaters for a ping back to the store
+		$store_url = 'https://edd.warfareplugins.com';
+		$api_params = array(
+			'edd_action' => 'deactivate_license',
+			'license' => $license,
+			'item_id' => 56935,
+			'url' => home_url(),
+		);
+
+		// Ping the store back home and ask for a response for the activation attempt
+		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
+	  	if ( is_wp_error( $response ) ) {
+			return false;
+	  	}
+
+		// Decode the response so we can actually look at it
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		// If the license is valid store it in the database
+		if( $license_data->license == 'valid' ) {
+
+			$options = get_option( 'socialWarfareOptions' );
+			$options['pro_license_key'] = '';
+			update_option( 'socialWarfareOptions' , $options );
+
+			echo json_encode($license_data);
+			wp_die();
+
+		// If the license is not valid
+		} else {
+			echo json_encode($license_data);
+			wp_die();
+		}
 	}
 
-	if ( 'success' === $response['status'] ) {
-		// swp_update_option( 'emailAddress', '' );
-		swp_update_option( 'premiumCode', '' );
-		return $response;
-	}
-
-	swp_update_option( 'premiumCode', '' );
-	return $response['status'];
+	wp_die();
 }
 
 /**

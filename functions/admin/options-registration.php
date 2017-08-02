@@ -11,11 +11,10 @@
 $premium_code = '';
 $email = '';
 
-if ( ! empty( $swp_user_options['emailAddress'] ) ) {
-	$email = $swp_user_options['emailAddress'];
-}
-if ( ! empty( $swp_user_options['premiumCode'] ) ) {
-	$premium_code = $swp_user_options['premiumCode'];
+if ( ! empty( $swp_user_options['pro_license_key'] ) ) {
+	$pro_license_key = $swp_user_options['pro_license_key'];
+} else {
+	$pro_license_key = '';
 }
 ?>
 
@@ -34,23 +33,20 @@ if ( ! empty( $swp_user_options['premiumCode'] ) ) {
 		</p>
 
 		<p class="sw-subtitle sw-registration-text sw-italic">
-			<?php esc_html_e( 'Step 1: Enter your email.' , 'social-warfare' ); ?><br />
+			<?php esc_html_e( 'Step 1: Enter your License Key.' , 'social-warfare' ); ?><br />
 			<?php esc_html_e( 'Step 2: Click the "Register Plugin" button.' , 'social-warfare' ); ?><br />
 			<?php esc_html_e( 'Step 3: Watch the magic.' , 'social-warfare' ); ?>
 		</p>
 
 		<div class="sw-grid sw-col-300">
 			<p class="sw-input-label">
-				<?php esc_html_e( 'Email Address' , 'social-warfare' ); ?>
+				<?php esc_html_e( 'License Key' , 'social-warfare' ); ?>
 			</p>
 		</div>
 
 		<div class="sw-grid sw-col-300">
-			<input name="emailAddress" type="text" class="sw-admin-input" placeholder="email@domain.com" value="<?php echo $email; ?>" />
+			<input name="pro_license_key" type="text" class="sw-admin-input" placeholder="License Key" value="<?php echo $pro_license_key; ?>" />
 		</div>
-
-		<input name="premiumCode" type="text" class="sw-admin-input sw-hidden" value="<?php echo $premium_code; ?>" />
-		<input name="regCode" type="text" class="sw-admin-input sw-hidden" value="<?php echo swp_get_registration_key( swp_get_site_url() ); ?>" />
 
 		<div class="sw-grid sw-col-300 sw-fit"></div>
 		<div class="sw-clearfix"></div>
