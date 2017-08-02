@@ -38,7 +38,7 @@ function is_swp_registered() {
 
 	$is_registered = false;
 
-	if( !empty($options['pro_license_key']) && true === get_transient('swp_pro_license_key_valid') ) {
+	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') ) {
 
 		$is_registered = true;
 
@@ -59,8 +59,6 @@ function is_swp_registered() {
 		  	}
 
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-			echo '<script>console.log('.json_encode($license_data).')</script>';
 
 			if( $license_data->license == 'valid' ) {
 				$is_registered = true;
