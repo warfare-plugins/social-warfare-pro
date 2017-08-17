@@ -32,13 +32,13 @@ function swp_get_registration_key( $domain, $context = 'api' ) {
  * @since  unknown
  * @return bool True if the plugin is registered, false otherwise.
  */
-function is_swp_registered() {
+function is_swp_registered($timeline = false) {
 
 	$options = get_option( 'socialWarfareOptions' );
 
 	$is_registered = false;
 
-	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') ) {
+	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') && $timeline == true ) {
 
 		$is_registered = true;
 
@@ -216,6 +216,10 @@ function swp_unregister_plugin() {
 
 		// If the license is not valid
 		} else {
+
+			$options = get_option( 'socialWarfareOptions' );
+			$options['pro_license_key'] = '';
+			update_option( 'socialWarfareOptions' , $options );
 			echo json_encode($license_data);
 			wp_die();
 		}

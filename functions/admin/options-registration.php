@@ -18,7 +18,7 @@ if ( ! empty( $swp_user_options['pro_license_key'] ) ) {
 }
 ?>
 
-<div class="registration-wrapper" registration="<?php echo absint( is_swp_registered() ); ?>">
+<div class="registration-wrapper" registration="<?php echo absint( is_swp_registered(true) ); ?>">
 
 	<h2><?php esc_html_e( 'Premium Registration' , 'social-warfare' ); ?></h2>
 
