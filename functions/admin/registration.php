@@ -50,7 +50,7 @@ function is_swp_registered() {
 			$api_params = array(
 				'edd_action' => 'check_license',
 				'license' => $license,
-				'item_id' => 56935,
+				'item_id' => 63157,
 				'url' => home_url()
 			);
 			$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
@@ -131,7 +131,7 @@ function swp_register_plugin() {
 		$api_params = array(
 			'edd_action' => 'activate_license',
 			'license' => $license,
-			'item_id' => 56935,
+			'item_id' => 63157,
 			'url' => home_url(),
 		);
 
@@ -191,7 +191,7 @@ function swp_unregister_plugin() {
 		$api_params = array(
 			'edd_action' => 'deactivate_license',
 			'license' => $license,
-			'item_id' => 56935,
+			'item_id' => 63157,
 			'url' => home_url(),
 		);
 
