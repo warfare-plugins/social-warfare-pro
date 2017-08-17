@@ -45,7 +45,7 @@ function is_swp_registered() {
 	} elseif( !empty($options['pro_license_key']) ){
 
 		if ( false === ( $value = get_transient( 'swp_pro_license_key_checked' ) ) ) {
-			$store_url = 'http://edd.warfareplugins.com';
+			$store_url = 'http://warfareplugins.com';
 			$license = $options['pro_license_key'];
 			$api_params = array(
 				'edd_action' => 'check_license',
@@ -127,7 +127,7 @@ function swp_register_plugin() {
 		$license = $_POST['pro_license_key'];
 
 		// Set up the paramaters for a ping back to the store
-		$store_url = 'https://edd.warfareplugins.com';
+		$store_url = 'https://warfareplugins.com';
 		$api_params = array(
 			'edd_action' => 'activate_license',
 			'license' => $license,
@@ -187,7 +187,7 @@ function swp_unregister_plugin() {
 		$license = $options['pro_license_key'];
 
 		// Set up the paramaters for a ping back to the store
-		$store_url = 'https://edd.warfareplugins.com';
+		$store_url = 'https://warfareplugins.com';
 		$api_params = array(
 			'edd_action' => 'deactivate_license',
 			'license' => $license,
