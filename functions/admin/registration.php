@@ -38,7 +38,7 @@ function is_swp_registered($timeline = false) {
 
 	$is_registered = false;
 
-	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') && $timeline == true ) {
+	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') && $timeline != true ) {
 
 		$is_registered = true;
 

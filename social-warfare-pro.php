@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  http://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     2.2.11
+ * Version:     2.3.0
  * Author:      Warfare Plugins
  * Author URI:  http://warfareplugins.com
  * Text Domain: social-warfare
@@ -15,7 +15,7 @@ defined( 'WPINC' ) || die;
  * Define plugin constants for use throughout the plugin (Version and Directories)
  *
  */
-define( 'SWPP_VERSION', '2.2.11' );
+define( 'SWPP_VERSION', '2.3.0' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -81,3 +81,19 @@ $swpp_update_checker = new $swpp_github_checker(
     __FILE__,
     'master'
 );
+
+/**
+ * Registration Update Notification
+ *
+ * @since 2.3.0
+ * @access public
+ * @return void
+ *
+ */
+ function swp_registration_update_notification() {
+    $options = get_option( 'socialWarfareOptions', array() );
+    if( !empty($options['premiumCode']) && empty( $options['pro_license_key'] ) ):
+        echo '<div class="notice-error notice is-dismissable"><p>' . __( '<b>Important:</b> We’ve just made some significant upgrades to your <i>Social Warfare - Pro</i> license. You will need to <a href="https://warfareplugins.com/my-account/">grab your license key</a> and re-register the plugin. Read <a href="https://warfareplugins.com/support/how-to-register-your-license-key/">the full details</a> to find out why this change was necessary.', 'social-warfare' ) . '</p></div>';
+    endif;
+  }
+  add_action( 'admin_notices', 'swp_registration_update_notification' );
