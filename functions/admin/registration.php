@@ -34,6 +34,11 @@ function swp_get_registration_key( $domain, $context = 'api' ) {
  */
 function is_swp_registered($timeline = false) {
 
+	// Check if we have a constant so we don't recheck every time the function is called
+	if( defined('IS_SWP_REGISTERED') ){
+		return IS_SWP_REGISTERED;
+	}
+
 	$options = get_option( 'socialWarfareOptions' );
 	$is_registered = false;
 	$current_time = time();
@@ -58,30 +63,40 @@ function is_swp_registered($timeline = false) {
 				'item_id' => 63157,
 				'url' => home_url()
 			);
-			$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
+			$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 10, 'sslverify' => false ) );
 		  	if ( is_wp_error( $response ) ) {
 				return false;
 		  	}
 
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
+			// If the license was valid
 			if( 'valid' == $license_data->license ) {
 				$is_registered = true;
 				$options['pro_license_key_timestamp'] = $current_time;
 				update_option( 'socialWarfareOptions' , $options );
 
+			// If the license was invalid
 			} elseif('invalid' == $license_data->license) {
 				$is_registered = false;
 				$options['pro_license_key'] = '';
 				$options['pro_license_key_timestamp'] = $current_time;
 				update_option( 'socialWarfareOptions' , $options );
+
+			// If we recieved no response from the server, we'll just check again next week
 			} else {
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
 				$is_registered = true;
 			}
 
 		}
 	}
 
+	// Add this to a constant so we don't recheck every time this function is called
+	define('IS_SWP_REGISTERED' , $is_registered);
+
+	// Return the registration value true/false
 	return $is_registered;
 }
 
