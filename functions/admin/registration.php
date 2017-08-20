@@ -72,6 +72,7 @@ function is_swp_registered($timeline = false) {
 
 			} elseif('invalid' == $license_data->license) {
 				$is_registered = false;
+				$options['pro_license_key'] = '';
 				$options['pro_license_key_timestamp'] = $current_time;
 				update_option( 'socialWarfareOptions' , $options );
 			} else {
