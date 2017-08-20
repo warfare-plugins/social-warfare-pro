@@ -35,10 +35,15 @@ function swp_get_registration_key( $domain, $context = 'api' ) {
 function is_swp_registered($timeline = false) {
 
 	$options = get_option( 'socialWarfareOptions' );
-
 	$is_registered = false;
+	$current_time = time();
+	if(!isset($options['pro_license_key_timestamp'])):
+		$timestamp = 0;
+	else:
+		$timestamp = $options['pro_license_key_timestamp'];
+	endif;
 
-	if( !empty($options['pro_license_key']) && true == get_transient('swp_pro_license_key_valid') && $timeline != true ) {
+	if( !empty($options['pro_license_key']) && $current_time < ($timestamp + WEEK_IN_SECONDS) ) {
 
 		$is_registered = true;
 
@@ -60,15 +65,17 @@ function is_swp_registered($timeline = false) {
 
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			if( $license_data->license == 'valid' ) {
+			if( 'valid' == $license_data->license ) {
 				$is_registered = true;
-				set_transient( 'swp_pro_license_key_valid', true , WEEK_IN_SECONDS );
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
 
-				// this license is still valid
-			} else {
+			} elseif('invalid' == $license_data->license) {
 				$is_registered = false;
-				set_transient( 'swp_pro_license_key_valid', false , WEEK_IN_SECONDS );
-				// this license is no longer valid
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
+			} else {
+				$is_registered = true;
 			}
 
 		}
@@ -149,6 +156,7 @@ function swp_register_plugin() {
 
 			$options = get_option( 'socialWarfareOptions' );
 			$options['pro_license_key'] = $license;
+			$options['pro_license_key_timestamp'] = $current_time;
 			update_option( 'socialWarfareOptions' , $options );
 
 			echo json_encode($license_data);
