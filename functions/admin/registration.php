@@ -28,6 +28,7 @@ function swp_get_registration_key( $domain, $context = 'api' ) {
 
 /**
  * Check to see if the plugin has been registered once per page load.
+ * Once per week, we'll ping our server to ask if the license key is still valid.
  *
  * @since  unknown
  * @return bool True if the plugin is registered, false otherwise.
@@ -39,8 +40,11 @@ function is_swp_registered($timeline = false) {
 		return IS_SWP_REGISTERED;
 	}
 
+	// Get the plugin options from the database
 	$options = get_option( 'socialWarfareOptions' );
 	$is_registered = false;
+
+	// Get the timestamps setup for comparison to see if a week has passed since our last check
 	$current_time = time();
 	if(!isset($options['pro_license_key_timestamp'])):
 		$timestamp = 0;
@@ -48,53 +52,56 @@ function is_swp_registered($timeline = false) {
 		$timestamp = $options['pro_license_key_timestamp'];
 	endif;
 
+	// If they have a key and a week hasn't passed since the last check, just return true...the plugin is registered.
 	if( !empty($options['pro_license_key']) && $current_time < ($timestamp + WEEK_IN_SECONDS) ) {
 
 		$is_registered = true;
 
+	// If a week has indeed passed since the last check, ping our API to check the validity of the license key
 	} elseif( !empty($options['pro_license_key']) ){
 
-		if ( false === ( $value = get_transient( 'swp_pro_license_key_checked' ) ) ) {
-			$store_url = 'http://warfareplugins.com';
-			$license = $options['pro_license_key'];
-			$api_params = array(
-				'edd_action' => 'check_license',
-				'license' => $license,
-				'item_id' => 63157,
-				'url' => home_url()
-			);
-			$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 10, 'sslverify' => false ) );
-		  	if ( is_wp_error( $response ) ) {
-				return false;
-		  	}
+		// Setup the API parameters
+		$store_url = 'http://warfareplugins.com';
+		$license = $options['pro_license_key'];
+		$api_params = array(
+			'edd_action' => 'check_license',
+			'license' => $license,
+			'item_id' => 63157,
+			'url' => home_url()
+		);
 
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		// Fetch the response from our API
+		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 10, 'sslverify' => false ) );
+	  	if ( is_wp_error( $response ) ) {
+			return false;
+	  	}
 
-			// If the license was valid
-			if( 'valid' == $license_data->license ) {
-				$is_registered = true;
-				$options['pro_license_key_timestamp'] = $current_time;
-				update_option( 'socialWarfareOptions' , $options );
+		// Parse the response into an object
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			// If the license was invalid
-			} elseif('invalid' == $license_data->license) {
-				$is_registered = false;
-				$options['pro_license_key'] = '';
-				$options['pro_license_key_timestamp'] = $current_time;
-				update_option( 'socialWarfareOptions' , $options );
+		// If the license was valid
+		if( 'valid' == $license_data->license ) {
+			$is_registered = true;
+			$options['pro_license_key_timestamp'] = $current_time;
+			update_option( 'socialWarfareOptions' , $options );
 
-			// If we recieved no response from the server, we'll just check again next week
-			} else {
-				$options['pro_license_key_timestamp'] = $current_time;
-				update_option( 'socialWarfareOptions' , $options );
-				$is_registered = true;
-			}
+		// If the license was invalid
+		} elseif('invalid' == $license_data->license) {
+			$is_registered = false;
+			$options['pro_license_key'] = '';
+			$options['pro_license_key_timestamp'] = $current_time;
+			update_option( 'socialWarfareOptions' , $options );
 
+		// If we recieved no response from the server, we'll just check again next week
+		} else {
+			$options['pro_license_key_timestamp'] = $current_time;
+			update_option( 'socialWarfareOptions' , $options );
+			$is_registered = true;
 		}
 	}
 
 	// Add this to a constant so we don't recheck every time this function is called
-	define('IS_SWP_REGISTERED' , $is_registered);
+	define('IS_SWP_REGISTERED' , $is_registered );
 
 	// Return the registration value true/false
 	return $is_registered;
