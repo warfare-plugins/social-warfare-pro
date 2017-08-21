@@ -147,27 +147,16 @@ function swp_register_plugin() {
 		// Grab the license key so we can use it below
 		$license = $_POST['pro_license_key'];
 
-		// Set up the paramaters for a ping back to the store
-		$store_url = 'https://warfareplugins.com';
-		$api_params = array(
-			'edd_action' => 'activate_license',
-			'license' => $license,
-			'item_id' => 63157,
-			'url' => home_url(),
-		);
+		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.home_url();
+		$response = swp_file_get_contents_curl( $url );
 
-		// Ping the store back home and ask for a response for the activation attempt
-		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
-	  	if ( is_wp_error( $response ) ) {
-			return false;
-	  	}
-
-		// Decode the response so we can actually look at it
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		// Parse the response into an object
+		$license_data = json_decode( $response );
 
 		// If the license is valid store it in the database
-		if( $license_data->license == 'valid' ) {
+		if( 'valid' == $license_data->license ) {
 
+			$current_time = time();
 			$options = get_option( 'socialWarfareOptions' );
 			$options['pro_license_key'] = $license;
 			$options['pro_license_key_timestamp'] = $current_time;
@@ -177,7 +166,14 @@ function swp_register_plugin() {
 			wp_die();
 
 		// If the license is not valid
+		} elsesif( 'invalid' == $license_data->license ) {
+			echo json_encode($license_data);
+			wp_die();
+
+		// If we didn't get a response from the registration server
 		} else {
+			$license_date['success'] == false;
+			$license_date['data'] == 'Failed to connect to registration server.';
 			echo json_encode($license_data);
 			wp_die();
 		}
