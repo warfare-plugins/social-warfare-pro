@@ -61,7 +61,7 @@ function is_swp_registered($timeline = false) {
 	} elseif( !empty($options['pro_license_key']) ){
 
 		// Setup the API parameters
-		$store_url = 'http://warfareplugins.com';
+		$store_url = 'https://warfareplugins.com';
 		$license = $options['pro_license_key'];
 		$api_params = array(
 			'edd_action' => 'check_license',
@@ -71,7 +71,7 @@ function is_swp_registered($timeline = false) {
 		);
 
 		// Fetch the response from our API
-		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 10, 'sslverify' => false ) );
+		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
 	  	if ( is_wp_error( $response ) ) {
 			return false;
 	  	}
