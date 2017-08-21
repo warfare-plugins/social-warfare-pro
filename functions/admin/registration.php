@@ -63,21 +63,12 @@ function is_swp_registered($timeline = false) {
 		// Setup the API parameters
 		$store_url = 'https://warfareplugins.com';
 		$license = $options['pro_license_key'];
-		$api_params = array(
-			'edd_action' => 'check_license',
-			'license' => $license,
-			'item_id' => 63157,
-			'url' => home_url()
-		);
 
-		// Fetch the response from our API
-		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
-	  	if ( is_wp_error( $response ) ) {
-			return false;
-	  	}
+		$url ='https://warfareplugins.com/?edd_action=check_license&item_id=63157&license='.$license.'&url='.home_url();
+		$response = swp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		$license_data = json_decode( $response );
 
 		// If the license was valid
 		if( 'valid' == $license_data->license ) {
