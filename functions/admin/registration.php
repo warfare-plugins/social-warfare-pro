@@ -51,9 +51,10 @@ function is_swp_registered($timeline = false) {
 	else:
 		$timestamp = $options['pro_license_key_timestamp'];
 	endif;
+	$time_to_recheck = $timestamp + 604800;
 
 	// If they have a key and a week hasn't passed since the last check, just return true...the plugin is registered.
-	if( !empty($options['pro_license_key']) && $current_time < ($timestamp + WEEK_IN_SECONDS) ) {
+	if( !empty($options['pro_license_key']) && $current_time < $time_to_recheck ) {
 
 		$is_registered = true;
 
@@ -99,37 +100,6 @@ function is_swp_registered($timeline = false) {
 }
 
 /**
- * Get a response from the Social Warfare registration API.
- *
- * @since  2.1.0
- * @param  array $args Query arguments to be sent to the API.
- * @param  bool  $decode Whether or not to decode the API response.
- * @return array
- */
-function swp_get_registration_api( $args = array(), $decode = true ) {
-	$url = add_query_arg( $args, 'https://warfareplugins.com/registration-api/' );
-	$response = wp_remote_get( esc_url_raw( $url ) );
-
-	if ( is_wp_error( $response ) ) {
-		return false;
-	}
-
-	$response = wp_remote_retrieve_body( $response );
-
-	if ( $decode ) {
-		$response = json_decode( $response, true );
-
-		if ( isset( $response['status'] ) ) {
-			$response['status'] = strtolower( $response['status'] );
-		} else {
-			$response['status'] = 'failure';
-		}
-	}
-
-	return $response;
-}
-
-/**
  * Attempt to register the plugin.
  *
  * @since  2.1.0
@@ -172,8 +142,8 @@ function swp_register_plugin() {
 
 		// If we didn't get a response from the registration server
 		} else {
-			$license_date['success'] == false;
-			$license_date['data'] == 'Failed to connect to registration server.';
+			$license_data['success'] == false;
+			$license_data['data'] == 'Failed to connect to registration server.';
 			echo json_encode($license_data);
 			wp_die();
 		}
