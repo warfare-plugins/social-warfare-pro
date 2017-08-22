@@ -64,7 +64,7 @@ function is_swp_registered($timeline = false) {
 		$store_url = 'https://warfareplugins.com';
 		$license = $options['pro_license_key'];
 
-		$url ='https://warfareplugins.com/?edd_action=check_license&item_id=63157&license='.$license.'&url='.home_url();
+		$url ='https://warfareplugins.com/?edd_action=check_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
 		$response = swp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
@@ -147,7 +147,7 @@ function swp_register_plugin() {
 		// Grab the license key so we can use it below
 		$license = $_POST['pro_license_key'];
 
-		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.home_url();
+		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
 		$response = swp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
@@ -187,7 +187,7 @@ function swp_register_plugin() {
  * Attempt to unregister the plugin.
  *
  * @since  2.1.0
- * @sincc  2.3.0 Hooked into the EDD Software Licensing API
+ * @since  2.3.0 Hooked into the EDD Software Licensing API
  * @param  none
  * @return JSON Encoded Array (Echoed) - The Response from the EDD API
  */
@@ -204,25 +204,13 @@ function swp_unregister_plugin() {
 		// Grab the license key so we can use it below
 		$license = $options['pro_license_key'];
 
-		// Set up the paramaters for a ping back to the store
-		$store_url = 'https://warfareplugins.com';
-		$api_params = array(
-			'edd_action' => 'deactivate_license',
-			'license' => $license,
-			'item_id' => 63157,
-			'url' => home_url(),
-		);
+		$url ='https://warfareplugins.com/?edd_action=deactivate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
+		$response = swp_file_get_contents_curl( $url );
 
-		// Ping the store back home and ask for a response for the activation attempt
-		$response = wp_remote_post( $store_url, array( 'body' => $api_params, 'timeout' => 15, 'sslverify' => false ) );
-	  	if ( is_wp_error( $response ) ) {
-			return false;
-	  	}
+		// Parse the response into an object
+		$license_data = json_decode( $response );
 
-		// Decode the response so we can actually look at it
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		// If the license is valid store it in the database
+		// If the deactivation was valid store it in the database
 		if( $license_data->license == 'valid' ) {
 
 			$options = get_option( 'socialWarfareOptions' );
@@ -232,7 +220,7 @@ function swp_unregister_plugin() {
 			echo json_encode($license_data);
 			wp_die();
 
-		// If the license is not valid
+		// If the deactivation is not valid
 		} else {
 
 			$options = get_option( 'socialWarfareOptions' );
