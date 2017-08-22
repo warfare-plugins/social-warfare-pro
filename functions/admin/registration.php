@@ -68,21 +68,30 @@ function is_swp_registered($timeline = false) {
 		$url ='https://warfareplugins.com/?edd_action=check_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
 		$response = swp_file_get_contents_curl( $url );
 
-		// Parse the response into an object
-		$license_data = json_decode( $response );
+		if( false != $response ) {
 
-		// If the license was valid
-		if( 'valid' == $license_data->license ) {
-			$is_registered = true;
-			$options['pro_license_key_timestamp'] = $current_time;
-			update_option( 'socialWarfareOptions' , $options );
+			// Parse the response into an object
+			$license_data = json_decode( $response );
 
-		// If the license was invalid
-		} elseif('invalid' == $license_data->license) {
-			$is_registered = false;
-			$options['pro_license_key'] = '';
-			$options['pro_license_key_timestamp'] = $current_time;
-			update_option( 'socialWarfareOptions' , $options );
+			// If the license was valid
+			if( isset($license_data->license) && 'valid' == $license_data->license ) {
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
+				$is_registered = true;
+
+			// If the license was invalid
+			} elseif( isset($license_data->license) && 'invalid' == $license_data->license) {
+				$is_registered = false;
+				$options['pro_license_key'] = '';
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
+
+			// If the property is some other status, just go with it.
+			} else {
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
+				$is_registered = true;
+			}
 
 		// If we recieved no response from the server, we'll just check again next week
 		} else {
@@ -120,25 +129,35 @@ function swp_register_plugin() {
 		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
 		$response = swp_file_get_contents_curl( $url );
 
-		// Parse the response into an object
-		$license_data = json_decode( $response );
+		if(false != $response){
 
-		// If the license is valid store it in the database
-		if( 'valid' == $license_data->license ) {
+			// Parse the response into an object
+			$license_data = json_decode( $response );
 
-			$current_time = time();
-			$options = get_option( 'socialWarfareOptions' );
-			$options['pro_license_key'] = $license;
-			$options['pro_license_key_timestamp'] = $current_time;
-			update_option( 'socialWarfareOptions' , $options );
+			// If the license is valid store it in the database
+			if( isset($license_data->license) && 'valid' == $license_data->license ) {
 
-			echo json_encode($license_data);
-			wp_die();
+				$current_time = time();
+				$options = get_option( 'socialWarfareOptions' );
+				$options['pro_license_key'] = $license;
+				$options['pro_license_key_timestamp'] = $current_time;
+				update_option( 'socialWarfareOptions' , $options );
 
-		// If the license is not valid
-		} elseif( 'invalid' == $license_data->license ) {
-			echo json_encode($license_data);
-			wp_die();
+				echo json_encode($license_data);
+				wp_die();
+
+			// If the license is not valid
+		} elseif( isset($license_data->license) &&  'invalid' == $license_data->license ) {
+				echo json_encode($license_data);
+				wp_die();
+
+			// If some other status was returned
+			} else {
+				$license_data['success'] == false;
+				$license_data['data'] == 'Invaid response from the registration server.';
+				echo json_encode($license_data);
+				wp_die();
+			}
 
 		// If we didn't get a response from the registration server
 		} else {
@@ -174,23 +193,23 @@ function swp_unregister_plugin() {
 		// Grab the license key so we can use it below
 		$license = $options['pro_license_key'];
 
+		// Setup the API URL and send the HTTP request via our in house cURL function
 		$url ='https://warfareplugins.com/?edd_action=deactivate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
 		$response = swp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
 		$license_data = json_decode( $response );
 
-		// If the deactivation was valid store it in the database
-		if( $license_data->license == 'valid' ) {
+		// If the deactivation was valid update the database
+		if( isset($license_data->license) && $license_data->license == 'valid' ) {
 
 			$options = get_option( 'socialWarfareOptions' );
 			$options['pro_license_key'] = '';
 			update_option( 'socialWarfareOptions' , $options );
-
 			echo json_encode($license_data);
 			wp_die();
 
-		// If the deactivation is not valid
+		// If the API request didn't work, just deactivate locally anyways
 		} else {
 
 			$options = get_option( 'socialWarfareOptions' );
