@@ -166,7 +166,7 @@ function swp_register_plugin() {
 			wp_die();
 
 		// If the license is not valid
-		} elsesif( 'invalid' == $license_data->license ) {
+		} elseif( 'invalid' == $license_data->license ) {
 			echo json_encode($license_data);
 			wp_die();
 
