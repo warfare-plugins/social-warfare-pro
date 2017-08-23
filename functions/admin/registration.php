@@ -8,6 +8,34 @@
  * @since     1.0.0
  */
 
+ /**
+  * A function to be used to make cURL requests
+  * @param  string $url The URL to be fetched
+  * @return string The response from the server
+  *
+  */
+function swpp_file_get_contents_curl( $url ) {
+ 	$ch = curl_init();
+ 	curl_setopt( $ch, CURLOPT_URL, $url );
+ 	curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
+ 	curl_setopt( $ch, CURLOPT_FAILONERROR, 0 );
+ 	curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 0 );
+ 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER,1 );
+ 	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+ 	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+ 	curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
+ 	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
+ 	curl_setopt( $ch, CURLOPT_NOSIGNAL, 1 );
+ 	curl_setopt( $ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+ 	$cont = @curl_exec( $ch );
+ 	$curl_errno = curl_errno( $ch );
+ 	curl_close( $ch );
+ 	if ( $curl_errno > 0 ) {
+ 		return false;
+ 	}
+ 	return $cont;
+ }
+
 /**
  * Check to see if the plugin has been registered once per page load.
  *
@@ -62,25 +90,17 @@ function is_swp_registered($timeline = false) {
 	} elseif( !empty($options['pro_license_key']) ){
 
 		// Setup the API parameters
-		$store_url = 'https://warfareplugins.com';
 		$license = $options['pro_license_key'];
-
 		$url ='https://warfareplugins.com/?edd_action=check_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
-		$response = swp_file_get_contents_curl( $url );
+		$response = swpp_file_get_contents_curl( $url );
 
 		if( false != $response ) {
 
 			// Parse the response into an object
 			$license_data = json_decode( $response );
 
-			// If the license was valid
-			if( isset($license_data->license) && 'valid' == $license_data->license ) {
-				$options['pro_license_key_timestamp'] = $current_time;
-				update_option( 'socialWarfareOptions' , $options );
-				$is_registered = true;
-
 			// If the license was invalid
-			} elseif( isset($license_data->license) && 'invalid' == $license_data->license) {
+			} if( isset($license_data->license) && 'invalid' == $license_data->license) {
 				$is_registered = false;
 				$options['pro_license_key'] = '';
 				$options['pro_license_key_timestamp'] = $current_time;
@@ -127,7 +147,7 @@ function swp_register_plugin() {
 		$license = $_POST['pro_license_key'];
 
 		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
-		$response = swp_file_get_contents_curl( $url );
+		$response = swpp_file_get_contents_curl( $url );
 
 		if(false != $response){
 
@@ -147,7 +167,7 @@ function swp_register_plugin() {
 				wp_die();
 
 			// If the license is not valid
-		} elseif( isset($license_data->license) &&  'invalid' == $license_data->license ) {
+			} elseif( isset($license_data->license) &&  'invalid' == $license_data->license ) {
 				echo json_encode($license_data);
 				wp_die();
 
@@ -195,7 +215,7 @@ function swp_unregister_plugin() {
 
 		// Setup the API URL and send the HTTP request via our in house cURL function
 		$url ='https://warfareplugins.com/?edd_action=deactivate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
-		$response = swp_file_get_contents_curl( $url );
+		$response = swpp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
 		$license_data = json_decode( $response );
