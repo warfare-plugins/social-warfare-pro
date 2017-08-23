@@ -34,7 +34,7 @@ function swpp_file_get_contents_curl( $url ) {
  		return false;
  	}
  	return $cont;
- }
+}
 
 /**
  * Check to see if the plugin has been registered once per page load.
@@ -100,7 +100,7 @@ function is_swp_registered($timeline = false) {
 			$license_data = json_decode( $response );
 
 			// If the license was invalid
-			} if( isset($license_data->license) && 'invalid' == $license_data->license) {
+			if( isset($license_data->license) && 'invalid' == $license_data->license) {
 				$is_registered = false;
 				$options['pro_license_key'] = '';
 				$options['pro_license_key_timestamp'] = $current_time;
