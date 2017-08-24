@@ -205,7 +205,7 @@ function swp_unregister_plugin() {
 
 	$options = get_option( 'socialWarfareOptions' );
 
-	// Check to ensure that license key was passed into the function
+	// Check to see if the license key is even in the options
 	if(empty($options['pro_license_key'])) {
 		echo 'success';
 	} else {
