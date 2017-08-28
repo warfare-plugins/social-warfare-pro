@@ -186,6 +186,11 @@ function swp_register_plugin() {
 			echo json_encode($license_data);
 			wp_die();
 		}
+	} else {
+		$license_data['success'] == false;
+		$license_data['data'] == 'Admin Ajax did not receive valid POST data.';
+		echo json_encode($license_data);
+		wp_die();
 	}
 
 	wp_die();
