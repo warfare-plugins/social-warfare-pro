@@ -36,8 +36,14 @@ function swp_get_site_url() {
  */
 function swp_pre_insert_pinterest_image() {
 
+	if( function_exists('is_amp_endpoint') ) {
+		$amp = is_amp_endpoint();
+	} else {
+		$amp = false;
+	}
+
 	// Only hook into the_content filter if we is_singular() is true or they don't use excerpts
-    if( true === is_singular() ):
+    if( true === is_singular() && false == is_feed() && false == $amp ):
         add_filter( 'the_content','swp_insert_pinterest_image', 10 );
     endif;
 
