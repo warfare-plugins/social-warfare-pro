@@ -141,12 +141,14 @@ add_action( 'wp_ajax_swp_register_plugin', 'swp_register_plugin' );
 function swp_register_plugin() {
 
 	// Check to ensure that license key was passed into the function
-	if(!empty($_POST['pro_license_key'])) {
+	if(!empty($_POST['license_key'])) {
 
 		// Grab the license key so we can use it below
-		$license = $_POST['pro_license_key'];
+		$license = $_POST['license_key'];
+		$name_key = $_POST['name_key'];
+		$item_id = $_POST['item_id'];
 
-		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
+		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id='.$item_id.'&license='.$license.'&url='.swp_get_site_url();
 		$response = swpp_file_get_contents_curl( $url );
 
 		if(false != $response){
@@ -159,8 +161,8 @@ function swp_register_plugin() {
 
 				$current_time = time();
 				$options = get_option( 'socialWarfareOptions' );
-				$options['pro_license_key'] = $license;
-				$options['pro_license_key_timestamp'] = $current_time;
+				$options[$name_key.'_license_key'] = $license;
+				$options[$name_key.'_license_key_timestamp'] = $current_time;
 				update_option( 'socialWarfareOptions' , $options );
 
 				echo json_encode($license_data);
@@ -173,22 +175,22 @@ function swp_register_plugin() {
 
 			// If some other status was returned
 			} else {
-				$license_data['success'] == false;
-				$license_data['data'] == 'Invaid response from the registration server.';
+				$license_data['success'] = false;
+				$license_data['data'] = 'Invaid response from the registration server.';
 				echo json_encode($license_data);
 				wp_die();
 			}
 
 		// If we didn't get a response from the registration server
 		} else {
-			$license_data['success'] == false;
-			$license_data['data'] == 'Failed to connect to registration server.';
+			$license_data['success'] = false;
+			$license_data['data'] = 'Failed to connect to registration server.';
 			echo json_encode($license_data);
 			wp_die();
 		}
 	} else {
-		$license_data['success'] == false;
-		$license_data['data'] == 'Admin Ajax did not receive valid POST data.';
+		$license_data['success'] = false;
+		$license_data['data'] = 'Admin Ajax did not receive valid POST data.';
 		echo json_encode($license_data);
 		wp_die();
 	}
@@ -209,17 +211,20 @@ add_action( 'wp_ajax_swp_unregister_plugin', 'swp_unregister_plugin' );
 function swp_unregister_plugin() {
 
 	$options = get_option( 'socialWarfareOptions' );
+	$name_key = $_POST['name_key'];
+	$item_id = $_POST['item_id'];
 
 	// Check to see if the license key is even in the options
-	if(empty($options['pro_license_key'])) {
-		echo 'success';
+	if(empty($options[$name_key.'_license_key'])) {
+		$response['success'] = true;
+		echo json_encode($response);
 	} else {
 
 		// Grab the license key so we can use it below
-		$license = $options['pro_license_key'];
+		$license = $options[$name_key.'_license_key'];
 
 		// Setup the API URL and send the HTTP request via our in house cURL function
-		$url ='https://warfareplugins.com/?edd_action=deactivate_license&item_id=63157&license='.$license.'&url='.swp_get_site_url();
+		$url ='https://warfareplugins.com/?edd_action=deactivate_license&item_id='.$item_id.'&license='.$license.'&url='.swp_get_site_url();
 		$response = swpp_file_get_contents_curl( $url );
 
 		// Parse the response into an object
@@ -229,7 +234,7 @@ function swp_unregister_plugin() {
 		if( isset($license_data->license) && $license_data->license == 'valid' ) {
 
 			$options = get_option( 'socialWarfareOptions' );
-			$options['pro_license_key'] = '';
+			$options[$name_key.'_license_key'] = '';
 			update_option( 'socialWarfareOptions' , $options );
 			echo json_encode($license_data);
 			wp_die();
@@ -238,7 +243,7 @@ function swp_unregister_plugin() {
 		} else {
 
 			$options = get_option( 'socialWarfareOptions' );
-			$options['pro_license_key'] = '';
+			$options[$name_key.'_license_key'] = '';
 			update_option( 'socialWarfareOptions' , $options );
 			echo json_encode($license_data);
 			wp_die();
