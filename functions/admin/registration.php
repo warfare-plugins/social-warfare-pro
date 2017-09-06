@@ -144,8 +144,8 @@ function swp_register_plugin() {
 	if(!empty($_POST['license_key'])) {
 
 		// Grab the license key so we can use it below
-		$license = $_POST['license_key'];
 		$name_key = $_POST['name_key'];
+		$license = $_POST['license_key'];
 		$item_id = $_POST['item_id'];
 
 		$url ='https://warfareplugins.com/?edd_action=activate_license&item_id='.$item_id.'&license='.$license.'&url='.swp_get_site_url();
