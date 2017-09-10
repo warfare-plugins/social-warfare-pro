@@ -20,6 +20,18 @@ define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 
+// Add a registration key for the plugin to track this registration
+add_filter('swp_registrations' , 'social_warfare_pro_registration_key');
+function social_warfare_pro_registration_key($array) {
+    $array[] = array(
+        'plugin_name' => 'Social Warfare - Pro',
+        'key' => 'pro',
+        'product_id' => 63157
+    );
+
+    return $array;
+}
+
 add_action( 'plugins_loaded' , 'swpp_initiate_plugin' , 10 );
 function swpp_initiate_plugin() {
     if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
@@ -29,7 +41,6 @@ function swpp_initiate_plugin() {
          */
         require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
         require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/admin/registration.php';
         require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/header-meta-tags.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
