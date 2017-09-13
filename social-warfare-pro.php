@@ -107,8 +107,8 @@ function swp_mismatch_notification() {
  * @access public
  *
  */
-add_action( 'plugins_loaded' , 'swed_update_checker' , 20 );
-function swed_update_checker() {
+add_action( 'plugins_loaded' , 'swpp_update_checker' , 20 );
+function swpp_update_checker() {
 
     // Make sure core is on a version that contains our dependancies
     if (defined('SWP_VERSION') && SWPP_VERSION == SWP_VERSION){
