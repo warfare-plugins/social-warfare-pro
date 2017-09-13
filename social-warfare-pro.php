@@ -21,9 +21,9 @@ define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 
 // Add a registration key for the plugin to track this registration
-add_filter('swp_registrations' , 'social_warfare_pro_registration_key');
+add_filter('swp_registrations' , 'social_warfare_pro_registration_key' , 1 );
 function social_warfare_pro_registration_key($array) {
-    $array[] = array(
+    $array['pro'] = array(
         'plugin_name' => 'Social Warfare - Pro',
         'key' => 'pro',
         'product_id' => 63157
