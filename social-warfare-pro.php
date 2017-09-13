@@ -19,19 +19,36 @@ define( 'SWPP_VERSION', '2.3.2' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
+define( 'SWPP_ITEM_ID', 114481 );
 
-// Add a registration key for the plugin to track this registration
+/**
+ * Hook into the registration functions in core and add this plugin to the array
+ *
+ * @param  $array Array An array of registrations to be processed and handled
+ * @return $array Array The modified array of registrations to be processed
+ * @since  2.3.3 | 13 SEP 2017 | Created
+ * @access public
+ *
+ */
 add_filter('swp_registrations' , 'social_warfare_pro_registration_key' , 1 );
 function social_warfare_pro_registration_key($array) {
     $array['pro'] = array(
         'plugin_name' => 'Social Warfare - Pro',
         'key' => 'pro',
-        'product_id' => 63157
+        'product_id' => SWPP_ITEM_ID
     );
 
     return $array;
 }
 
+/**
+ * A function to defer the loading of the functions.
+ * We don't want these functions to run until after core has loaded.
+ *
+ * @param  none
+ * @return none
+ *
+ */
 add_action( 'plugins_loaded' , 'swpp_initiate_plugin' , 10 );
 function swpp_initiate_plugin() {
     if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
@@ -68,7 +85,9 @@ function swpp_initiate_plugin() {
  *
  *
  * @since  2.2.0
+ * @param  none
  * @return void
+ *
  */
 function swp_mismatch_notification() {
 	global $swp_user_options;
@@ -80,21 +99,44 @@ function swp_mismatch_notification() {
  add_action( 'admin_notices', 'swp_mismatch_notification' );
 
 /**
- * The Plugin Update checker
+ * The Plugin Update Checker
  *
- * @since 2.0.0
+ *
+ * @since 2.0.0 | Created | Update checker added when the plugin was split into core and pro.
+ * @since 2.3.3 | 13 SEP 2017 | Updated to use EDD's update checker built into core.
  * @access public
+ *
  */
-require_once SWPP_PLUGIN_DIR . '/functions/update-checker/plugin-update-checker.php';
-$swpp_github_checker = swp_PucFactory::getLatestClassVersion('PucGitHubChecker');
-$swpp_update_checker = new $swpp_github_checker(
-    'https://github.com/warfare-plugins/social-warfare-pro/',
-    __FILE__,
-    'master'
-);
+add_action( 'plugins_loaded' , 'swed_update_checker' , 20 );
+function swed_update_checker() {
+
+    // Make sure core is on a version that contains our dependancies
+    if (defined('SWP_VERSION') && SWPP_VERSION == SWP_VERSION){
+
+        // Check if the plugin is registered
+        if( is_swp_addon_registered( 'pro' ) ) {
+
+            // retrieve our license key from the DB
+            $license_key = swp_get_license_key('pro');
+            $website_url = swp_get_site_url();
+
+            // setup the updater
+            $swed_updater = new SW_EDD_SL_Plugin_Updater( SWP_STORE_URL , __FILE__ , array(
+            	'version'   => SWPP_VERSION,		// current version number
+            	'license'   => $license_key,	// license key
+            	'item_id'   => SWPP_ITEM_ID,	// id of this plugin
+            	'author'    => 'Warfare Plugins',	// author of this plugin
+            	'url'       => $website_url,
+                'beta'      => false // set to true if you wish customers to receive update notifications of beta releases
+                )
+            );
+        }
+    }
+}
 
 /**
  * Registration Update Notification
+ *
  *
  * @since 2.3.0
  * @access public
