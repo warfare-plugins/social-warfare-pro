@@ -1152,7 +1152,7 @@ function swp_pro_options_advanced($swp_options) {
 			'size'				=> 'two-thirds',
 			'content'				=> __( 'Force New Shares?' , 'social-warfare' ),
 			'default'			=> false,
-			'premium'			=> false
+			'premium'			=> false,
 		)
 	);
 
@@ -1186,7 +1186,19 @@ function swp_pro_options_registration($swp_options) {
 		'activate_tweet_counts' => array(
 			'type'			=> 'tweet_counts',
 			'premium'		=> true
-		)
+		),
+		'tweet_count_source'	=> array(
+			'type'				=> 'select',
+			'size'				=> 'two-thirds',
+			'name'				=> __( 'Tweet Count Source' , 'social-warfare' ),
+			'content'			=> array(
+				'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
+				'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
+			),
+			'default'			=> 'opensharecount',
+			'divider'			=> false,
+			'premium'			=> true,
+		),
 	);
 
 	return $swp_options;

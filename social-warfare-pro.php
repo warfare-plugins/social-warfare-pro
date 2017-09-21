@@ -19,7 +19,7 @@ define( 'SWPP_VERSION', '2.3.2' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'SWPP_ITEM_ID', 114481 );
+define( 'SWPP_ITEM_ID', 63157 );
 
 /**
  * Hook into the registration functions in core and add this plugin to the array
