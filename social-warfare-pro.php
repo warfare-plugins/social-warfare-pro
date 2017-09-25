@@ -111,7 +111,7 @@ add_action( 'plugins_loaded' , 'swpp_update_checker' , 20 );
 function swpp_update_checker() {
 
     // Make sure core is on a version that contains our dependancies
-    if (defined('SWP_VERSION') && version_compare(SWP_VERSION , '2.3.3') >= 0)){
+    if (defined('SWP_VERSION') && version_compare(SWP_VERSION , '2.3.3') >= 0){
 
         // Check if the plugin is registered
         if( is_swp_addon_registered( 'pro' ) ) {
