@@ -11,23 +11,6 @@
  */
 
 /**
- * Get the current site's URL.
- *
- * @since  2.1.0
- * @return string The current site's URL.
- */
-function swp_get_site_url() {
-
-	$domain = get_option( 'siteurl' );
-
-	if ( is_multisite() ) {
-		$domain = network_site_url();
-	}
-
-	return $domain;
-}
-
-/**
  * A function to queue up the function that will add the Pinterest image for browser extensions
  *
  * @since 2.2.4 | Created | 09 MAR 2017
