@@ -113,20 +113,24 @@ function swpp_update_checker() {
     // Make sure core is on a version that contains our dependancies
     if (defined('SWP_VERSION') && version_compare(SWP_VERSION , '2.3.3') >= 0){
 
-        // retrieve our license key from the DB
-        $license_key = swp_get_license_key('pro');
-        $website_url = swp_get_site_url();
+        // Check if the plugin is registered
+        if( is_swp_addon_registered( 'pro' ) ) {
 
-        // setup the updater
-        $swed_updater = new SW_EDD_SL_Plugin_Updater( SWP_STORE_URL , __FILE__ , array(
-        	'version'   => SWPP_VERSION,      // current version number
-        	'license'   => $license_key,      // license key
-        	'item_id'   => SWPP_ITEM_ID,      // id of this plugin
-        	'author'    => 'Warfare Plugins', // author of this plugin
-        	'url'       => $website_url,      // URL of this website
-            'beta'      => false              // set to true if you wish customers to receive beta updates
-            )
-        );
+            // retrieve our license key from the DB
+            $license_key = swp_get_license_key('pro');
+            $website_url = swp_get_site_url();
+
+            // setup the updater
+            $swed_updater = new SW_EDD_SL_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
+            	'version'   => SWPP_VERSION,      // current version number
+            	'license'   => $license_key,      // license key
+            	'item_id'   => SWPP_ITEM_ID,      // id of this plugin
+            	'author'    => 'Warfare Plugins', // author of this plugin
+            	'url'       => $website_url,      // URL of this website
+                'beta'      => false              // set to true if you wish customers to receive beta updates
+                )
+            );
+        }
     }
 }
 
