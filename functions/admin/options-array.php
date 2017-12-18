@@ -1145,50 +1145,35 @@ function swp_pro_options_advanced($swp_options) {
 };
 
 /**
- * swp_options_registration An array of options for the registration tab of the options page
- * @since 	2.0.0
- * @param  	array $swp_options The array of options
- * @return 	array $swp_options The modified array of options
+ * A function to add the Tweet authentication options
+ * @param  [type] $swp_options [description]
+ * @return [type]              [description]
  */
+function swp_options_tweet_authentication($swp_options) {
 
-function swp_pro_options_registration($swp_options) {
-
-	// Declare the Display Settings tab and tab name
-	$swp_options['tabs']['links']['swp_registration'] = __( 'Registration' , 'social-warfare' );
-
-	$swp_options['options']['swp_registration'] = array(
-		'plugin_registration' => array(
-			'type'			=> 'plugin_registration',
-			'addon_name'    => 'Social Warfare - Pro',
-			'product_id'    => 56935,
-			'divider'		=> false,
-			'premium'	=> true
+    // Create the new Tweet authentication option in a variable to be inserted
+    $swp_options['options']['swp_registration']['activate_tweet_counts'] = array(
+		'type'			=> 'tweet_counts',
+		'premium'		=> true
+	);
+	$swp_options['options']['swp_registration']['tweet_count_source'] = array(
+		'type'				=> 'select',
+		'size'				=> 'two-thirds',
+		'name'				=> __( 'Tweet Count Source' , 'social-warfare' ),
+		'content'			=> array(
+			'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
+			'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
 		),
-		'registration_divider' => array(
-				'type'	  => 'divider',
-				'premium' => true
-		),
-		'activate_tweet_counts' => array(
-			'type'			=> 'tweet_counts',
-			'premium'		=> true
-		),
-		'tweet_count_source'	=> array(
-			'type'				=> 'select',
-			'size'				=> 'two-thirds',
-			'name'				=> __( 'Tweet Count Source' , 'social-warfare' ),
-			'content'			=> array(
-				'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
-				'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
-			),
-			'default'			=> 'opensharecount',
-			'divider'			=> false,
-			'premium'			=> true,
-		),
+		'default'			=> 'opensharecount',
+		'divider'			=> false,
+		'premium'			=> true,
 	);
 
-	return $swp_options;
+    // Call the swp_add_option_after() function
+    return $swp_options;
 
-}
+};
+
 
 /**
  * Queue up the options filter functions
@@ -1203,4 +1188,4 @@ add_filter('swp_options', 'swp_pro_options_display'             , 5 );
 add_filter('swp_options', 'swp_pro_options_styles'              , 6 );
 add_filter('swp_options', 'swp_pro_options_social_identity'     , 7 );
 add_filter('swp_options', 'swp_pro_options_advanced'            , 8 );
-add_filter('swp_options', 'swp_pro_options_registration'        , 9 );
+add_filter('swp_options', 'swp_options_tweet_authentication'    , 9 );
