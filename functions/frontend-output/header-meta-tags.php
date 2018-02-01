@@ -72,6 +72,8 @@ function swp_open_graph_values($info){
 		return $info;
 	}
 
+	if( false === get_option('socialWarfareOptions')['swp_og_output']) return $info;
+
 	global $swp_user_options;
 
 	/**
