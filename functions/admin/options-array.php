@@ -27,6 +27,7 @@ function swp_pro_options_display($swp_options) {
 	);
 	$icons_array = apply_filters( 'swp_button_options' , $icons_array );
 
+
 	// Declare the Options Tab and Tab Name
 	$swp_options['tabs']['links']['swp_display'] = __( 'Display' ,'social-warfare' );
 
@@ -708,6 +709,13 @@ function swp_pro_options_styles($swp_options) {
 			),
 			'default' => 'style1',
 			'premium'	=> true
+		),
+		'cttCSS'  => array(
+			'type' => 'textarea',
+			'name' => __( 'Custom CSS', 'social-warfare' ),
+			'dep'  => 'cttTheme',
+			'dep_val' => 'none',
+			'premium' => true
 		),
 		'cttPreview' => array(
 			'type' => 'html',
