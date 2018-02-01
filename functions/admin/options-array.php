@@ -92,15 +92,30 @@ function swp_pro_options_display($swp_options) {
 				'type'	  => 'divider',
 				'premium' => false
 		),
+		'metadata_title' => array(
+			'type'		=> 'title',
+			'content'	=> __( 'Head Metadata'),
+			'support'	=> 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/'
+		),
+		'swp_metadata_descr' => array(
+			'type'		=> 'paragraph',
+			'content'	=> 'Open Graph meta tags are the standard for defining which title, image, and description get posted when a share is made.',
+		),
+		'swp_og_output' => array(
+			'type'		=> 'checkbox',
+			'size'		=> 'two-thirds',
+			'content'   => 'Output metatags',
+			'default'	=> is_swp_addon_registered('pro'),
+			'premium'   => true
+		),
+
 		'swp_twitter_card' => array(
 			'type'		=> 'checkbox',
 			'size'		=> 'two-thirds',
 			'content'	=> __( 'Twitter Cards' ,'social-warfare' ),
-			'header'	=> true,
 			'divider'	=> false,
 			'default'	=> true,
 			'premium'	=> true,
-			'support'   => 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/'
 		),
 		'swp_twitter_card_divider' => array(
 				'type'	  => 'divider',
@@ -357,7 +372,8 @@ function swp_pro_options_styles($swp_options) {
 				'shift' 		=> __( 'Shift' ,'social-warfare' ),
 				'pill' 			=> __( 'Pills' ,'social-warfare' ),
 				'threeDee' 		=> __( 'Three-Dee' ,'social-warfare' ),
-				'connected' 	=> __( 'Connected' ,'social-warfare' )
+				'connected' 	=> __( 'Connected' ,'social-warfare' ),
+				'boxed'			=> __( 'Boxed', 'social-warfare')
 			),
 			'default' => 'flatFresh',
 			'premium'	=> true
