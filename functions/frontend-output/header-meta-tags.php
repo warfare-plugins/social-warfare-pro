@@ -72,8 +72,6 @@ function swp_open_graph_values($info){
 		return $info;
 	}
 
-	if( false === get_option('socialWarfareOptions')['swp_og_output']) return $info;
-
 	global $swp_user_options;
 
 	/**
@@ -253,6 +251,9 @@ function swp_open_graph_html($info) {
 	if( false === is_singular() ) {
 		return $info;
 	}
+
+	if( false === get_option('socialWarfareOptions')['swp_og_output']) return $info;
+
 
 	// Check to ensure that we don't need to defer to Yoast
 	if(false === $info['yoast_og_setting']):
