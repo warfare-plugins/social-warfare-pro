@@ -104,7 +104,7 @@ function swp_pro_options_display($swp_options) {
 		'swp_og_output' => array(
 			'type'		=> 'checkbox',
 			'size'		=> 'two-thirds',
-			'content'   => 'Output metatags',
+			'content'   => __('Output Open Graph tags', 'social-warfare'),
 			'default'	=> is_swp_addon_registered('pro'),
 			'premium'   => true
 		),
