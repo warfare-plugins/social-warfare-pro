@@ -41,7 +41,8 @@ function social_warfare_pro_registration_key($array) {
     $array['pro'] = array(
         'plugin_name' => 'Social Warfare - Pro',
         'key' => 'pro',
-        'product_id' => SWPP_ITEM_ID
+        'product_id' => SWPP_ITEM_ID,
+        'version' => SWPP_VERSION,
     );
 
     return $array;

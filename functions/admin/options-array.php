@@ -95,12 +95,12 @@ function swp_pro_options_display($swp_options) {
 		),
 		'metadata_title' => array(
 			'type'		=> 'title',
-			'content'	=> __( 'Head Metadata'),
+			'content'	=> __( 'Meta Tags'),
 			'support'	=> 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/'
 		),
 		'swp_metadata_descr' => array(
 			'type'		=> 'paragraph',
-			'content'	=> 'Open Graph meta tags are the standard for defining which title, image, and description get posted when a share is made.',
+			'content'	=> 'Open Graph meta tags and Twitter Cards are the standard for defining which title, image, and description get posted when a share is made.',
 		),
 		'swp_og_output' => array(
 			'type'		=> 'checkbox',
