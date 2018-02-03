@@ -62,6 +62,7 @@ add_filter( 'swp_header_html'   , 'swp_output_custom_color'  , 15 );
  * 4. We'll just auto-generate the field from the post.
  *
  * @since  2.1.4
+ * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
  * @access public
  * @param  array $info An array of data about the post
  * @return array $info The modified array
@@ -73,6 +74,11 @@ function swp_open_graph_values($info){
 	}
 
 	global $swp_user_options;
+
+	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
+	if( false === $swp_user_options['swp_og_output'] && false === $swp_user_options['swp_twitter_card'] ){
+		return $info;
+	}
 
 	/**
 	 * Begin by fetching the user's default custom settings
@@ -243,17 +249,22 @@ function swp_open_graph_values($info){
 
 /**
  * A function to compile the meta tags into HTML
+ * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
  * @param  array $info The info array
  * @return array $info The modified info array
  */
 function swp_open_graph_html($info) {
 
+	global $swp_user_options;
+
 	if( false === is_singular() ) {
 		return $info;
 	}
 
-	if( false === get_option('socialWarfareOptions')['swp_og_output']) return $info;
-
+	// Don't compile them if the OG Tags are Disabled on the options page
+	if( false === $swp_user_options['swp_og_output'] ){
+		return $info;
+	}
 
 	// Check to ensure that we don't need to defer to Yoast
 	if(false === $info['yoast_og_setting']):
