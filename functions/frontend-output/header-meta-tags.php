@@ -514,7 +514,7 @@ function swp_output_custom_color( $info ) {
 	endif;
 
 	if ( $swp_user_options['floatStyleSource'] == false && ($swp_user_options['sideDColorSet'] == 'customColor' || $swp_user_options['sideIColorSet'] == 'customColor' || $swp_user_options['sideOColorSet'] == 'customColor') ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['sideCustomColor'] . ';border:1px solid ' . $swp_user_options['sideCustomColor'] . ';} </style>';
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['sideCustomColor'] . ';border:1px solid ' . $swp_user_options['sideCustomColor'] . ';} </style>';
 	endif;
 
 	if ( $swp_user_options['floatStyleSource'] == false && ( $swp_user_options['sideDColorSet'] == 'ccOutlines' || $swp_user_options['sideIColorSet'] == 'ccOutlines' || $swp_user_options['sideOColorSet'] == 'ccOutlines' ) ) :
@@ -523,4 +523,33 @@ function swp_output_custom_color( $info ) {
 
 		endif;
 	return $info;
+}
+
+/**
+ * Output custom CSS for Click To Tweet
+ *
+ * Note: This is done in the header rather than in a CSS file to
+ * avoid having the fonts called from a CDN, 95% of which do not
+ * support the necessary mime & cross-origin access types to deliver them.
+ *
+ * @since  2.4.0
+ * @access public
+ * @param  array  $info An array of information about the post
+ * @return array  $info The modified array
+ */
+function swp_output_ctt_css( $info = array() ) {
+    global $swp_user_options;
+
+    if (!empty($swp_user_options['cttCSS']) && count($swp_user_options) > 0) {
+
+        if ( is_admin() ) :
+            echo '<style id=ctt-custom>' . $swp_user_options['cttCSS'] . '</style>';
+        else :
+            // Add it to our array if we're using the frontend Head Hook
+            $info['html_output'] .= PHP_EOL . '<style>' . $swp_user_options['cttCSS'] . '</style>';
+        endif;
+
+    }
+
+    return $info;
 }
