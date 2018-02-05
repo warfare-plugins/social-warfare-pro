@@ -540,15 +540,6 @@ function swp_output_custom_color( $info ) {
 function swp_output_ctt_css( $info = array() ) {
     global $swp_user_options;
 
-    if (!empty($swp_user_options['cttCSS'])) {
-        echo "z_tyles";
-        var_dump($swp_user_options['cttCSS']);
-        die();
-    } else {
-        echo "z_nothing";
-        die();
-    }
-
     if (!empty($swp_user_options['cttCSS']) && count($swp_user_options)['cttCSS'] > 0) {
         // Add it to our array if we're using the frontend Head Hook
         $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['cttCSS'] . '</style>';
