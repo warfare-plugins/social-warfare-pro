@@ -714,7 +714,7 @@ function swp_pro_options_styles($swp_options) {
 			'type' => 'textarea',
 			'name' => __( 'Custom CSS', 'social-warfare' ),
 			'dep'  => 'cttTheme',
-			'dep_val' => 'none',
+			'dep_val' => array('none'),
 			'premium' => true
 		),
 		'cttPreview' => array(

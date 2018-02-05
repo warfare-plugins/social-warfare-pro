@@ -529,8 +529,7 @@ function swp_output_custom_color( $info ) {
  * Output custom CSS for Click To Tweet
  *
  * Note: This is done in the header rather than in a CSS file to
- * avoid having the fonts called from a CDN, 95% of which do not
- * support the necessary mime & cross-origin access types to deliver them.
+ * avoid having the styles called from a CDN
  *
  * @since  2.4.0
  * @access public
@@ -540,14 +539,9 @@ function swp_output_custom_color( $info ) {
 function swp_output_ctt_css( $info = array() ) {
     global $swp_user_options;
 
-    if (!empty($swp_user_options['cttCSS']) && count($swp_user_options) > 0) {
-
-        if ( is_admin() ) :
-            echo '<style id=ctt-custom>' . $swp_user_options['cttCSS'] . '</style>';
-        else :
-            // Add it to our array if we're using the frontend Head Hook
-            $info['html_output'] .= PHP_EOL . '<style>' . $swp_user_options['cttCSS'] . '</style>';
-        endif;
+    if (!empty($swp_user_options['cttCSS']) && count($swp_user_options)['cttCSS'] > 0) {
+        // Add it to our array if we're using the frontend Head Hook
+        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['cttCSS'] . '</style>';
 
     }
 
