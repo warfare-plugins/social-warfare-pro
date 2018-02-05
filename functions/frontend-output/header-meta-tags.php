@@ -540,9 +540,21 @@ function swp_output_custom_color( $info ) {
 function swp_output_ctt_css( $info = array() ) {
     global $swp_user_options;
 
-    if ('none' === $swp_user_options['cttTheme'] && !empty($swp_user_options['cttCSS']) > 0) {
+	$css = $swp_user_options['cttCSS'];
+
+    if ('none' === $swp_user_options['cttTheme'] && !empty($css) > 0) {
+    	$output = str_replace(array("\r\n", "\r"), "\n", $css);
+    	$lines = explode("\n", $css);
+    	$new_lines = array();
+
+    	foreach($lines as $i => $line) {
+    		if (!empty($line)) {
+    			$new_lines[] = trim($line);
+    		}
+    	}
+
         // Add it to our array if we're using the frontend Head Hook
-        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['cttCSS'] . '</style>';
+        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . implode($new_lines) . '</style>';
 
     }
 
