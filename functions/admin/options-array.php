@@ -474,7 +474,8 @@ function swp_pro_options_styles($swp_options) {
 				'fullWidth' => __( 'Full Width' ,'social-warfare' ),
 				'left' 		=> __( 'Left' ,'social-warfare' ),
 				'right'   	=> __( 'Right' ,'social-warfare' ),
-				'center' 	=> __( 'Center' ,'social-warfare' )
+				'center' 	=> __( 'Center' ,'social-warfare' ),
+
 			),
 			'default' 	=> 'fullWidth',
 			'dep' 		=> 'buttonSize',
@@ -543,7 +544,8 @@ function swp_pro_options_styles($swp_options) {
 			'content' => array(
 				'top' => __( 'Top of the Page' ,'social-warfare' ),
 				'bottom' => __( 'Bottom of the Page' ,'social-warfare' ),
-				'left' => __( 'On the left side of the page' ,'social-warfare' )
+				'left' => __( 'On the left side of the page' ,'social-warfare' ),
+				'right' => __( 'On the right side of the page' , 'social-warfare'),
 			),
 			'default' => 'bottom',
 			'dep' 		=> 'float',
