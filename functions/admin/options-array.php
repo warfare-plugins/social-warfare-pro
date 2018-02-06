@@ -557,7 +557,7 @@ function swp_pro_options_styles($swp_options) {
 			'name' => __( 'Minimum Screen Width' ,'social-warfare' ),
 			'default' => '1100',
 			'dep' 		=> 'floatOption',
-			'dep_val'	=> array('left')
+			'dep_val'	=> array('left', 'right')
 		),
 		'sideReveal' => array(
 			'type' => 'select',
@@ -569,7 +569,7 @@ function swp_pro_options_styles($swp_options) {
 			),
 			'default' => 'slide',
 			'dep' 		=> 'floatOption',
-			'dep_val'	=> array('left')
+			'dep_val'	=> array('left', 'right')
 		),
 		'floatLeftMobile' => array(
 			'type' => 'select',
@@ -581,7 +581,7 @@ function swp_pro_options_styles($swp_options) {
 			),
 			'default' => 'bottom',
 			'dep' 		=> 'floatOption',
-			'dep_val'	=> array('left'),
+			'dep_val'	=> array('left', 'right'),
 			'premium'	=> true
 		),
 		'floatStyle' => array(
@@ -594,7 +594,7 @@ function swp_pro_options_styles($swp_options) {
 			),
 			'default' => 'boxed',
 			'dep' 		=> 'floatOption',
-			'dep_val'	=> array('left'),
+			'dep_val'	=> array('left', 'right'),
 			'premium'	=> true
 		),
 		'floatStyleSource' => array(
@@ -603,7 +603,7 @@ function swp_pro_options_styles($swp_options) {
 			'content' => __( 'Inherit Visual Options' ,'social-warfare' ),
 			'default' => '1',
 			'dep' 		=> 'floatOption',
-			'dep_val'	=> array('left'),
+			'dep_val'	=> array('left', 'right'),
 			'premium'	=> true
 		),
 		'sideDColorSet' => array(
