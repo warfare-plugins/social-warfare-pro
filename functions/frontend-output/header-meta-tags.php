@@ -95,7 +95,6 @@ function swp_open_graph_values($info){
 	 * Disable Jetpack's Open Graph tags
 	 *
 	 */
-	add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
 	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
 
 	/**
@@ -383,7 +382,7 @@ function swp_twitter_card_values($info) {
 		endif;
 
 		/**
-		 * JET PACK: If ours are activated, disable theirs
+		 * Jetpack: If ours are activated, disable theirs
 		 *
 		 */
 		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
