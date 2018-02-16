@@ -551,6 +551,19 @@ function swp_pro_options_styles($swp_options) {
             'dep'       => 'float',
             'dep_val'   => array(true)
         ),
+        'float_vertical' => array(
+            'type'  => 'select',
+            'size'  => 'two-fourths',
+            'name'  => __( 'Vertical position', 'social-warfare'),
+            'content'   => array(
+                'top'   => __( 'Top', 'social-warfare'),
+                'center' => __(' Center', 'social-warfare'),
+                'bottom' => __(' Bottom', 'social-warfare')
+            ),
+            'default'   => 'center',
+            'dep'       => 'floatOption',
+            'dep_val'   => array( 'left','right' )
+        ),
         'swp_float_scr_sz' => array(
             'type' => 'input',
             'size' => 'two-fourths',
@@ -576,8 +589,9 @@ function swp_pro_options_styles($swp_options) {
             'name' => __( 'On Mobile' ,'social-warfare' ),
             'size' => 'two-fourths',
             'content' => array(
+                'top'       => __( 'Top of screen', 'social-warfare'),
                 'bottom'    => __( 'Bottom of Screen' ,'social-warfare' ),
-                'off'       => __( 'Off' ,'social-warfare' )
+                'off'       => __( 'Off' ,'social-warfare' ),
             ),
             'default' => 'bottom',
             'dep'       => 'floatOption',
@@ -605,19 +619,6 @@ function swp_pro_options_styles($swp_options) {
             'dep'       => 'floatOption',
             'dep_val'   => array('left', 'right'),
             'premium'   => true
-        ),
-        'float_vertical' => array(
-            'type'  => 'select',
-            'size'  => 'two-fourths',
-            'name'  => __( 'Vertical position', 'social-warfare'),
-            'content'   => array(
-                'top'   => __( 'Top', 'social-warfare'),
-                'center' => __(' Center', 'social-warfare'),
-                'bottom' => __(' Bottom', 'social-warfare')
-            ),
-            'default'   => 'center',
-            'dep'       => 'floatOption',
-            'dep_val'   => array( 'left','right' )
         ),
         'sideDColorSet' => array(
             'type' => 'select',
