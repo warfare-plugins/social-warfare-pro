@@ -606,7 +606,7 @@ function swp_pro_options_styles($swp_options) {
             'dep_val'   => array('left', 'right'),
             'premium'   => true
         ),
-        'float_verticals' => array(
+        'float_vertical' => array(
             'type'  => 'select',
             'size'  => 'two-fourths',
             'name'  => __( 'Vertical position', 'social-warfare'),
