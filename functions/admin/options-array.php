@@ -564,6 +564,22 @@ function swp_pro_options_styles($swp_options) {
             'dep'       => 'floatOption',
             'dep_val'   => array( 'left','right' )
         ),
+        'float_button_size' => array(
+            'type' => 'select',
+            'size' => 'two-fourths',
+            'name' => __( 'Button Size' ,'social-warfare' ),
+            'content' => array(
+                '1.3' => __( '130%' ,'social-warfare' ),
+                '1.2' => __( '120%' ,'social-warfare' ),
+                '1.1' => __( '110%' ,'social-warfare' ),
+                '1'   => __( '100%' ,'social-warfare' ),
+                '0.9' => __( '90%' ,'social-warfare' ),
+                '0.8' => __( '80%' ,'social-warfare' ),
+                '0.7' => __( '70%' ,'social-warfare' )
+            ),
+            'default' => '1',
+            'premium'   => true
+         ),
         'swp_float_scr_sz' => array(
             'type' => 'input',
             'size' => 'two-fourths',
