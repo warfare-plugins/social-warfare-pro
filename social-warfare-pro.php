@@ -66,7 +66,7 @@ function swpp_initiate_plugin() {
         require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
         require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
         require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/header-meta-tags.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
         require_once SWPP_PLUGIN_DIR . '/functions/admin/options-array.php';
 
@@ -88,7 +88,7 @@ function swpp_initiate_plugin() {
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
 
-			new SWP_Pro_Settings_link();			
+			new SWP_Pro_Settings_link();
 		}
 
     endif;
