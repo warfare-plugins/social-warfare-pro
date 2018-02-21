@@ -19,7 +19,7 @@ defined( 'WPINC' ) || die;
 function _swp_get_twitter_handle( $fallback = false ) {
 	// Fetch the Twitter handle for the Post Author if it exists.
 	if ( isset( $_GET['post'] ) ) {
-		$user_id = swp_get_author( absint( $_GET['post'] ) );
+		$user_id = SWP_User_Profile::get_author( absint( $_GET['post'] ) );
 	} else {
 		$user_id = get_current_user_id();
 	}

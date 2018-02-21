@@ -48,6 +48,7 @@ add_filter( 'swp_header_values' , 'swp_open_graph_values'    , 5 );
 add_filter( 'swp_header_values' , 'swp_twitter_card_values'  , 10 );
 add_filter( 'swp_header_html'   , 'swp_open_graph_html'      , 5 );
 add_filter( 'swp_header_html'   , 'swp_twitter_card_html'    , 10 );
+add_filter( 'swp_header_html'   , 'swp_output_ctt_css'       , 15 );
 add_filter( 'swp_header_html'   , 'swp_output_custom_color'  , 15 );
 
 /**
@@ -216,10 +217,10 @@ function swp_open_graph_values($info){
 	 * Facebook Author
 	 *
 	 */
-	if ( get_the_author_meta( 'swp_fb_author' , swp_get_author( $info['postID'] ) ) ) :
-		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'swp_fb_author' , swp_get_author( $info['postID'] ) );
-	elseif ( get_the_author_meta( 'facebook' , swp_get_author( $info['postID'] ) ) && defined( 'WPSEO_VERSION' ) ) :
-		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'facebook' , swp_get_author( $info['postID'] ) );
+	if ( get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) ) ) :
+		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) );
+	elseif ( get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) ) && defined( 'WPSEO_VERSION' ) ) :
+		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) );
 	endif;
 
 	/**
@@ -364,7 +365,7 @@ function swp_twitter_card_values($info) {
 		$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'nc_ogDescription' , true ) );
 		$custom_og_image_id    = get_post_meta( $info['postID'] , 'nc_ogImage' , true );
 		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
-		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , swp_get_author( $info['postID'] ) );
+		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
 
 		/**
 		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
@@ -514,7 +515,7 @@ function swp_output_custom_color( $info ) {
 	endif;
 
 	if ( $swp_user_options['floatStyleSource'] == false && ($swp_user_options['sideDColorSet'] == 'customColor' || $swp_user_options['sideIColorSet'] == 'customColor' || $swp_user_options['sideOColorSet'] == 'customColor') ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['sideCustomColor'] . ';border:1px solid ' . $swp_user_options['sideCustomColor'] . ';} </style>';
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['sideCustomColor'] . ';border:1px solid ' . $swp_user_options['sideCustomColor'] . ';} </style>';
 	endif;
 
 	if ( $swp_user_options['floatStyleSource'] == false && ( $swp_user_options['sideDColorSet'] == 'ccOutlines' || $swp_user_options['sideIColorSet'] == 'ccOutlines' || $swp_user_options['sideOColorSet'] == 'ccOutlines' ) ) :
@@ -523,4 +524,27 @@ function swp_output_custom_color( $info ) {
 
 		endif;
 	return $info;
+}
+
+/**
+ * Output custom CSS for Click To Tweet
+ *
+ * Note: This is done in the header rather than in a CSS file to
+ * avoid having the styles called from a CDN
+ *
+ * @since  2.4.0
+ * @access public
+ * @param  array  $info An array of information about the post
+ * @return array  $info The modified array
+ */
+function swp_output_ctt_css( $info = array() ) {
+    global $swp_user_options;
+
+    if (!empty($swp_user_options['cttCSS']) && count($swp_user_options)['cttCSS'] > 0) {
+        // Add it to our array if we're using the frontend Head Hook
+        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['cttCSS'] . '</style>';
+
+    }
+
+    return $info;
 }
