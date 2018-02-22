@@ -88,7 +88,7 @@ function swpp_initiate_plugin() {
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
 
-			new SWP_Pro_Settings_link();			
+			new SWP_Pro_Settings_link();
 		}
 
     endif;
@@ -136,7 +136,7 @@ function swpp_update_checker() {
             $website_url = swp_get_site_url();
 
             // setup the updater
-            $swed_updater = new SW_EDD_SL_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
+            $swed_updater = new SWP_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
             	'version'   => SWPP_VERSION,      // current version number
             	'license'   => $license_key,      // license key
             	'item_id'   => SWPP_ITEM_ID,      // id of this plugin
