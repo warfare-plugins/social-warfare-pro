@@ -84,6 +84,8 @@ function swpp_initiate_plugin() {
         require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
         require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
 
+		new SWP_Pro_Header_Output();
+
 		// Admin only classes
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
