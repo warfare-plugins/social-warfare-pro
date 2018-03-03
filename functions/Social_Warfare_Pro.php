@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * TODO: This file needs to mirror Social_Warfare.php and the Social_Warfare
+ * 		 class that is in core.
+ */
 class Social_Warfare_Pro extends Social_Warfare {
 
 	public function __construct() {
@@ -16,7 +20,12 @@ class Social_Warfare_Pro extends Social_Warfare {
 	}
 
 	public function instantiate_classes() {
+
 		new SWP_Pro_Options_page();
+
+		// Output for testing:
+		global $SWP_Options_Page;
+		var_dump($SWP_Options_Page);
 	}
 
 	public function instantiate_admin_classes() {
