@@ -8,7 +8,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 		$_options = $SWP_Options_Page->tabs->display->sections->share_counts->options;
 		$_options->minimum_shares = new SWP_Option_Input();
 		$_options->minimum_shares->set_name( __( 'Minimum Shares', 'social-warfare' ) )->set_priority(30)->set_size('two-thirds')->set_default('0')->set_premium('pro');
-
+		var_dump($SWP_Options_Page);
 		/**
 		 * These all need moved to different tabs and/or sections.
 		 *
