@@ -59,6 +59,10 @@ function social_warfare_pro_registration_key($array) {
 add_action( 'plugins_loaded' , 'swpp_initiate_plugin' , 10 );
 function swpp_initiate_plugin() {
     if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
+
+		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
+		new Social_Warfare_Pro();
+
         /**
          * Include the necessary files
          *
