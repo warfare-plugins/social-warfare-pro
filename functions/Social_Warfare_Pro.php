@@ -27,8 +27,9 @@ class Social_Warfare_Pro extends Social_Warfare {
 		global $SWP_Options_Page;
 
 		// We can sort the object immediately before looping for HTML output.
-		// $SWP_Options_Page->sort_by_priority();
-		// var_dump($SWP_Options_Page);
+		// AKA migrate this command to SWP_Options_Page_HTML
+		$SWP_Options_Page->sort_by_priority();
+		var_dump($SWP_Options_Page);
 	}
 
 	public function instantiate_admin_classes() {
