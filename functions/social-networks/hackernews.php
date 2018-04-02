@@ -24,7 +24,7 @@ add_filter( 'swp_button_options', 'swp_hacker_news_options_function',20 );
 function swp_hacker_news_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['hacker_news'] = array(
+	$options['icons']['hacker_news'] = array(
 		'type' => 'checkbox',
 		'content' => 'Hacker News',
 		'default' => false,

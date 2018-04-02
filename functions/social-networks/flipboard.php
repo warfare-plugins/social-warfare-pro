@@ -24,7 +24,7 @@ add_filter( 'swp_button_options', 'swp_flipboard_options_function',20 );
 function swp_flipboard_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['flipboard'] = array(
+	$options['icons']['flipboard'] = array(
 		'type' => 'checkbox',
 		'content' => 'Flipboard',
 		'default' => false,

@@ -23,7 +23,7 @@ add_filter( 'swp_button_options', 'swp_buffer_options_function',20 );
 function swp_buffer_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['buffer'] = array(
+	$options['icons']['buffer'] = array(
 		'type' => 'checkbox',
 		'content' => 'Buffer',
 		'default' => false,

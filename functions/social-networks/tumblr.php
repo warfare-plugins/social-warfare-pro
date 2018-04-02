@@ -24,7 +24,7 @@ add_filter( 'swp_button_options' , 'swp_tumblr_options_function' , 20 );
 function swp_tumblr_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['tumblr'] = array(
+	$options['icons']['tumblr'] = array(
 		'type' => 'checkbox',
 		'content' => 'Tumblr',
 		'default' => false,

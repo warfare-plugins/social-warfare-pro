@@ -24,7 +24,7 @@ add_filter( 'swp_button_options' , 'swp_yummly_options_function' , 20 );
 function swp_yummly_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['yummly'] = array(
+	$options['icons']['yummly'] = array(
 		'type' => 'checkbox',
 		'content' => 'Yummly',
 		'default' => false,

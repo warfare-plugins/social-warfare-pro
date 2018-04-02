@@ -24,7 +24,7 @@ add_filter( 'swp_button_options', 'swp_pocket_options_function',20 );
 function swp_pocket_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['pocket'] = array(
+	$options['icons']['pocket'] = array(
 		'type' => 'checkbox',
 		'content' => 'Pocket',
 		'default' => false,

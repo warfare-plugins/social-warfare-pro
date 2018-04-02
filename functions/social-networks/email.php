@@ -24,7 +24,7 @@ add_filter( 'swp_button_options', 'swp_email_options_function',20 );
 function swp_email_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['email'] = array(
+	$options['icons']['email'] = array(
 		'type' => 'checkbox',
 		'content' => 'Email',
 		'default' => false,

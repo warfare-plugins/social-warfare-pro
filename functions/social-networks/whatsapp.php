@@ -24,7 +24,7 @@ add_filter( 'swp_button_options' , 'swp_whatsapp_options_function' , 20 );
 function swp_whatsapp_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['whatsapp'] = array(
+	$options['icons']['whatsapp'] = array(
 		'type' => 'checkbox',
 		'content' => 'WhatsApp',
 		'default' => false,

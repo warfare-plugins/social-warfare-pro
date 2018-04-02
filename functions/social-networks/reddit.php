@@ -24,7 +24,7 @@ add_filter( 'swp_button_options' , 'swp_reddit_options_function' , 20 );
 function swp_reddit_options_function( $options ) {
 
 	// Create the new option in a variable to be inserted
-	$options['content']['reddit'] = array(
+	$options['icons']['reddit'] = array(
 		'type' => 'checkbox',
 		'content' => 'Reddit',
 		'default' => false,
