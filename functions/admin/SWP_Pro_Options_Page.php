@@ -10,9 +10,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     */
 
 	public function __construct() {
-		global $SWP_Options_Page;
 
+		global $SWP_Options_Page;
         $this->core = $SWP_Options_Page;
+		
+		$this->update_display_tab();
+		$this->update_styles_tab();
+		$this->update_social_tab();
+		$this->update_advanced_tab();
     }
 
     /**

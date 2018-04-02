@@ -26,3 +26,11 @@ define( 'SWPP_ITEM_ID', 63157 );
 if( !defined( 'SWP_ACTIVATE_REGISTRATION_TAB' ) ) {
     define( 'SWP_ACTIVATE_REGISTRATION_TAB' , true );
 }
+
+
+
+add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 10 );
+function initialize_social_warfare_pro() {
+	require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
+	new Social_Warfare_Pro();
+}

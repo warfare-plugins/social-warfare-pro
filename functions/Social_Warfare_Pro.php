@@ -32,8 +32,8 @@ class Social_Warfare_Pro extends Social_Warfare {
 	}
 
 	public function instantiate_classes() {
-		// Output for testing:
-		global $SWP_Options_Page;
+
+		new SWP_Pro_Options_Page();
 
 		// We can sort the object immediately before looping for HTML output.
 		// AKA migrate this command to SWP_Options_Page_HTML
