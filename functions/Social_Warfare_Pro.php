@@ -24,7 +24,7 @@ class Social_Warfare_Pro extends Social_Warfare {
 	    // add_action( 'admin_notices', array( $this, 'mismatch_notification' ) );
 	    // add_action( 'plugins_loaded' , array( $this, 'initiate_plugin' , 10 ) );
 	    // add_action( 'plugins_loaded' , array( $this, 'update_checker' , 20 ) );
-	    add_filter( 'swp_registrations' , array( $this, 'social_warfare_pro_registration_key' , 1 ) );
+	    add_filter( 'swp_registrations' , array( $this, 'social_warfare_pro_registration_key'), 1 );
 	}
 
 	public function load_classes() {
