@@ -13,7 +13,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
 		global $SWP_Options_Page;
         $this->core = $SWP_Options_Page;
-		
+
 		$this->update_display_tab();
 		$this->update_styles_tab();
 		$this->update_social_tab();
@@ -35,7 +35,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             //* linkShortening => bitly_authentication
             $bitly_authentication = new SWP_Option_Toggle( 'Bitly Link Shortening', 'bitly_authentication' );
-            $bitly_authentication->set_size( 'two-thirds' )
+            $bitly_authentication->set_size( 'sw-col-300' )
                 ->set_priority( 10 )
                 ->set_default( false )
                 ->set_premium( 'pro' );
@@ -55,7 +55,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* swp_click_tracking => click_tracking
             $click_tracking = new SWP_Option_Toggle( 'Button Click Tracking', 'click_tracking' );
             $click_tracking->set_priority( 10 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_default( false )
                 ->set_premium( 'pro' );
 
@@ -81,7 +81,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $utm_on_pins = new SWP_Option_Toggle( 'UTM Tracking on Pins', 'utm_on_pins' );
             $utm_on_pins->set_default( false )
                 ->set_priority( 50 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'google_analytics', true )
                 ->set_premium( 'pro' );
 
@@ -99,7 +99,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* advanced_pinterest_image => pin_browser_extension
             $pin_browser_extension = new SWP_Option_Toggle( 'Pinterest Image for Browser Extensions', 'pin_browser_extension' );
             $pin_browser_extension->set_default( false )
-                ->set_size( 'two-thirds')
+                ->set_size( 'sw-col-300')
                 ->set_premium( 'pro' );
 
             //* advanced_pinterest_image_location => pinterest_image_location
@@ -110,7 +110,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'bottom'    => 'At the bottom of each post.'
             ])
                 ->set_default( 'hidden ')
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'pin_browser_extension', true )
                 ->set_premium( 'pro' );
 
@@ -134,7 +134,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $recover_shares = new SWP_Option_Toggle( 'Activate Share Recovery', 'recover_shares' );
             $recover_shares->set_default( false )
                 ->set_priority( 10 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_premium( 'pro' );
 
             $recovery_format = new SWP_Option_Select( 'Previous URL Format', 'recovery_format' );
@@ -149,13 +149,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_priority( 20 )
                 ->set_default( 'unchanged' )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
             //* recovery_custom_format => recovery_permalink
             $recovery_permalink = new SWP_Option_Text( 'Custom Permalink Format', 'recovery_permalink' );
-            $recovery_permalink->set_size( 'two-thirds' )
+            $recovery_permalink->set_size( 'sw-col-300' )
                 ->set_priority( 30 )
                 ->set_dependency( 'recover_shares' , true )
                 ->set_premium( 'pro' );
@@ -179,14 +179,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_priority( 50 )
                 ->set_default( 'unchanged' )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
             $recovery_subdomain = new SWP_Option_Text( 'Subdomain', 'recovery_subdomain' );
             $recovery_subdomain->set_default( '' )
                 ->set_priority( 60 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
@@ -198,14 +198,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $cross_domain = new SWP_Section_HTML( 'Cross Domain', 'cross_domain_recovery_description' );
             $cross_domain->set_priority( 65 )
                 ->set_dependency( 'recover_shares', true )
-                ->set_size( 'four-fourths' )
+                ->set_size( 'sw-col-620' )
                 ->set_premium( 'pro' )
                 ->add_HTML( $cross_domain_html );
 
             $former_domain = new SWP_Option_Text( 'Former Domain', 'former_domain' );
             $former_domain->set_default( '' )
                 ->set_priority( 70 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
@@ -237,7 +237,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                     'manual'    => 'Sort Manually Using Drag & Drop Above' ,
                     'dynamic'   => 'Sort Dynamically By Order Of Most Shares'
                 ])
-                ->set_size( 'four-fourths')
+                ->set_size( 'sw-col-460')
                 ->set_default( 'manual' )
                 ->set_premium( 'pro' );
 
@@ -247,7 +247,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $minimum_shares = new SWP_Option_Text( 'Minimum Shares', 'minimum_shares' );
             $minimum_shares->set_default( 0 )
                 ->set_priority( 30 )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_premium( 'pro' );
 
         $display->sections->share_counts->add_option( $minimum_shares );
@@ -260,7 +260,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $twitter_card = new SWP_Option_Toggle( 'Show Twitter Cards', 'twitter_cards' );
                 $twitter_card->set_default( true )
                     ->set_priority( 10 )
-                    ->set_size( 'two-thirds' )
+                    ->set_size( 'sw-col-300' )
                     ->set_premium( 'pro' );
 
         $twitter_cards->add_option( $twitter_card );
@@ -273,7 +273,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $pinit_toggle = new SWP_Option_Toggle( 'Pinit Button', 'pinit_toggle' );
             $pinit_toggle->set_default( true )
-                ->set_size( 'two-thirds' )
+                ->set_size( 'sw-col-300' )
                 ->set_premium( 'pro' );
 
         $image_hover->add_option( $pinit_toggle );
@@ -355,7 +355,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ] )
             ->set_default( 'flat_fresh' )
             ->set_priority( 10 )
-            ->set_size( 'two-fourths' )
+            ->set_size( 'sw-col-460' )
             ->set_premium( 'pro' );
 
         //* buttonSize => button_size
@@ -372,7 +372,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ] )
             ->set_default( '1' )
             ->set_priority( 20 )
-            ->set_size( 'two-fourths' )
+            ->set_size( 'sw-col-460' )
             ->set_premium( 'pro' );
 
         $color_choices = SWP_Options_Page::get_color_choices_array();
@@ -384,7 +384,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $default_colors->set_choices( $color_choices )
                 ->set_default( 'full_color' )
                 ->set_priority( 30 )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_premium( 'pro' );
 
             //* oColorSet => hover_colors
@@ -408,7 +408,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'right'     => 'Right',
                 'center'    => 'Center'
             ])
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_priority( 60 )
                 ->set_default( 'full_width' )
                 ->set_dependency( 'button_size', [ '0.7', '0.8', '0.9'] )
@@ -437,7 +437,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_default( 'boxed' )
                 ->set_priority( 50 )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_dependency( 'floating_panel', ['left', 'rigt'] )
                 ->set_premium( 'pro' );
 
@@ -445,7 +445,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_style_source = new SWP_Option_Select( 'Inherit Visual Options', 'float_style_source' );
             $float_style_source->set_default( true )
                 ->set_priority( 60 )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_dependency( 'floating_panel', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
@@ -453,14 +453,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_custom_color = new SWP_Option_Text( 'Custom Color', 'float_custom_color' );
             $float_custom_color->set_default( '#ced3dc' )
                 ->set_priority( 90 )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_premium( 'pro' );
 
             //* floatBgColor => float_background_color
             $float_background_color = new SWP_Option_Text( 'Background Color', 'float_background_color' );
-            $float_background_color->set_size( 'two-fourths' )
+            $float_background_color->set_size( 'sw-col-460' )
                 ->set_default( "#ffffff" )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_dependency( 'float_position', ['top', 'bottom'] );
 
             $float_mobile = new SWP_Option_Select( 'On Mobile', 'float_mobile' );
@@ -468,7 +468,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
-                ->set_size( 'two-fourths' )
+                ->set_size( 'sw-col-460' )
                 ->set_dependency( 'float_position', 'left' )
                 ->set_premium( 'pro' );
 
