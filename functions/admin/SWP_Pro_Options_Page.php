@@ -313,7 +313,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $choices[$type] = $type;
             }
 
-            $default_types = ['page', 'post'];
+            $default_types = ['location_page', 'location_post'];
             $post_types = array_merge( $default_types, get_post_types( ['public' => true, '_builtin' => false ], 'names' ) );
 
             //* Assign the hard-coded custom post types as options for the
