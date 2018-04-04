@@ -85,7 +85,6 @@ class Social_Warfare_Pro extends Social_Warfare {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
 	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
 	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/admin/options-array.php';
 
 
 	        /**
