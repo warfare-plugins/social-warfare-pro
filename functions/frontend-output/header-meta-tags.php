@@ -77,7 +77,7 @@ function swp_open_graph_values($info){
 	global $swp_user_options;
 
 	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-	if( false === $swp_user_options['swp_og_output'] && false === $swp_user_options['swp_twitter_card'] ){
+	if( false === $swp_user_options['swp_og_output'] && false === $swp_user_options['twitter_cards'] ){
 		return $info;
 	}
 
@@ -227,8 +227,8 @@ function swp_open_graph_values($info){
 	 * Open Graph Publisher
 	 *
 	 */
-	if ( !empty( $swp_user_options['facebookPublisherUrl'] )) :
-		$info['meta_tag_values']['article_publisher'] = $swp_user_options['facebookPublisherUrl'];
+	if ( !empty( $swp_user_options['facebook_publisher_url'] )) :
+		$info['meta_tag_values']['article_publisher'] = $swp_user_options['facebook_publisher_url'];
 	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['facebook_site'] ) ) :
 		$info['meta_tag_values']['article_publisher'] = $wpseo_social['facebook_site'];
 	endif;
@@ -237,8 +237,8 @@ function swp_open_graph_values($info){
 	 * Open Graph App ID
 	 *
 	 */
-	if ( !empty( $swp_user_options['facebookAppID'] ) ) :
-		$info['meta_tag_values']['fb_app_id'] = $swp_user_options['facebookAppID'];
+	if ( !empty( $swp_user_options['facebook_app_id'] ) ) :
+		$info['meta_tag_values']['fb_app_id'] = $swp_user_options['facebook_app_id'];
 	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['fbadminapp'] ) ) :
 		$info['meta_tag_values']['fb_app_id'] = $wpseo_social['fbadminapp'];
 	else :
@@ -355,7 +355,7 @@ function swp_twitter_card_values($info) {
 
 	global $swp_user_options;
 
-	if ( is_singular() && $swp_user_options['swp_twitter_card'] ) :
+	if ( is_singular() && $swp_user_options['twitter_cards'] ) :
 
 		/**
 		 * Begin by fetching the user's default custom settings
@@ -438,8 +438,8 @@ function swp_twitter_card_values($info) {
 		 * The Twitter Card Site
 		 *
 		 */
-		if ( $swp_user_options['twitterID'] ) :
-			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $swp_user_options['twitterID'] ) );
+		if ( $swp_user_options['twitter_id'] ) :
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $swp_user_options['twitter_id'] ) );
 		endif;
 
 		/**
@@ -461,7 +461,7 @@ function swp_twitter_card_html($info) {
 
 	global $swp_user_options;
 
-	if ( is_singular() && $swp_user_options['swp_twitter_card'] ) :
+	if ( is_singular() && $swp_user_options['twitter_cards'] ) :
 
 		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
 			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
@@ -504,23 +504,23 @@ function swp_output_custom_color( $info ) {
 
 	global $swp_user_options;
 
-	if ( $swp_user_options['dColorSet'] == 'customColor' || $swp_user_options['iColorSet'] == 'customColor' || $swp_user_options['oColorSet'] == 'customColor' ) :
+	if ( $swp_user_options['default_colors'] == 'customColor' || $swp_user_options['single_colors'] == 'customColor' || $swp_user_options['hover_colors'] == 'customColor' ) :
 		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_customColor:hover a {color:white} .nc_socialPanel.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.swp_i_customColor .nc_tweetContainer:hover, body .nc_socialPanel.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['customColor'] . ';border:1px solid ' . $swp_user_options['customColor'] . ';} </style>';
 	endif;
 
-	if ( $swp_user_options['dColorSet'] == 'ccOutlines' || $swp_user_options['iColorSet'] == 'ccOutlines' || $swp_user_options['oColorSet'] == 'ccOutlines' ) :
+	if ( $swp_user_options['default_colors'] == 'custom_color_outlines' || $swp_user_options['single_colors'] == 'custom_color_outlines' || $swp_user_options['hover_colors'] == 'custom_color_outlines' ) :
 		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_ccOutlines a, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_ccOutlines:hover a { color:' . $swp_user_options['customColor'] . '; }
 .nc_socialPanel.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $swp_user_options['customColor'] . '; } </style>';
 
 	endif;
 
-	if ( $swp_user_options['floatStyleSource'] == false && ($swp_user_options['sideDColorSet'] == 'customColor' || $swp_user_options['sideIColorSet'] == 'customColor' || $swp_user_options['sideOColorSet'] == 'customColor') ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['sideCustomColor'] . ';border:1px solid ' . $swp_user_options['sideCustomColor'] . ';} </style>';
+	if ( $swp_user_options['float_style_source'] == false && ($swp_user_options['float_default_colors'] == 'customColor' || $swp_user_options['float_single_colors'] == 'customColor' || $swp_user_options['float_hover_colors'] == 'customColor') ) :
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $swp_user_options['single_custom_color'] . ';border:1px solid ' . $swp_user_options['single_custom_color'] . ';} </style>';
 	endif;
 
-	if ( $swp_user_options['floatStyleSource'] == false && ( $swp_user_options['sideDColorSet'] == 'ccOutlines' || $swp_user_options['sideIColorSet'] == 'ccOutlines' || $swp_user_options['sideOColorSet'] == 'ccOutlines' ) ) :
-		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $swp_user_options['sideCustomColor'] . '; }
-.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $swp_user_options['sideCustomColor'] . '; } </style>';
+	if ( $swp_user_options['float_style_source'] == false && ( $swp_user_options['float_default_colors'] == 'custom_color_outlines' || $swp_user_options['float_single_colors'] == 'custom_color_outlines' || $swp_user_options['float_hover_colors'] == 'custom_color_outlines' ) ) :
+		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $swp_user_options['single_custom_color'] . '; }
+.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $swp_user_options['single_custom_color'] . '; } </style>';
 
 		endif;
 	return $info;
@@ -540,9 +540,9 @@ function swp_output_custom_color( $info ) {
 function swp_output_ctt_css( $info = array() ) {
     global $swp_user_options;
 
-    if (!empty($swp_user_options['cttCSS']) && count($swp_user_options)['cttCSS'] > 0) {
+    if (!empty($swp_user_options['ctt_css']) && count($swp_user_options)['ctt_css'] > 0) {
         // Add it to our array if we're using the frontend Head Hook
-        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['cttCSS'] . '</style>';
+        $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $swp_user_options['ctt_css'] . '</style>';
 
     }
 

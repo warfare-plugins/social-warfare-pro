@@ -53,7 +53,7 @@ function swp_register_meta_boxes( $meta_boxes ) {
 	$prefix = 'nc_';
 	$options = $swp_user_options;
 
-	$twitter_id = isset( $options['twitterID'] ) ? $options['twitterID'] : false;
+	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
 	$twitter_handle = _swp_get_twitter_handle( $twitter_id );
 
@@ -190,7 +190,7 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			),
 			array(
 				'name'  => $twitter_handle,
-				'id'    => 'twitterID',
+				'id'    => 'twitter_id',
 				'class' => 'twitterIDWrapper',
 				'type'  => 'hidden',
 				'std'   => $twitter_handle,

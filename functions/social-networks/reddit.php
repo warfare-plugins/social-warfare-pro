@@ -108,7 +108,7 @@ function swp_reddit_button_html( $array ) {
 	elseif ( (isset( $array['options']['newOrderOfIcons']['reddit'] ) && ! isset( $array['buttons'] )) || (isset( $array['buttons'] ) && isset( $array['buttons']['reddit'] ))  ) :
 
 		if ( isset( $array['shares']['reddit'] ) ) :
-			$array['totes'] += intval( $array['shares']['reddit'] );
+			$array['total_shares'] += intval( $array['shares']['reddit'] );
 		endif;
 		++$array['count'];
 
@@ -121,7 +121,7 @@ function swp_reddit_button_html( $array ) {
 		$array['resource']['reddit'] = '<div class="nc_tweetContainer swp_reddit" data-id="' . $array['count'] . '" data-network="reddit">';
 		$link = $array['url'];
 		$array['resource']['reddit'] .= '<a rel="nofollow" target="_blank" href="https://www.reddit.com/submit?url=' . $link . '&title=' . urlencode( $title ) . '" data-link="https://www.reddit.com/submit?url=' . $link . '&title=' . urlencode( $title ) . '" class="nc_tweet">';
-		if ( $array['options']['totesEach'] && $array['shares']['totes'] >= $array['options']['minTotes'] && isset( $array['shares']['reddit'] ) && $array['shares']['reddit'] > 0 ) :
+		if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && isset( $array['shares']['reddit'] ) && $array['shares']['reddit'] > 0 ) :
 			$array['resource']['reddit'] .= '<span class="iconFiller">';
 			$array['resource']['reddit'] .= '<span class="spaceManWilly">';
 			$array['resource']['reddit'] .= '<i class="sw sw-reddit"></i>';

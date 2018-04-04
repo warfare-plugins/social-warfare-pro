@@ -82,7 +82,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-    	if( false === $this->options['swp_og_output'] && false === $this->options['swp_twitter_card'] ){
+    	if( false === $this->options['swp_og_output'] && false === $this->options['twitter_cards'] ){
     		return $info;
     	}
 
@@ -232,8 +232,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 * Open Graph Publisher
     	 *
     	 */
-    	if ( !empty( $this->options['facebookPublisherUrl'] )) :
-    		$info['meta_tag_values']['article_publisher'] = $this->options['facebookPublisherUrl'];
+    	if ( !empty( $this->options['facebook_publisher_url'] )) :
+    		$info['meta_tag_values']['article_publisher'] = $this->options['facebook_publisher_url'];
     	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['facebook_site'] ) ) :
     		$info['meta_tag_values']['article_publisher'] = $wpseo_social['facebook_site'];
     	endif;
@@ -242,8 +242,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 * Open Graph App ID
     	 *
     	 */
-    	if ( !empty( $this->options['facebookAppID'] ) ) :
-    		$info['meta_tag_values']['fb_app_id'] = $this->options['facebookAppID'];
+    	if ( !empty( $this->options['facebook_app_id'] ) ) :
+    		$info['meta_tag_values']['fb_app_id'] = $this->options['facebook_app_id'];
     	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['fbadminapp'] ) ) :
     		$info['meta_tag_values']['fb_app_id'] = $wpseo_social['fbadminapp'];
     	else :
@@ -357,7 +357,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['swp_twitter_card'] ) :
+    	if ( is_singular() && $this->options['twitter_cards'] ) :
 
     		/**
     		 * Begin by fetching the user's default custom settings
@@ -440,8 +440,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 * The Twitter Card Site
     		 *
     		 */
-    		if ( $this->options['twitterID'] ) :
-    			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitterID'] ) );
+    		if ( $this->options['twitter_id'] ) :
+    			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
     		endif;
 
     		/**
@@ -473,7 +473,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['swp_twitter_card'] ) :
+    	if ( is_singular() && $this->options['twitter_cards'] ) :
 
     		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
@@ -516,23 +516,23 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
     public function output_custom_color( $info ) {
 
-    	if ( $this->options['dColorSet'] == 'customColor' || $this->options['iColorSet'] == 'customColor' || $this->options['oColorSet'] == 'customColor' ) :
+    	if ( $this->options['default_colors'] == 'customColor' || $this->options['single_colors'] == 'customColor' || $this->options['hover_colors'] == 'customColor' ) :
     		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_customColor:hover a {color:white} .nc_socialPanel.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.swp_i_customColor .nc_tweetContainer:hover, body .nc_socialPanel.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $this->options['customColor'] . ';border:1px solid ' . $this->options['customColor'] . ';} </style>';
     	endif;
 
-    	if ( $this->options['dColorSet'] == 'ccOutlines' || $this->options['iColorSet'] == 'ccOutlines' || $this->options['oColorSet'] == 'ccOutlines' ) :
+    	if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines' ) :
     		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_ccOutlines a, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.swp_o_ccOutlines:hover a { color:' . $this->options['customColor'] . '; }
     .nc_socialPanel.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $this->options['customColor'] . '; } </style>';
 
     	endif;
 
-    	if ( $this->options['floatStyleSource'] == false && ($this->options['sideDColorSet'] == 'customColor' || $this->options['sideIColorSet'] == 'customColor' || $this->options['sideOColorSet'] == 'customColor') ) :
-    		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $this->options['sideCustomColor'] . ';border:1px solid ' . $this->options['sideCustomColor'] . ';} </style>';
+    	if ( $this->options['float_style_source'] == false && ($this->options['float_default_colors'] == 'customColor' || $this->options['float_single_colors'] == 'customColor' || $this->options['float_hover_colors'] == 'customColor') ) :
+    		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.swp_d_customColor a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover a {color:white} .nc_socialPanel.nc_socialPanelSide.swp_d_customColor .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_customColor .nc_tweetContainer:hover, body. nc_socialPanel.nc_socialPanelSide.swp_o_customColor:hover .nc_tweetContainer {background-color:' . $this->options['single_custom_color'] . ';border:1px solid ' . $this->options['single_custom_color'] . ';} </style>';
     	endif;
 
-    	if ( $this->options['floatStyleSource'] == false && ( $this->options['sideDColorSet'] == 'ccOutlines' || $this->options['sideIColorSet'] == 'ccOutlines' || $this->options['sideOColorSet'] == 'ccOutlines' ) ) :
-    		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $this->options['sideCustomColor'] . '; }
-    .nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $this->options['sideCustomColor'] . '; } </style>';
+    	if ( $this->options['float_style_source'] == false && ( $this->options['float_default_colors'] == 'custom_color_outlines' || $this->options['float_single_colors'] == 'custom_color_outlines' || $this->options['float_hover_colors'] == 'custom_color_outlines' ) ) :
+    		$info['html_output'] .= PHP_EOL . '<style type="text/css">.nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines a, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover a, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover a { color:' . $this->options['single_custom_color'] . '; }
+    .nc_socialPanel.nc_socialPanelSide.swp_d_ccOutlines .nc_tweetContainer, html body .nc_socialPanel.nc_socialPanelSide.swp_i_ccOutlines .nc_tweetContainer:hover, body .nc_socialPanel.nc_socialPanelSide.swp_o_ccOutlines:hover .nc_tweetContainer { background:transparent; border:1px solid ' . $this->options['single_custom_color'] . '; } </style>';
 
     		endif;
     	return $info;
@@ -550,9 +550,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array  $info The modified array
      */
     public function output_ctt_css( $info = array() ) {
-        if (!empty($this->options['cttCSS']) && count($this->options)['cttCSS'] > 0) {
+        if (!empty($this->options['ctt_css']) && count($this->options)['ctt_css'] > 0) {
             // Add it to our array if we're using the frontend Head Hook
-            $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $this->options['cttCSS'] . '</style>';
+            $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $this->options['ctt_css'] . '</style>';
 
         }
 

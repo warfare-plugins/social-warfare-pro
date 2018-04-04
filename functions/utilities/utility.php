@@ -64,8 +64,8 @@ function swp_insert_pinterest_image( $content ) {
 		$status = false;
 
 	// Third check if it's turned on or off in the options
-	elseif( isset( $swp_user_options['advanced_pinterest_image'] ) && true === $swp_user_options['advanced_pinterest_image'] ):
-		$status = $swp_user_options['advanced_pinterest_image'];
+	elseif( isset( $swp_user_options['pin_browser_extension'] ) && true === $swp_user_options['pin_browser_extension'] ):
+		$status = $swp_user_options['pin_browser_extension'];
 
 	// Fourth, if nothing matches, turn it off
 	else:
@@ -81,8 +81,8 @@ function swp_insert_pinterest_image( $content ) {
 		$location = $swp_advanced_pin_image_location;
 
 	// Second, see if it's set in the options
-	elseif( isset( $swp_user_options['advanced_pinterest_image_location'] ) ):
-		$location = $swp_user_options['advanced_pinterest_image_location'];
+	elseif( isset( $swp_user_options['pinterest_image_location'] ) ):
+		$location = $swp_user_options['pinterest_image_location'];
 
 	// Third, if nothing is set, set it to hidden.
 	else:
@@ -102,8 +102,8 @@ function swp_insert_pinterest_image( $content ) {
 			$pinterest_description = get_post_meta( $post_id , 'nc_pinterestDescription' , true );
 
 			// Collect the user's Pinterest username
-			if ( !empty( $swp_user_options['pinterestID'] ) ) :
-				$pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterestID'] );
+			if ( !empty( $swp_user_options['pinterest_id'] ) ) :
+				$pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterest_id'] );
 			else :
 				$pinterest_username = '';
 			endif;

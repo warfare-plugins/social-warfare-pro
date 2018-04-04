@@ -93,7 +93,7 @@ function swp_tumblr_button_html( $array ) {
 	// If not, let's check if Tumblr is activated and create the button HTML
 	elseif ( (isset( $array['options']['newOrderOfIcons']['tumblr'] ) && ! isset( $array['buttons'] )) || (isset( $array['buttons'] ) && isset( $array['buttons']['tumblr'] ))  ) :
 
-		$array['totes'] += intval( $array['shares']['tumblr'] );
+		$array['total_shares'] += intval( $array['shares']['tumblr'] );
 		++$array['count'];
 
 		// Collect the Title
@@ -108,7 +108,7 @@ function swp_tumblr_button_html( $array ) {
 		$array['resource']['tumblr'] = '<div class="nc_tweetContainer swp_tumblr" data-id="' . $array['count'] . '" data-network="tumblr">';
 		$link = urlencode( urldecode( swp_process_url( $array['url'] , 'tumblr' , $array['postID'] ) ) );
 		$array['resource']['tumblr'] .= '<a rel="nofollow" target="_blank" href="http://www.tumblr.com/share/link?url=' . $link . '&name=' . urlencode( $title ) . ($description ? '&description=' : '') . urlencode( $description ) . '" data-link="http://www.tumblr.com/share/link?url=' . $link . '&name=' . urlencode( $title ) . ($description ? '&description=' : '') . urlencode( $description ) . '" class="nc_tweet">';
-		if ( $array['options']['totesEach'] && $array['shares']['totes'] >= $array['options']['minTotes'] && $array['shares']['tumblr'] > 0 ) :
+		if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && $array['shares']['tumblr'] > 0 ) :
 			$array['resource']['tumblr'] .= '<span class="iconFiller">';
 			$array['resource']['tumblr'] .= '<span class="spaceManWilly">';
 			$array['resource']['tumblr'] .= '<i class="sw sw-tumblr"></i>';

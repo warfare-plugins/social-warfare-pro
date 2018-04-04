@@ -101,7 +101,7 @@ function swp_buffer_button_html( $array ) {
 
 		endif;
 
-		$array['totes'] += intval( $array['shares']['buffer'] );
+		$array['total_shares'] += intval( $array['shares']['buffer'] );
 
 		++$array['count'];
 
@@ -111,7 +111,7 @@ function swp_buffer_button_html( $array ) {
 
 		$array['resource']['buffer'] .= '<a rel="nofollow" target="_blank" href="http://bufferapp.com/add?url=' . $link . '&text=' . urlencode( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) ) . '" data-link="http://bufferapp.com/add?url=' . $link . '&text=' . urlencode( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) ) . '" class="nc_tweet buffer_link">';
 
-		if ( $array['options']['totesEach'] && $array['shares']['totes'] >= $array['options']['minTotes'] && $array['shares']['buffer'] > 0 ) :
+		if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && $array['shares']['buffer'] > 0 ) :
 
 			$array['resource']['buffer'] .= '<span class="iconFiller">';
 
