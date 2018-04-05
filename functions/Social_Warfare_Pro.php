@@ -5,9 +5,10 @@
  * 		 class that is in core.
  */
 
-class Social_Warfare_Pro extends Social_Warfare {
+class Social_Warfare_Pro extends SWP_Addon {
 
-	public function __construct() {
+	public function __construct( $name, $key, $product_id, $version ) {
+        parent::__construct( $name, $key, $product_id, $version );
 		$this->load_classes();
 		$this->instantiate_classes();
 

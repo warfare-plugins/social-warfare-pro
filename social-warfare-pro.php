@@ -32,5 +32,5 @@ if( !defined( 'SWP_ACTIVATE_REGISTRATION_TAB' ) ) {
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 10 );
 function initialize_social_warfare_pro() {
 	require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
-	new Social_Warfare_Pro();
+	new Social_Warfare_Pro( 'Social Warfare - Pro', 'pro', 63157, '2.3.5' );
 }
