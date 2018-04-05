@@ -144,7 +144,7 @@ function swp_yummly_button_html( $array ) {
 			endif;
 
 			$array['resource']['yummly'] = '<div class="nc_tweetContainer swp_yummly" data-id="' . $array['count'] . '" data-network="yummly">';
-			// $link = urlencode(urldecode(swp_process_url( $array['url'] , 'yummly' , $array['postID'] )));
+			// $link = urlencode(urldecode(SWP_URL_Management::process_url( $array['url'] , 'yummly' , $array['postID'] )));
 			$link = $array['url'];
 			$array['resource']['yummly'] .= '<a rel="nofollow" target="_blank" href="http://www.yummly.com/urb/verify?url=' . $link . '&title=' . $title . '&image=' . $image . '&yumtype=button" data-link="http://www.yummly.com/urb/verify?url=' . $link . '&title=' . $title . '&image=' . $image . '&yumtype=button" class="nc_tweet">';
 			if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && $array['shares']['yummly'] > 0 ) :

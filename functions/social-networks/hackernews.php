@@ -95,7 +95,7 @@ function swp_hacker_news_button_html( $array ) {
 		++$array['count'];
 
 		$array['resource']['hacker_news'] = '<div class="nc_tweetContainer swp_hacker_news" data-id="' . $array['count'] . '" data-network="hacker_news">';
-		$link = urlencode( urldecode( swp_process_url( $array['url'] , 'email' , $array['postID'] ) ) );
+		$link = urlencode( urldecode( SWP_URL_Management::process_url( $array['url'] , 'email' , $array['postID'] ) ) );
 		$array['resource']['hacker_news'] .= '<a rel="nofollow" target="_blank" href="http://news.ycombinator.com/submitlink?u=' . $link . '&t=' . $title . '" data-link="http://news.ycombinator.com/submitlink?u=' . $link . '&t=' .  $title . '" class="nc_tweet">';
 		if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && $array['shares']['hacker_news'] > 0 ) :
 			$array['resource']['hacker_news'] .= '<span class="iconFiller">';

@@ -96,7 +96,7 @@ function swp_whatsapp_button_html( $array ) {
 		++$array['count'];
 
 		$array['resource']['whatsapp'] = '<div class="nc_tweetContainer swp_whatsapp" data-id="' . $array['count'] . '" data-network="whatsapp">';
-		$link = urlencode( urldecode( swp_process_url( $array['url'] , 'whatsapp' , $array['postID'] ) ) );
+		$link = urlencode( urldecode( SWP_URL_Management::process_url( $array['url'] , 'whatsapp' , $array['postID'] ) ) );
 		$array['resource']['whatsapp'] .= '<a rel="nofollow" target="_blank" onclick="window.location = this.href;" href="whatsapp://send?text=' . $link . '" data-link="whatsapp://send?text=' . $link . '" class="nc_tweet noPop" data-action="share/whatsapp/share">';
 		if ( $array['options']['network_shares'] && $array['shares']['total_shares'] >= $array['options']['minimum_shares'] && $array['shares']['whatsapp'] > 0 ) :
 			$array['resource']['whatsapp'] .= '<span class="iconFiller">';
