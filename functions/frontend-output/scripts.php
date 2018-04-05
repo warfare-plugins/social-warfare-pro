@@ -24,7 +24,7 @@ function swp_pinit_controls_output($info){
 	$pin_vars = array(
 		'enabled' => false,
 	);
-	if ( is_swp_registered() ) {
+	if ( is_swp_addon_registered('pro') ) {
 
 		if ( $swp_user_options['pinit_toggle'] ) {
 			$pin_vars['enabled']   = true;

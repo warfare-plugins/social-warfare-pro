@@ -194,11 +194,11 @@ function swp_register_meta_boxes( $meta_boxes ) {
 				'std'   => $twitter_handle,
 			),
 			array(
-				'name'  => (is_swp_registered() ? 'true' : 'false'),
-				'id'    => (is_swp_registered() ? 'true' : 'false'),
+				'name'  => (is_swp_addon_registered('pro') ? 'true' : 'false'),
+				'id'    => (is_swp_addon_registered('pro') ? 'true' : 'false'),
 				'class' => 'registrationWrapper',
 				'type'  => 'hidden',
-				'std'   => (is_swp_registered() ? 'true' : 'false'),
+				'std'   => (is_swp_addon_registered('pro') ? 'true' : 'false'),
 			),
 		),
 	);
