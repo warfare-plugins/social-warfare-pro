@@ -313,14 +313,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $choices[$type] = $type;
             }
 
-            $default_types = ['location_page', 'location_post'];
+            $default_types = ['swp_og_type_page', 'swp_og_type_post'];
             $post_types = array_merge( $default_types, get_post_types( ['public' => true, '_builtin' => false ], 'names' ) );
 
             //* Assign the hard-coded custom post types as options for the
             //* registered post types.
             foreach( $post_types as $index => $type ) {
                 $priority = ( ( $index + 1 ) * 10 );
-                $option = new SWP_Option_Select( ucfirst( $type ), $type );
+                $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), $type );
                 $option->set_priority( $priority )
                     ->set_choices( $choices )
                     ->set_default( 'article' )
