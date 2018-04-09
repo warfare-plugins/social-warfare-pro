@@ -7,8 +7,12 @@
 
 class Social_Warfare_Pro extends SWP_Addon {
 
-	public function __construct( $name, $key, $product_id, $version ) {
-        parent::__construct( $name, $key, $product_id, $version );
+	public function __construct( ) {
+        parent::__construct();
+        $this->name = 'Social Warfare - Pro';
+        $this->key = 'pro';
+        $this->product_id = 63157;
+        $this->version = '3.0.0';
 		$this->load_classes();
 		$this->instantiate_classes();
 
@@ -17,15 +21,16 @@ class Social_Warfare_Pro extends SWP_Addon {
 		}
 
 		$this->registration_update_notification();
-		$this->mismatch_notification();
 		$this->initiate_plugin();
 		$this->update_checker();
 		// $this->social_warfare_pro_registration_key(1);
 	    // add_action( 'admin_notices', array( $this, 'registration_update_notification' ) );
-	    // add_action( 'admin_notices', array( $this, 'mismatch_notification' ) );
+	    if ( $this->version !== $this->core_version ) {
+            add_action( 'admin_notices', array( $this, 'mismatch_notification' ) );
+        }
 	    // add_action( 'plugins_loaded' , array( $this, 'initiate_plugin' , 10 ) );
 	    // add_action( 'plugins_loaded' , array( $this, 'update_checker' , 20 ) );
-	    add_filter( 'swp_registrations' , array( $this, 'social_warfare_pro_registration_key'), 1 );
+        add_filter( 'swp_registrations', [$this, 'add_self'] );
 
         if( true === $this->is_registered() ):
         	add_filter( 'swpmb_meta_boxes', [$this, 'register_meta_boxes'] );
@@ -302,11 +307,7 @@ function register_meta_boxes( $meta_boxes ) {
 	 *
 	 */
 	public function mismatch_notification() {
-		global $swp_user_options;
-
-		if(defined('SWP_VERSION') && SWP_VERSION !== SWPP_VERSION):
-			echo '<div class="update-nag notice is-dismissable"><p>' . __( '<b>Important:</b> You are currently running Social Warfare v'.SWP_VERSION.' and Social Warfare - Pro v'.SWPP_VERSION.'. In order to avoid conflicts, these two version need to match in order to activate all of the plugins features. Please update the appropriate plugin so that both Social Warfare and Social Warfare - Pro are on the same version. For more information about this, <a href="https://warfareplugins.com/support/updating-social-warfare-social-warfare-pro/">please read this</a>. ', 'social-warfare' ) . '</p></div>';
-		endif;
+		echo '<div class="update-nag notice is-dismissable"><p>' . __( '<b>Important:</b> You are currently running Social Warfare v'.SWP_VERSION.' and Social Warfare - Pro v'.SWPP_VERSION.'. In order to avoid conflicts, these two version need to match in order to activate all of the plugins features. Please update the appropriate plugin so that both Social Warfare and Social Warfare - Pro are on the same version. For more information about this, <a href="https://warfareplugins.com/support/updating-social-warfare-social-warfare-pro/">please read this</a>. ', 'social-warfare' ) . '</p></div>';
 	}
 
 
