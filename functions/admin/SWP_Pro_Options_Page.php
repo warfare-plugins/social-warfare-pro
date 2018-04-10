@@ -418,15 +418,15 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $floating_share_buttons = $styles->sections->floating_share_buttons;
 
-            //* sideReveal => transition
-            $transition = new SWP_Option_Select( 'Transition', 'transition' );
-            $transition->set_choices( [
-                'slide' => 'Slide In / Slide Out',
-                'fade'  => 'Fade In / Fade Out'
+            $float_mobile = new SWP_Option_Select( 'On Mobile', 'float_mobile' );
+            $float_mobile->set_choices( [
+                'bottom'=> 'Bottom of Screen',
+                'off'   => 'Off'
             ])
-                ->set_default( 'slide' )
                 ->set_priority( 40 )
-                ->set_dependency( 'floating_panel', ['left', 'right'] )
+                ->set_default( 'bottom' )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
             //* floatStyle => float_button_shape
@@ -434,45 +434,56 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_button_shape->set_choices( [
                 'default'   => 'Buttons',
                 'boxed'     => 'Boxes',
-            ])
+                ])
                 ->set_default( 'boxed' )
-                ->set_priority( 50 )
-                ->set_size( 'sw-col-460' )
-                ->set_dependency( 'floating_panel', ['left', 'rigt'] )
+                ->set_priority( 45 )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
             //* floatStyleSource => float_style_source
-            $float_style_source = new SWP_Option_Select( 'Inherit Visual Options', 'float_style_source' );
+            $float_style_source = new SWP_Option_Toggle( 'Inherit Visual Options', 'float_style_source' );
             $float_style_source->set_default( true )
-                ->set_priority( 60 )
-                ->set_size( 'sw-col-460' )
-                ->set_dependency( 'floating_panel', ['left', 'right'] )
+                ->set_priority( 50 )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
+
+            //* sideDColorSet => float_default_colors
+            $float_default_colors = new SWP_Option_Select( 'Default Color Set', 'default_colors' );
+            $float_default_colors->set_choices( $color_choices )
+                ->set_default( 'full_color' )
+                ->set_priority( 60 )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_style_source', [true] );
+
+            //* sideOColorSet => float_hover_colors
+            $float_hover_colors = new SWP_Option_Select( 'Hover Color Set', 'float_hover_colors' );
+            $float_hover_colors->set_priority( 80 )
+                ->set_choices( $color_choices )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_style_source', [true] );
+
+            //* sideIColorSet => float_single_colors
+            $float_single_colors = new SWP_Option_Select( 'Single Button Hover', 'float_single_colors' );
+            $float_single_colors->set_priority( 90 )
+                ->set_choices( $color_choices )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_style_source', [true] );
 
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( 'Custom Color', 'float_custom_color' );
             $float_custom_color->set_default( '#ced3dc' )
-                ->set_priority( 90 )
-                ->set_size( 'sw-col-460' )
+                ->set_priority( 100 )
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'float_style_source', [false] )
                 ->set_premium( 'pro' );
 
-            //* floatBgColor => float_background_color
-            $float_background_color = new SWP_Option_Text( 'Background Color', 'float_background_color' );
-            $float_background_color->set_size( 'sw-col-460' )
-                ->set_default( "#ffffff" )
-                ->set_size( 'sw-col-460' )
-                ->set_dependency( 'float_position', ['top', 'bottom'] );
 
-            $float_mobile = new SWP_Option_Select( 'On Mobile', 'float_mobile' );
-            $float_mobile->set_choices( [
-            ])
-                ->set_priority( 40 )
-                ->set_default( 'bottom' )
-                ->set_size( 'sw-col-460' )
-                ->set_dependency( 'float_position', 'left' )
-                ->set_premium( 'pro' );
 
-        $floating_share_buttons->add_options( [$transition, $float_button_shape, $float_style_source, $float_mobile, $float_custom_color, $float_background_color] );
+
+        $floating_share_buttons->add_options( [$float_button_shape, $float_style_source, $float_mobile, $float_custom_color,
+            $float_default_colors, $float_hover_colors, $float_single_colors,] );
 
         $click_to_tweet = new SWP_Options_Page_Section( 'Click-To-Tweet Style' );
         $click_to_tweet->set_description( 'Select the default visual style for Click-to-Tweets on your site.' )
