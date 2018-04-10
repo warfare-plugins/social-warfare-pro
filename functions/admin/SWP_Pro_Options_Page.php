@@ -120,6 +120,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'all'   => 'Show a selection of all images on the page.',
                 'featured'  => 'Show my featured image.'
             ])
+                ->set_size( 'sw-col-300' )
                 ->set_default( 'all' )
                 ->set_premium( 'pro' );
 
@@ -205,7 +206,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $former_domain = new SWP_Option_Text( 'Former Domain', 'former_domain' );
             $former_domain->set_default( '' )
                 ->set_priority( 70 )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-300'  )
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
@@ -322,6 +323,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $priority = ( ( $index + 1 ) * 10 );
                 $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), $type );
                 $option->set_priority( $priority )
+                    ->set_size( 'sw-col-300' )
                     ->set_choices( $choices )
                     ->set_default( 'article' )
                     ->set_premium( 'pro' );
@@ -425,7 +427,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
                 ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
@@ -437,7 +439,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ])
                 ->set_default( 'boxed' )
                 ->set_priority( 45 )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
                 ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
@@ -445,7 +447,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_style_source = new SWP_Option_Toggle( 'Inherit Visual Options', 'float_style_source' );
             $float_style_source->set_default( true )
                 ->set_priority( 50 )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_position', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
@@ -454,28 +456,28 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_default_colors->set_choices( $color_choices )
                 ->set_default( 'full_color' )
                 ->set_priority( 60 )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [true] );
 
             //* sideOColorSet => float_hover_colors
             $float_hover_colors = new SWP_Option_Select( 'Hover Color Set', 'float_hover_colors' );
             $float_hover_colors->set_priority( 80 )
                 ->set_choices( $color_choices )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [true] );
 
             //* sideIColorSet => float_single_colors
             $float_single_colors = new SWP_Option_Select( 'Single Button Hover', 'float_single_colors' );
             $float_single_colors->set_priority( 90 )
                 ->set_choices( $color_choices )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [true] );
 
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( 'Custom Color', 'float_custom_color' );
             $float_custom_color->set_default( '#ced3dc' )
                 ->set_priority( 100 )
-                ->set_size( 'sw-col-300' )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] )
                 ->set_premium( 'pro' );
 
@@ -501,6 +503,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'style6' => 'Livin\' On A Prayer',
                 'none' => 'None - Create Your Own CSS In Your Theme'
             ])
+                ->set_size( 'sw-col-300' )
                 ->set_default( 'style1' )
                 ->set_premium( 'pro' )
                 ->set_priority( 10 );
@@ -509,6 +512,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $ctt_css = new SWP_Option_Textarea( 'Custom CSS', 'ctt_css' );
             $ctt_css->set_dependency( 'ctt_theme', 'none' )
                 ->set_premium( 'pro' )
+                ->set_size( 'sw-col-300' )
                 ->set_priority( 20 );
 
             //* cttPreview => ctt_preview
