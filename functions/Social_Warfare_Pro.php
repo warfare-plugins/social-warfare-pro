@@ -259,6 +259,30 @@ function register_meta_boxes( $meta_boxes ) {
 	 */
 	public function initiate_plugin() {
 	    if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
+
+            /**
+    		 * The Social Network Classes
+    		 *
+    		 * This family of classes provides the framework and the model needed for creating
+    		 * a unique object for each social network. It also provides for maximum extensibility
+    		 * to allow addons even easier access than ever before to create and add more social
+    		 * networks to the plugin.
+    		 *
+    		 */
+    		$social_networks = [
+    			'Buffer',
+    			'Reddit',
+    			'Flipboard',
+                'Email',
+                'Hackernews',
+                'Pocket',
+                'Tumblr',
+                'Whatsapp',
+                'Yummly'
+    		];
+    		$this->load_files( '/functions/social-networks/', $social_networks);
+
+
 	        /**
 	         * Include the necessary files
 	         *
@@ -269,20 +293,6 @@ function register_meta_boxes( $meta_boxes ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
 	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
 
-
-	        /**
-	         * Include the networks files
-	         *
-	         */
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/tumblr.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/reddit.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/yummly.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/email.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/whatsapp.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/pocket.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/buffer.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/hackernews.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/social-networks/flipboard.php';
 
 			new SWP_Pro_Header_Output();
 
@@ -362,5 +372,22 @@ function register_meta_boxes( $meta_boxes ) {
 	        echo '<div class="notice-error notice is-dismissable"><p>' . __( '<b>Important:</b> We’ve just made some significant upgrades to your <i>Social Warfare - Pro</i> license. You will need to <a href="https://warfareplugins.com/my-account/">grab your license key</a> and re-register the plugin. Read <a href="https://warfareplugins.com/support/how-to-register-your-license-key/">the full details</a> to find out why this change was necessary.', 'social-warfare' ) . '</p></div>';
 	    endif;
 	}
+
+    /**
+     * Loads an array of related files.
+     *
+     * @param  string   $path  The relative path to the files home.
+     * @param  array    $files The name of the files (classes), no vendor prefix.
+     * @return none     The files are loaded into memory.
+     *
+     */
+    private function load_files( $path, $files ) {
+        foreach( $files as $file ) {
+
+            //* Add our vendor prefix to the file name.
+            $file = "SWP_" . $file;
+            require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
+        }
+    }
 
 }
