@@ -69,6 +69,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $analytics_medium = new SWP_Option_Text( 'UTM Medium', 'analytics_medium' );
             $analytics_medium->set_default( 'Social' )
                 ->set_priority( 30 )
+                ->set_size( 'sw-col-300' )
                 ->set_dependency( 'google_analytics', true )
                 ->set_premium( 'pro');
 
@@ -238,7 +239,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                     'manual'    => 'Sort Manually Using Drag & Drop Above' ,
                     'dynamic'   => 'Sort Dynamically By Order Of Most Shares'
                 ])
-                ->set_size( 'sw-col-460')
+                ->set_size( 'sw-col-300' )
                 ->set_default( 'manual' )
                 ->set_premium( 'pro' );
 
@@ -357,7 +358,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ] )
             ->set_default( 'flat_fresh' )
             ->set_priority( 10 )
-            ->set_size( 'sw-col-460' )
+            ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
             ->set_premium( 'pro' );
 
         //* buttonSize => button_size
@@ -374,7 +375,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ] )
             ->set_default( '1' )
             ->set_priority( 20 )
-            ->set_size( 'sw-col-460' )
+            ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
             ->set_premium( 'pro' );
 
         $color_choices = SWP_Options_Page::get_color_choices_array();
@@ -386,20 +387,22 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $default_colors->set_choices( $color_choices )
                 ->set_default( 'full_color' )
                 ->set_priority( 30 )
-                ->set_size( 'sw-col-460' )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_premium( 'pro' );
 
             //* oColorSet => hover_colors
-            $hover_colors = clone $default_colors;
-            $hover_colors->set_name( 'Hover Color Set')
-                ->set_key( 'hover_colors' )
-                ->set_priority( 40 );
+            $hover_colors = new SWP_Option_Select( 'Hover Color Set', 'hover_colors' );
+            $hover_colors->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+                ->set_default( 'full_color' )
+                ->set_priority( 40 )
+                ->set_premium( 'pro' );
 
             //* iColorSet => single_colors
-            $single_colors = clone $default_colors;
-            $single_colors->set_name( 'Single Button Hover' )
-                ->set_key( 'single_colors' )
-                ->set_priority( 50 );
+            $single_colors = new SWP_Option_Select( 'Single Button Hover', 'single_colors' );
+            $single_colors->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+                ->set_default( 'full_color' )
+                ->set_priority( 50 )
+                ->set_premium( 'pro' );
 
             //* button_alignment => button_alignment
             $button_alignment = new SWP_Option_Select( 'Button Alignment', 'button_alignment' );
@@ -409,14 +412,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'left'      => 'Left',
                 'right'     => 'Right',
                 'center'    => 'Center'
-            ])
-                ->set_size( 'sw-col-460' )
+                ] )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_priority( 60 )
                 ->set_default( 'full_width' )
                 ->set_dependency( 'button_size', [ '0.7', '0.8', '0.9'] )
                 ->set_premium( 'pro' );
 
-        $visual_options->add_options( [$button_shape, $button_size, $default_colors, $default_colors, $single_colors, $button_alignment] );
+        $visual_options->add_options( [$button_shape, $button_size, $default_colors, $default_colors, $hover_colors, $single_colors, $button_alignment] );
 
         $floating_share_buttons = $styles->sections->floating_share_buttons;
 
@@ -439,7 +442,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ])
                 ->set_default( 'boxed' )
                 ->set_priority( 45 )
-                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_dependency( 'float_location', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
