@@ -401,7 +401,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_key( 'single_colors' )
                 ->set_priority( 50 );
 
-            //* buttonFloat => button_alignment
+            //* button_alignment => button_alignment
             $button_alignment = new SWP_Option_Select( 'Button Alignment', 'button_alignment' );
             $button_alignment->set_choices( [
                 //* fullWidth -> full_width
