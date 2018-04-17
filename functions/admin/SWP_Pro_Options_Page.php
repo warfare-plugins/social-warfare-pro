@@ -428,7 +428,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-                ->set_dependency( 'float_position', ['left', 'right'] )
+                ->set_dependency( 'float_location', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
             //* floatStyle => float_button_shape
@@ -440,7 +440,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_default( 'boxed' )
                 ->set_priority( 45 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-                ->set_dependency( 'float_position', ['left', 'right'] )
+                ->set_dependency( 'float_location', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
             //* floatStyleSource => float_style_source
@@ -448,7 +448,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_style_source->set_default( true )
                 ->set_priority( 50 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
-                ->set_dependency( 'float_position', ['left', 'right'] )
+                ->set_dependency( 'float_location', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
             //* sideDColorSet => float_default_colors
