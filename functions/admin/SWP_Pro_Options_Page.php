@@ -423,6 +423,18 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $floating_share_buttons = $styles->sections->floating_share_buttons;
 
+            $float_alignment = new SWP_Option_Select( 'Float Alignment', 'float_alignment' );
+            $float_alignment->set_choices( [
+                'top'       => 'Near the top of the page',
+                'center'    => 'Centered on the page',
+                'bottom'    => 'Near the bottom of the page'
+                ] )
+                ->set_default( 'center' )
+                ->set_priority( 25 )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+                ->set_dependency( 'float_location', ['left', 'right'] )
+                ->set_premium( 'pro' );
+
             $float_mobile = new SWP_Option_Select( 'On Mobile', 'float_mobile' );
             $float_mobile->set_choices( [
                 'bottom'=> 'Bottom of Screen',
@@ -487,7 +499,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
 
 
-        $floating_share_buttons->add_options( [$float_button_shape, $float_style_source, $float_mobile, $float_custom_color,
+        $floating_share_buttons->add_options( [$float_alignment, $float_button_shape, $float_style_source, $float_mobile, $float_custom_color,
             $float_default_colors, $float_hover_colors, $float_single_colors,] );
 
         $click_to_tweet = new SWP_Options_Page_Section( 'Click-To-Tweet Style' );
