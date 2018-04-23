@@ -48,8 +48,8 @@ function swp_insert_pinterest_image( $content ) {
 	// Fetch the user's settings
 	global $swp_user_options, $post;
 	$post_id = $post->ID;
-	$swp_advanced_pin_image = get_post_meta( $post_id , 'swp_advanced_pinterest_image' , true );
-	$swp_advanced_pin_image_location = get_post_meta( $post_id , 'swp_advanced_pinterest_image_location' , true );
+	$swp_advanced_pin_image = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
+	$swp_advanced_pin_image_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
 	/**
 	 * A conditional to see if this feature should be turned on or off on a given post
