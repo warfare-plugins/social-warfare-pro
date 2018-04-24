@@ -392,14 +392,17 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             //* oColorSet => hover_colors
             $hover_colors = new SWP_Option_Select( 'Hover Color Set', 'hover_colors' );
-            $hover_colors->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+            $hover_colors->set_choices( $color_choices )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_default( 'full_color' )
                 ->set_priority( 40 )
                 ->set_premium( 'pro' );
 
+
             //* iColorSet => single_colors
             $single_colors = new SWP_Option_Select( 'Single Button Hover', 'single_colors' );
-            $single_colors->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+            $single_colors->set_choices( $color_choices )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_default( 'full_color' )
                 ->set_priority( 50 )
                 ->set_premium( 'pro' );
@@ -407,7 +410,6 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* button_alignment => button_alignment
             $button_alignment = new SWP_Option_Select( 'Button Alignment', 'button_alignment' );
             $button_alignment->set_choices( [
-                //* fullWidth -> full_width
                 'full_width' => 'Full Width',
                 'left'      => 'Left',
                 'right'     => 'Right',
@@ -419,7 +421,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_dependency( 'button_size', [ '0.7', '0.8', '0.9'] )
                 ->set_premium( 'pro' );
 
-        $visual_options->add_options( [$button_shape, $button_size, $default_colors, $default_colors, $hover_colors, $single_colors, $button_alignment] );
+        $visual_options->add_options( [$button_shape, $button_size, $default_colors,
+            $hover_colors, $single_colors, $button_alignment,
+        ] );
 
         $floating_share_buttons = $styles->sections->floating_share_buttons;
 
@@ -484,7 +488,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' );
 
             //* sideDColorSet => float_default_colors
-            $float_default_colors = new SWP_Option_Select( 'Default Color Set', 'default_colors' );
+            $float_default_colors = new SWP_Option_Select( 'Default Color Set', 'float_default_colors' );
             $float_default_colors->set_choices( $color_choices )
                 ->set_default( 'full_color' )
                 ->set_priority( 60 )
@@ -513,11 +517,10 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_dependency( 'float_style_source', [false] )
                 ->set_premium( 'pro' );
 
-
-
-
-        $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_style_source, $float_mobile, $float_custom_color,
-            $float_default_colors, $float_hover_colors, $float_single_colors,] );
+        $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_style_source,
+            $float_mobile, $float_custom_color,
+            $float_default_colors, $float_hover_colors, $float_single_colors,
+        ] );
 
         $click_to_tweet = new SWP_Options_Page_Section( 'Click-To-Tweet Style' );
         $click_to_tweet->set_description( 'Select the default visual style for Click-to-Tweets on your site.' )
