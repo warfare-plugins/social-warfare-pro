@@ -18,18 +18,12 @@ class Social_Warfare_Pro extends SWP_Addon {
 		$this->registration_update_notification();
 		$this->initiate_plugin();
 		$this->update_checker();
-		// $this->social_warfare_pro_registration_key(1);
-	    // add_action( 'admin_notices', array( $this, 'registration_update_notification' ) );
+
 	    if ( $this->version !== $this->core_version ) {
             add_action( 'admin_notices', array( $this, 'mismatch_notification' ) );
         }
-	    // add_action( 'plugins_loaded' , array( $this, 'initiate_plugin' , 10 ) );
-	    // add_action( 'plugins_loaded' , array( $this, 'update_checker' , 20 ) );
-        add_filter( 'swp_registrations', [$this, 'add_self'] );
 
-        if( true === $this->is_registered() ):
-        	add_filter( 'swpmb_meta_boxes', [$this, 'register_meta_boxes'] );
-        endif;
+        add_filter( 'swp_registrations', [$this, 'add_self'] );
 	}
 
 	public function load_classes() {
