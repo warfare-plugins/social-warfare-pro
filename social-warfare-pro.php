@@ -20,16 +20,9 @@ define( 'SWPP_VERSION', '3.0.0' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'SWPP_ITEM_ID', 63157 );
 
-// Activate the registration tab constant so that core loads the registration tab
-if( !defined( 'SWP_ACTIVATE_REGISTRATION_TAB' ) ) {
-    define( 'SWP_ACTIVATE_REGISTRATION_TAB' , true );
-}
+add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
-
-
-add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 10 );
 function initialize_social_warfare_pro() {
 	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
 		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
