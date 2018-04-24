@@ -1,10 +1,5 @@
 <?php
 
-/**
- * TODO: This file needs to mirror Social_Warfare.php and the Social_Warfare
- * 		 class that is in core.
- */
-
 class Social_Warfare_Pro extends SWP_Addon {
 
 	public function __construct( ) {
@@ -367,7 +362,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 	 *
 	 */
 	public  function registration_update_notification() {
-	    $options = get_option( 'socialWarfareOptions', array() );
+	    $options = get_option( 'social_warfare_settings', array() );
 	    if( !empty($options['premiumCode']) && empty( $options['pro_license_key'] ) ):
 	        echo '<div class="notice-error notice is-dismissable"><p>' . __( '<b>Important:</b> We’ve just made some significant upgrades to your <i>Social Warfare - Pro</i> license. You will need to <a href="https://warfareplugins.com/my-account/">grab your license key</a> and re-register the plugin. Read <a href="https://warfareplugins.com/support/how-to-register-your-license-key/">the full details</a> to find out why this change was necessary.', 'social-warfare' ) . '</p></div>';
 	    endif;
