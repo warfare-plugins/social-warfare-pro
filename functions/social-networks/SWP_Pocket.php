@@ -35,7 +35,7 @@ class SWP_Pocket extends SWP_Social_Network {
 
 		// Update the class properties for this network
 		$this->name           = __( 'Pocket','social-warfare' );
-		$this->cta            = __( 'pocket','social-warfare' );
+		$this->cta            = __( 'Pocket','social-warfare' );
 		$this->key            = 'pocket';
 		$this->default        = false;
         $this->premium        = 'pro';
