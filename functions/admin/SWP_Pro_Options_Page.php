@@ -411,9 +411,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $button_alignment = new SWP_Option_Select( 'Button Alignment', 'button_alignment' );
             $button_alignment->set_choices( [
                 'full_width' => 'Full Width',
-                'left'      => 'Left',
-                'right'     => 'Right',
-                'center'    => 'Center'
+                'left'       => 'Left',
+                'right'      => 'Right',
+                'center'     => 'Center'
                 ] )
                 ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_priority( 60 )
@@ -433,10 +433,10 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 '1.3' => '130%',
                 '1.2' => '120%',
                 '1.1' => '110%',
-                '1'     => '100%',
-                '0.9'   => '90%',
-                '0.8'   => '80%',
-                '0.7'   => '70%'
+                '1'   => '100%',
+                '0.9' => '90%',
+                '0.8' => '80%',
+                '0.7' => '70%'
                 ] )
                 ->set_default( '1' )
                 ->set_priority( 35 )
@@ -470,8 +470,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* floatStyle => float_button_shape
             $float_button_shape = new SWP_Option_Select( 'Button Shape', 'float_button_shape' );
             $float_button_shape->set_choices( [
-                'default'   => 'Buttons',
-                'boxed'     => 'Boxes',
+                'default' => 'Buttons',
+                'boxed'   => 'Boxes',
+				'circles' => 'Circles',
                 ])
                 ->set_default( 'boxed' )
                 ->set_priority( 45 )
