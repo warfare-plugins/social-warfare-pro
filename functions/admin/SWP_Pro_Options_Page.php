@@ -308,21 +308,21 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $open_graph->set_description( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.' )
                 ->set_priority( 20 );
 
-            $custom_post_types = $this->get_custom_post_types();
+            $og_post_types = $this->get_og_post_types();
             $choices = [];
 
-            foreach( $custom_post_types as $type) {
-                $choices[$type] = $type;
+            foreach( $og_post_types as $type) {
+                $choices['og_' . $type] = $type;
             }
 
-            $default_types = ['swp_og_type_page', 'swp_og_type_post'];
+            $default_types = ['page', 'post'];
             $post_types = array_merge( $default_types, get_post_types( ['public' => true, '_builtin' => false ], 'names' ) );
 
             //* Assign the hard-coded custom post types as options for the
             //* registered post types.
             foreach( $post_types as $index => $type ) {
                 $priority = ( ( $index + 1 ) * 10 );
-                $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), $type );
+                $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), 'og_' . $type );
                 $option->set_priority( $priority )
                     ->set_size( 'sw-col-300' )
                     ->set_choices( $choices )
