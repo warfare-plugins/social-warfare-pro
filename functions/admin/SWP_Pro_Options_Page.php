@@ -254,8 +254,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $display->sections->share_counts->add_option( $minimum_shares );
 
-        $twitter_cards = new SWP_Options_Page_Section( 'Twitter Cards' );
-        $twitter_cards->set_description( 'Activating Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.' )
+        $meta_tags = new SWP_Options_Page_Section( __( 'Social Meta Tags' , 'social-warfare') );
+        $meta_tags->set_description( 'Activating Open Graph Tags and Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.' )
             ->set_priority( 30 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/' );
 
@@ -265,7 +265,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                     ->set_size( 'sw-col-300' )
                     ->set_premium( 'pro' );
 
-        $twitter_cards->add_option( $twitter_card );
+				$og_tags = new SWP_Option_Toggle( 'Show Open Graph Tags', 'og_tags' );
+                $og_tags->set_default( true )
+                    ->set_priority( 5 )
+                    ->set_size( 'sw-col-300' )
+                    ->set_premium( 'pro' );
+
+        $meta_tags->add_options( [$twitter_card,$og_tags] );
 
         /* Image Hover Pin Button   */
         $image_hover = new SWP_Options_Page_Section( 'Image Hover Pin Button' );
@@ -290,7 +296,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $yummly_display->add_option( $yummly_table );
 
-        $display->add_sections( [$twitter_cards, $image_hover, $yummly_display] );
+        $display->add_sections( [$meta_tags, $image_hover, $yummly_display] );
 
         return $this;
     }
