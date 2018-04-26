@@ -360,7 +360,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             'pill'      => 'Pills',
             'three_dee' => 'Three-Dee',
             'connected'  => 'Connected',
-            'boxed'     => 'Boxed'
+            // 'boxed'     => 'Boxed'
             ] )
             ->set_default( 'flat_fresh' )
             ->set_priority( 10 )
