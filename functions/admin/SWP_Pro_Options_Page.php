@@ -347,42 +347,46 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_styles_tab() {
         $styles = $this->core->tabs->styles;
 
-        //* visualTheme => button_shape
-        $button_shape = new SWP_Option_Select( 'Button Shape', 'button_shape' );
-        $button_shape->set_choices( [
-            'flat_fresh'=> 'Flat & Fresh',
-            'leaf'     => 'A Leaf on the Wind',
-            'shift'     => 'Shift',
-            'pill'      => 'Pills',
-            'three_dee' => 'Three-Dee',
-            'connected'  => 'Connected',
-            // 'boxed'     => 'Boxed'
-            ] )
-            ->set_default( 'flat_fresh' )
+        $visual_options = new SWP_Options_Page_Section( 'Visual Options' );
+        $visual_options->set_description( 'Use the settings below to customize the look of your share buttons.' )
             ->set_priority( 10 )
-            ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+            ->set_information_link( 'https://warfareplugins.com/support/options-page-styles-tab-visual-options/' )
             ->set_premium( 'pro' );
 
-        //* buttonSize => button_size
-        $button_size = new SWP_Option_Select( 'Button Size', 'button_size' );
-        $button_size->set_choices( [
-            '1.4' => '140%',
-            '1.3' => '130%',
-            '1.2' => '120%',
-            '1.1' => '110%',
-            '1'     => '100%',
-            '0.9'   => '90%',
-            '0.8'   => '80%',
-            '0.7'   => '70%'
-            ] )
-            ->set_default( '1' )
-            ->set_priority( 20 )
-            ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
-            ->set_premium( 'pro' );
+            //* visualTheme => button_shape
+            $button_shape = new SWP_Option_Select( 'Button Shape', 'button_shape' );
+            $button_shape->set_choices( [
+                'flat_fresh'=> 'Flat & Fresh',
+                'leaf'     => 'A Leaf on the Wind',
+                'shift'     => 'Shift',
+                'pill'      => 'Pills',
+                'three_dee' => 'Three-Dee',
+                'connected'  => 'Connected',
+                // 'boxed'     => 'Boxed'
+                ] )
+                ->set_default( 'flat_fresh' )
+                ->set_priority( 10 )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+                ->set_premium( 'pro' );
 
-        $color_choices = SWP_Options_Page::get_color_choices_array();
+            //* buttonSize => button_size
+            $button_size = new SWP_Option_Select( 'Button Size', 'button_size' );
+            $button_size->set_choices( [
+                '1.4' => '140%',
+                '1.3' => '130%',
+                '1.2' => '120%',
+                '1.1' => '110%',
+                '1'     => '100%',
+                '0.9'   => '90%',
+                '0.8'   => '80%',
+                '0.7'   => '70%'
+                ] )
+                ->set_default( '1' )
+                ->set_priority( 20 )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+                ->set_premium( 'pro' );
 
-        $visual_options = $styles->sections->visual_options;
+            $color_choices = SWP_Options_Page::get_color_choices_array();
 
             //* dColorSet => default_colors
             $default_colors = new SWP_Option_Select( 'Default Color Set', 'default_colors' );
@@ -563,7 +567,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $click_to_tweet->add_options( [$ctt_theme, $ctt_css, $ctt_preview] );
 
-        $styles->add_section( $click_to_tweet );
+        $styles->add_sections( [$visual_options, $click_to_tweet] );
 
         return $this;
     }
