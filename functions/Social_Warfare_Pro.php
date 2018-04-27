@@ -90,10 +90,10 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Image','social-warfare' ),
     				'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
-    				'id'    => $prefix . 'ogImage',
+    				'id'    => $prefix . 'og_image',
     				'type'  => 'image_advanced',
     				'clone' => false,
-    				'class' => $prefix . 'ogImageWrapper',
+    				'class' => $prefix . 'og_imageWrapper',
     				'max_file_uploads' => 1,
     			),
     			// Setup the social media title.
@@ -102,7 +102,7 @@ class Social_Warfare_Pro extends SWP_Addon {
     				'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
     				'id'    => $prefix . 'ogTitle',
     				'type'  => 'textarea',
-    				'class' => $prefix . 'ogTitleWrapper',
+    				'class' => $prefix . 'og_title',
     				'clone' => false,
     			),
     			// Setup the social media description.
@@ -124,8 +124,8 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<i class="sw sw-pinterest"></i> ' . __( 'Pinterest Image','social-warfare' ),
     				'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
-    				'id'    => $prefix . 'pinterestImage',
-    				'class' => $prefix . 'pinterestImageWrapper',
+    				'id'    => $prefix . 'pinterest_image',
+    				'class' => $prefix . 'pinterest_imageWrapper',
     				'type'  => 'image_advanced',
     				'clone' => false,
     				'max_file_uploads' => 1,

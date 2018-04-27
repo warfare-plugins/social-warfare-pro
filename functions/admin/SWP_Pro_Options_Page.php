@@ -387,7 +387,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' );
 
             $color_choices = SWP_Options_Page::get_color_choices_array();
-
+            
             //* dColorSet => default_colors
             $default_colors = new SWP_Option_Select( 'Default Color Set', 'default_colors' );
             $default_colors->set_choices( $color_choices )
