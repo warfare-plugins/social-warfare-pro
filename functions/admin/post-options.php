@@ -48,7 +48,7 @@ function _swp_get_twitter_handle( $fallback = false ) {
 function swp_register_meta_boxes( $meta_boxes ) {
 	global $swp_user_options;
 
-	$prefix = 'nc_';
+	$prefix = 'swp_';
 	$options = $swp_user_options;
 
 	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
@@ -87,7 +87,7 @@ function swp_register_meta_boxes( $meta_boxes ) {
 				'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Description','social-warfare' ),
 				'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
 				'id'    => $prefix . 'ogDescription',
-				'class' => $prefix . 'ogDescriptionWrapper',
+				'class' => $prefix . 'og_description',
 				'type'  => 'textarea',
 				'clone' => false,
 			),
@@ -120,8 +120,8 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			array(
 				'name'  => '<i class="sw sw-pinterest"></i>' . __( 'Pinterest Description','social-warfare' ),
 				'desc'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
-				'id'    => $prefix . 'pinterestDescription',
-				'class' => $prefix . 'pinterestDescriptionWrapper',
+				'id'    => $prefix . 'pinterest_description',
+				'class' => $prefix . 'pinterest_descriptionWrapper',
 				'type'  => 'textarea',
 				'clone' => false,
 			),
@@ -155,8 +155,8 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			// Set up the location on post options.
 			array(
 				'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Horizontal Buttons Location','social-warfare' ),
-				'id'      => $prefix . 'postLocation',
-				'class'   => $prefix . 'postLocationWrapper',
+				'id'      => $prefix . 'post_location',
+				'class'   => $prefix . 'post_locationWrapper',
 				'type'    => 'select',
 				'options' => array(
 					'default' => __( 'Default','social-warfare' ),
@@ -170,8 +170,8 @@ function swp_register_meta_boxes( $meta_boxes ) {
 			),
 			array(
 				'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Floating Buttons','social-warfare' ),
-				'id'      => $prefix . 'floatLocation',
-				'class'   => $prefix . 'floatLocationWrapper',
+				'id'      => $prefix . 'float_location',
+				'class'   => $prefix . 'float_locationWrapper',
 				'type'    => 'select',
 				'options' => array(
 					'default' => __( 'Default','social-warfare' ),

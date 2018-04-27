@@ -99,7 +99,7 @@ function swp_insert_pinterest_image( $content ) {
 		if( false !== $pinterest_image_url && !empty($pinterest_image_url) ):
 
 			// Fetch the user's custom Pinterest description
-			$pinterest_description = get_post_meta( $post_id , 'nc_pinterestDescription' , true );
+			$pinterest_description = get_post_meta( $post_id , 'nc_pinterest_description' , true );
 
 			// Collect the user's Pinterest username
 			if ( !empty( $swp_user_options['pinterest_id'] ) ) :

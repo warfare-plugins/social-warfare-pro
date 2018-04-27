@@ -110,7 +110,7 @@ class Social_Warfare_Pro extends SWP_Addon {
     				'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Description','social-warfare' ),
     				'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
     				'id'    => $prefix . 'ogDescription',
-    				'class' => $prefix . 'ogDescriptionWrapper',
+    				'class' => $prefix . 'og_description',
     				'type'  => 'textarea',
     				'clone' => false,
     			),
@@ -143,8 +143,8 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<i class="sw sw-pinterest"></i>' . __( 'Pinterest Description','social-warfare' ),
     				'desc'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
-    				'id'    => $prefix . 'pinterestDescription',
-    				'class' => $prefix . 'pinterestDescriptionWrapper',
+    				'id'    => $prefix . 'pinterest_description',
+    				'class' => $prefix . 'pinterest_descriptionWrapper',
     				'type'  => 'textarea',
     				'clone' => false,
     			),
@@ -178,8 +178,8 @@ class Social_Warfare_Pro extends SWP_Addon {
     			// Set up the location on post options.
     			array(
     				'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Horizontal Buttons Location','social-warfare' ),
-    				'id'      => $prefix . 'postLocation',
-    				'class'   => $prefix . 'postLocationWrapper',
+    				'id'      => $prefix . 'post_location',
+    				'class'   => $prefix . 'post_locationWrapper',
     				'type'    => 'select',
     				'options' => array(
     					'default' => __( 'Default','social-warfare' ),
@@ -193,8 +193,8 @@ class Social_Warfare_Pro extends SWP_Addon {
     			),
     			array(
     				'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Floating Buttons','social-warfare' ),
-    				'id'      => $prefix . 'floatLocation',
-    				'class'   => $prefix . 'floatLocationWrapper',
+    				'id'      => $prefix . 'float_location',
+    				'class'   => $prefix . 'float_locationWrapper',
     				'type'    => 'select',
     				'options' => array(
     					'default' => __( 'Default','social-warfare' ),
