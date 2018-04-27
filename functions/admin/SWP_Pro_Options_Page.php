@@ -387,7 +387,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' );
 
             $color_choices = SWP_Options_Page::get_color_choices_array();
-            
+
             //* dColorSet => default_colors
             $default_colors = new SWP_Option_Select( 'Default Color Set', 'default_colors' );
             $default_colors->set_choices( $color_choices )
@@ -516,16 +516,42 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] );
 
+            //* These are all of the custom color fields. Right now their dependency is
+            //* not set up in by the conventional method and are being patched with
+            //* temporary Javascript.
+
+            //* sideCustomColor => float_custom_color
+            $custom_color = new SWP_Option_Text( 'Custom Color', 'custom_color' );
+            $custom_color->set_default( '#ced3dc' )
+                ->set_priority( 100 )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_premium( 'pro' );
+
+            //* sideCustomColor => float_custom_color
+            $custom_color_outlines = new SWP_Option_Text( 'Custom Outlines', 'custom_color_outlines' );
+            $custom_color_outlines->set_default( '#ced3dc' )
+                ->set_priority( 100 )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_premium( 'pro' );
+
+            $visual_options->add_options( [$custom_color, $custom_color_outlines] );
+
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( 'Custom Color', 'float_custom_color' );
             $float_custom_color->set_default( '#ced3dc' )
                 ->set_priority( 100 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
-                ->set_dependency( 'float_style_source', [false] )
+                ->set_premium( 'pro' );
+
+            //* sideCustomColor => float_custom_color
+            $float_custom_color_outlines = new SWP_Option_Text( 'Custom Outlines', 'float_custom_color_outlines' );
+            $float_custom_color_outlines->set_default( '#ced3dc' )
+                ->set_priority( 100 )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_premium( 'pro' );
 
         $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_style_source,
-            $float_mobile, $float_custom_color,
+            $float_mobile, $float_custom_color, $float_custom_color_outlines,
             $float_default_colors, $float_hover_colors, $float_single_colors,
         ] );
 
