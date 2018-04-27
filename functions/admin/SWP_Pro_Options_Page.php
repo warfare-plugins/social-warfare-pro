@@ -1,8 +1,4 @@
 <?php
-//* For options whose database name has changed, it is notated as follows:
-//* prevOption => new_option
-//* @see SWP_Database_Migration
-
 class SWP_Pro_Options_Page extends SWP_Options_Page {
     /**
     * Reference to the global SWP_Options_Page object.
