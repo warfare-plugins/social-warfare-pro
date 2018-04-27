@@ -9,10 +9,11 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->product_id = 63157;
         $this->version = '3.0.0';
 		$this->load_classes();
-		$this->instantiate_classes();
+
+        add_action( 'wp_loaded', [$this, 'instantiate_classes'] );
+		// $this->instantiate_classes();
 
 		if ( true === is_admin() ) {
-			$this->instantiate_admin_classes();
             add_filter( 'swpmb_meta_boxes', [$this, 'register_meta_boxes'] );
 		}
 
@@ -31,27 +32,23 @@ class Social_Warfare_Pro extends SWP_Addon {
 		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
 	}
 
+    /**
+     * Instantiates the addon's functionality.
+     *
+     * @return void
+     *
+     */
 	public function instantiate_classes() {
-
-		new SWP_Pro_Options_Page();
-
-		// We can sort the object immediately before looping for HTML output.
-		// AKA migrate this command to SWP_Options_Page_HTML
-		// $SWP_Options_Page->sort_by_priority();
+        if ( $this->is_registered()) :
+    		new SWP_Pro_Options_Page();
+        else:
+            die("not registerd");
+        endif;
 	}
 
-	public function instantiate_admin_classes() {
-
-	}
 
     /**
      * Output the meta boxes on the posts page if the plugin is registered
-     *
-     */
-
-
-    /**
-     * Build the options fields.
      *
      * @param  array $meta_boxes The existing meta boxes.
      * @return array $meta_boxes The modified meta boxes.
@@ -227,7 +224,6 @@ class Social_Warfare_Pro extends SWP_Addon {
 	 * @access public
 	 *
 	 */
-
 	public function social_warfare_pro_registration_key($array) {
 	    $array['pro'] = array(
 	        'plugin_name' => 'Social Warfare - Pro',
