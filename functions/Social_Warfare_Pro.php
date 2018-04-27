@@ -10,8 +10,7 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->version = '3.0.0';
 		$this->load_classes();
 
-        add_action( 'wp_loaded', [$this, 'instantiate_classes'] );
-		// $this->instantiate_classes();
+        add_action( 'wp_loaded', [$this, 'instantiate_addon'] );
 
 		if ( true === is_admin() ) {
             add_filter( 'swpmb_meta_boxes', [$this, 'register_meta_boxes'] );
@@ -21,15 +20,32 @@ class Social_Warfare_Pro extends SWP_Addon {
 		$this->initiate_plugin();
 		$this->update_checker();
 
-	    if ( $this->version !== $this->core_version ) {
-            add_action( 'admin_notices', array( $this, 'mismatch_notification' ) );
-        }
-
         add_filter( 'swp_registrations', [$this, 'add_self'] );
 	}
 
 	public function load_classes() {
-		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
+            /**
+             * The Social Network Classes
+             *
+             * This family of classes provides the framework and the model needed for creating
+             * a unique object for each social network. It also provides for maximum extensibility
+             * to allow addons even easier access than ever before to create and add more social
+             * networks to the plugin.
+             *
+             */
+            $social_networks = [
+                'Buffer',
+                'Reddit',
+                'Flipboard',
+                'Email',
+                'Hackernews',
+                'Pocket',
+                'Tumblr',
+                'Whatsapp',
+                'Yummly'
+            ];
+            $this->load_files( '/functions/social-networks/', $social_networks);
+    		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
 	}
 
     /**
@@ -38,14 +54,13 @@ class Social_Warfare_Pro extends SWP_Addon {
      * @return void
      *
      */
-	public function instantiate_classes() {
+	public function instantiate_addon() {
         if ( $this->is_registered()) :
-    		new SWP_Pro_Options_Page();
+            new SWP_Pro_Options_Page();
         else:
-            die("not registerd");
+            // die("not registerd");
         endif;
 	}
-
 
     /**
      * Output the meta boxes on the posts page if the plugin is registered
@@ -236,7 +251,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 	}
 
 	/**
-	 * A function to defer the loading of the functions.
+	 * Defer the loading of functions.
 	 * We don't want these functions to run until after core has loaded.
 	 *
 	 * @param  none
@@ -244,52 +259,20 @@ class Social_Warfare_Pro extends SWP_Addon {
 	 *
 	 */
 	public function initiate_plugin() {
-	    if(defined('SWP_VERSION') && SWP_VERSION === SWPP_VERSION):
 
-            /**
-    		 * The Social Network Classes
-    		 *
-    		 * This family of classes provides the framework and the model needed for creating
-    		 * a unique object for each social network. It also provides for maximum extensibility
-    		 * to allow addons even easier access than ever before to create and add more social
-    		 * networks to the plugin.
-    		 *
-    		 */
-    		$social_networks = [
-    			'Buffer',
-    			'Reddit',
-    			'Flipboard',
-                'Email',
-                'Hackernews',
-                'Pocket',
-                'Tumblr',
-                'Whatsapp',
-                'Yummly'
-    		];
-    		$this->load_files( '/functions/social-networks/', $social_networks);
+        require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
+        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
 
+		new SWP_Pro_Header_Output();
 
-	        /**
-	         * Include the necessary files
-	         *
-	         */
-	        require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
-	        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
+		if ( is_admin() ) {
+	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
+			new SWP_Pro_Settings_link();
+		}
 
-
-			new SWP_Pro_Header_Output();
-
-			// Admin only classes
-			if ( is_admin() ) {
-		        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
-
-				new SWP_Pro_Settings_link();
-			}
-
-	    endif;
 	}
 
     public function get_twitter_handle( $fallback = false ) {
@@ -310,18 +293,6 @@ class Social_Warfare_Pro extends SWP_Addon {
     }
 
 
-	/**
-	 * A function to notify users that the versions of Social Warfare and Social Warfare Pro are mismatched.
-	 *
-	 *
-	 * @since  2.2.0
-	 * @param  none
-	 * @return void
-	 *
-	 */
-	public function mismatch_notification() {
-		echo '<div class="update-nag notice is-dismissable"><p>' . __( '<b>Important:</b> You are currently running Social Warfare v'.SWP_VERSION.' and Social Warfare - Pro v'.SWPP_VERSION.'. In order to avoid conflicts, these two version need to match in order to activate all of the plugins features. Please update the appropriate plugin so that both Social Warfare and Social Warfare - Pro are on the same version. For more information about this, <a href="https://warfareplugins.com/support/updating-social-warfare-social-warfare-pro/">please read this</a>. ', 'social-warfare' ) . '</p></div>';
-	}
 
 
 	/**
@@ -350,7 +321,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 	            $swed_updater = new SWP_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
 	            	'version'   => SWPP_VERSION,      // current version number
 	            	'license'   => $license_key,      // license key
-	            	'item_id'   => SWPP_ITEM_ID,      // id of this plugin
+	            	'item_id'   => $this->product_id,      // id of this plugin
 	            	'author'    => 'Warfare Plugins', // author of this plugin
 	            	'url'       => $website_url,      // URL of this website
 	                'beta'      => false              // set to true if you wish customers to receive beta updates
