@@ -13,6 +13,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 
 		if ( true === is_admin() ) {
 			$this->instantiate_admin_classes();
+            add_filter( 'swpmb_meta_boxes', [$this, 'register_meta_boxes'] );
 		}
 
 		$this->registration_update_notification();
@@ -63,7 +64,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
-    	$twitter_handle = _swp_get_twitter_handle( $twitter_id );
+    	$twitter_handle = $this->get_twitter_handle( $twitter_id );
 
     	// Setup our meta box using an array.
     	$meta_boxes[0] = array(
@@ -294,6 +295,23 @@ class Social_Warfare_Pro extends SWP_Addon {
 
 	    endif;
 	}
+
+    public function get_twitter_handle( $fallback = false ) {
+    	// Fetch the Twitter handle for the Post Author if it exists.
+    	if ( isset( $_GET['post'] ) ) {
+    		$user_id = SWP_User_Profile::get_author( absint( $_GET['post'] ) );
+    	} else {
+    		$user_id = get_current_user_id();
+    	}
+
+    	$twitter_handle = get_the_author_meta( 'swp_twitter', $user_id );
+
+    	if ( ! $twitter_handle ) {
+    		$twitter_handle = $fallback;
+    	}
+
+    	return $twitter_handle;
+    }
 
 
 	/**
