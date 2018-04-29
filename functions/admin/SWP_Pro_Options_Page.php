@@ -24,7 +24,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_advanced_tab() {
         $advanced = $this->core->tabs->advanced;
 
-        $bitly = new SWP_Options_Page_Section( 'Bitly Link Shortening' );
+        $bitly = new SWP_Options_Page_Section( 'Bitly Link Shortening', 'bitly' );
         $bitly->set_description( 'If you like to have all of your links automatically shortened, turn this on.' )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/' )
             ->set_priority( 20 );
@@ -44,7 +44,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $bitly->add_options( [$bitly_authentication, $bitly_connection] );
 
 
-        $analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ) );
+        $analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ), 'analytics_tracking' );
         $analytics_tracking->set_description( 'If you want to activate UTM tracking for shared URL, turn this on.' )
             ->set_priority( 30 );
 
@@ -87,7 +87,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $analytics_tracking->add_options( [$click_tracking, $google_analytics, $analytics_medium,
                 $analytics_campaign, $utm_on_pins] );
 
-        $advanced_pinterest = new SWP_Options_Page_Section( __( 'Advanced Pinterest Settings', 'social-warfare' ));
+        $advanced_pinterest = new SWP_Options_Page_Section( __( 'Advanced Pinterest Settings', 'social-warfare' ), 'advanced_pinterest' );
         $advanced_pinterest->set_description( 'Get maximum control over how your visitors are sharing your content on Pinterest.' )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-advanced-pinterest-settings/' )
             ->set_priority( 40 )
@@ -123,7 +123,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback] );
 
-        $share_recovery = new SWP_Options_Page_Section( __( 'Share Recovery', 'social-warfare' ) );
+        $share_recovery = new SWP_Options_Page_Section( __( 'Share Recovery', 'social-warfare' ), 'share_recovery' );
         $share_recovery->set_description( 'If at any point you have changed permalink structures or have gone from http to https (SSL) then you will have undoubtedly lost all of your share counts. This tool allows you to recover them. See <a target="_blank" href="https://warfareplugins.com/support/recover-social-share-counts-after-changing-permalink-settings/">this guide</a> for more detailed instructions on how to use this feature.' )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-share-recovery/' )
             ->set_priority( 50 )
@@ -250,7 +250,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $display->sections->share_counts->add_option( $minimum_shares );
 
-        $meta_tags = new SWP_Options_Page_Section( __( 'Social Meta Tags' , 'social-warfare') );
+        $meta_tags = new SWP_Options_Page_Section( __( 'Social Meta Tags' , 'social-warfare'), 'meta_tags' );
         $meta_tags->set_description( 'Activating Open Graph Tags and Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.' )
             ->set_priority( 30 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/' );
@@ -270,7 +270,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $meta_tags->add_options( [$twitter_card,$og_tags] );
 
         /* Image Hover Pin Button   */
-        $image_hover = new SWP_Options_Page_Section( __( 'Image Hover Pin Button', 'social-warfare' ) );
+        $image_hover = new SWP_Options_Page_Section( __( 'Image Hover Pin Button', 'social-warfare' ), 'image_hover' );
         $image_hover->set_description( 'If you would like a "Pin" button to appear on images when users hover over them, activate this.' )
             ->set_priority( 50 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-image-hover-pin-button/' );
@@ -282,7 +282,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         $image_hover->add_option( $pinit_toggle );
 
-        $yummly_display = new SWP_Options_Page_Section( __( 'Yummy Display Control', 'social-warfare' ) );
+        $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
         $yummly_display->set_description( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.' )
             ->set_priority( 60 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-yummly-display-control/' );
@@ -306,7 +306,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_social_tab() {
         $social_identity = $this->core->tabs->social_identity;
 
-            $open_graph = new SWP_Options_Page_Section( __( 'Open Graph og:type Values', 'social-warfare' ) );
+            $open_graph = new SWP_Options_Page_Section( __( 'Open Graph og:type Values', 'social-warfare' ), 'open_graph' );
             $open_graph->set_description( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.' )
                 ->set_priority( 20 );
 
@@ -347,7 +347,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_styles_tab() {
         $styles = $this->core->tabs->styles;
 
-        $visual_options = new SWP_Options_Page_Section( __( 'Visual Options', 'social-warfare' ) );
+        $visual_options = new SWP_Options_Page_Section( __( 'Visual Options', 'social-warfare' ), 'visual_options' );
         $visual_options->set_description( 'Use the settings below to customize the look of your share buttons.' )
             ->set_priority( 10 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-styles-tab-visual-options/' )
@@ -555,7 +555,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_default_colors, $float_hover_colors, $float_single_colors,
         ] );
 
-        $click_to_tweet = new SWP_Options_Page_Section( __( 'Click-To-Tweet Style', 'social-warfare' ) );
+        $click_to_tweet = new SWP_Options_Page_Section( __( 'Click-To-Tweet Style', 'social-warfare' ), 'click_to_tweet' );
         $click_to_tweet->set_description( 'Select the default visual style for Click-to-Tweets on your site.' )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-styles-tab-click-tweet-style/' )
             ->set_priority( 40 );
