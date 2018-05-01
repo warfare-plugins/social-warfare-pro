@@ -91,7 +91,9 @@ class SWP_Tumblr extends SWP_Social_Network {
     public function generate_share_link( $post_data ) {
         $parameters = 'posttype=link';
         $parameters .= '&canonicalUrl=' . $this->get_shareable_permalink( $post_data);
-        $parameters .= '&title=' . urlencode( $post_data['post_title'] );
+        if ( isset($post_data['post_title'] ) ) :
+            $parameters .= '&title=' . urlencode( $post_data['post_title'] );
+        endif; 
         $share_link = $this->base_share_url . $parameters;
         return $share_link;
     }
