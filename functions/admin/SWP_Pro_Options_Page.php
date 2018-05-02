@@ -486,6 +486,14 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_dependency( 'float_location', ['left', 'right'] )
                 ->set_premium( 'pro' );
 
+            $float_button_count = new SWP_Option_Text( __( 'Number of Buttons', 'social-warfare'), 'float_button_count' );
+
+            $float_button_count->set_default( 5 )
+                ->set_priority( 46 )
+                ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
+                ->set_dependency( 'float_location', ['left', 'right'] )
+                ->set_premium( 'pro' );
+
             //* floatStyleSource => float_style_source
             $float_style_source = new SWP_Option_Toggle( __( 'Inherit Visual Options', 'social-warfare' ), 'float_style_source' );
             $float_style_source->set_default( true )
@@ -550,7 +558,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_premium( 'pro' );
 
-        $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_style_source,
+        $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_button_count, $float_style_source,
             $float_mobile, $float_custom_color, $float_custom_color_outlines,
             $float_default_colors, $float_hover_colors, $float_single_colors,
         ] );
