@@ -43,4 +43,56 @@ class SWP_Email extends SWP_Social_Network {
 
 		$this->init_social_network();
 	}
+
+
+	/**
+	 * Create the HTML to display the share button
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @param  array $network_counts Associative array of 'network_key' => 'count_value'
+	 * @return array $array The modified array which will now contain the html for this button
+	 * @todo   Eliminate the array
+	 *
+	 */
+	public function render_HTML( $panel_context , $echo = false ) {
+
+		$post_data = $panel_context['post_data'];
+		$share_counts = $panel_context['shares'];
+		$options = $panel_context['options'];
+
+		$share_link = $this->generate_share_link( $post_data );
+
+		// Build the button.
+		$icon = '<span class="iconFiller">';
+			$icon.= '<span class="spaceManWilly">';
+				$icon.= '<i class="sw swp_'.$this->key.'_icon"></i>';
+				$icon.= '<span class="swp_share">' . $this->cta . '</span>';
+			$icon .= '</span>';
+		$icon .= '</span>';
+
+		if ( true === $this->are_shares_shown( $share_counts , $options ) ) :
+			$icon .= '<span class="swp_count">' . swp_kilomega( $share_counts[$this->key] ) . '</span>';
+		else :
+			$icon = '<span class="swp_count swp_hide">' . $icon . '</span>';
+		endif;
+
+		// Build the wrapper.
+		$html = '<div class="nc_tweetContainer swp_'.$this->key.'" data-network="'.$this->key.'">';
+			$html .= '<a rel="nofollow" href="' . $share_link . '" class="nc_tweet">';
+				// Put the button inside.
+				$html .= $icon;
+			$html.= '</a>';
+		$html.= '</div>';
+
+		// Store these buttons so that we don't have to generate them for each set
+		$this->html = $html;
+
+		if ( $echo ) :
+			echo $html;
+		endif;
+
+		return $html;
+
+	}
 }
