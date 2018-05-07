@@ -229,7 +229,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_display_tab() {
         $display = $this->core->tabs->display;
 
-            $order_of_icons = new SWP_Option_Select( __( 'Button Ordering', 'social-warfare' ), 'order_of_icons' );
+            $order_of_icons = new SWP_Option_Select( __( 'Button Ordering', 'social-warfare' ), 'order_of_icons_method' );
             $order_of_icons->set_priority( 30 )
                 ->set_choices( [
                     'manual'    => 'Sort Manually Using Drag & Drop Above' ,
