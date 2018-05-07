@@ -6,7 +6,6 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     */
 
 	public function __construct() {
-
 		global $SWP_Options_Page;
         $this->core = $SWP_Options_Page;
 
@@ -336,7 +335,33 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $count++;
             }
 
-        $social_identity->add_section( $open_graph );
+            $tweet_count_registration = new SWP_Options_Page_section( __( 'Tweet Count Registration', 'social-warfare' ), 'activate_tweet_counts' );
+            $tweet_count_registration->set_description( "In order to allow Social Warfare to track tweet counts, we've partnered with a couple of third-party share counting tools. Follow the steps below to register with one of these platforms and allow us to track your Twitter shares." );
+
+            $tweet_activation = new SWP_Section_HTML( 'Tweet Activation', 'tweet_activation' );
+            $tweet_activation->set_priority( 10 )
+                ->set_premium( 'pro' );
+            $tweet_activation->do_tweet_count_registration();
+
+
+            $twitter_shares = new SWP_Option_Toggle( __( 'Tweet Counts' ,'social-warfare' ), 'twitter_shares' );
+            $twitter_shares->set_default( false )
+                ->set_priority( 20 )
+                ->set_premium( 'pro' );
+
+            $tweet_count_source = new SWP_Option_Select( __( 'Tweet Count Source', 'social-warfare' ), 'tweet_count_source' );
+            $tweet_count_source->set_choices( [
+                'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
+    			'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
+                ] )->set_default( 'opensharecount' )
+                ->set_priority( 30 )
+                ->set_premium( 'pro' );
+
+            $tweet_count_registration->set_priority( 100 )
+                ->add_options( [$tweet_activation, $twitter_shares, $tweet_count_source] );
+
+
+        $social_identity->add_sections( [$open_graph, $tweet_count_registration ]);
 
         return $this;
     }
