@@ -36,7 +36,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_default( false )
                 ->set_premium( 'pro' );
 
-            $bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ) );
+            $bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ), 'bitly_connection' );
             $bitly_connection->set_priority( 20 )
                 ->set_premium( 'pro' )
                 ->do_bitly_authentication_button();
@@ -319,11 +319,12 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $default_types = ['page', 'post'];
             $post_types = array_merge( $default_types, get_post_types( ['public' => true, '_builtin' => false ], 'names' ) );
+            $count = 1;
 
             //* Assign the hard-coded custom post types as options for the
             //* registered post types.
             foreach( $post_types as $index => $type ) {
-                $priority = ( ( $index + 1 ) * 10 );
+                $priority = ( ( $count ) * 10 );
                 $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), 'og_' . $type );
                 $option->set_priority( $priority )
                     ->set_size( 'sw-col-300' )
@@ -332,6 +333,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                     ->set_premium( 'pro' );
 
                 $open_graph->add_option( $option );
+                $count++;
             }
 
         $social_identity->add_section( $open_graph );
@@ -524,9 +526,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] );
 
+
             //* These are all of the custom color fields. Right now their dependency is
-            //* not set up in by the conventional method and are being patched with
+            //* not set up in by the conventional method. They are being patched with
             //* temporary Javascript.
+
+
+            //* PANEL CUSTOM COLOR *//
 
             //* sideCustomColor => float_custom_color
             $custom_color = new SWP_Option_Text( __( 'Custom Color', 'social-warfare' ), 'custom_color' );
@@ -543,6 +549,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' );
 
             $visual_options->add_options( [$custom_color, $custom_color_outlines] );
+
+
+            //* FLOAT CUSTOM COLOR *//
 
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( __( 'Custom Color', 'social-warfare' ), 'float_custom_color' );
