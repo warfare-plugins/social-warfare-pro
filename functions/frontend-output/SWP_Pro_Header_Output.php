@@ -46,6 +46,7 @@
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
         parent::__construct();
+        $this->init();
     }
 
 
