@@ -37,7 +37,6 @@ function initialize_social_warfare_pro() {
 }
 
 
-
 /**
  * A function to output the Pin Button option controls
  *
@@ -53,28 +52,27 @@ function swp_pinit_controls_output($info){
 		'enabled' => false,
 	);
 
-		if ( $swp_user_options['pinit_toggle'] ) {
-			$pin_vars['enabled']   = true;
-			$pin_vars['hLocation'] = $swp_user_options['pinit_location_horizontal'];
-			$pin_vars['vLocation'] = $swp_user_options['pinit_location_vertical'];
-			$pin_vars['minWidth']  = str_replace( 'px', '', $swp_user_options['pinit_min_width'] );
-			$pin_vars['minHeight'] = str_replace( 'px', '', $swp_user_options['pinit_min_height'] );
+	if ( $swp_user_options['pinit_toggle'] ) {
+		$pin_vars['enabled']   = true;
+		$pin_vars['hLocation'] = $swp_user_options['pinit_location_horizontal'];
+		$pin_vars['vLocation'] = $swp_user_options['pinit_location_vertical'];
+		$pin_vars['minWidth']  = str_replace( 'px', '', $swp_user_options['pinit_min_width'] );
+		$pin_vars['minHeight'] = str_replace( 'px', '', $swp_user_options['pinit_min_height'] );
 
-			// Set the image source
-			if(isset($swp_user_options['pinit_image_source']) && 'custom' == $swp_user_options['pinit_image_source'] && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ):
-				$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
-			endif;
+		// Set the image source
+		if(isset($swp_user_options['pinit_image_source']) && 'custom' == $swp_user_options['pinit_image_source'] && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ):
+			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+		endif;
 
-			// Set the description Source
-			if(isset($swp_user_options['pinit_image_description']) && 'custom' == $swp_user_options['pinit_image_description'] && get_post_meta( get_the_ID() , 'nc_pinterest_description' , true ) ):
-				$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'nc_pinterest_description' , true );
-			endif;
+		// Set the description Source
+		if(isset($swp_user_options['pinit_image_description']) && 'custom' == $swp_user_options['pinit_image_description'] && get_post_meta( get_the_ID() , 'nc_pinterest_description' , true ) ):
+			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'nc_pinterest_description' , true );
+		endif;
+	}
 
-		}
 	$info['footer_output'] .= ' swpPinIt='.json_encode($pin_vars).';';
 	return $info;
 }
-
 
 
 /**
