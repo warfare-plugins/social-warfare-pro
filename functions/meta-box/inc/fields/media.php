@@ -51,9 +51,6 @@ class SWPMB_Media_Field extends SWPMB_Field
 	static function html( $meta, $field )
 	{
 		$meta       = (array) $meta;
-        if (is_array($meta)) :
-            $meta = $meta[0];
-        endif;
 		$meta       = implode( ',', $meta );
 		$attributes = self::get_attributes( $field, $meta );
 
