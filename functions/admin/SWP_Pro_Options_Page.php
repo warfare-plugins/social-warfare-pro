@@ -36,7 +36,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_default( false )
                 ->set_premium( 'pro' );
 
-            $bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ) );
+            $bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ), 'bitly_connection' );
             $bitly_connection->set_priority( 20 )
                 ->set_premium( 'pro' )
                 ->do_bitly_authentication_button();
@@ -528,7 +528,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* These are all of the custom color fields. Right now their dependency is
             //* not set up in by the conventional method. They are being patched with
             //* temporary Javascript.
-            
+
 
             //* PANEL CUSTOM COLOR *//
 
