@@ -524,9 +524,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] );
 
+
             //* These are all of the custom color fields. Right now their dependency is
-            //* not set up in by the conventional method and are being patched with
+            //* not set up in by the conventional method. They are being patched with
             //* temporary Javascript.
+            
+
+            //* PANEL CUSTOM COLOR *//
 
             //* sideCustomColor => float_custom_color
             $custom_color = new SWP_Option_Text( __( 'Custom Color', 'social-warfare' ), 'custom_color' );
@@ -543,6 +547,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' );
 
             $visual_options->add_options( [$custom_color, $custom_color_outlines] );
+
+
+            //* FLOAT CUSTOM COLOR *//
 
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( __( 'Custom Color', 'social-warfare' ), 'float_custom_color' );
