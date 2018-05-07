@@ -45,7 +45,8 @@
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
-        parent::__construct();
+        global $swp_user_options;
+        $this->options = $swp_user_options;
         $this->init();
     }
 
@@ -551,7 +552,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
                     html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
                     body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                        //* Using !Important to override the value set above by social_panel custom colors. 
+                        //* Using !Important to override the value set above by social_panel custom colors.
                         background-color:' . $this->options['float_custom_color'] . '!Important;
                         border:1px solid ' . $this->options['float_custom_color'] . '!Important;}
                 </style>';
