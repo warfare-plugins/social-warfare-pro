@@ -319,11 +319,12 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $default_types = ['page', 'post'];
             $post_types = array_merge( $default_types, get_post_types( ['public' => true, '_builtin' => false ], 'names' ) );
+            $count = 1;
 
             //* Assign the hard-coded custom post types as options for the
             //* registered post types.
             foreach( $post_types as $index => $type ) {
-                $priority = ( ( $index + 1 ) * 10 );
+                $priority = ( ( $count ) * 10 );
                 $option = new SWP_Option_Select( ucfirst( str_replace( 'swp_og_type_', '', $type ) ), 'og_' . $type );
                 $option->set_priority( $priority )
                     ->set_size( 'sw-col-300' )
@@ -332,6 +333,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                     ->set_premium( 'pro' );
 
                 $open_graph->add_option( $option );
+                $count++;
             }
 
         $social_identity->add_section( $open_graph );
