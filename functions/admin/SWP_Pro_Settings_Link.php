@@ -9,7 +9,7 @@
  * @package   SocialWarfare\Admin\Functions
  * @copyright Copyright (c) 2018, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     2.4.0 | 21 FEB 2018 | Created
+ * @since     3.0.0 | 21 FEB 2018 | Created
  *
  */
 class SWP_Pro_Settings_Link extends SWP_Settings_Link {
@@ -21,7 +21,7 @@ class SWP_Pro_Settings_Link extends SWP_Settings_Link {
     * This method called in the settings link by attaching it to the appropriate
     * WordPress hooks and filtering the passed array of $links.
     *
-    * @since  2.4.0
+    * @since  3.0.0
     * @param  None
     * @return None
     *

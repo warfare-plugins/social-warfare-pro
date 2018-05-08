@@ -8,7 +8,7 @@
  * @license   GPL-3.0+
  * @since     1.0.0 | Created | Uknown
  * @since     2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values.
- * @since     2.4.0 | Updated | 21 FEB 2018 | Refactored into a class-based system.
+ * @since     3.0.0 | Updated | 21 FEB 2018 | Refactored into a class-based system.
  *
  *
  * Hook into the core header filter
@@ -73,7 +73,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * 4. We'll just auto-generate the field from the post.
      *
      * @since  2.1.4
-     * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
+     * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
      * @access public
      * @param  array $info An array of data about the post
      * @return array $info The modified array
@@ -257,7 +257,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
     /**
      * A function to compile the meta tags into HTML
-     * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
+     * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
      * @param  array $info The info array
      * @return array $info The modified info array
      */
@@ -563,7 +563,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * Note: This is done in the header rather than in a CSS file to
      * avoid having the styles called from a CDN
      *
-     * @since  2.4.0
+     * @since  3.0.0
      * @access public
      * @param  array  $info An array of information about the post
      * @return array  $info The modified array

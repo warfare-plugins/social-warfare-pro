@@ -48,23 +48,23 @@ class SWPMB_Media_Field extends SWPMB_Field
 	 *
 	 * @return string
 	 */
-	static function html( $meta, $field )
-	{
-		$meta       = (array) $meta;
-		$meta       = implode( ',', $meta );
-		$attributes = self::get_attributes( $field, $meta );
+     static function html( $meta, $field )
+ 	{
+ 		$meta       = (array) $meta;
+ 		$meta       = implode( ',', $meta );
+ 		$attributes = self::get_attributes( $field, $meta );
 
-		$html = sprintf(
-			'<input %s>
-			<div class="swpmb-media-view" data-mime-type="%s" data-max-files="%s" data-force-delete="%s"></div>',
-			self::render_attributes( $attributes ),
-			$field['mime_type'],
-			$field['max_file_uploads'],
-			$field['force_delete'] ? 'true' : 'false'
-		);
+ 		$html = sprintf(
+ 			'<input %s>
+ 			<div class="swpmb-media-view" data-mime-type="%s" data-max-files="%s" data-force-delete="%s"></div>',
+ 			self::render_attributes( $attributes ),
+ 			$field['mime_type'],
+ 			$field['max_file_uploads'],
+ 			$field['force_delete'] ? 'true' : 'false'
+ 		);
 
-		return $html;
-	}
+ 		return $html;
+ 	}
 
 	/**
 	 * Normalize parameters for field
