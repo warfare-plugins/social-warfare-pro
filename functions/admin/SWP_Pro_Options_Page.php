@@ -564,6 +564,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $custom_color->set_default( '#ced3dc' )
                 ->set_priority( 100 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_placeholder( "#f4e2d7" )
                 ->set_premium( 'pro' );
 
             //* sideCustomColor => float_custom_color
@@ -571,10 +572,10 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $custom_color_outlines->set_default( '#ced3dc' )
                 ->set_priority( 100 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_placeholder( "#c43ad4" )
                 ->set_premium( 'pro' );
 
             $visual_options->add_options( [$custom_color, $custom_color_outlines] );
-
 
             //* FLOAT CUSTOM COLOR *//
 
@@ -583,6 +584,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_custom_color->set_default( '#ced3dc' )
                 ->set_priority( 100 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_placeholder("#f445a4")
                 ->set_premium( 'pro' );
 
             //* sideCustomColor => float_custom_color
@@ -590,6 +592,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $float_custom_color_outlines->set_default( '#ced3dc' )
                 ->set_priority( 100 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+                ->set_placeholder("#d3d654")
                 ->set_premium( 'pro' );
 
         $floating_share_buttons->add_options( [$float_size, $float_alignment, $float_button_shape, $float_button_count, $float_style_source,
