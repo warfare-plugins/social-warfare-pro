@@ -264,7 +264,6 @@ class Social_Warfare_Pro extends SWP_Addon {
         require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
         require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
-        // require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/scripts.php';
 
 		new SWP_Pro_Header_Output();
 
