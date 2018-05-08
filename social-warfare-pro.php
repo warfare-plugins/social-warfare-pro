@@ -67,8 +67,8 @@ function swp_pinit_controls_output($info){
 		endif;
 
 		// Set the description Source
-		if(isset($swp_user_options['pinit_image_description']) && 'custom' == $swp_user_options['pinit_image_description'] && get_post_meta( get_the_ID() , 'nc_pinterest_description' , true ) ):
-			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'nc_pinterest_description' , true );
+		if(isset($swp_user_options['pinit_image_description']) && 'custom' == $swp_user_options['pinit_image_description'] && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ):
+			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
 		endif;
 	}
 
