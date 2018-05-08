@@ -63,7 +63,7 @@ add_filter( 'swp_header_html'   , 'swp_output_custom_color'  , 15 );
  * 4. We'll just auto-generate the field from the post.
  *
  * @since  2.1.4
- * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
+ * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
  * @access public
  * @param  array $info An array of data about the post
  * @return array $info The modified array
@@ -250,7 +250,7 @@ function swp_open_graph_values($info){
 
 /**
  * A function to compile the meta tags into HTML
- * @since  2.4.0 | 03 FEB 2018 | Added the option to disable OG tag output
+ * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
  * @param  array $info The info array
  * @return array $info The modified info array
  */
@@ -532,7 +532,7 @@ function swp_output_custom_color( $info ) {
  * Note: This is done in the header rather than in a CSS file to
  * avoid having the styles called from a CDN
  *
- * @since  2.4.0
+ * @since  3.0.0
  * @access public
  * @param  array  $info An array of information about the post
  * @return array  $info The modified array
