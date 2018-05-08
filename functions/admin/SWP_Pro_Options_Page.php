@@ -479,9 +479,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $float_alignment = new SWP_Option_Select( __( 'Float Alignment', 'social-warfare' ), 'float_alignment' );
             $float_alignment->set_choices( [
-                'top'       => 'Near the top of the page',
-                'center'    => 'Centered on the page',
-                'bottom'    => 'Near the bottom of the page'
+                'top'       => __('Near the top of the page'  , 'social-warfare' ) ,
+                'center'    => __( 'Centered on the page' , 'social-warfare' ),
+                'bottom'    => __( 'Near the bottom of the page' , 'social-warfare' )
                 ] )
                 ->set_default( 'center' )
                 ->set_priority( 25 )
@@ -503,9 +503,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* floatStyle => float_button_shape
             $float_button_shape = new SWP_Option_Select( __( 'Button Shape', 'social-warfare' ), 'float_button_shape' );
             $float_button_shape->set_choices( [
-                'default' => 'Buttons',
-                'boxed'   => 'Boxes',
-				'circles' => 'Circles',
+                'default' => __( 'Buttons' , 'social-warfare' ),
+                'boxed'   => __( 'Boxes' , 'social-warfare' ),
+				'circles' => __( 'Circles' , 'social-warfare' ),
                 ])
                 ->set_default( 'boxed' )
                 ->set_priority( 45 )
