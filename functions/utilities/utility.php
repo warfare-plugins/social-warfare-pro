@@ -110,7 +110,7 @@ function swp_insert_pinterest_image( $content ) {
 
 			// If there is no custom description, use the post Title
 			if( false === $pinterest_description || empty($pinterest_image_url) ):
-				urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
+				$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
 			endif;
 
 			// Fetch the Permalink
