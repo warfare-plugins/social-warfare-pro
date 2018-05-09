@@ -491,8 +491,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $float_mobile = new SWP_Option_Select( __( 'On Mobile', 'social-warfare' ), 'float_mobile' );
             $float_mobile->set_choices( [
-                'bottom'=> 'Bottom of Screen',
-                'off'   => 'Off'
+				'top'    => 'Top of Screen',
+                'bottom' => 'Bottom of Screen',
+                'off'    => 'Off'
             ])
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
