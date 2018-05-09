@@ -16,7 +16,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.0.0' );
+define( 'SWPP_VERSION', '3.0.1' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
