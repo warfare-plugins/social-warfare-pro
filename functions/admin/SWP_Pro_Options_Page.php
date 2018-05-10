@@ -277,9 +277,45 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $pinit_toggle = new SWP_Option_Toggle( __( 'Pinit Button', 'social-warfare' ), 'pinit_toggle' );
             $pinit_toggle->set_default( true )
                 ->set_size( 'sw-col-300' )
+				->set_priority( 10 )
                 ->set_premium( 'pro' );
 
-        $image_hover->add_option( $pinit_toggle );
+			$pinit_location_horizontal = new SWP_Option_Select( __( 'Horizontal Location', 'social-warfare' ), 'pinit_location_horizontal' );
+            $pinit_location_horizontal->set_priority( 20 )
+                ->set_choices( [
+                    'left'   => __( 'Left' , 'social-warfare' ) ,
+                    'center' => __( 'Center' , 'social-warfare' ),
+					'right'  => __( 'Right' , 'social-warfare' )
+                ])
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+                ->set_default( 'center' )
+				->set_dependency( 'pinit_toggle', [true] )
+                ->set_premium( 'pro' );
+
+			$pinit_location_vertical = new SWP_Option_Select( __( 'Vertical Location', 'social-warfare' ), 'pinit_location_vertical' );
+			$pinit_location_vertical->set_priority( 40 )
+				->set_choices( [
+					'top'    => __( 'Top' , 'social-warfare' ) ,
+					'middle' => __( 'Middle' , 'social-warfare' ),
+					'bottom' => __( 'Bottom' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+				->set_default( 'middle' )
+				->set_dependency( 'pinit_toggle', [true] )
+				->set_premium( 'pro' );
+
+			$pinit_image_source = new SWP_Option_Select( __( 'Image Source', 'social-warfare' ), 'pinit_image_source' );
+			$pinit_image_source->set_priority( 60 )
+				->set_choices( [
+					'image'    => __( 'Pin the Image' , 'social-warfare' ) ,
+					'custom' => __( 'Pin the Custom Pin Image' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+				->set_default( 'image' )
+				->set_dependency( 'pinit_toggle', [true] )
+				->set_premium( 'pro' );
+
+        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source] );
 
         $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
         $yummly_display->set_description( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.' )
