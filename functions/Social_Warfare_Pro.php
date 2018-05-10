@@ -7,7 +7,7 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->name = 'Social Warfare - Pro';
         $this->key = 'pro';
         $this->product_id = 63157;
-        $this->version = '3.0.0';
+        $this->version = SWPP_VERSION;
 		$this->load_classes();
 
         add_action( 'wp_loaded', [$this, 'instantiate_addon'] );
