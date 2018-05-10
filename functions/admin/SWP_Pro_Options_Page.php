@@ -406,10 +406,10 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $tweet_activation->do_tweet_count_registration();
 
 
-            $twitter_shares = new SWP_Option_Toggle( __( 'Tweet Counts' ,'social-warfare' ), 'twitter_shares' );
-            $twitter_shares->set_default( false )
-                ->set_priority( 20 )
-                ->set_premium( 'pro' );
+            //$twitter_shares = new SWP_Option_Toggle( __( 'Tweet Counts' ,'social-warfare' ), 'twitter_shares' );
+            //$twitter_shares->set_default( false )
+            //    ->set_priority( 20 )
+            //    ->set_premium( 'pro' );
 
             $tweet_count_source = new SWP_Option_Select( __( 'Tweet Count Source', 'social-warfare' ), 'tweet_count_source' );
             $tweet_count_source->set_choices( [
@@ -417,10 +417,11 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     			'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
                 ] )->set_default( 'opensharecount' )
                 ->set_priority( 30 )
+				->set_size( 'sw-col-300' )
                 ->set_premium( 'pro' );
 
             $tweet_count_registration->set_priority( 100 )
-                ->add_options( [$tweet_activation, $twitter_shares, $tweet_count_source] );
+                ->add_options( [$tweet_activation, $tweet_count_source] );
 
 
         $social_identity->add_sections( [$open_graph, $tweet_count_registration ]);
