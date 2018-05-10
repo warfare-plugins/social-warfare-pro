@@ -315,7 +315,18 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
-        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source] );
+			$pinit_image_description = new SWP_Option_Select( __( 'Description Source', 'social-warfare' ), 'pinit_image_description' );
+			$pinit_image_description->set_priority( 70 )
+				->set_choices( [
+					'alt_text' => __( 'Image ALT Text' , 'social-warfare' ) ,
+					'custom'   => __( 'Custom Pin Description' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+				->set_default( 'image' )
+				->set_dependency( 'pinit_toggle', [true] )
+				->set_premium( 'pro' );
+
+        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source,$pinit_image_description] );
 
         $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
         $yummly_display->set_description( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.' )
