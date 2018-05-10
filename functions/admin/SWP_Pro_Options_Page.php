@@ -68,11 +68,12 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_dependency( 'google_analytics', true )
                 ->set_premium( 'pro');
 
-            $analytics_campaign = clone $analytics_medium;
-            $analytics_campaign->set_name( __( 'UTM Campaign', 'social-warfare' ) )
-                ->set_key( 'analytics_campaign ')
+			$analytics_campaign = new SWP_Option_Text( __( 'UTM Campaign', 'social-warfare' ), 'analytics_campaign' );
+            $analytics_campaign->set_default( 'SocialWarfare' )
                 ->set_priority( 40 )
-                ->set_default( 'SocialWarfare' );
+                ->set_size( 'sw-col-300' )
+                ->set_dependency( 'google_analytics', true )
+                ->set_premium( 'pro');
 
             $utm_on_pins = new SWP_Option_Toggle( __( 'UTM Tracking on Pins', 'social-warfare' ), 'utm_on_pins' );
             $utm_on_pins->set_default( false )
