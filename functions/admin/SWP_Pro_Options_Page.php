@@ -292,6 +292,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
                 ->set_premium( 'pro' );
 
+			$pinit_min_width = new SWP_Option_Text( __( 'Min Width', 'social-warfare' ), 'pinit_min_width' );
+			$pinit_min_width->set_default( '200' )
+				->set_priority( 30 )
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+				->set_placeholder( '200' )
+				->set_premium( 'pro' );
+
 			$pinit_location_vertical = new SWP_Option_Select( __( 'Vertical Location', 'social-warfare' ), 'pinit_location_vertical' );
 			$pinit_location_vertical->set_priority( 40 )
 				->set_choices( [
@@ -302,6 +309,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
 				->set_default( 'middle' )
 				->set_dependency( 'pinit_toggle', [true] )
+				->set_premium( 'pro' );
+
+			$pinit_min_height = new SWP_Option_Text( __( 'Min Height', 'social-warfare' ), 'pinit_min_height' );
+			$pinit_min_height->set_default( '200' )
+				->set_priority( 50 )
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
+				->set_placeholder( '200' )
 				->set_premium( 'pro' );
 
 			$pinit_image_source = new SWP_Option_Select( __( 'Image Source', 'social-warfare' ), 'pinit_image_source' );
@@ -326,7 +340,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
-        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source,$pinit_image_description] );
+        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source,$pinit_image_description,$pinit_min_width,$pinit_min_height] );
 
         $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
         $yummly_display->set_description( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.' )
