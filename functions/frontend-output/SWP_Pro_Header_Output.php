@@ -84,7 +84,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-    	if( false === $this->options['og_tags'] && false === $this->options['twitter_cards'] ){
+    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] && isset( $this->options['twitter_cards'] ) && false === $this->options['twitter_cards'] ){
     		return $info;
     	}
 
@@ -267,7 +267,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Don't compile them if the OG Tags are Disabled on the options page
-    	if( false === $this->options['og_tags'] ){
+    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ){
     		return $info;
     	}
 
