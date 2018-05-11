@@ -45,6 +45,14 @@ class SWP_Email extends SWP_Social_Network {
 	}
 
 
+	/**
+	 * Generate Share link
+	 *
+	 * @since  3.0.5 | 11 MAY 2018 | Created
+	 * @param  array $post_data The array of Post Data
+	 * @return string           The share link.
+	 * 
+	 */
 	public function generate_share_link( $post_data ) {
 
 		// Collect the Title
@@ -64,6 +72,7 @@ class SWP_Email extends SWP_Social_Network {
 		$share_link = 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body) . __('Read More Here:' , 'social-warfare' ) . ' ' . $permalink;
 		return $share_link;
 	}
+
 
 	/**
 	 * Create the HTML to display the share button
