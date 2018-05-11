@@ -302,6 +302,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_priority( 30 )
 				->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
 				->set_placeholder( '200' )
+				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
 			$pinit_location_vertical = new SWP_Option_Select( __( 'Vertical Location', 'social-warfare' ), 'pinit_location_vertical' );
@@ -321,6 +322,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_priority( 50 )
 				->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
 				->set_placeholder( '200' )
+				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
 			$pinit_image_source = new SWP_Option_Select( __( 'Image Source', 'social-warfare' ), 'pinit_image_source' );
