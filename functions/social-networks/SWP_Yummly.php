@@ -56,8 +56,12 @@ class SWP_Yummly extends SWP_Social_Network {
      *
      */
     public function set_active_state() {
+        //* TODO: Complete this method. 
+        //* Return during development so we don't get blocked by errors.
+        return;
+
         //* TODO: We can not access the post metadata (tags or categories)
-        //* because the post has not yet been loaded in the WP Chronology. 
+        //* because the post has not yet been loaded in the WP Chronology.
         global $swp_user_options;
 
         if ( isset( $swp_user_options['order_of_icons'][$this->key] ) ) {
