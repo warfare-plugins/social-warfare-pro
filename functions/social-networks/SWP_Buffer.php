@@ -89,7 +89,16 @@ class SWP_Buffer extends SWP_Social_Network {
      *
      */
     public function generate_share_link( $post_data ) {
-        $title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+
+		$title = get_post_meta( $array['postID'] , 'nc_ogTitle' , true );
+		if ( !$title ) :
+			$title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+		endif;
+		if( !$title ) :
+			$title = get_the_title();
+		endif;
+		$title = urlencode( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
+
         $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&text=' . $title;
         return $share_link;
     }
