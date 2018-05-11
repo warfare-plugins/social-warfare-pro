@@ -100,7 +100,7 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Title','social-warfare' ),
     				'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
-    				'id'    => $prefix . 'ogTitle',
+    				'id'    => $prefix . 'og_title',
     				'type'  => 'textarea',
     				'class' => $prefix . 'og_title',
     				'clone' => false,
@@ -109,7 +109,7 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Description','social-warfare' ),
     				'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
-    				'id'    => $prefix . 'ogDescription',
+    				'id'    => $prefix . 'og_description',
     				'class' => $prefix . 'og_description',
     				'type'  => 'textarea',
     				'clone' => false,
@@ -134,7 +134,7 @@ class Social_Warfare_Pro extends SWP_Addon {
     			array(
     				'name'  => '<i class="sw swp_twitter_icon"></i> ' . __( 'Custom Tweet','social-warfare' ),
     				'desc'  => ( $twitter_id ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ),str_replace( '@','',$twitter_handle ),'<span class="counterNumber">140</span>' ) : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
-    				'id'    => $prefix . 'customTweet',
+    				'id'    => $prefix . 'custom_tweet',
     				'class' => $prefix . 'customTweetWrapper',
     				'type'  => 'textarea',
     				'clone' => false,
