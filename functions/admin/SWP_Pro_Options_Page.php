@@ -164,6 +164,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'http'  => 'http',
                 'https' => 'https'
             ])
+                ->set_size( 'sw-col-300' )
                 ->set_priority( 40 )
                 ->set_default( 'unchanged' )
                 ->set_dependency( 'recover_shares', true )
@@ -212,7 +213,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_key( 'current_domain' );
 
         $share_recovery->add_options( [$recover_shares, $recovery_format,
-            $recovery_permalink, $recovery_prefix, $recovery_subdomain, $recovery_protocol,s
+            $recovery_permalink, $recovery_prefix, $recovery_subdomain, $recovery_protocol,
             $cross_domain, $former_domain, $current_domain] );
 
         $advanced->add_sections( [$bitly, $analytics_tracking, $advanced_pinterest, $share_recovery] );
