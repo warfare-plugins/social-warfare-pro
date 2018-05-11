@@ -92,8 +92,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 * Begin by fetching the user's default custom settings
     	 *
     	 */
-    	$custom_og_title       = htmlspecialchars( get_post_meta( $info['postID'] , 'nc_ogTitle' , true ) );
-    	$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'nc_ogDescription' , true ) );
+    	$custom_og_title       = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_title' , true ) );
+    	$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_description' , true ) );
     	$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
     	$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
     	$custom_og_image_data  = json_decode( get_post_meta( $info['postID'] , 'swp_open_graph_image_data' , true ) );
@@ -365,8 +365,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 * Begin by fetching the user's default custom settings
     		 *
     		 */
-    		$custom_og_title       = htmlspecialchars( get_post_meta( $info['postID'] , 'nc_ogTitle' , true ) );
-    		$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'nc_ogDescription' , true ) );
+    		$custom_og_title       = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_title' , true ) );
+    		$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_description' , true ) );
     		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
     		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
     		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
@@ -469,7 +469,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $info The modified array
      *
      */
-    public function twitter_card_html($info) {
+    public function twitter_card_html($info) {echo "<pre>";
 
     	if( false === is_singular() ) {
     		return $info;
