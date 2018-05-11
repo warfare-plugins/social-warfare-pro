@@ -47,8 +47,6 @@ class SWP_Email extends SWP_Social_Network {
 
 	public function generate_share_link( $post_data ) {
 
-		https://warfareplugins.com/linkedin-drops-share-counts/mailto:?subject=LinkedIn Quietly Ditches Support for Share Counts and Nobody Noticed&body=The next social network to drop support for share counts on its platform is LinkedIn. And it seems only a handful of people have noticed yet.  Read Here: http://bit.ly/2rAF3jY
-
 		// Collect the Title
 		$subject = get_post_meta( $post_data['ID'] , 'nc_og_title' , true );
 		if ( false == $subject ) :
