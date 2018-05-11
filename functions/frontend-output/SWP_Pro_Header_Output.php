@@ -373,8 +373,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 * Begin by fetching the user's default custom settings
     		 *
     		 */
-    		$custom_og_title       = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_title' , true ) );
-    		$custom_og_description = htmlspecialchars( get_post_meta( $info['postID'] , 'swp_og_description' , true ) );
+            $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
+            if ( !empty( $custom_og_title) ) :
+                $custom_og_title = htmlspecialchars( $custom_og_title );
+            endif;
+
+            $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
+            if ( !empty( $custom_og_description ) ) :
+                $custom_og_description = htmlspecialchars( $custom_og_description );
+            endif;
     		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
     		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
     		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
