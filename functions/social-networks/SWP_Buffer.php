@@ -90,7 +90,7 @@ class SWP_Buffer extends SWP_Social_Network {
      */
     public function generate_share_link( $post_data ) {
 
-		$title = get_post_meta( $array['postID'] , 'nc_ogTitle' , true );
+		$title = get_post_meta( $post_data['ID'] , 'nc_ogTitle' , true );
 		if ( !$title ) :
 			$title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
 		endif;
