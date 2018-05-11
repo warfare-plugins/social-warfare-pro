@@ -39,7 +39,8 @@ class SWP_Buffer extends SWP_Social_Network {
 		$this->key            = 'buffer';
 		$this->default        = 'false';
         $this->premium        = 'pro';
-		$this->base_share_url = 'http://bufferapp.com/add?url=';
+        $title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+		$this->base_share_url = 'http://bufferapp.com/add?text=' . $title . '&url=';
 
 		$this->init_social_network();
 	}
