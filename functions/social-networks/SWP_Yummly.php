@@ -63,7 +63,7 @@ class SWP_Yummly extends SWP_Social_Network {
         //* TODO: We can not access the post metadata (tags or categories)
         //* because the post has not yet been loaded in the WP Chronology.
         //* N.B. We can move the below checks to Buttons_Panel. That would easily solve the problem.
-        //* If it is possible to keep it contained here in Yummly, that is better. 
+        //* If it is possible to keep it contained here in Yummly, that is better.
         global $swp_user_options;
 
         if ( isset( $swp_user_options['order_of_icons'][$this->key] ) ) {
@@ -72,7 +72,6 @@ class SWP_Yummly extends SWP_Social_Network {
         }
 
         $post_tags = get_the_tags( $post->ID );
-        die(var_dump($post_tags));
 
         if ( $post_tags !== false ) :
             //* Trim whitespace and return an array.
