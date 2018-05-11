@@ -208,9 +208,12 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_dependency( 'recover_shares', true )
                 ->set_premium( 'pro' );
 
-            $current_domain = clone $former_domain;
-            $current_domain->set_name( 'Current Domain ')
-                ->set_key( 'current_domain' );
+			$current_domain = new SWP_Option_Text( __( 'Current Domain', 'social-warfare' ), 'current_domain' );
+            $current_domain->set_default( '' )
+                ->set_priority( 80 )
+                ->set_size( 'sw-col-300'  )
+                ->set_dependency( 'recover_shares', true )
+                ->set_premium( 'pro' );
 
         $share_recovery->add_options( [$recover_shares, $recovery_format,
             $recovery_permalink, $recovery_prefix, $recovery_subdomain, $recovery_protocol,
