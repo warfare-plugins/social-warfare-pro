@@ -133,3 +133,9 @@ class SWP_Yummly extends SWP_Social_Network {
     	return isset( $response['count'] )?intval( $response['count'] ):0;
 	}
 }
+
+/**
+ * Add a render_HTML method. Include the conditional logic for tags and categories.
+ * If the conditions are met, call PARENT::render_html(), if not, return an empty string.
+ * 
+ */
