@@ -212,7 +212,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_key( 'current_domain' );
 
         $share_recovery->add_options( [$recover_shares, $recovery_format,
-            $recovery_permalink, $recovery_prefix, $recovery_subdomain,
+            $recovery_permalink, $recovery_prefix, $recovery_subdomain, $recovery_protocol,s
             $cross_domain, $former_domain, $current_domain] );
 
         $advanced->add_sections( [$bitly, $analytics_tracking, $advanced_pinterest, $share_recovery] );
