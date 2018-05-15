@@ -280,7 +280,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-image-hover-pin-button/' );
 
             $pinit_toggle = new SWP_Option_Toggle( __( 'Pinit Button', 'social-warfare' ), 'pinit_toggle' );
-            $pinit_toggle->set_default( true )
+            $pinit_toggle->set_default( false )
                 ->set_size( 'sw-col-300' )
 				->set_priority( 10 )
                 ->set_premium( 'pro' );
