@@ -121,6 +121,7 @@ class SWP_Yummly extends SWP_Social_Network {
 		// If a category is set and this post is in that category.
 		if( isset( $cat ) && $cat != '' && in_category( $cat , $id ) ):
 			return true;
+        endif;
 
         // If a tag is set and this post is in that tag.
         if ( isset( $tag ) && $tag != '' && has_tag( $tag , $id ) ):
