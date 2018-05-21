@@ -110,31 +110,34 @@ class SWP_Yummly extends SWP_Social_Network {
     //     return false;
     // }
 
-    private function check_taxonomy_conditionals() {
+    private function check_taxonomy_conditionals( $panel_context ) {
+        $id = $panel_context['post_data']['ID'];
+        $options = $panel_context['options'];
+        
         if (
 
             // If a category is set and this post is in that category
             (
-                isset( $array['options']['yummly_categories'] )
-                && $array['options']['yummly_categories'] != ''
-                && in_category( $array['options']['yummly_categories'] , $array['postID'] )
+                isset( $options['yummly_categories'] )
+                && $options['yummly_categories'] != ''
+                && in_category( $options['yummly_categories'] , $id )
             )
 
             ||
 
             // If a tag is set and this post is in that tag
             (
-                isset( $array['options']['yummly_tags'] )
-                && $array['options']['yummly_tags'] != ''
-                && has_tag( $array['options']['yummly_tags'] , $array['postID'] )
+                isset( $options['yummly_tags'] )
+                && $options['yummly_tags'] != ''
+                && has_tag( $options['yummly_tags'] , $id )
             )
 
             ||
 
             // If no tags or categories have been set
             (
-                ! isset( $array['options']['yummly_tags'] ) && ! isset( $array['options']['yummly_categories'] ) ||
-                 $array['options']['yummly_categories'] == '' && $array['options']['yummly_tags'] == ''
+                ! isset( $options['yummly_tags'] ) && ! isset( $options['yummly_categories'] ) ||
+                 $options['yummly_categories'] == '' && $options['yummly_tags'] == ''
             )
 
         ) {
@@ -145,7 +148,7 @@ class SWP_Yummly extends SWP_Social_Network {
     }
 
     public function render_HTML( $panel_context, $echo = false ) {
-        if ( true === $this->check_taxonomy_conditionals() ) :
+        if ( true === $this->check_taxonomy_conditionals( $panel_context ) ) :
             return parent::render_HTML( $panel_context, $echo );
         else:
             return '';
