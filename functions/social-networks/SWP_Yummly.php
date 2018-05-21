@@ -11,6 +11,7 @@
  * @since     1.0.0 | Unknown     | CREATED
  * @since     2.2.4 | 02 MAY 2017 | Refactored functions & updated docblocking
  * @since     3.0.0 | 05 APR 2018 | Rebuilt into a class-based system.
+ * @since     3.0.8 | 21 MAY 2018 | Added render_thml() and check_taxonomy_conditionals()
  *
  */
 class SWP_Yummly extends SWP_Social_Network {
@@ -43,8 +44,6 @@ class SWP_Yummly extends SWP_Social_Network {
 
 		$this->init_social_network();
 	}
-
-
 
 
 	/**
@@ -110,7 +109,7 @@ class SWP_Yummly extends SWP_Social_Network {
 	 * @param  array $panel_context The necessary data from the buttons panel.
 	 * @return bool                 true: conditions met, display the button
 	 *                              false: conditions not met, don't display it
-	 *                              
+	 *
 	 */
 	private function check_taxonomy_conditionals( $panel_context ) {
 
