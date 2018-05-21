@@ -75,67 +75,21 @@ class SWP_Yummly extends SWP_Social_Network {
     	return isset( $response['count'] )?intval( $response['count'] ):0;
 	}
 
-    // private function check_taxonomy_conditionals() {
-    //     global $post;
-    //     $post_tags = get_the_tags( $post->ID );
-    //
-    //     if ( $post_tags !== false ) :
-    //         //* Trim whitespace and return an array.
-    //         $user_tags = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_tags']);
-    //
-    //         foreach ( $post_tags as $tag ) {
-    //             if ( in_array( $tag, $user_tags ) ) :
-    //                 return true;
-    //             endif;
-    //         }
-    //
-    //     endif;
-    //
-    //     $post_categories = wp_get_post_categories();
-    //
-    //     //* wp_get_post_categories can return a WP error. Make sure we don't process it.
-    //     if ( !is_wp_error( $post_categories) && count( $post_categories ) > 0 ) :
-    //         //* Trim whitespace and return an array.
-    //         $user_categories = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_categories']);
-    //
-    //         foreach( $post_categories as $cat ) {
-    //             $category = get_category( $cat );
-    //
-    //             if ( in_array( $category->name, $user_categories ) || in_array( $category->slug, $user_categories ) ) :
-    //                 return true;
-    //             endif;
-    //         }
-    //     endif;
-    //
-    //     return false;
-    // }
 
-    private function check_taxonomy_conditionals( $panel_context ) {
-
-		// Create local variables to keep the logic below cleaner.
-        $id = $panel_context['post_data']['ID'];
-		$cat = $panel_context['options']['yummly_categories'];
-		$tag = $panel_context['options']['yummly_tags'];
-
-		// If a category is set and this post is in that category.
-		if( !empty( $cat ) && in_category( $cat , $id ) ):
-			return true;
-        endif;
-
-        // If a tag is set and this post is in that tag.
-        if ( !empty( $tag ) && has_tag( $tag , $id ) ):
-			return true;
-		endif;
-
-        // If no tags or categories have been set
-        if ( empty( $tag ) && empty( $cat ) ):
-			return true;
-        endif;
-
-		return false;
-
-    }
-
+	/**
+	 * Render the HTML
+	 *
+	 * This method is being added to this child class, instead of just using
+	 * the parent render_html() method, because we need to check if the Yummly
+	 * terms or categories have been set on the options page and then if so,
+	 * we'll call the parent render_html method to actually do the work.
+	 *
+	 * @since  3.0.8 | 21 MAY 2018 | Created
+	 * @param  array  $panel_context The necessary data from the buttons panel.
+	 * @param  boolean $echo         Return of echo the html.
+	 * @return string                The html for the button.
+	 *
+	 */
     public function render_HTML( $panel_context, $echo = false ) {
         if ( true === $this->check_taxonomy_conditionals( $panel_context ) ) :
             return parent::render_HTML( $panel_context, $echo );
@@ -143,10 +97,80 @@ class SWP_Yummly extends SWP_Social_Network {
             return '';
         endif;
     }
+
+
+	/**
+	 * Check the Yummly Taxonomy Conditionals
+	 *
+	 * This method is designed to check if the user has set a tag or category
+	 * on the options page to limit the display of the Yummly button to only
+	 * show up on posts that have that tag or are in that category.
+	 *
+	 * @since  3.0.8 | 21 MAY 2018 | Created
+	 * @param  array $panel_context The necessary data from the buttons panel.
+	 * @return bool                 true: conditions met, display the button
+	 *                              false: conditions not met, don't display it
+	 *                              
+	 */
+	private function check_taxonomy_conditionals( $panel_context ) {
+
+		// Create local variables to keep the logic below cleaner.
+		$id = $panel_context['post_data']['ID'];
+		$cat = $panel_context['options']['yummly_categories'];
+		$tag = $panel_context['options']['yummly_tags'];
+
+		// If a category is set and this post is in that category.
+		if( !empty( $cat ) && in_category( $cat , $id ) ):
+			return true;
+		endif;
+
+		// If a tag is set and this post is in that tag.
+		if ( !empty( $tag ) && has_tag( $tag , $id ) ):
+			return true;
+		endif;
+
+		// If no tags or categories have been set
+		if ( empty( $tag ) && empty( $cat ) ):
+			return true;
+		endif;
+
+		return false;
+
+	}
+
 }
 
-/**
- * Add a render_HTML method. Include the conditional logic for tags and categories.
- * If the conditions are met, call PARENT::render_html(), if not, return an empty string.
- *
- */
+// private function check_taxonomy_conditionals() {
+//     global $post;
+//     $post_tags = get_the_tags( $post->ID );
+//
+//     if ( $post_tags !== false ) :
+//         //* Trim whitespace and return an array.
+//         $user_tags = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_tags']);
+//
+//         foreach ( $post_tags as $tag ) {
+//             if ( in_array( $tag, $user_tags ) ) :
+//                 return true;
+//             endif;
+//         }
+//
+//     endif;
+//
+//     $post_categories = wp_get_post_categories();
+//
+//     //* wp_get_post_categories can return a WP error. Make sure we don't process it.
+//     if ( !is_wp_error( $post_categories) && count( $post_categories ) > 0 ) :
+//         //* Trim whitespace and return an array.
+//         $user_categories = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_categories']);
+//
+//         foreach( $post_categories as $cat ) {
+//             $category = get_category( $cat );
+//
+//             if ( in_array( $category->name, $user_categories ) || in_array( $category->slug, $user_categories ) ) :
+//                 return true;
+//             endif;
+//         }
+//     endif;
+//
+//     return false;
+// }
