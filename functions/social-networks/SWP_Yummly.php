@@ -111,40 +111,29 @@ class SWP_Yummly extends SWP_Social_Network {
     // }
 
     private function check_taxonomy_conditionals( $panel_context ) {
+
+		// Create local variables to keep the logic below cleaner.
         $id = $panel_context['post_data']['ID'];
         $options = $panel_context['options'];
-        
-        if (
+		$cat = $options['yummly_categories'];
+		$tag = $opitons['yummly_tags'];
 
-            // If a category is set and this post is in that category
-            (
-                isset( $options['yummly_categories'] )
-                && $options['yummly_categories'] != ''
-                && in_category( $options['yummly_categories'] , $id )
-            )
+		// If a category is set and this post is in that category.
+		if( isset( $cat ) && $cat != '' && in_category( $cat , $id ) ):
+			return true;
 
-            ||
+        // If a tag is set and this post is in that tag.
+        if ( isset( $tag ) && $tag != '' && has_tag( $tag , $id ) ):
+			return true;
+		endif;
 
-            // If a tag is set and this post is in that tag
-            (
-                isset( $options['yummly_tags'] )
-                && $options['yummly_tags'] != ''
-                && has_tag( $options['yummly_tags'] , $id )
-            )
+        // If no tags or categories have been set
+        if ( !isset( $tag ) && !isset( $cat ) || $cat == '' && $tag == '' ):
+			return true;
+        endif;
 
-            ||
+		return false;
 
-            // If no tags or categories have been set
-            (
-                ! isset( $options['yummly_tags'] ) && ! isset( $options['yummly_categories'] ) ||
-                 $options['yummly_categories'] == '' && $options['yummly_tags'] == ''
-            )
-
-        ) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function render_HTML( $panel_context, $echo = false ) {
