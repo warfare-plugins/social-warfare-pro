@@ -66,10 +66,10 @@ class SWP_Yummly extends SWP_Social_Network {
         //* If it is possible to keep it contained here in Yummly, that is better.
         global $swp_user_options;
 
-        if ( isset( $swp_user_options['order_of_icons'][$this->key] ) ) {
-            $this->active = true;
-            return;
-        }
+        // if ( isset( $swp_user_options['order_of_icons'][$this->key] ) ) {
+        //     $this->active = true;
+        //     return;
+        // }
 
         $post_tags = get_the_tags( $post->ID );
 
@@ -132,10 +132,53 @@ class SWP_Yummly extends SWP_Social_Network {
         $response = json_decode( $response, true );
     	return isset( $response['count'] )?intval( $response['count'] ):0;
 	}
+
+    private function check_taxonomy_conditionals() {
+        global $post;
+        $post_tags = get_the_tags( $post->ID );
+
+        if ( $post_tags !== false ) :
+            //* Trim whitespace and return an array.
+            $user_tags = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_tags']);
+
+            foreach ( $post_tags as $tag ) {
+                if ( in_array( $tag, $user_tags ) ) :
+                    return true;
+                endif;
+            }
+
+        endif;
+
+        $post_categories = wp_get_post_categories();
+
+        //* wp_get_post_categories can return a WP error. Make sure we don't process it.
+        if ( !is_wp_error( $post_categories) && count( $post_categories ) > 0 ) :
+            //* Trim whitespace and return an array.
+            $user_categories = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_categories']);
+
+            foreach( $post_categories as $cat ) {
+                $category = get_category( $cat );
+
+                if ( in_array( $category->name, $user_categories ) || in_array( $category->slug, $user_categories ) ) :
+                    return true;
+                endif;
+            }
+        endif;
+
+        return false;
+    }
+
+    public function render_HTML( $panel_context, $echo = false ) {
+        if ( true === $this->check_taxonomy_conditionals() ) :
+            return parent::render_HTML();
+        else:
+            return '';
+        endif;
+    }
 }
 
 /**
  * Add a render_HTML method. Include the conditional logic for tags and categories.
  * If the conditions are met, call PARENT::render_html(), if not, return an empty string.
- * 
+ *
  */
