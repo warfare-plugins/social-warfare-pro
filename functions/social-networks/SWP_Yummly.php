@@ -44,7 +44,7 @@ class SWP_Yummly extends SWP_Social_Network {
 		$this->init_social_network();
 	}
 
-    
+
 
 
 	/**
@@ -75,44 +75,78 @@ class SWP_Yummly extends SWP_Social_Network {
     	return isset( $response['count'] )?intval( $response['count'] ):0;
 	}
 
+    // private function check_taxonomy_conditionals() {
+    //     global $post;
+    //     $post_tags = get_the_tags( $post->ID );
+    //
+    //     if ( $post_tags !== false ) :
+    //         //* Trim whitespace and return an array.
+    //         $user_tags = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_tags']);
+    //
+    //         foreach ( $post_tags as $tag ) {
+    //             if ( in_array( $tag, $user_tags ) ) :
+    //                 return true;
+    //             endif;
+    //         }
+    //
+    //     endif;
+    //
+    //     $post_categories = wp_get_post_categories();
+    //
+    //     //* wp_get_post_categories can return a WP error. Make sure we don't process it.
+    //     if ( !is_wp_error( $post_categories) && count( $post_categories ) > 0 ) :
+    //         //* Trim whitespace and return an array.
+    //         $user_categories = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_categories']);
+    //
+    //         foreach( $post_categories as $cat ) {
+    //             $category = get_category( $cat );
+    //
+    //             if ( in_array( $category->name, $user_categories ) || in_array( $category->slug, $user_categories ) ) :
+    //                 return true;
+    //             endif;
+    //         }
+    //     endif;
+    //
+    //     return false;
+    // }
+
     private function check_taxonomy_conditionals() {
-        global $post;
-        $post_tags = get_the_tags( $post->ID );
+        if (
 
-        if ( $post_tags !== false ) :
-            //* Trim whitespace and return an array.
-            $user_tags = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_tags']);
+            // If a category is set and this post is in that category
+            (
+                isset( $array['options']['yummly_categories'] )
+                && $array['options']['yummly_categories'] != ''
+                && in_category( $array['options']['yummly_categories'] , $array['postID'] )
+            )
 
-            foreach ( $post_tags as $tag ) {
-                if ( in_array( $tag, $user_tags ) ) :
-                    return true;
-                endif;
-            }
+            ||
 
-        endif;
+            // If a tag is set and this post is in that tag
+            (
+                isset( $array['options']['yummly_tags'] )
+                && $array['options']['yummly_tags'] != ''
+                && has_tag( $array['options']['yummly_tags'] , $array['postID'] )
+            )
 
-        $post_categories = wp_get_post_categories();
+            ||
 
-        //* wp_get_post_categories can return a WP error. Make sure we don't process it.
-        if ( !is_wp_error( $post_categories) && count( $post_categories ) > 0 ) :
-            //* Trim whitespace and return an array.
-            $user_categories = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $swp_user_options['yummly_categories']);
+            // If no tags or categories have been set
+            (
+                ! isset( $array['options']['yummly_tags'] ) && ! isset( $array['options']['yummly_categories'] ) ||
+                 $array['options']['yummly_categories'] == '' && $array['options']['yummly_tags'] == ''
+            )
 
-            foreach( $post_categories as $cat ) {
-                $category = get_category( $cat );
-
-                if ( in_array( $category->name, $user_categories ) || in_array( $category->slug, $user_categories ) ) :
-                    return true;
-                endif;
-            }
-        endif;
-
-        return false;
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function render_HTML( $panel_context, $echo = false ) {
         if ( true === $this->check_taxonomy_conditionals() ) :
-            return parent::render_HTML();
+            return parent::render_HTML( $panel_context, $echo );
         else:
             return '';
         endif;
