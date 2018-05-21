@@ -114,22 +114,21 @@ class SWP_Yummly extends SWP_Social_Network {
 
 		// Create local variables to keep the logic below cleaner.
         $id = $panel_context['post_data']['ID'];
-        $options = $panel_context['options'];
-		$cat = $options['yummly_categories'];
-		$tag = $opitons['yummly_tags'];
+		$cat = $panel_context['options']['yummly_categories'];
+		$tag = $panel_context['options']['yummly_tags'];
 
 		// If a category is set and this post is in that category.
-		if( isset( $cat ) && $cat != '' && in_category( $cat , $id ) ):
+		if( !empty( $cat ) && in_category( $cat , $id ) ):
 			return true;
         endif;
 
         // If a tag is set and this post is in that tag.
-        if ( isset( $tag ) && $tag != '' && has_tag( $tag , $id ) ):
+        if ( !empty( $tag ) && has_tag( $tag , $id ) ):
 			return true;
 		endif;
 
         // If no tags or categories have been set
-        if ( !isset( $tag ) && !isset( $cat ) || $cat == '' && $tag == '' ):
+        if ( empty( $tag ) && empty( $cat ) ):
 			return true;
         endif;
 
