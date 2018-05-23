@@ -564,6 +564,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
         //* Float custom color.
         if ( $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
+
             if ( true === $this->options['float_style_source'] ) :
                 //* Inherit the static button style.
                 $this->float_custom_color = $this->custom_color;
@@ -584,12 +585,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         else:
             $this->custom_color_outlines = '';
         endif;
+        // var_dump($this);
+        // die( "checking cc utlines");
 
         //* Float custom outlines.
         if ( $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
-            $custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
-            $this->custom_color_outlines = $custom_color_outlines;
-
             if ( true === $this->options['float_style_source'] ) :
 
                 //* Inherit the static button style.
@@ -634,14 +634,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 }
             ";
         endif;
-
         if ( $this->options[$float . "default_colors"] === $float . "custom_color_outlines" ) :
-            $css .= "
+                $css .= "
 
-            $class.swp_default_custom_color_outlines a
+            $class.swp_default_" . $float . "custom_color_outlines a
                 {color: " . $custom_outlines . " }
 
-            $class.swp_default_custom_color_outlines .nc_tweetContainer
+            $class.swp_default_" . $float . "custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
                     border:1px solid " . $custom_outlines . " ;
@@ -698,10 +697,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options[$float . "hover_colors"] === $float . "custom_color_outlines" ) :
             $css .= "
 
-            html body $class.swp_other_custom_color_outlines:hover a
+            html body $class.swp_other_" . $float . "custom_color_outlines:hover a
                 {color:" . $custom_outlines . " }
 
-            html body $class.swp_other_custom_color_outlines:hover .nc_tweetContainer
+            html body $class.swp_other_" . $float . "custom_color_outlines:hover .nc_tweetContainer
                 {
                     background-color: transparent ;
                     border:1px solid " . $custom_outlines . " ;
