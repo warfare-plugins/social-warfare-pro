@@ -613,12 +613,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css = "
 
             $prefix.swp_default_custom_color_outlines a
-                {color: " . $this->custom_color_outlines . "}
+                {color: " . $this->custom_color_outlines . " !important}
 
             $prefix.swp_default_custom_color_outlines .nc_tweetContainer
                 {
-                    background-color: transparent;
-                    border:1px solid " . $this->custom_color_outlines . ";
+                    background-color: transparent !important;
+                    border:1px solid " . $this->custom_color_outlines . " !important;
                 }
             ";
         endif;
@@ -627,10 +627,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options["single_colors"] === "custom_color" ) :
             $css = "
 
-            $prefix.swp_individual_custom_color .nc_tweetContainer:hover a
+            html body $prefix.swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover a
                 {color:white}
 
-            $prefix.swp_individual_custom_color .nc_tweetContainer:hover
+            html body $prefix.swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover
                 {
                     background-color:" . $this->custom_color . ";
                     border:1px solid " . $this->custom_color . ";
@@ -642,13 +642,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options["single_colors"] === "custom_color_outlines" ) :
             $css = "
 
-            $prefix.swp_individual_custom_color .nc_tweetContainer:hover a
-                {color:" . $this->custom_color_outlines . "}
+            $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover a
+                {color:" . $this->custom_color_outlines . " !important}
 
-            $prefix.swp_individual_custom_color .nc_tweetContainer:hover
+            $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover
                 {
-                    background-color: transparent;
-                    border:1px solid " . $this->custom_color_outlines . ";
+                    background-color: transparent !important;
+                    border:1px solid " . $this->custom_color_outlines . " !important;
                 }
             ";
         endif;
@@ -671,13 +671,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options["hover_colors"] === "custom_color_outlines" ) :
             $css = "
 
-            $prefix.swp_other_custom_color:hover a
-                {color:" . $this->custom_color_outlines . "}
+            $prefix.swp_other_custom_color_outlines:hover a
+                {color:" . $this->custom_color_outlines . " !important}
 
-            $prefix.swp_other_custom_color:hover .nc_tweetContainer
+            $prefix.swp_other_custom_color_outlines:hover .nc_tweetContainer
                 {
-                    background-color: transparent;
-                    border:1px solid " . $this->custom_color_outlines . ";
+                    background-color: transparent !important;
+                    border:1px solid " . $this->custom_color_outlines . " !important;
                 }
             ";
         endif;
