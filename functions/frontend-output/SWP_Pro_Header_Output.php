@@ -660,7 +660,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Individual: Custom Color
-        var_dump($this->options[$float . "single_colors"]);
         if ( $this->options[$float . "single_colors"] === $float . "custom_color" ) :
             $css .= "
 
