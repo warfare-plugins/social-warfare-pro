@@ -596,7 +596,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
         // Output ONLY the default custom color selectors
         if ( $this->options["default_colors"] === "custom_color" ) :
-            $css = "
+            $css .= "
 
             $prefix.swp_default_custom_color a
                 {color:white}
@@ -610,52 +610,53 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         if ( $this->options["default_colors"] === "custom_color_outlines" ) :
-            $css = "
+            $css .= "
 
             $prefix.swp_default_custom_color_outlines a
-                {color: " . $this->custom_color_outlines . " !important}
+                {color: " . $this->custom_color_outlines . " }
 
             $prefix.swp_default_custom_color_outlines .nc_tweetContainer
                 {
-                    background-color: transparent !important;
-                    border:1px solid " . $this->custom_color_outlines . " !important;
+                    background-color: transparent ;
+                    border:1px solid " . $this->custom_color_outlines . " ;
                 }
             ";
         endif;
 
         // Output ONLY the single color hover state selectors
+        //* single_colors are the only colors that get an !important tag, as they are the most specifc.
         if ( $this->options["single_colors"] === "custom_color" ) :
-            $css = "
+            $css .= "
 
             html body $prefix.swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover a
-                {color:white}
+                {color:white!important}
 
             html body $prefix.swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover
                 {
-                    background-color:" . $this->custom_color . ";
-                    border:1px solid " . $this->custom_color . ";
+                    background-color:" . $this->custom_color . "!important;
+                    border:1px solid " . $this->custom_color . "!important;
                 }
             ";
         endif;
 
         // Output ONLY the single color hover state selectors
         if ( $this->options["single_colors"] === "custom_color_outlines" ) :
-            $css = "
+            $css .= "
 
-            $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover a
-                {color:" . $this->custom_color_outlines . " !important}
+            html body $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover a
+                {color:" . $this->custom_color_outlines . "!important}
 
-            $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover
+            html body $prefix.swp_individual_custom_color_outlines .nc_tweetContainer:hover
                 {
                     background-color: transparent !important;
-                    border:1px solid " . $this->custom_color_outlines . " !important;
+                    border:1px solid " . $this->custom_color_outlines . "!important ;
                 }
             ";
         endif;
 
         // Output ONLY the "other" color hover state selectors
         if ( $this->options["hover_colors"] === "custom_color" ) :
-            $css = "
+            $css .= "
 
             body $prefix.swp_social_panel.swp_other_custom_color:hover a
                 {color:white}
@@ -669,15 +670,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         if ( $this->options["hover_colors"] === "custom_color_outlines" ) :
-            $css = "
+            $css .= "
 
-            $prefix.swp_other_custom_color_outlines:hover a
-                {color:" . $this->custom_color_outlines . " !important}
+            html body $prefix.swp_other_custom_color_outlines:hover a
+                {color:" . $this->custom_color_outlines . " }
 
-            $prefix.swp_other_custom_color_outlines:hover .nc_tweetContainer
+            html body $prefix.swp_other_custom_color_outlines:hover .nc_tweetContainer
                 {
-                    background-color: transparent !important;
-                    border:1px solid " . $this->custom_color_outlines . " !important;
+                    background-color: transparent ;
+                    border:1px solid " . $this->custom_color_outlines . " ;
                 }
             ";
         endif;
@@ -706,7 +707,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         $css = $static . $floating;
 
         if ( !empty( $css) ) :
-            $css = '<style type="text/css">' . $css . '</style>';
+            $css .= '<style type="text/css">' . $css . '</style>';
         endif;
 
         //* Replaces newlines and excessive whitespace with a single space.
