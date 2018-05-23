@@ -546,8 +546,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
                 html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
                 body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                    background-color:' . $this->options['custom_color'] . ';
-                    border:1px solid ' . $this->options['custom_color'] . ';
+                    background-color:' . $this->options['custom_color'] . '!important;
+                    border:1px solid ' . $this->options['custom_color'] . '!important;
                 }
             </style>';
     	endif;
@@ -560,15 +560,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 .swp_social_panel.swp_default_custom_color_outlines a,
                 html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
                 body .swp_social_panel.swp_other_custom_color_outlines:hover a {
-                    color:' . $this->options['custom_color_outlines'] . ';
+                    color:' . $this->options['custom_color_outlines'] . '!important;
                 }
 
                 .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer,
                 html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
                 body .swp_social_panel.swp_other_custom_color_outlines:hover
                 .nc_tweetContainer {
-                    background:transparent;
-                    border:1px solid ' . $this->options['custom_color_outlines'] . ';
+                    background:transparent !important;
+                    border:1px solid ' . $this->options['custom_color_outlines'] . '!important;
                 }
             </style>';
 
@@ -607,8 +607,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
                     .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer,
                     html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                    body .swp_social_panel.swp_other_custom_color_outlines:hover .nc_tweetContainer {
-                        background:transparent; border:1px solid ' . $this->options['float_custom_color_outlines'] . '!Important;
+                    html body .swp_social_panel.swp_other_custom_color_outlines:hover .nc_tweetContainer {
+                        background:transparent !important;
+                        border:1px solid ' . $this->options['float_custom_color_outlines'] . '!Important;
                     }
                 </style>';
 
@@ -626,9 +627,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover a {
                         color:white !Important;
                     }
-                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color .nc_tweetContainer,
+                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
                     html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color .nc_tweetContainer:hover,
-                    body. swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover .nc_tweetContainer {
+                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover .nc_tweetContainer {
                         background-color:' . $this->options['float_custom_color'] . '!Important;
                         border:1px solid ' . $this->options['float_custom_color'] . '!important;
                     }
@@ -649,7 +650,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines .nc_tweetContainer,
                     html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
                     body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover .nc_tweetContainer {
-                        background:transparent;
+                        background: transparent !important;;
                         border:1px solid ' . $this->options['float_custom_color_outlines'] . '!!Important;
                     }
                 </style>';
