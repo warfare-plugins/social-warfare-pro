@@ -546,8 +546,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
                 html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
                 body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                    background-color:' . $this->options['custom_color'] . '!important;
-                    border:1px solid ' . $this->options['custom_color'] . '!important;
+                    background-color:' . $this->options['custom_color'] . ';
+                    border:1px solid ' . $this->options['custom_color'] . ';
                 }
             </style>';
     	endif;
@@ -588,8 +588,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                         body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
                         html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
                         body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                            background-color:' . $this->options['float_custom_color'] . '!Important;
-                            border:1px solid ' . $this->options['float_custom_color'] . '!Important;
+                            background-color:' . $this->options['float_custom_color'] . ';
+                            border:1px solid ' . $this->options['float_custom_color'] . ';
                         }
                     </style>';
         	endif;
@@ -629,12 +629,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     }
                     .swp_social_panel.swp_social_panelSide.swp_default_custom_color .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
                     html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color .nc_tweetContainer:hover,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover .nc_tweetContainer {
-                        background-color:' . $this->options['float_custom_color'] . '!Important;
-                        border:1px solid ' . $this->options['float_custom_color'] . '!important;
+                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover .nc_tweetContainer:not(.total_shares):not(.total_sharesalt) {
+                        background-color:' . $this->options['float_custom_color'] . ';
+                        border:1px solid ' . $this->options['float_custom_color'] . ';
                     }
                 </style>';
         	endif;
+
 
         	if ( ( $this->options['float_default_colors'] == 'custom_color_outlines' || $this->options['float_single_colors'] == 'custom_color_outlines' || $this->options['float_hover_colors'] == 'custom_color_outlines' ) ) :
         		$info['html_output'] .= PHP_EOL .
@@ -647,11 +648,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                         color:' . $this->options['float_custom_color_outlines'] . '!Important;
                     }
 
-                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines .nc_tweetContainer,
+                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
                     html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover .nc_tweetContainer {
+                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover .nc_tweetContainer:not(.total_shares):not(.total_sharesalt) {
                         background: transparent !important;;
-                        border:1px solid ' . $this->options['float_custom_color_outlines'] . '!!Important;
+                        border:1px solid ' . $this->options['float_custom_color_outlines'] . '!important;
                     }
                 </style>';
 
