@@ -663,9 +663,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options[$float . "single_colors"] === $float . "custom_color" ) :
             $css .= "
 
-            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:hover a
+            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
                 {color:white!important}
-            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:hover
+            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color:" . $custom_color . "!important;
                     border:1px solid " . $custom_color . "!important;
@@ -677,9 +677,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options[$float . "single_colors"] === $float . "custom_color_outlines" ) :
             $css .= "
 
-            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:hover a
+            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
                 {color:" . $custom_outlines . "!important}
-            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:hover
+            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color: transparent !important;
                     border:1px solid " . $custom_outlines . "!important ;
