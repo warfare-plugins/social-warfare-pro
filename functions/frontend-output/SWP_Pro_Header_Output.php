@@ -6,9 +6,10 @@
  * @package   SocialWarfare\Functions
  * @copyright Copyright (c) 2017, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     1.0.0 | Created | Uknown
- * @since     2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values.
- * @since     3.0.0 | Updated | 21 FEB 2018 | Refactored into a class-based system.
+ * @since     1.0.0 | Unknown     | Created
+ * @since     2.2.4 | 05 MAY 2017 | Added the global options for og:type values.
+ * @since     3.0.0 | 21 FEB 2018 | Refactored into a class-based system.
+ * @since     3.0.8 | 23 MAY 2018 | Added compatibility for custom color/outline combos.
  *
  *
  * Hook into the core header filter
@@ -546,7 +547,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     /**
      * Localizes the custom color settings from admin.
      *
-     * @since 3.0.8 | MAY 23 2018 | Created the method.
+     * @since  3.0.8 | MAY 23 2018 | Created the method.
+     * @param  none
      * @return void
      *
      */
@@ -623,7 +625,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Output ONLY the default custom color selectors
+        // Default: Custom Color
         if ( $this->options[$float . "default_colors"] === $float . "custom_color" ) :
             $css .= "
 
@@ -637,7 +639,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             ";
         endif;
 
-		// Output ONLY the default custom outlines selectors
+		// Default: Custom Outlines
         if ( $this->options[$float . "default_colors"] === $float . "custom_color_outlines" ) :
                 $css .= "
 
@@ -657,8 +659,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Output ONLY the single color hover state selectors
-        //* single_colors are the only colors that get an !important tag, as they are the most specifc.
+        // Individual: Custom Color
         var_dump($this->options[$float . "single_colors"]);
         if ( $this->options[$float . "single_colors"] === $float . "custom_color" ) :
             $css .= "
@@ -673,7 +674,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             ";
         endif;
 
-        // Output ONLY the single color hover state selectors
+        // Individual: Custom Outlines
         if ( $this->options[$float . "single_colors"] === $float . "custom_color_outlines" ) :
             $css .= "
 
@@ -693,7 +694,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Output ONLY the "other" color hover state selectors
+        // Other: Custom Color
         if ( $this->options[$float . "hover_colors"] === $float . "custom_color" ) :
             $css .= "
 
@@ -707,6 +708,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             ";
         endif;
 
+		// Other: Custom Outlines
         if ( $this->options[$float . "hover_colors"] === $float . "custom_color_outlines" ) :
             $css .= "
 
@@ -748,8 +750,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Replaces newlines and excessive whitespace with a single space.
-        // $info['html_output'] .= trim( preg_replace( '/\s+/', ' ', $css ) );
-		$info['html_output'] .= $css;
+        $info['html_output'] .= trim( preg_replace( '/\s+/', ' ', $css ) );
+		// $info['html_output'] .= $css;
     	return $info;
     }
 
