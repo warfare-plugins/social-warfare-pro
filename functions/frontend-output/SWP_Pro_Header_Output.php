@@ -593,11 +593,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     private function get_css( $floating = false ) {
         $float = '';
         $class = '';
+        $custom_color = $this->custom_color;
+        $custom_outlines = $this->custom_color_outlines;
 
         if ( $floating ) {
             $float = 'float_';
             $class = '.swp_social_panelSide';
+            $custom_color = $this->float_custom_color;
+            $custom_outlines = $this->float_custom_color_outlines;
         }
+
         $css = '';
 
         // Output ONLY the default custom color selectors
@@ -609,8 +614,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
             $class.swp_social_panel.swp_default_custom_color .nc_tweetContainer
                 {
-                    background-color:" . $this->custom_color . ";
-                    border:1px solid " . $this->custom_color . ";
+                    background-color:" . $custom_color . ";
+                    border:1px solid " . $custom_color . ";
                 }
             ";
         endif;
@@ -619,12 +624,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             $class.swp_default_custom_color_outlines a
-                {color: " . $this->custom_color_outlines . " }
+                {color: " . $custom_outlines . " }
 
             $class.swp_default_custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
-                    border:1px solid " . $this->custom_color_outlines . " ;
+                    border:1px solid " . $custom_outlines . " ;
                 }
             ";
         endif;
@@ -639,8 +644,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
             html body $class.swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover
                 {
-                    background-color:" . $this->custom_color . "!important;
-                    border:1px solid " . $this->custom_color . "!important;
+                    background-color:" . $custom_color . "!important;
+                    border:1px solid " . $custom_color . "!important;
                 }
             ";
         endif;
@@ -650,12 +655,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:hover a
-                {color:" . $this->custom_color_outlines . "!important}
+                {color:" . $custom_outlines . "!important}
 
             html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:hover
                 {
                     background-color: transparent !important;
-                    border:1px solid " . $this->custom_color_outlines . "!important ;
+                    border:1px solid " . $custom_outlines . "!important ;
                 }
             ";
         endif;
@@ -669,8 +674,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
             body $class.swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer
                 {
-                    background-color:" . $this->custom_color . ";
-                    border:1px solid " . $this->custom_color . ";
+                    background-color:" . $custom_color . ";
+                    border:1px solid " . $custom_color . ";
                 }
             ";
         endif;
@@ -679,12 +684,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class.swp_other_custom_color_outlines:hover a
-                {color:" . $this->custom_color_outlines . " }
+                {color:" . $custom_outlines . " }
 
             html body $class.swp_other_custom_color_outlines:hover .nc_tweetContainer
                 {
                     background-color: transparent ;
-                    border:1px solid " . $this->custom_color_outlines . " ;
+                    border:1px solid " . $custom_outlines . " ;
                 }
             ";
         endif;
