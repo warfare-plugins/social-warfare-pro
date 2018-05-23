@@ -615,9 +615,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     color:' . $this->custom_color_outlines . '!important;
                 }
 
-                .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer,
+                .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
                 html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                body .swp_social_panel.swp_other_custom_color_outlines:hover
+                body .swp_social_panel.swp_other_custom_color_outlines:hover:not(.total_shares):not(.total_sharesalt)
                 .nc_tweetContainer {
                     background:transparent !important;
                     border:1px solid ' . $this->custom_color_outlines . '!important;
