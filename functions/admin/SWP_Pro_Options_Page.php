@@ -602,7 +602,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             unset($color_choices['custom_color']);
             unset($color_choices['custom_color_outlines']);
             $color_choices['float_custom_color'] = __( 'Custom Color', 'social-warfare' );
-            $color_choices['float_custom_outlines'] = __( 'Custom Color Outlines', 'social-warfare' );
+            $color_choices['float_custom_color_outlines'] = __( 'Custom Color Outlines', 'social-warfare' );
 
             //* sideDColorSet => float_default_colors
             $float_default_colors = new SWP_Option_Select( __( 'Default Color Set', 'social-warfare' ), 'float_default_colors' );
