@@ -47,6 +47,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
         global $swp_user_options;
         $this->options = $swp_user_options;
+        $this->establish_custom_colors();
         $this->init();
     }
 
@@ -521,6 +522,57 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	return $info;
     }
 
+    /**
+     * Verifies that the color has been properly set.
+     *
+     * @since 3.0.8 | MAY 23 2018 | Created the method.
+     * @param string $hex The color to check.
+     * @return string $hex The sanitized color string.
+     *
+     */
+    private function parse_hex_color( $hex ) {
+        if ( !isset( $hex ) ) :
+            //* Default to a dark grey.
+            return  "#333333";
+        endif;
+
+        if ( strpos( $hex, "#" !== 0 ) :
+            $hex = "#" . $hex;
+        endif;
+
+        return $hex;
+    }
+
+    /**
+     * Localizes the custom color settings from admin.
+     *
+     * @since 3.0.8 | MAY 23 2018 | Created the method.
+     * @return void
+     *
+     */
+    private funciton establish_custom_colors() {
+        if ( $this->options['default_colors'] == 'custom_color' || $this->options['single_colors'] == 'custom_color' || $this->options['hover_colors'] == 'custom_color'
+          || $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
+
+            $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
+            $this->custom_color = $custom_color;
+
+            $custom_float_color = $this->parse_hex_color( $this->options['float_custom_color'] );
+            $this->float_custom_color = $custom_float_color;
+
+        endif;
+
+        if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines'
+          || $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+
+          $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
+          $this->custom_color_outlnes = $custom_color_outlines;
+
+          $custom_float_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+          $this->float_custom_color_outlines = $custom_float_color_outlines;
+      endif;
+    }
+
 
     /**
      * Output the CSS for custom selected colors
@@ -645,7 +697,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines a,
                     html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
                     body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover a {
-                        color:' . $this->options['float_custom_color_outlines'] . '!Important;
+                        color:' . $this->options['float_custom_color_outlines'] . '!important;
                     }
 
                     .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
