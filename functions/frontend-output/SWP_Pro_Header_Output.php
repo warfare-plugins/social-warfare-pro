@@ -557,20 +557,37 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
             $this->custom_color = $custom_color;
 
-            $custom_float_color = $this->parse_hex_color( $this->options['float_custom_color'] );
-            $this->float_custom_color = $custom_float_color;
+            if ( true === $this->options['float_style_source'] ) :
+                //* Inherit the static button style.
+                $this->float_custom_color = $custom_color;
+            else :
+                $custom_float_color = $this->parse_hex_color( $this->options['float_custom_color'] );
+                $this->float_custom_color = $custom_float_color;
+            endif;
 
+        else :
+            $this->custom_color = '';
+            $this->float_custom_color = '';
         endif;
 
         if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines'
           || $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
 
-          $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
-          $this->custom_color_outlines = $custom_color_outlines;
+            $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
+            $this->custom_color_outlines = $custom_color_outlines;
 
-          $custom_float_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
-          $this->float_custom_color_outlines = $custom_float_color_outlines;
-      endif;
+            if ( true === $this->options['float_style_source'] ) :
+                //* Inherit the static button style.
+                $this->float_custom_color_outlines = $custom_color_outlines;
+            else:
+                $custom_float_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+                $this->float_custom_color_outlines = $custom_float_color_outlines;
+            endif;
+
+        else:
+            $this->custom_color_outlines = '';
+            $this->float_custom_color_outlines = '';
+        endif;
     }
 
 
@@ -588,7 +605,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function output_custom_color( $info ) {
         //* Social Panel Custom Color
 
-    	if ( $this->options['default_colors'] == 'custom_color' || $this->options['single_colors'] == 'custom_color' || $this->options['hover_colors'] == 'custom_color' ) :
+    	if ( !empty ( $this->custom_color ) ) :
     		$info['html_output'] .= PHP_EOL .
 
             '<style type="text/css">
@@ -604,7 +621,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             </style>';
     	endif;
 
-    	if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines' ) :
+    	if ( !empty( $this->custom_color_outlines ) ) :
     		$info['html_output'] .= PHP_EOL .
 
             '<style type="text/css">
@@ -631,7 +648,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( true === $this->options['float_style_source'] ) :
             //* FLoating buttons inherit the static button style.
 
-            if ( $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
+            if ( !empty( $this->float_custom_color ) ) :
         		$info['html_output'] .= PHP_EOL .
                     '<style type="text/css">
                         /* Social Warfare Floating Custom Color (Inherited) */
@@ -640,13 +657,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                         body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
                         html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
                         body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                            background-color:' . $this->custom_color . ';
-                            border:1px solid ' . $this->custom_color . ';
+                            background-color:' . $this->float_custom_color . ';
+                            border:1px solid ' . $this->float_custom_color . ';
                         }
                     </style>';
         	endif;
 
-        	if ( $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+        	if ( !empty( $this->float_custom_color_outlines ) ) :
         		$info['html_output'] .= PHP_EOL .
 
                 '<style type="text/css">
@@ -654,14 +671,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                     .swp_social_panel.swp_default_custom_color_outlines a,
                     html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
                     body .swp_social_panel.swp_other_custom_color_outlines:hover a {
-                        color:' . $this->options['float_custom_color_outlines'] . '!Important;
+                        color:' . $this->float_custom_color_outlines. '!Important;
                     }
 
                     .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer,
                     html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
                     html body .swp_social_panel.swp_other_custom_color_outlines:hover .nc_tweetContainer {
                         background:transparent !important;
-                        border:1px solid ' . $this->custom_color_outlines . '!Important;
+                        border:1px solid ' . $this->float_custom_color_outlines . '!Important;
                     }
                 </style>';
 
@@ -669,7 +686,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
         else :
             //* FLoating buttons have their own defined style.
-        	if ( ($this->options['float_default_colors'] == 'custom_color' || $this->options['float_single_colors'] == 'custom_color' || $this->options['float_hover_colors'] == 'custom_color') ) :
+        	if ( !empty ( $this->custom_color ) ) :
         		$info['html_output'] .= PHP_EOL .
 
                 '<style type="text/css">
@@ -689,7 +706,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         	endif;
 
 
-        	if ( ( $this->options['float_default_colors'] == 'custom_color_outlines' || $this->options['float_single_colors'] == 'custom_color_outlines' || $this->options['float_hover_colors'] == 'custom_color_outlines' ) ) :
+        	if ( !empty ( $this->custom_color_outlines ) ) :
         		$info['html_output'] .= PHP_EOL .
 
                 '<style type="text/css">
