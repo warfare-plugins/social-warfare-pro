@@ -707,7 +707,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         $css = $static . $floating;
 
         if ( !empty( $css) ) :
-            $css .= '<style type="text/css">' . $css . '</style>';
+            $css = '<style type="text/css">' . $css . '</style>';
         endif;
 
         //* Replaces newlines and excessive whitespace with a single space.
