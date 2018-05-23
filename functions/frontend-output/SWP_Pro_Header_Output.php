@@ -585,18 +585,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         else:
             $this->custom_color_outlines = '';
         endif;
-        // var_dump($this);
-        // die( "checking cc utlines");
 
-        //* Float custom outlines.
-        if ( $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+        if ( $this->options['float_default_colors'] == 'float_custom_outlines' || $this->options['float_single_colors'] == 'float_custom_outlines' || $this->options['float_hover_colors'] == 'float_custom_outlines' ) :
             if ( true === $this->options['float_style_source'] ) :
 
                 //* Inherit the static button style.
                 $this->float_custom_color_outlines = $this->custom_color_outlines;
             else:
-
-                $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+                //* TODO: We are making it to this point.
+                    $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
             endif;
 
         else:
@@ -634,19 +631,39 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 }
             ";
         endif;
-        if ( $this->options[$float . "default_colors"] === $float . "custom_color_outlines" ) :
-                $css .= "
 
-            $class.swp_default_" . $float . "custom_color_outlines a
-                {color: " . $custom_outlines . " }
+        //* TODO This is wonky and not systematic with the rest, but it works for now.
+        if ($float) {
+            if ( $this->options[$float . "default_colors"] === $float . "custom_outlines" ) :
+                    $css .= "
 
-            $class.swp_default_" . $float . "custom_color_outlines .nc_tweetContainer
-                {
-                    background-color: transparent ;
-                    border:1px solid " . $custom_outlines . " ;
-                }
-            ";
-        endif;
+                $class.swp_default_" . $float . "custom_outlines a
+                    {color: " . $custom_outlines . " }
+
+                $class.swp_default_" . $float . "custom_outlines .nc_tweetContainer
+                    {
+                        background-color: transparent ;
+                        border:1px solid " . $custom_outlines . " ;
+                    }
+                ";
+            endif;
+
+        } else {
+            if ( $this->options["default_colors"] === "custom_outlines" ) :
+                    $css .= "
+
+                $class.swp_default_custom_outlines a
+                    {color: " . $custom_outlines . " }
+
+                $class.swp_default_custom_outlines .nc_tweetContainer
+                    {
+                        background-color: transparent ;
+                        border:1px solid " . $custom_outlines . " ;
+                    }
+                ";
+            endif;
+        }
+
 
         // Output ONLY the single color hover state selectors
         //* single_colors are the only colors that get an !important tag, as they are the most specifc.
