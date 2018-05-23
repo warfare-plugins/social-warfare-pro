@@ -551,43 +551,59 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
     private function establish_custom_colors() {
-        if ( $this->options['default_colors'] == 'custom_color' || $this->options['single_colors'] == 'custom_color' || $this->options['hover_colors'] == 'custom_color'
-          || $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
+
+        //* Static custom color.
+        if ( $this->options['default_colors'] == 'custom_color' || $this->options['single_colors'] == 'custom_color' || $this->options['hover_colors'] == 'custom_color' ) :
 
             $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
             $this->custom_color = $custom_color;
 
+        else :
+            $this->custom_color = '';
+        endif;
+
+        //* Float custom color.
+        if ( $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
             if ( true === $this->options['float_style_source'] ) :
                 //* Inherit the static button style.
-                $this->float_custom_color = $custom_color;
+                $this->float_custom_color = $this->custom_color;
             else :
-                $custom_float_color = $this->parse_hex_color( $this->options['float_custom_color'] );
-                $this->float_custom_color = $custom_float_color;
+                $this->float_custom_color = $this->parse_hex_color( $this->options['float_custom_color'] );
             endif;
 
         else :
-            $this->custom_color = '';
             $this->float_custom_color = '';
         endif;
 
-        if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines'
-          || $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+        //* Static custom outlines.
+        if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines' ) :
 
             $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
             $this->custom_color_outlines = $custom_color_outlines;
 
+        else:
+            $this->custom_color_outlines = '';
+        endif;
+
+        //* Float custom outlines.
+        if ( $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+            $custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+            $this->custom_color_outlines = $custom_color_outlines;
+
             if ( true === $this->options['float_style_source'] ) :
+
                 //* Inherit the static button style.
-                $this->float_custom_color_outlines = $custom_color_outlines;
+                $this->float_custom_color_outlines = $this->custom_color_outlines;
             else:
-                $custom_float_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
-                $this->float_custom_color_outlines = $custom_float_color_outlines;
+
+                $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
             endif;
 
         else:
-            $this->custom_color_outlines = '';
             $this->float_custom_color_outlines = '';
         endif;
+
+        // var_dump($this); die;
     }
 
     private function get_css( $floating = false ) {
