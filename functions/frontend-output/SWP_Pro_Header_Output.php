@@ -590,6 +590,102 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
     }
 
+    private function get_css( $floating = false ) {
+        $prefix = $floating ? '.swp_social_panelSide' : '';
+        $css = '';
+
+        // Output ONLY the default custom color selectors
+        if ( $this->options["default_colors"] === "custom_color" ) :
+            $css = "
+
+            $prefix.swp_default_custom_color a
+                {color:white}
+
+            $prefix.swp_social_panel.swp_default_custom_color .nc_tweetContainer
+                {
+                    background-color:" . $this->custom_color . ";
+                    border:1px solid " . $this->custom_color . ";
+                }
+            ";
+        endif;
+
+        if ( $this->options["default_colors"] === "custom_color_outlines" ) :
+            $css = "
+
+            $prefix.swp_default_custom_color_outlines a
+                {color: " . $this->custom_color_outlines . "}
+
+            $prefix.swp_default_custom_color_outlines .nc_tweetContainer
+                {
+                    background-color: transparent;
+                    border:1px solid " . $this->custom_color_outlines . ";
+                }
+            ";
+        endif;
+
+        // Output ONLY the single color hover state selectors
+        if ( $this->options["single_colors"] === "custom_color" ) :
+            $css = "
+
+            $prefix.swp_individual_custom_color .nc_tweetContainer:hover a
+                {color:white}
+
+            $prefix.swp_individual_custom_color .nc_tweetContainer:hover
+                {
+                    background-color:" . $this->custom_color . ";
+                    border:1px solid " . $this->custom_color . ";
+                }
+            ";
+        endif;
+
+        // Output ONLY the single color hover state selectors
+        if ( $this->options["single_colors"] === "custom_color_outlines" ) :
+            $css = "
+
+            $prefix.swp_individual_custom_color .nc_tweetContainer:hover a
+                {color:" . $this->custom_color_outlines . "}
+
+            $prefix.swp_individual_custom_color .nc_tweetContainer:hover
+                {
+                    background-color: transparent;
+                    border:1px solid " . $this->custom_color_outlines . ";
+                }
+            ";
+        endif;
+
+        // Output ONLY the "other" color hover state selectors
+        if ( $this->options["hover_colors"] === "custom_color" ) :
+            $css = "
+
+            body $prefix.swp_social_panel.swp_other_custom_color:hover a
+                {color:white}
+
+            body $prefix.swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer
+                {
+                    background-color:" . $this->custom_color . ";
+                    border:1px solid " . $this->custom_color . ";
+                }
+            ";
+        endif;
+
+        if ( $this->options["hover_colors"] === "custom_color_outlines" ) :
+            $css = "
+
+            $prefix.swp_other_custom_color:hover a
+                {color:" . $this->custom_color_outlines . "}
+
+            $prefix.swp_other_custom_color:hover .nc_tweetContainer
+                {
+                    background-color: transparent;
+                    border:1px solid " . $this->custom_color_outlines . ";
+                }
+            ";
+        endif;
+
+        return $css;
+
+    }
+
 
     /**
      * Output the CSS for custom selected colors
@@ -603,134 +699,18 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
     public function output_custom_color( $info ) {
-        //* Social Panel Custom Color
+        $static = $this->get_css();
+        $floaters_on = swp_get_option( 'floating_panel' );
+        $floating = $floaters_on ? $this->get_css( true ) : '';
 
-    	if ( !empty ( $this->custom_color ) ) :
-    		$info['html_output'] .= PHP_EOL .
+        $css = $static . $floating;
 
-            '<style type="text/css">
-                /* Social Warfare Custom Color */
-                .swp_social_panel.swp_default_custom_color a,
-                html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover a,
-                body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
-                html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
-                body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                    background-color:' . $this->custom_color . ';
-                    border:1px solid ' . $this->custom_color . ';
-                }
-            </style>';
-    	endif;
-
-    	if ( !empty( $this->custom_color_outlines ) ) :
-    		$info['html_output'] .= PHP_EOL .
-
-            '<style type="text/css">
-                /* Social Warfare Custom Color Outlines */
-                .swp_social_panel.swp_default_custom_color_outlines a,
-                html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
-                body .swp_social_panel.swp_other_custom_color_outlines:hover a {
-                    color:' . $this->custom_color_outlines . '!important;
-                }
-
-                .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
-                html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                body .swp_social_panel.swp_other_custom_color_outlines:hover:not(.total_shares):not(.total_sharesalt)
-                .nc_tweetContainer {
-                    background:transparent !important;
-                    border:1px solid ' . $this->custom_color_outlines . '!important;
-                }
-            </style>';
-
-    	endif;
-
-        //* Floating Buttons Custom Color
-
-        if ( true === $this->options['float_style_source'] ) :
-            //* FLoating buttons inherit the static button style.
-
-            if ( !empty( $this->float_custom_color ) ) :
-        		$info['html_output'] .= PHP_EOL .
-                    '<style type="text/css">
-                        /* Social Warfare Floating Custom Color (Inherited) */
-                        .swp_social_panelSide.swp_default_custom_color a,
-                        html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover a,
-                        body .swp_social_panel.swp_other_custom_color:hover a {color:white} .swp_social_panel.swp_default_custom_color .nc_tweetContainer,
-                        html body .swp_social_panel.swp_individual_custom_color .nc_tweetContainer:hover,
-                        body .swp_social_panel.swp_other_custom_color:hover .nc_tweetContainer {
-                            background-color:' . $this->float_custom_color . ';
-                            border:1px solid ' . $this->float_custom_color . ';
-                        }
-                    </style>';
-        	endif;
-
-        	if ( !empty( $this->float_custom_color_outlines ) ) :
-        		$info['html_output'] .= PHP_EOL .
-
-                '<style type="text/css">
-                    /* Social Warfare Floating Custom Color Outlines (Inherited) */
-                    .swp_social_panel.swp_default_custom_color_outlines a,
-                    html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
-                    body .swp_social_panel.swp_other_custom_color_outlines:hover a {
-                        color:' . $this->float_custom_color_outlines. '!Important;
-                    }
-
-                    .swp_social_panel.swp_default_custom_color_outlines .nc_tweetContainer,
-                    html body .swp_social_panel.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                    html body .swp_social_panel.swp_other_custom_color_outlines:hover .nc_tweetContainer {
-                        background:transparent !important;
-                        border:1px solid ' . $this->float_custom_color_outlines . '!Important;
-                    }
-                </style>';
-
-        	endif;
-
-        else :
-            //* FLoating buttons have their own defined style.
-        	if ( !empty ( $this->custom_color ) ) :
-        		$info['html_output'] .= PHP_EOL .
-
-                '<style type="text/css">
-                    /* Social Warfare Floating Custom Color */
-                    .swp_social_panel.swp_default_custom_color a,
-                    html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color .nc_tweetContainer:hover a,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover a {
-                        color:white !Important;
-                    }
-                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
-                    html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color .nc_tweetContainer:hover,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color:hover .nc_tweetContainer:not(.total_shares):not(.total_sharesalt) {
-                        background-color:' . $this->float_custom_color . ';
-                        border:1px solid ' . $this->float_custom_color . ';
-                    }
-                </style>';
-        	endif;
-
-
-        	if ( !empty ( $this->custom_color_outlines ) ) :
-        		$info['html_output'] .= PHP_EOL .
-
-                '<style type="text/css">
-                    /* Social Warfare Floating Custom Color Outlines */
-                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines a,
-                    html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color_outlines .nc_tweetContainer:hover a,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover a {
-                        color:' . $this->float_custom_color_outlines . '!important;
-                    }
-
-                    .swp_social_panel.swp_social_panelSide.swp_default_custom_color_outlines .nc_tweetContainer:not(.total_shares):not(.total_sharesalt),
-                    html body .swp_social_panel.swp_social_panelSide.swp_individual_custom_color_outlines .nc_tweetContainer:hover,
-                    body .swp_social_panel.swp_social_panelSide.swp_other_custom_color_outlines:hover .nc_tweetContainer:not(.total_shares):not(.total_sharesalt) {
-                        background: transparent !important;;
-                        border:1px solid ' . $this->float_custom_color_outlines . '!important;
-                    }
-                </style>';
-
-    		endif;
-
+        if ( !empty( $css) ) :
+            $css = '<style type="text/css">' . $css . '</style>';
         endif;
 
         //* Replaces newlines and excessive whitespace with a single space.
-        $info['html_output'] = trim( preg_replace( '/\s+/', ' ', $info['html_output'] ) );
+        $info['html_output'] = trim( preg_replace( '/\s+/', ' ', $css ) );
 
     	return $info;
     }
