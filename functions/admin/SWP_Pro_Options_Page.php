@@ -615,6 +615,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* sideOColorSet => float_hover_colors
             $float_hover_colors = new SWP_Option_Select( __( 'Hover Color Set', 'social-warfare' ), 'float_hover_colors' );
             $float_hover_colors->set_priority( 80 )
+				->set_default('full_color')
                 ->set_choices( $color_choices )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] );
@@ -622,6 +623,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* sideIColorSet => float_single_colors
             $float_single_colors = new SWP_Option_Select( __( 'Single Button Hover', 'social-warfare' ), 'float_single_colors' );
             $float_single_colors->set_priority( 90 )
+				->set_default('full_color')
                 ->set_choices( $color_choices )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_dependency( 'float_style_source', [false] );
