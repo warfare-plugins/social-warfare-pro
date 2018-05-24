@@ -594,8 +594,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 //* Inherit the static button style.
                 $this->float_custom_color_outlines = $this->custom_color_outlines;
             else:
-                //* TODO: We are making it to this point.
-                    $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+                $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
             endif;
 
         else:
@@ -641,11 +640,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		// Default: Custom Outlines
         if ( $this->options[$float . "default_colors"] === $float . "custom_color_outlines" ) :
+            // die(var_dump($this));
                 $css .= "
 
-            $class.swp_default_" . $float . "custom_outlines a
+            $class.swp_default_" . $float . "custom_color_outlines a
                 {color: " . $custom_outlines . " }
-            $class.swp_default_" . $float . "custom_outlines .nc_tweetContainer
+            $class.swp_default_" . $float . "custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
                     border:1px solid " . $custom_outlines . " ;
