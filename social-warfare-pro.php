@@ -25,11 +25,14 @@ add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
 function initialize_social_warfare_pro() {
 	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
-		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
-		new Social_Warfare_Pro();
+        if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
+    		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
+    		new Social_Warfare_Pro();
 
-        // Queue up out footer hook function
-        add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
+            // Queue up out footer hook function
+            add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
+
+        endif;
 
     elseif ( !defined('SWP_VERSION')) :
         add_action( 'admin_notices', 'needs_core' );
