@@ -603,6 +603,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
     }
 
+
+	/**
+	 * A function to render custom color CSS
+	 *
+	 * @since  3.0.8 | 25 MAY 2018 | Moved the .swp_social_panel to a variable to avoid making
+	 *                               the default override the hover states on the floaters.
+	 * @param  boolean $floating True = floating CSS, False = non-floating CSS.
+	 * @return string            The CSS to be output.
+	 * 
+	 */
     private function get_css( $floating = false ) {
         $float = '';
         $class = '';
