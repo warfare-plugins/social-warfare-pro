@@ -57,6 +57,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* googleAnalytics => google_analytics
             $google_analytics = clone $click_tracking;
             $google_analytics->set_name( __( 'UTM Link Tracking', 'social-warfare' ) )
+				->set_default(false)
                 ->set_key( 'google_analytics' )
                 ->set_priority( 20 );
 
