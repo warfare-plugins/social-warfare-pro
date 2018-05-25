@@ -606,6 +606,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     private function get_css( $floating = false ) {
         $float = '';
         $class = '';
+		$panel = '';
         $custom_color = $this->custom_color;
         $custom_outlines = $this->custom_color_outlines;
 
@@ -614,7 +615,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $class = '.swp_social_panelSide';
             $custom_color = $this->float_custom_color;
             $custom_outlines = $this->float_custom_color_outlines;
-        }
+        } else {
+			$panel = '.swp_social_panel';
+		}
 
         $css = '';
 
@@ -630,7 +633,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
             $class.swp_default_" . $float . "custom_color a
                 {color:white}
-            $class.swp_social_panel.swp_default_" . $float . "custom_color .nc_tweetContainer
+            $class$panel.swp_default_" . $float . "custom_color .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
                     border:1px solid " . $custom_color . ";
@@ -663,9 +666,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options[$float . "single_colors"] === $float . "custom_color" ) :
             $css .= "
 
-            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
+            html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
                 {color:white!important}
-            html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover
+            html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color:" . $custom_color . "!important;
                     border:1px solid " . $custom_color . "!important;
@@ -697,9 +700,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( $this->options[$float . "hover_colors"] === $float . "custom_color" ) :
             $css .= "
 
-            body $class.swp_social_panel.swp_other_" . $float . "custom_color:hover a
+            body $class$panel.swp_other_" . $float . "custom_color:hover a
                 {color:white}
-            body $class.swp_social_panel.swp_other_" . $float . "custom_color:hover .nc_tweetContainer
+            body $class$panel.swp_other_" . $float . "custom_color:hover .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
                     border:1px solid " . $custom_color . ";
