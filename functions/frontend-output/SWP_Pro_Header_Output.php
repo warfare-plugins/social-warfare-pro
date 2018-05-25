@@ -625,7 +625,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Default: Custom Color
-        if ( $this->options[$float . "default_colors"] === $float . "custom_color" ) :
+        if ( swp_get_option($float . "default_colors") === $float . "custom_color" ) :
             $css .= "
 
             $class.swp_default_" . $float . "custom_color a
@@ -639,7 +639,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Default: Custom Outlines
-        if ( $this->options[$float . "default_colors"] === $float . "custom_color_outlines" ) :
+        if ( swp_get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
             // die(var_dump($this));
                 $css .= "
 
@@ -660,7 +660,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Individual: Custom Color
-        if ( $this->options[$float . "single_colors"] === $float . "custom_color" ) :
+        if ( swp_get_option($float . "single_colors") === $float . "custom_color" ) :
             $css .= "
 
             html body $class.swp_social_panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
@@ -674,7 +674,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         // Individual: Custom Outlines
-        if ( $this->options[$float . "single_colors"] === $float . "custom_color_outlines" ) :
+        if ( swp_get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
@@ -694,7 +694,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Other: Custom Color
-        if ( $this->options[$float . "hover_colors"] === $float . "custom_color" ) :
+        if ( swp_get_option($float . "hover_colors") === $float . "custom_color" ) :
             $css .= "
 
             body $class.swp_social_panel.swp_other_" . $float . "custom_color:hover a
@@ -708,7 +708,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Other: Custom Outlines
-        if ( $this->options[$float . "hover_colors"] === $float . "custom_color_outlines" ) :
+        if (swp_get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
