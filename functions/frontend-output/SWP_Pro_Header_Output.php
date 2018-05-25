@@ -555,7 +555,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     private function establish_custom_colors() {
 
         //* Static custom color.
-        if ( $this->options['default_colors'] == 'custom_color' || $this->options['single_colors'] == 'custom_color' || $this->options['hover_colors'] == 'custom_color' ) :
+        if ( swp_get_option('default_colors') == 'custom_color' || swp_get_option('single_colors') == 'custom_color' || swp_get_option('hover_colors') == 'custom_color' ) :
 
             $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
             $this->custom_color = $custom_color;
@@ -565,7 +565,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Float custom color.
-        if ( $this->options['float_default_colors'] == 'float_custom_color' || $this->options['float_single_colors'] == 'float_custom_color' || $this->options['float_hover_colors'] == 'float_custom_color' ) :
+        if ( swp_get_option('float_default_colors') == 'float_custom_color' ||  swp_get_option('float_single_colors') == 'float_custom_color' ||  swp_get_option('float_hover_colors') == 'float_custom_color' ) :
 
             if ( true === $this->options['float_style_source'] ) :
                 //* Inherit the static button style.
@@ -579,7 +579,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Static custom outlines.
-        if ( $this->options['default_colors'] == 'custom_color_outlines' || $this->options['single_colors'] == 'custom_color_outlines' || $this->options['hover_colors'] == 'custom_color_outlines' ) :
+        if ( swp_get_option('default_colors') == 'custom_color_outlines' ||  swp_get_option('single_colors') == 'custom_color_outlines' ||  swp_get_option('hover_colors') == 'custom_color_outlines' ) :
 
             $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
             $this->custom_color_outlines = $custom_color_outlines;
@@ -588,7 +588,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $this->custom_color_outlines = '';
         endif;
 
-        if ( $this->options['float_default_colors'] == 'float_custom_color_outlines' || $this->options['float_single_colors'] == 'float_custom_color_outlines' || $this->options['float_hover_colors'] == 'float_custom_color_outlines' ) :
+        if (  swp_get_option('float_default_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_single_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
             if ( true === $this->options['float_style_source'] ) :
 
                 //* Inherit the static button style.
