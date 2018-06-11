@@ -369,7 +369,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
+    	if ( true == $this->options['twitter_cards'] ) :
 
     		/**
     		 * Begin by fetching the user's default custom settings
@@ -492,7 +492,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
+    	if ( true == $this->options['twitter_cards'] ) :
 
     		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
@@ -611,7 +611,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *                               the default override the hover states on the floaters.
 	 * @param  boolean $floating True = floating CSS, False = non-floating CSS.
 	 * @return string            The CSS to be output.
-	 * 
+	 *
 	 */
     private function get_css( $floating = false ) {
         $float = '';
@@ -780,6 +780,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
     public function output_ctt_css( $info = array() ) {
         if (!empty($this->options['ctt_css']) && count($this->options)['ctt_css'] > 0) {
+            if ( empty( $info['html_output'] ) ) :
+                $info['html_output'] = '';
+            endif;
+            
             // Add it to our array if we're using the frontend Head Hook
             $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $this->options['ctt_css'] . '</style>';
 
