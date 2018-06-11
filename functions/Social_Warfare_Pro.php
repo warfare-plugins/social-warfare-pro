@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @since 3.1.0  | 11 JUN 2018 | moved update_checker() into the main file. 
+ *
+ */
 class Social_Warfare_Pro extends SWP_Addon {
 
 	public function __construct( ) {
@@ -18,7 +23,6 @@ class Social_Warfare_Pro extends SWP_Addon {
 
 		$this->registration_update_notification();
 		$this->initiate_plugin();
-		$this->update_checker();
 
         add_filter( 'swp_registrations', [$this, 'add_self'] );
 	}
@@ -291,44 +295,6 @@ class Social_Warfare_Pro extends SWP_Addon {
     	return $twitter_handle;
     }
 
-
-
-
-	/**
-	 * The Plugin Update Checker
-	 *
-	 *
-	 * @since 2.0.0 | Created | Update checker added when the plugin was split into core and pro.
-	 * @since 2.3.3 | 13 SEP 2017 | Updated to use EDD's update checker built into core.
-	 * @access public
-	 *
-	 */
-
-	public function update_checker() {
-
-	    // Make sure core is on a version that contains our dependancies
-	    if (defined('SWP_VERSION') && version_compare(SWP_VERSION , '2.3.3') >= 0){
-
-	        // Check if the plugin is registered
-	        if( $this->is_registered() ) {
-
-	            // retrieve our license key from the DB
-	            $license_key = swp_get_license_key('pro');
-	            $website_url = swp_get_site_url();
-
-	            // setup the updater
-	            $swed_updater = new SWP_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
-	            	'version'   => SWPP_VERSION,      // current version number
-	            	'license'   => $license_key,      // license key
-	            	'item_id'   => $this->product_id,      // id of this plugin
-	            	'author'    => 'Warfare Plugins', // author of this plugin
-	            	'url'       => $website_url,      // URL of this website
-	                'beta'      => false              // set to true if you wish customers to receive beta updates
-	                )
-	            );
-	        }
-	    }
-	}
 
 	/**
 	 * Registration Update Notification
