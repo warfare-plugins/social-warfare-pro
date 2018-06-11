@@ -23,11 +23,12 @@ define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
+
 function initialize_social_warfare_pro() {
-	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
+    if ( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
-    		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
-    		new Social_Warfare_Pro();
+            require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
+            new Social_Warfare_Pro();
 
             // Queue up out footer hook function
             add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
@@ -38,7 +39,22 @@ function initialize_social_warfare_pro() {
         add_action( 'admin_notices', 'needs_core' );
     else:
         add_action( 'admin_notices', 'mismatch_notification' );
-	endif;
+    endif;
+
+    if ( defined( 'SWP_VERSION' ) && version_compare( SWP_VERSION , '3.0.0' ) >= 0 && class_exists( 'SWP_Plugin_Updater' ) ) {
+        $edd_key = 'a6cb12065ec0d60ed5265fa1fad2e820';
+
+        // setup the updater
+        $swed_updater = new SWP_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
+            'version'   => SWPP_VERSION,                        // current version number
+            'license'   => $edd_key,                            // Easy Digital Download license
+            'item_id'   => 63157,                               // id of this plugin
+            'author'    => 'Warfare Plugins',                   // author of this plugin
+            'url'       => 'beta.warfareplugins.com/',          // URL of this website
+            'beta'      => false                                // set to true if you wish customers to receive beta updates
+            )
+        );
+    }
 }
 
 
