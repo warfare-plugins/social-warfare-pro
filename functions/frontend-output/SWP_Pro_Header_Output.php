@@ -369,7 +369,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( true == $this->options['twitter_cards'] ) :
+    	if ( isset( $this->options['twitter_cards'] ) && true == $this->options['twitter_cards'] ) :
 
     		/**
     		 * Begin by fetching the user's default custom settings
@@ -492,7 +492,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( true == $this->options['twitter_cards'] ) :
+    	if ( isset( $this->options['twitter_cards'] ) &&  true == $this->options['twitter_cards'] ) :
 
     		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
@@ -721,7 +721,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Other: Custom Outlines
-        if (swp_get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
+        if ( swp_get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
@@ -779,11 +779,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array  $info The modified array
      */
     public function output_ctt_css( $info = array() ) {
-        if (!empty($this->options['ctt_css']) && count($this->options)['ctt_css'] > 0) {
+        if ( !empty( $this->options['ctt_css'] ) && count($this->options)['ctt_css'] > 0) {
             if ( empty( $info['html_output'] ) ) :
                 $info['html_output'] = '';
             endif;
-            
+
             // Add it to our array if we're using the frontend Head Hook
             $info['html_output'] .= PHP_EOL . '<style id=ctt-css>' . $this->options['ctt_css'] . '</style>';
 
