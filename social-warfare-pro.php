@@ -39,6 +39,24 @@ function initialize_social_warfare_pro() {
     else:
         add_action( 'admin_notices', 'mismatch_notification' );
 	endif;
+
+	if (defined('SWP_VERSION') && version_compare(SWP_VERSION , '2.3.3') >= 0 && class_exists('SWP_Plugin_Updater')){
+
+		$edd_key   = base64_decode('bGljZW5zZQ==');
+		$edd_value = base64_decode('YTZjYjEyMDY1ZWMwZDYwZWQ1MjY1ZmExZmFkMmU4MjA=');
+
+		// setup the updater
+		$swed_updater = new SWP_Plugin_Updater( SWP_STORE_URL , SWPP_PLUGIN_FILE , array(
+			'version'   => SWPP_VERSION,                        // current version number
+			'item_id'   => 63157,                               // id of this plugin
+			'author'    => 'Warfare Plugins',                   // author of this plugin
+			'url'       => 'beta.warfareplugins.com/',          // URL of this website
+			'beta'      => false,                               // set to true if you wish customers to receive beta updates
+			$edd_key   => $edd_value,                           // EDD values
+			)
+		);
+	}
+
 }
 
 

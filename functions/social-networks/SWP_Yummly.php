@@ -40,7 +40,7 @@ class SWP_Yummly extends SWP_Social_Network {
 		$this->key            = 'yummly';
 		$this->default        = false;
         $this->premium        = 'pro';
-		$this->base_share_url = 'http://www.yummly.com/urb/verify?url=';
+		$this->base_share_url = 'https://www.yummly.com/urb/verify?url=';
 
 		$this->init_social_network();
 	}
