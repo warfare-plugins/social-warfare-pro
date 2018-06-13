@@ -108,7 +108,7 @@ class SWP_Email extends SWP_Social_Network {
 
 		// Build the wrapper.
 		$html = '<div class="nc_tweetContainer swp_'.$this->key.'" data-network="'.$this->key.'">';
-			$html .= '<a rel="noreferrer" href="' . $share_link . '" class="nc_tweet">';
+			$html .= '<a rel="nofollow noreferrer noopener" href="' . $share_link . '" class="nc_tweet">';
 				// Put the button inside.
 				$html .= $icon;
 			$html.= '</a>';
