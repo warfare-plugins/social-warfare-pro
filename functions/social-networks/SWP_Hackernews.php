@@ -37,7 +37,7 @@ class SWP_HackerNews extends SWP_Social_Network {
 		$this->key            = 'hacker_news';
 		$this->default        = false;
         $this->premium        = 'pro';
-		$this->base_share_url = 'http://news.ycombinator.com/submitlink?u=';
+		$this->base_share_url = 'https://news.ycombinator.com/submitlink?u=';
 
 		$this->init_social_network();
 	}
