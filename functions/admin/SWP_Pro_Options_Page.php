@@ -379,7 +379,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_priority( 20 );
 
             $og_post_types = $this->get_og_post_types();
-            $choices = array()
+            $choices = array();
 
             foreach( $og_post_types as $type) {
                 $choices['og_' . $type] = $type;
