@@ -648,7 +648,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* sideCustomColor => float_custom_color
             $custom_color_outlines = new SWP_Option_Text( __( 'Custom Outlines', 'social-warfare' ), 'custom_color_outlines' );
             $custom_color_outlines->set_default( '#ced3dc' )
-                ->set_priority( 100 )
+                ->set_priority( 110 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_placeholder( "#c43ad4" )
                 ->set_premium( 'pro' );
@@ -660,7 +660,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* sideCustomColor => float_custom_color
             $float_custom_color = new SWP_Option_Text( __( 'Custom Color', 'social-warfare' ), 'float_custom_color' );
             $float_custom_color->set_default( '#ced3dc' )
-                ->set_priority( 100 )
+                ->set_priority( 120 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_placeholder("#f445a4")
                 ->set_premium( 'pro' );
@@ -668,7 +668,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* sideCustomColor => float_custom_color
             $float_custom_color_outlines = new SWP_Option_Text( __( 'Custom Outlines', 'social-warfare' ), 'float_custom_color_outlines' );
             $float_custom_color_outlines->set_default( '#ced3dc' )
-                ->set_priority( 100 )
+                ->set_priority( 130 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit')
                 ->set_placeholder("#d3d654")
                 ->set_premium( 'pro' );
