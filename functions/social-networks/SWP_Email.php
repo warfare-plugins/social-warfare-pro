@@ -51,7 +51,7 @@ class SWP_Email extends SWP_Social_Network {
 	 * @since  3.0.5 | 11 MAY 2018 | Created
 	 * @param  array $post_data The array of Post Data
 	 * @return string           The share link.
-	 * 
+	 *
 	 */
 	public function generate_share_link( $post_data ) {
 
@@ -108,7 +108,7 @@ class SWP_Email extends SWP_Social_Network {
 
 		// Build the wrapper.
 		$html = '<div class="nc_tweetContainer swp_'.$this->key.'" data-network="'.$this->key.'">';
-			$html .= '<a rel="nofollow" href="' . $share_link . '" class="nc_tweet">';
+			$html .= '<a rel="nofollow noreferrer noopener" href="' . $share_link . '" class="nc_tweet">';
 				// Put the button inside.
 				$html .= $icon;
 			$html.= '</a>';

@@ -56,7 +56,7 @@ class SWP_Yummly extends SWP_Social_Network {
 	 *
 	 */
 	public function get_api_link( $url ) {
-        return 'http://www.yummly.com/services/yum-count?url=' . $url;
+        return 'https://www.yummly.com/services/yum-count?url=' . $url;
 	}
 
 
