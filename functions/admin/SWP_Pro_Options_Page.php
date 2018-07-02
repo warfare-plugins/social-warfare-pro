@@ -23,8 +23,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     public function update_advanced_tab() {
         $advanced = $this->core->tabs->advanced;
 
-        $bitly = new SWP_Options_Page_Section( 'Bitly Link Shortening', 'bitly' );
-        $bitly->set_description( 'If you like to have all of your links automatically shortened, turn this on.' )
+        $bitly = new SWP_Options_Page_Section( __( 'Bitly Link Shortening', 'social-warfare'), 'bitly' );
+        $bitly->set_description( __( 'If you like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/' )
             ->set_priority( 20 );
 
@@ -44,7 +44,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
 
         $analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ), 'analytics_tracking' );
-        $analytics_tracking->set_description( 'If you want to activate UTM tracking for shared URL, turn this on.' )
+        $analytics_tracking->set_description( __( 'If you want to activate UTM tracking for shared URL, turn this on.', 'social-warfare') )
             ->set_priority( 30 );
 
             //* swp_click_tracking => click_tracking
@@ -89,7 +89,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 $analytics_campaign, $utm_on_pins] );
 
         $advanced_pinterest = new SWP_Options_Page_Section( __( 'Advanced Pinterest Settings', 'social-warfare' ), 'advanced_pinterest' );
-        $advanced_pinterest->set_description( 'Get maximum control over how your visitors are sharing your content on Pinterest.' )
+        $advanced_pinterest->set_description( __( 'Get maximum control over how your visitors are sharing your content on Pinterest.', 'social-warfare') )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-advanced-pinterest-settings/' )
             ->set_priority( 40 )
             ->set_premium( 'pro' );
@@ -103,9 +103,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* advanced_pinterest_image_location => pinterest_image_location
             $pinterest_image_location = new SWP_Option_Select( __( 'Pinterest Image Location', 'social-warfare' ), 'pinterest_image_location' );
             $pinterest_image_location->set_choices( [
-                'hidden'    => 'Hidden',
-                'top'       => 'At the top of each post.',
-                'bottom'    => 'At the bottom of each post.'
+                'hidden'    => __( 'Hidden', 'social-warfare'),
+                'top'       => __( 'At the top of each post.', 'social-warfare'),
+                'bottom'    => __( 'At the bottom of each post.', 'social-warfare')
             ])
                 ->set_default( 'hidden ')
                 ->set_size( 'sw-col-300' )
@@ -115,8 +115,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* advanced_pinterest_fallback => pinterest_fallback
             $pinterest_fallback = new SWP_Option_Select( __( 'Pinterest Image Fallback', 'social-warfare' ), 'pinterest_fallback' );
             $pinterest_fallback->set_choices( [
-                'all'   => 'Show a selection of all images on the page.',
-                'featured'  => 'Show my featured image.'
+                'all'       => __( 'Show a selection of all images on the page.', 'social-warfare'),
+                'featured'  => __( 'Show my featured image.', 'social-warfare')
             ])
                 ->set_size( 'sw-col-300' )
                 ->set_default( 'all' )
@@ -125,7 +125,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback] );
 
         $share_recovery = new SWP_Options_Page_Section( __( 'Share Recovery', 'social-warfare' ), 'share_recovery' );
-        $share_recovery->set_description( 'If at any point you have changed permalink structures or have gone from http to https (SSL) then you will have undoubtedly lost all of your share counts. This tool allows you to recover them. See <a target="_blank" href="https://warfareplugins.com/support/recover-social-share-counts-after-changing-permalink-settings/">this guide</a> for more detailed instructions on how to use this feature.' )
+        $share_recovery->set_description( __( 'If at any point you have changed permalink structures or have gone from http to https (SSL) then you will have undoubtedly lost all of your share counts. This tool allows you to recover them. See <a target="_blank" href="https://warfareplugins.com/support/recover-social-share-counts-after-changing-permalink-settings/">this guide</a> for more detailed instructions on how to use this feature.', 'social-warfare') )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-share-recovery/' )
             ->set_priority( 50 )
             ->set_premium( 'pro' );
@@ -138,13 +138,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $recovery_format = new SWP_Option_Select( __( 'Previous URL Format', 'social-warfare' ), 'recovery_format' );
             $recovery_format->set_choices( [
-                'unchanged'         => 'Unchanged',
-                'default'           => 'Plain',
-                'day_and_name'      => 'Day and Name',
-                'month_and_name'    => 'Month and Name',
-                'numeric'           => 'Numeric',
-                'post_name'         => 'Post Name',
-                'custom'            => 'Custom'
+                'unchanged'         => __( 'Unchanged', 'social-warfare' ),
+                'default'           => __( 'Plain', 'social-warfare' ),
+                'day_and_name'      => __( 'Day and Name', 'social-warfare' ),
+                'month_and_name'    => __( 'Month and Name', 'social-warfare' ),
+                'numeric'           => __( 'Numeric', 'social-warfare' ),
+                'post_name'         => __( 'Post Name', 'social-warfare' ),
+                'custom'            => __( 'Custom', 'social-warfare' ),
             ])
                 ->set_priority( 20 )
                 ->set_default( 'unchanged' )
@@ -161,9 +161,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $recovery_protocol = new SWP_Option_Select( __( 'Previous Connection Protocol', 'social-warfare' ), 'recovery_protocol' );
             $recovery_protocol->set_choices( [
-                'unchanged'     => 'Unchanged',
-                'http'  => 'http',
-                'https' => 'https'
+                'unchanged'     => __( 'Unchanged', 'social-warfare' ),
+                'http'          => 'http',
+                'https'         => 'https'
             ])
                 ->set_size( 'sw-col-300' )
                 ->set_priority( 40 )
@@ -173,7 +173,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $recovery_prefix = new SWP_Option_Select( __( 'Previous Domain Prefix', 'social-warfare' ), 'recovery_prefix' );
             $recovery_prefix->set_choices( [
-                'Unchanged' => 'Unchanged',
+                'Unchanged' => __( 'Unchanged', 'social-warfare' ),
                 'www'       => 'www',
                 'nonwww'    => 'non-www',
             ])
@@ -237,8 +237,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $order_of_icons = new SWP_Option_Select( __( 'Button Ordering', 'social-warfare' ), 'order_of_icons_method' );
             $order_of_icons->set_priority( 30 )
                 ->set_choices( [
-                    'manual'    => 'Sort Manually Using Drag & Drop Above' ,
-                    'dynamic'   => 'Sort Dynamically By Order Of Most Shares'
+                    'manual'    => __( 'Sort Manually Using Drag & Drop Above', 'social-warfare'),
+                    'dynamic'   => __( 'Sort Dynamically By Order Of Most Shares', 'social-warfare')
                 ])
                 ->set_size( 'sw-col-300' )
                 ->set_default( 'manual' )
@@ -256,7 +256,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $display->sections->share_counts->add_option( $minimum_shares );
 
         $meta_tags = new SWP_Options_Page_Section( __( 'Social Meta Tags' , 'social-warfare'), 'meta_tags' );
-        $meta_tags->set_description( 'Activating Open Graph Tags and Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.' )
+        $meta_tags->set_description( __( 'Activating Open Graph Tags and Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.', 'social-warfare') )
             ->set_priority( 30 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-twitter-cards/' );
 
@@ -276,7 +276,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
         /* Image Hover Pin Button   */
         $image_hover = new SWP_Options_Page_Section( __( 'Image Hover Pin Button', 'social-warfare' ), 'image_hover' );
-        $image_hover->set_description( 'If you would like a "Pin" button to appear on images when users hover over them, activate this.' )
+        $image_hover->set_description( __( 'If you would like a "Pin" button to appear on images when users hover over them, activate this.', 'social-warfare') )
             ->set_priority( 50 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-image-hover-pin-button/' );
 
@@ -289,9 +289,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 			$pinit_location_horizontal = new SWP_Option_Select( __( 'Horizontal Location', 'social-warfare' ), 'pinit_location_horizontal' );
             $pinit_location_horizontal->set_priority( 20 )
                 ->set_choices( [
-                    'left'   => __( 'Left' , 'social-warfare' ) ,
-                    'center' => __( 'Center' , 'social-warfare' ),
-					'right'  => __( 'Right' , 'social-warfare' )
+                    'left'   => __( 'Left', 'social-warfare' ) ,
+                    'center' => __( 'Center', 'social-warfare' ),
+					'right'  => __( 'Right', 'social-warfare' )
                 ])
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
                 ->set_default( 'center' )
@@ -309,9 +309,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 			$pinit_location_vertical = new SWP_Option_Select( __( 'Vertical Location', 'social-warfare' ), 'pinit_location_vertical' );
 			$pinit_location_vertical->set_priority( 40 )
 				->set_choices( [
-					'top'    => __( 'Top' , 'social-warfare' ) ,
-					'middle' => __( 'Middle' , 'social-warfare' ),
-					'bottom' => __( 'Bottom' , 'social-warfare' )
+					'top'    => __( 'Top', 'social-warfare' ),
+					'middle' => __( 'Middle', 'social-warfare' ),
+					'bottom' => __( 'Bottom', 'social-warfare' )
 				])
 				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
 				->set_default( 'middle' )
@@ -351,7 +351,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source,$pinit_image_description,$pinit_min_width,$pinit_min_height] );
 
         $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
-        $yummly_display->set_description( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.' )
+        $yummly_display->set_description( __( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.', 'social-warfare') )
             ->set_priority( 60 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-display-tab-yummly-display-control/' );
 
@@ -375,7 +375,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $social_identity = $this->core->tabs->social_identity;
 
             $open_graph = new SWP_Options_Page_Section( __( 'Open Graph og:type Values', 'social-warfare' ), 'open_graph' );
-            $open_graph->set_description( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.' )
+            $open_graph->set_description( __( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.', 'social-warfare') )
                 ->set_priority( 20 );
 
             $og_post_types = $this->get_og_post_types();
@@ -405,9 +405,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             }
 
             $tweet_count_registration = new SWP_Options_Page_section( __( 'Tweet Count Registration', 'social-warfare' ), 'activate_tweet_counts' );
-            $tweet_count_registration->set_description( "In order to allow Social Warfare to track tweet counts, we've partnered with a couple of third-party share counting tools. Follow the steps below to register with one of these platforms and allow us to track your Twitter shares." );
+            $tweet_count_registration->set_description( __( "In order to allow Social Warfare to track tweet counts, we've partnered with a couple of third-party share counting tools. Follow the steps below to register with one of these platforms and allow us to track your Twitter shares.", 'social-warfare') );
 
-            $tweet_activation = new SWP_Section_HTML( 'Tweet Activation', 'tweet_activation' );
+            $tweet_activation = new SWP_Section_HTML( __( 'Tweet Activation', 'social-warfare'), 'tweet_activation' );
             $tweet_activation->set_priority( 10 )
                 ->set_premium( 'pro' );
             $tweet_activation->do_tweet_count_registration();
@@ -445,7 +445,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         $styles = $this->core->tabs->styles;
 
         $visual_options = new SWP_Options_Page_Section( __( 'Visual Options', 'social-warfare' ), 'visual_options' );
-        $visual_options->set_description( 'Use the settings below to customize the look of your share buttons.' )
+        $visual_options->set_description( __( 'Use the settings below to customize the look of your share buttons.', 'social-warfare') )
             ->set_priority( 10 )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-styles-tab-visual-options/' )
             ->set_premium( 'pro' );
@@ -453,12 +453,12 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* visualTheme => button_shape
             $button_shape = new SWP_Option_Select( __( 'Button Shape', 'social-warfare' ), 'button_shape' );
             $button_shape->set_choices( [
-                'flat_fresh'=> 'Flat & Fresh',
-                'leaf'     => 'A Leaf on the Wind',
-                'shift'     => 'Shift',
-                'pill'      => 'Pills',
-                'three_dee' => 'Three-Dee',
-                'connected'  => 'Connected',
+                'flat_fresh'=> __( 'Flat & Fresh', 'social-warfare'),
+                'leaf'     => __( 'A Leaf on the Wind', 'social-warfare'),
+                'shift'     => __( 'Shift', 'social-warfare'),
+                'pill'      => __( 'Pills', 'social-warfare'),
+                'three_dee' => __( 'Three-Dee', 'social-warfare'),
+                'connected'  => __( 'Connected', 'social-warfare')
                 // 'boxed'     => 'Boxed'
                 ] )
                 ->set_default( 'flat_fresh' )
@@ -513,10 +513,10 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* button_alignment => button_alignment
             $button_alignment = new SWP_Option_Select( __( 'Button Alignment', 'social-warfare' ), 'button_alignment' );
             $button_alignment->set_choices( [
-                'full_width' => 'Full Width',
-                'left'       => 'Left',
-                'right'      => 'Right',
-                'center'     => 'Center'
+                'full_width' => __( 'Full Width', 'social_warfare'),
+                'left'       => __( 'Left', 'social_warfare'),
+                'right'      => __( 'Right', 'social_warfare'),
+                'center'     => __( 'Center', 'social_warfare')
                 ] )
                 ->set_size( 'sw-col-460', 'sw-col-460  sw-fit' )
                 ->set_priority( 60 )
@@ -561,9 +561,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $float_mobile = new SWP_Option_Select( __( 'On Mobile', 'social-warfare' ), 'float_mobile' );
             $float_mobile->set_choices( [
-				'top'    => 'Top of Screen',
-                'bottom' => 'Bottom of Screen',
-                'off'    => 'Off'
+				'top'    => __( 'Top of Screen', 'social_warfare'),
+                'bottom' => __( 'Bottom of Screen', 'social_warfare'),
+                'off'    => __( 'Off', 'social_warfare'),
             ])
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
@@ -679,7 +679,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         ] );
 
         $click_to_tweet = new SWP_Options_Page_Section( __( 'Click-To-Tweet Style', 'social-warfare' ), 'click_to_tweet' );
-        $click_to_tweet->set_description( 'Select the default visual style for Click-to-Tweets on your site.' )
+        $click_to_tweet->set_description( __('Select the default visual style for Click-to-Tweets on your site.', 'social-warfare') )
             ->set_information_link( 'https://warfareplugins.com/support/options-page-styles-tab-click-tweet-style/' )
             ->set_priority( 40 );
 
@@ -692,7 +692,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 'style4' => 'Don\'t Stop Believin\'',
                 'style5' => 'Thunderstruck',
                 'style6' => 'Livin\' On A Prayer',
-                'none' => 'None - Create Your Own CSS In Your Theme'
+                'none' => __( 'None - Create Your Own CSS In Your Theme', 'social-warfare')
             ])
                 ->set_size( 'sw-col-300' )
                 ->set_default( 'style1' )
