@@ -405,7 +405,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             }
 
             $tweet_count_registration = new SWP_Options_Page_section( __( 'Tweet Count Registration', 'social-warfare' ), 'activate_tweet_counts' );
-            $tweet_count_registration->set_description( __( "In order to allow Social Warfare to track tweet counts, we've partnered with a couple of third-party share counting tools. Follow the steps below to register with one of these platforms and allow us to track your Twitter shares.", 'social-warfare') );
+            $tweet_count_registration->set_description( __( "In order to allow Social Warfare to track tweet counts, we've partnered with a couple of third-party share counting tools. Follow the steps below to register with one of these platforms and allow us to track your Twitter shares.", 'social-warfare') )
+                ->set_information_link( 'https://warfareplugins.com/support/configuring-twitter-counts/' );
 
             $tweet_activation = new SWP_Section_HTML( __( 'Tweet Activation', 'social-warfare'), 'tweet_activation' );
             $tweet_activation->set_priority( 10 )
