@@ -72,8 +72,6 @@ class Social_Warfare_Pro extends SWP_Addon {
     	global $swp_user_options;
 
     	$prefix = 'swp_';
-    	$options = $swp_user_options;
-
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
@@ -225,6 +223,22 @@ class Social_Warfare_Pro extends SWP_Addon {
     			),
     		),
     	);
+
+        if ( true === $swp_user_options['recover_shares'] ) {
+            $recover_shares_box = array(
+                'name'  =>'<span class="dashicons dashicons-randomize"></span> ' . __( 'Share Recovery','social-warfare' ),
+                'desc'  => __( 'If you have changes the permalink for just this post, paste in the previous URL pattern so we can recover shares for that link.','social-warfare' ),
+                'id'    => 'swp_recovery_url',
+                'class' => $prefix . 'share_recoveryWrapper',
+                'type'  => 'text',
+                'clone' => false
+            );
+
+            $meta_boxes[0]['fields'][] = $recover_shares_box;
+
+            // array_splice( $meta_boxes[0]['fields'], 10, 0, $recover_shares_box );
+
+        }
 
     	return $meta_boxes;
     }
