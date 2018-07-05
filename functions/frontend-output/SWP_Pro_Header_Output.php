@@ -82,6 +82,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      * @since  2.1.4
      * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
+     * @
      * @access public
      * @param  array $info An array of data about the post
      * @return array $info The modified array
@@ -147,25 +148,29 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		$yoast_seo_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
     		$yoast_seo_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
 
-            if ( function_exists( 'wpseo_replace_vars' ) && !empty( $this->post ) ) {
-                $variables = [$yoast_og_title,
-                              $yoast_og_description,
-                              $yoast_og_image,
-                              $yoast_seo_title,
-                              $yoast_seo_description
-                          ];
+			if ( function_exists( 'wpseo_replace_vars' ) ) :
+				global $post;
 
-                //* Pass $string by reference so we can change the value if need be.
-                foreach( $variables as &$string ) {
-                    //* If the value is one of Yoast's placeholders, update it.
-                    if ( 0 === strpos($string, '%') ) {
-                        $string = wpseo_replace_vars( $string, $this->post );
-                    }
-                }
+				if( false !== $yoast_og_title ):
+		            $yoast_og_title = wpseo_replace_vars( $yoast_og_title, $post );
+				endif;
 
-                //* Clear the &reference from $string.
-                unset($string);
-            }
+                if( false !== $yoast_og_description ):
+		            $yoast_og_description = wpseo_replace_vars( $yoast_og_description, $post );
+				endif;
+
+                if( false !== $yoast_og_image ):
+		            $yoast_og_image = wpseo_replace_vars( $yoast_og_image, $post );
+				endif;
+
+                if( false !== $yoast_seo_title ):
+		            $yoast_seo_title = wpseo_replace_vars( $yoast_seo_title, $post );
+				endif;
+
+                if( false !== $yoast_seo_description ):
+		            $yoast_seo_description = wpseo_replace_vars( $yoast_seo_description, $post );
+				endif;
+			endif;
 
     		// Cancel their output if ours have been defined so we don't have two sets of tags
     		global $wpseo_og;
@@ -679,7 +684,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		// Default: Custom Outlines
         if ( swp_get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
-            // die(var_dump($this));
                 $css .= "
 
             $class.swp_default_" . $float . "custom_color_outlines a
