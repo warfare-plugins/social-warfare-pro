@@ -82,7 +82,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      * @since  2.1.4
      * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
-     * @
+     * @since  3.1.0 | 05 JUL 2018 | Added call to wpseo_replace_vars.
      * @access public
      * @param  array $info An array of data about the post
      * @return array $info The modified array
