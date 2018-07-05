@@ -10,6 +10,7 @@
  * @since     2.2.4 | 05 MAY 2017 | Added the global options for og:type values.
  * @since     3.0.0 | 21 FEB 2018 | Refactored into a class-based system.
  * @since     3.0.8 | 23 MAY 2018 | Added compatibility for custom color/outline combos.
+ * @since     3.1.0 | 05 JUL 2018 | Added global $post variable.
  *
  *
  * Hook into the core header filter
@@ -46,7 +47,12 @@
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
-        global $swp_user_options;
+        global $swp_user_options, $post;
+
+        if ( !empty( $post ) && is_object( $post ) ) {
+            //* Store the post for wpseo_replace_vars().
+            $this->post = $post;
+        }
         $this->options = $swp_user_options;
         $this->establish_custom_colors();
         $this->init();
@@ -140,6 +146,26 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		$yoast_og_image         = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-image' , true );
     		$yoast_seo_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
     		$yoast_seo_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
+
+            if ( function_exists( 'wpseo_replace_vars' ) && !empty( $this->post ) ) {
+                $variables = [$yoast_og_title,
+                              $yoast_og_description,
+                              $yoast_og_image,
+                              $yoast_seo_title,
+                              $yoast_seo_description
+                          ];
+
+                //* Pass $string by reference so we can change the value if need be.
+                foreach( $variables as &$string ) {
+                    //* If the value is one of Yoast's placeholders, update it.
+                    if ( 0 === strpos($string, '%') ) {
+                        $string = wpseo_replace_vars( $string, $this->post );
+                    }
+                }
+
+                //* Clear the &reference from $string.
+                unset($string);
+            }
 
     		// Cancel their output if ours have been defined so we don't have two sets of tags
     		global $wpseo_og;
