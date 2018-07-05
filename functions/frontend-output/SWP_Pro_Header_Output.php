@@ -66,15 +66,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     /**
      * Open Graph Meta Tag Values
      *
-     * If the user specifies an Open Graph tag,
+     * Notes: If the user specifies an Open Graph tag,
      * we're going to develop a complete set of tags. Order
      * of preference for each tag is as follows:
      * 1. Did they fill out our open graph field?
-     * 2. We auto-generate the field from the post.
+     * 2. Did they fill out Yoast's social field?
+     * 3. Did they fill out Yoast's SEO field?
+     * 4. We'll just auto-generate the field from the post.
      *
      * @since  2.1.4
      * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
-     * @since  3.1.0 | 05 JUL 2018 | Removed Yoast integration.
      * @access public
      * @param  array $info An array of data about the post
      * @return array $info The modified array
@@ -115,6 +116,43 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
 
     	/**
+    	 * Check for and coordinate with Yoast to create the best possible values for each tag
+    	 *
+    	 */
+    	if ( defined( 'WPSEO_VERSION' ) ) :
+    		global $wpseo_og;
+    		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
+    	else :
+    		$info['yoast_og_setting'] = false;
+    	endif;
+
+    	// Check if the user has filled out at least one of the custom fields
+    	if ( defined( 'WPSEO_VERSION' ) && ( !empty( $custom_og_title ) || !empty( $custom_og_description ) || !empty( $custom_og_image_url ) ) ):
+
+    		/**
+    		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
+    		 *
+    		 */
+
+    		// Collect their Social Descriptions as backups if they're not defined in ours
+    		$yoast_og_title         = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-title' , true );
+    		$yoast_og_description   = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-description' , true );
+    		$yoast_og_image         = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-image' , true );
+    		$yoast_seo_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
+    		$yoast_seo_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
+
+    		// Cancel their output if ours have been defined so we don't have two sets of tags
+    		global $wpseo_og;
+    		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
+    		$info['yoast_og_setting'] = false;
+
+    		// Fetch the WPSEO_SOCIAL Values
+    		$wpseo_social = get_option( 'wpseo_social' );
+
+    	// End of the Yoast Conditional
+    	endif;
+
+    	/**
     	 * Open Graph Tags (The Easy Ones That Don't Need Conditional Fallbacks)
     	 *
     	 */
@@ -146,7 +184,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 */
     	if ( !empty( $custom_og_title ) ) :
     		$info['meta_tag_values']['og_title'] = $custom_og_title;
-        else :
+    	elseif ( !empty( $yoast_og_title )) :
+    		$info['meta_tag_values']['og_title'] = $yoast_og_title;
+    	elseif ( !empty( $yoast_seo_title ) ) :
+    		$info['meta_tag_values']['og_title'] = $yoast_seo_title;
+    	else :
     		$info['meta_tag_values']['og_title'] = trim( convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
     	endif;
 
@@ -156,6 +198,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 */
     	if ( !empty( $custom_og_description ) ) :
     		$info['meta_tag_values']['og_description'] = $custom_og_description;
+    	elseif ( !empty( $yoast_og_description ) ) :
+    		$info['meta_tag_values']['og_description'] = $yoast_og_description;
+    	elseif ( !empty( $yoast_seo_description ) ) :
+    		$info['meta_tag_values']['og_description'] = $yoast_seo_description;
     	else :
     		$info['meta_tag_values']['og_description'] = html_entity_decode( convert_smart_quotes( htmlspecialchars_decode( swp_get_excerpt_by_id( $info['postID'] ) ) ) );
     	endif;
@@ -166,6 +212,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 */
     	if ( !empty( $custom_og_image_url ) ) :
     		$info['meta_tag_values']['og_image'] = $custom_og_image_url;
+    	elseif ( !empty( $yoast_og_image ) ) :
+    		$info['meta_tag_values']['og_image'] = $yoast_og_image;
     	else :
     		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $info['postID'] ) );
     		if ( $thumbnail_url ) :
@@ -220,7 +268,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     /**
      * A function to compile the meta tags into HTML
      * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
-     * @since  3.1.0 | 05 JUL 2018 | Removed Yoast integration. 
      * @param  array $info The info array
      * @return array $info The modified info array
      */
@@ -234,60 +281,65 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
-		endif;
+    	// Check to ensure that we don't need to defer to Yoast
+    	if(false === $info['yoast_og_setting']):
 
-		if( isset( $info['meta_tag_values']['og_title'] ) && !empty( $info['meta_tag_values']['og_title'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['og_description'] ) && !empty( $info['meta_tag_values']['og_description'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_title'] ) && !empty( $info['meta_tag_values']['og_title'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
+    		endif;
 
-		if( isset( $info[ 'meta_tag_values'][ 'og_image' ] )         && !empty( $info['meta_tag_values']['og_image'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_description'] ) && !empty( $info['meta_tag_values']['og_description'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
+    		endif;
 
-		if( isset( $info[ 'meta_tag_values'][ 'og_image_width' ] )  && !empty( $info['meta_tag_values']['og_image_width'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="og:image:width" content="'. trim( $info['meta_tag_values']['og_image_width'] ).'" />';
-		endif;
-		if( isset( $info[ 'meta_tag_values'][ 'og_image_height' ] ) && !empty( $info['meta_tag_values']['og_image_height'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
-		endif;
+    		if( isset( $info[ 'meta_tag_values'][ 'og_image' ] )         && !empty( $info['meta_tag_values']['og_image'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['og_url'] ) && !empty( $info['meta_tag_values']['og_url'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:url" content="'. trim( $info['meta_tag_values']['og_url'] ).'" />';
-		endif;
+    		if( isset( $info[ 'meta_tag_values'][ 'og_image_width' ] )  && !empty( $info['meta_tag_values']['og_image_width'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:image:width" content="'. trim( $info['meta_tag_values']['og_image_width'] ).'" />';
+    		endif;
+    		if( isset( $info[ 'meta_tag_values'][ 'og_image_height' ] ) && !empty( $info['meta_tag_values']['og_image_height'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
-			$info['html_output'] .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_url'] ) && !empty( $info['meta_tag_values']['og_url'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:url" content="'. trim( $info['meta_tag_values']['og_url'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['article_author'] ) && !empty( $info['meta_tag_values']['article_author'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="article:author" content="'. trim( $info['meta_tag_values']['article_author'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['article_publisher'] ) && !empty( $info['meta_tag_values']['article_publisher'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="article:publisher" content="'. trim( $info['meta_tag_values']['article_publisher'] ) .'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['article_author'] ) && !empty( $info['meta_tag_values']['article_author'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="article:author" content="'. trim( $info['meta_tag_values']['article_author'] ).'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['article_published_time'] ) && !empty( $info['meta_tag_values']['article_published_time'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="article:published_time" content="'. trim( $info['meta_tag_values']['article_published_time'] ) .'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['article_publisher'] ) && !empty( $info['meta_tag_values']['article_publisher'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="article:publisher" content="'. trim( $info['meta_tag_values']['article_publisher'] ) .'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['article_modified_time'] ) && !empty( $info['meta_tag_values']['article_modified_time'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="article:modified_time" content="'. trim( $info['meta_tag_values']['article_modified_time'] ) .'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['article_published_time'] ) && !empty( $info['meta_tag_values']['article_published_time'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="article:published_time" content="'. trim( $info['meta_tag_values']['article_published_time'] ) .'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['og_modified_time'] ) && !empty( $info['meta_tag_values']['og_modified_time'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="og:updated_time" content="'. trim( $info['meta_tag_values']['og_modified_time'] ) .'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['article_modified_time'] ) && !empty( $info['meta_tag_values']['article_modified_time'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="article:modified_time" content="'. trim( $info['meta_tag_values']['article_modified_time'] ) .'" />';
+    		endif;
 
-		if( isset( $info['meta_tag_values']['fb_app_id'] ) && !empty( $info['meta_tag_values']['fb_app_id'] ) ):
-			$info['html_output'] .= PHP_EOL . '<meta property="fb:app_id" content="'. trim( $info['meta_tag_values']['fb_app_id'] ).'" />';
-		endif;
+    		if( isset( $info['meta_tag_values']['og_modified_time'] ) && !empty( $info['meta_tag_values']['og_modified_time'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="og:updated_time" content="'. trim( $info['meta_tag_values']['og_modified_time'] ) .'" />';
+    		endif;
+
+    		if( isset( $info['meta_tag_values']['fb_app_id'] ) && !empty( $info['meta_tag_values']['fb_app_id'] ) ):
+    			$info['html_output'] .= PHP_EOL . '<meta property="fb:app_id" content="'. trim( $info['meta_tag_values']['fb_app_id'] ).'" />';
+    		endif;
+
+    	endif;
 
     	return $info;
     }
@@ -296,14 +348,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     /**
      *  Generate the Twitter Card fields
      *
-     *	If the user has Twitter cards turned on, we
-     *	need to generate them. Here's the order
+     *	Notes: If the user has Twitter cards turned on, we
+     *	need to generate them, but we also like Yoast so we'll
+     *	pay attention to their settings as well. Here's the order
      *	of preference for each field:
      *	1. Did the user fill out the Social Media field?
-     *  2. We generate something logical from the post.
+     *	2. Did the user fill out the Yoast Twitter Field?
+     *	3. Did the user fill out the Yoast SEO field?
+     *	4. We'll auto generate something logical from the post.
      *
      * @since 2.1.4
-     * @since 3.1.0 | 05 JUL 208 | Removed Yoast integration.
      * @access public
      * @param array $info An array of information about the post
      * @return array $info The modified array
@@ -322,20 +376,32 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 *
     		 */
             $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
-
             if ( !empty( $custom_og_title) ) :
                 $custom_og_title = htmlspecialchars( $custom_og_title );
             endif;
 
             $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
-
             if ( !empty( $custom_og_description ) ) :
                 $custom_og_description = htmlspecialchars( $custom_og_description );
             endif;
-
     		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
     		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
     		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
+
+    		/**
+    		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
+    		 *
+    		 */
+    		if ( defined( 'WPSEO_VERSION' ) ) :
+    			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
+    			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
+    			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
+    			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
+    			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
+
+    			// Cancel their output if ours have been defined so we don't have two sets of tags
+    			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
+    		endif;
 
     		/**
     		 * JET PACK: If ours are activated, disable theirs
@@ -349,6 +415,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 */
     		if ( !empty( $custom_og_title ) ):
     			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
+    		elseif( !empty( $yoast_twitter_title ) ) :
+    			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
     		else:
     			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
     		endif;
@@ -359,6 +427,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 */
     		if( !empty( $custom_og_description ) ):
     			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
+    		elseif ( !empty( $yoast_twitter_description ) ) :
+    			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
     		else:
     			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
     		endif;
@@ -369,6 +439,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 */
     		if ( !empty( $custom_og_image_url ) ):
     			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
+    		elseif ( !empty( $yoast_twitter_image ) ) :
+    			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
     		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
     			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
     		endif;
