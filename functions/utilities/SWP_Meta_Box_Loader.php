@@ -99,7 +99,7 @@ class SWP_Meta_Box_Loader {
 
         $recover_shares_box = array(
             'name'  =>'<span class="dashicons dashicons-randomize"></span> ' . __( 'Share Recovery','social-warfare' ),
-            'desc'  => __( 'If you have changed the permalink for just this post, paste in the previous URL pattern so we can recover shares for that link.','social-warfare' ),
+            'desc'  => __( 'If you have changed the permalink for just this post, paste in the previous full URL for this post so we can recover shares for that link.','social-warfare' ),
             'id'    => 'swp_recovery_url',
             'class' => $prefix . 'share_recoveryWrapper',
             'type'  => 'text',
