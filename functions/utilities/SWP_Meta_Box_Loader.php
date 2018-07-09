@@ -220,6 +220,7 @@ class SWP_Meta_Box_Loader {
             $meta_boxes[0]['fields'][] = $recover_shares_box;
         }
 
+        $meta_boxes[0]['fields'][] = $pinterest_description;
         $meta_boxes[0]['fields'][] = $pin_browser_extension;
         $meta_boxes[0]['fields'][] = $pin_browser_extension_location;
         $meta_boxes[0]['fields'][] = $post_location;
