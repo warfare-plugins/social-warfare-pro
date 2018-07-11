@@ -348,7 +348,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
-            $pinit_hide_on_anchors = new SWP_Option_Toggle( __( 'Hide on Anchors (links)', 'social-warfare'), '$pinit_hide_on_anchors' );
+            $pinit_hide_on_anchors = new SWP_Option_Toggle( __( 'Hide on Anchors (links)', 'social-warfare'), 'pinit_hide_on_anchors' );
             $pinit_hide_on_anchors->set_priority( 80 )
                 ->set_default( false )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
