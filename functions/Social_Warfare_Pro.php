@@ -189,23 +189,23 @@ class Social_Warfare_Pro extends SWP_Addon {
             require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
         }
     }
-
-    protected function edit_media_custom_field( $form_fields, $post ) {
-        $form_fields['swp_pinterest_image_description'] = array(
-            'label' => 'Social Warafre Pin Description',
-            'input' => 'textarea',
-            'value' => get_post_meta( $post->ID, '_swp_pinterest_image_description', true )
-        );
-        return $form_fields;
-    }
-
-    protected function save_media_custom_field( $post, $attachment ) {
-        update_post_meta( $post['ID'], '_swp_pinterest_description', $attachment['swp_pinterest_image_description'] );
-        return $post;
-    }
-
-    protected function add_pinterest_description_field() {
-        add_filter('attachment_fields_to_edit', array($this, 'edit_media_custom_field', 11, 2 ) );
-        add_filter('attachment_fields_to_save', array($this, 'save_media_custom_field', 11, 2 ) );
-    }
+    //
+    // protected function edit_media_custom_field( $form_fields, $post ) {
+    //     $form_fields['swp_pinterest_image_description'] = array(
+    //         'label' => 'Social Warafre Pin Description',
+    //         'input' => 'textarea',
+    //         'value' => get_post_meta( $post->ID, '_swp_pinterest_image_description', true )
+    //     );
+    //     return $form_fields;
+    // }
+    //
+    // protected function save_media_custom_field( $post, $attachment ) {
+    //     update_post_meta( $post['ID'], '_swp_pinterest_description', $attachment['swp_pinterest_image_description'] );
+    //     return $post;
+    // }
+    //
+    // protected function add_pinterest_description_field() {
+    //     add_filter('attachment_fields_to_edit', array($this, 'edit_media_custom_field', 11, 2 ) );
+    //     add_filter('attachment_fields_to_save', array($this, 'save_media_custom_field', 11, 2 ) );
+    // }
 }
