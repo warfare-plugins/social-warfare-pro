@@ -673,7 +673,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             $class.swp_default_" . $float . "custom_color a
-                {color:white}
+                {color:white !important}
             $class$panel.swp_default_" . $float . "custom_color .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
@@ -687,7 +687,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 $css .= "
 
             $class.swp_default_" . $float . "custom_color_outlines a
-                {color: " . $custom_outlines . " }
+                {color: " . $custom_outlines . " !important}
             $class.swp_default_" . $float . "custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
@@ -707,7 +707,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
-                {color:white!important}
+                {color:white !important}
             html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color:" . $custom_color . "!important;
@@ -721,7 +721,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
-                {color:" . $custom_outlines . "!important}
+                {color:" . $custom_outlines . " !important}
             html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color: transparent !important;
@@ -741,7 +741,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             body $class$panel.swp_other_" . $float . "custom_color:hover a
-                {color:white}
+                {color:white !important}
             body $class$panel.swp_other_" . $float . "custom_color:hover .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
@@ -755,7 +755,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
-                {color:" . $custom_outlines . " }
+                {color:" . $custom_outlines . " !important }
             html body $class.swp_other_" . $float . "custom_color_outlines:hover .nc_tweetContainer
                 {
                     background-color: transparent ;
