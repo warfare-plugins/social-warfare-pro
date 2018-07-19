@@ -84,11 +84,11 @@ function initialize_social_warfare_pro() {
     //* An expired Pro key.
     // $expired_key = 'ab81a8227a5ee7a180ca2dbf89b5b935';
 
-    if ( !class_exists( 'EDD_SL_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
-        require_once( SWP_PLUGIN_DIR . '/functions/utilities/EDD_SL_Plugin_Updater.php' );
+    if ( !class_exists( 'SWP_EDD_SL_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
+        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_EDD_SL_Plugin_Updater.php' );
     }
 
-    $edd_updater = new EDD_SL_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
+    $edd_updater = new SWP_EDD_SL_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
     	'version' 	=> SWPP_VERSION,		// current version number
     	'license' 	=> $license_key,	// license key (used get_option above to retrieve from DB)
         'item_id'   => EDD_SL_PRODUCT_ID,
