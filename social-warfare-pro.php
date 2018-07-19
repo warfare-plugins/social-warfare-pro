@@ -17,7 +17,6 @@ defined( 'WPINC' ) || die;
  *
  */
 define( 'SWPP_VERSION', '3.1.1' );
-// define( 'SWPP_VERSION', '0.0.9' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
