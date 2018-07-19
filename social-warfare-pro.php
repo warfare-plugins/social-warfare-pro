@@ -22,12 +22,17 @@ define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'EDD_SL_STORE_URL', 'https://warfareplugins.com' );
 
-// define( 'EDD_SL_PRODUCT_ID', 63157 );
-define( 'EDD_SL_PRODUCT_ID', 189418 );
+define( 'EDD_SL_PRODUCT_ID', 63157 );
+// define( 'EDD_SL_PRODUCT_ID', 189418 );  // Test product id.
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
 function initialize_social_warfare_pro() {
+    //* TODO
+    //* If the versions are not up to date, we need to display a message
+    //* saying somthing like "To reap all the features of Pro, update to the latest version."
+
+
 	// if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
     //     if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
     // 		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
@@ -75,7 +80,7 @@ function initialize_social_warfare_pro() {
     $license_key = trim( $options['pro_license_key'] );
 
     //* $test_product_key pairs with item_id 189418 for 'Test Product for Updates'
-    // $test_product_key = 'cf88c0df1bf351d2142ce82edb5a10be';
+    $test_product_key = 'cf88c0df1bf351d2142ce82edb5a10be';
 
     //* An expired Pro key.
     // $expired_key = 'ab81a8227a5ee7a180ca2dbf89b5b935';
@@ -83,7 +88,7 @@ function initialize_social_warfare_pro() {
     $edd_updater = new EDD_SL_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
     	'version' 	=> SWPP_VERSION,		// current version number
     	'license' 	=> $license_key,	// license key (used get_option above to retrieve from DB)
-        'item_id'   => 63157,
+        'item_id'   => EDD_SL_PRODUCT_ID,
     	'author' 	=> 'Warfare Plugins',	// author of this plugin
     	'url'           => home_url(),
         'beta'          => false // set to true if you wish customers to receive update notifications of beta releases
