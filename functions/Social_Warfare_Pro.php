@@ -8,19 +8,21 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->key = 'pro';
         $this->product_id = 63157;
         $this->version = SWPP_VERSION;
+        $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
         add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
+        // add_action('wp_loaded', function() {echo '<br>finderr wp_loaded<br>';});
 
 		$this->registration_update_notification();
 		$this->initiate_plugin();
 
         add_filter( 'swp_registrations', array( $this, 'add_self' ) );
+        // add_action('swp_registrations', function() {echo '<br>finderr swp_registrations<br>';});
+
 	}
 
 	public function load_classes() {
-
-
             /**
              * The Social Network Classes
              *
