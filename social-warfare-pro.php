@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
@@ -53,49 +55,6 @@ function initialize_social_warfare_pro() {
     //     add_action( 'admin_notices', 'mismatch_notification' );
     //     return;
 	// endif;
-
-    /**
-     * Note regarding keys:
-     *
-     * As I was testing, it seemd that the 'license' field trumps 'item_id'
-     * as far as product validation goes. For example:
-     *
-     * Set item_id to a Test Product id
-     * set license to a valid Test Product license
-     * Result: Finds updates for Test Product
-     *
-     * Set item_id to a Test Product id
-     * Set license to a valid Socail Warfare Pro license
-     * Result: Finds updates for Social Warfare Pro
-
-     * Set item_id to a Test Product id
-     * Set license to "x"
-     * Result: Finds no updates for anything.
-     *
-     */
-
-    // retrieve our license key from the DB
-    $options = get_option( 'social_warfare_settings' );
-    $license_key = trim( $options['pro_license_key'] );
-
-    //* $test_product_key pairs with item_id 189418 for 'Test Product for Updates'
-    $test_product_key = 'cf88c0df1bf351d2142ce82edb5a10be';
-
-    //* An expired Pro key.
-    // $expired_key = 'ab81a8227a5ee7a180ca2dbf89b5b935';
-
-    if ( !class_exists( 'SWP_EDD_SL_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
-        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_EDD_SL_Plugin_Updater.php' );
-    }
-
-    $edd_updater = new SWP_EDD_SL_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// current version number
-    	'license' 	=> $license_key,	// license key (used get_option above to retrieve from DB)
-        'item_id'   => EDD_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// author of this plugin
-    	'url'           => home_url(),
-        'beta'          => false // set to true if you wish customers to receive update notifications of beta releases
-    ) );
 }
 
 
