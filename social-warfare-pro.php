@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
@@ -24,37 +22,62 @@ define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'EDD_SL_STORE_URL', 'https://warfareplugins.com' );
 
-define( 'EDD_SL_PRODUCT_ID', 63157 );
-// define( 'EDD_SL_PRODUCT_ID', 189418 );  // Test product id.
+define( 'SWPP_SL_PRODUCT_ID', 189418 );  // Pro Utility Id
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
 function initialize_social_warfare_pro() {
-    //* TODO
-    //* If the versions are not up to date, we need to display a message
-    //* saying somthing like "To reap all the features of Pro, update to the latest version."
+    if ( !defined( 'SWP_VERSION' ) ) :
+        add_action( 'admin_notices', 'swp_needs_core' );
+        return;
+    endif;
 
-    if ( defined( 'SWP_VERSION' ) && SWP_VERSION != SWPP_VERSION ) {
-        add_filter( 'swp_admin_notices', 'update_notification' );
-    }
 
-	// if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
+	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
     		new Social_Warfare_Pro();
 
             // Queue up out footer hook function
             add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
-
         endif;
-    //
-    // elseif ( !defined('SWP_VERSION')) :
-    //     add_action( 'admin_notices', 'needs_core' );
-    //     return;
-    // else:
-    //     add_action( 'admin_notices', 'mismatch_notification' );
-    //     return;
-	// endif;
+    else:
+        add_filter( 'swp_admin_notices', 'update_notification' );
+        return;
+	endif;
+
+    /**
+     * Note regarding keys:
+     *
+     * As I was testing, it seemd that the 'license' field trumps 'item_id'
+     * as far as product validation goes. For example:
+     *
+     * Set item_id to a Test Product id
+     * set license to a valid Test Product license
+     * Result: Finds updates for Test Product
+     *
+     * Set item_id to a Test Product id
+     * Set license to a valid Socail Warfare Pro license
+     * Result: Finds updates for Social Warfare Pro
+
+     * Set item_id to a Test Product id
+     * Set license to "x"
+     * Result: Finds no updates for anything.
+     *
+     */
+
+    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
+        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
+    }
+
+    $edd_updater = new SWP_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
+    	'version' 	=> SWPP_VERSION,		// Current version number.
+    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
+        'item_id'   => SWPP_SL_PRODUCT_ID,
+    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
+    	'url'           => home_url(),
+        'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
+    ) );
 }
 
 
@@ -96,7 +119,7 @@ function swp_pinit_controls_output($info){
 	return $info;
 }
 
-function needs_core() {
+function swp_needs_core() {
     ?>
     <div class="update-nag notice is-dismissable">
         <p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the WordPress repo or from our <a href="https://warfareplugins.com" target="_blank">website</a>.</p>
@@ -134,11 +157,11 @@ function needs_core() {
 
      $notices[] = array(
          'key'   => 'update_notice_pro_' . SWPP_VERSION, // database key unique to this version.
-         'message'   => 'Looks like your copy of Social Warfare - Pro isn\t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
+         'message'   => 'Looks like your copy of Social Warfare - Pro isn\'t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
          'ctas'  => array(
              array(
                  'action'    => 'Remind me in a week.',
-                 'timeframe' => 7 // permadismiss for this version.
+                 'timeframe' => 7 // dismiss for one week.
              ),
              array(
                  'action'    => 'Thanks for letting me know.',
