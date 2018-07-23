@@ -22,12 +22,14 @@ define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'EDD_SL_STORE_URL', 'https://warfareplugins.com' );
 
-define( 'SWPP_SL_PRODUCT_ID', 189418 );  // Pro Utility Id
+define( 'SWPP_SL_PRODUCT_ID', 189418 );  // Pro Utility Product id
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
 function initialize_social_warfare_pro() {
     if ( !defined( 'SWP_VERSION' ) ) :
+        //* The original notice saying Core is required for Pro.
+        //* Note: This notice is not permadismissable. It is just a normal admin notice.
         add_action( 'admin_notices', 'swp_needs_core' );
         return;
     endif;
@@ -71,7 +73,7 @@ function initialize_social_warfare_pro() {
          * }
          *
          * In some_pro_file.php:
-         * 
+         *
          * class SWP_Pro_Pinterest {
          *     __construct() {
          *         add_filter( 'swp_pin_features', array( $this, 'pro_callbacks') );
@@ -112,6 +114,7 @@ function initialize_social_warfare_pro() {
         require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
     }
 
+    //* Everybody gets Pro updates, whether or not their license is active or valid.
     $edd_updater = new SWP_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
     	'version' 	=> SWPP_VERSION,		// Current version number.
     	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
