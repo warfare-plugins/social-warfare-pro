@@ -32,7 +32,6 @@ function initialize_social_warfare_pro() {
         return;
     endif;
 
-
 	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
@@ -43,6 +42,49 @@ function initialize_social_warfare_pro() {
         endif;
     else:
         add_filter( 'swp_admin_notices', 'update_notification' );
+        //* Do not instantiate Pro. Instead make them update.
+
+        /** TODO: Add checks for compatability throughout Core
+         * so we do not have to force them to update to Pro.
+         *
+         * For example:
+         * In some_core_file.php:
+         *
+         * if ( class_exists( 'SWP_Pro_Feature_4.3.1' ) ) {
+         *     $pro = new SWP_Pro_Feature_4.3.1();
+         *     $pro->do_awesome_magic();
+         * }
+         *
+         *
+         * OR, we create a system of filters/hooks leaves space for addons to
+         * change Core.
+         *
+         *
+         * For example:
+         * In some_core_file.php:
+         *
+         * class SWP_Pinterest() {
+         *     __construct() {
+         *         $this->init();
+         *         apply_filters( 'swp_pin_features', array());
+         *     }
+         * }
+         *
+         * In some_pro_file.php:
+         * 
+         * class SWP_Pro_Pinterest {
+         *     __construct() {
+         *         add_filter( 'swp_pin_features', array( $this, 'pro_callbacks') );
+         *     }
+         *
+         *      public function pro_callbacks() {
+         *          $this->add_pro_metabox();
+         *          $this->add_pin_hover();
+         *          $this->add_pin_vars();
+         *      }
+         * }
+         *
+         */
         return;
 	endif;
 
