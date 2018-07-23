@@ -20,8 +20,6 @@ define( 'SWPP_VERSION', '3.1.1' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'EDD_SL_STORE_URL', 'https://warfareplugins.com' );
-
 define( 'SWPP_SL_PRODUCT_ID', 189418 );  // Pro Utility Product id
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
@@ -43,7 +41,7 @@ function initialize_social_warfare_pro() {
             add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
         endif;
     else:
-        add_filter( 'swp_admin_notices', 'update_notification' );
+        add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
         //* Do not instantiate Pro. Instead make them update.
 
         /** TODO: Add checks for compatability throughout Core
@@ -115,7 +113,7 @@ function initialize_social_warfare_pro() {
     }
 
     //* Everybody gets Pro updates, whether or not their license is active or valid.
-    $edd_updater = new SWP_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
+    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
     	'version' 	=> SWPP_VERSION,		// Current version number.
     	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
         'item_id'   => SWPP_SL_PRODUCT_ID,
@@ -164,13 +162,16 @@ function swp_pinit_controls_output($info){
 	return $info;
 }
 
-function swp_needs_core() {
-    ?>
-    <div class="update-nag notice is-dismissable">
-        <p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the WordPress repo or from our <a href="https://warfareplugins.com" target="_blank">website</a>.</p>
-    </div>
-    <?php
-}
+
+if ( !function_exists( 'swp_needs_core' ) ) :
+    function swp_needs_core() {
+        ?>
+        <div class="update-nag notice is-dismissable">
+            <p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the WordPress repo or from our <a href="https://warfareplugins.com" target="_blank">website</a>.</p>
+        </div>
+        <?php
+    }
+endif;
 
 
 /**
@@ -195,7 +196,7 @@ function swp_needs_core() {
  * @return void
  *
  */
- function update_notification( $notices = array() ) {
+ function swp_pro_update_notification( $notices = array() ) {
      if (is_string( $notices ) ) {
          $notices = array();
      }
