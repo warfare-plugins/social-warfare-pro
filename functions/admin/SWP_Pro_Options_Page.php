@@ -436,8 +436,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $tweet_count_source = new SWP_Option_Select( __( 'Tweet Count Source', 'social-warfare' ), 'tweet_count_source' );
             $tweet_count_source->set_choices( [
-                'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
-    			'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
+                'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' )
                 ] )->set_default( 'opensharecount' )
                 ->set_priority( 30 )
 				->set_size( 'sw-col-300' )
