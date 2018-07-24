@@ -584,7 +584,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-                ->set_dependency( 'float_location', ['left', 'right'] )
+                ->set_dependency( 'floating_panel', [true] )
                 ->set_premium( 'pro' );
 
             //* floatStyle => float_button_shape
