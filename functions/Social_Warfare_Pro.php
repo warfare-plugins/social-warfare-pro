@@ -57,6 +57,9 @@ class Social_Warfare_Pro extends SWP_Addon {
 			$this->load_files( '/functions/utilities/', $utilities );
             // $this->add_pinterest_description_field();
 
+            require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Shortcode.php';
+            new SWP_Pro_Shortcode();
+
     		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
 
 	}
