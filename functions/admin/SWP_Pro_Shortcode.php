@@ -13,6 +13,8 @@
  *
  */
 class SWP_Pro_Shortcode {
+
+
 	/**
 	 * Constructs a new SWP_Shortcodes instance
 	 *
@@ -29,6 +31,15 @@ class SWP_Pro_Shortcode {
 
 	}
 
+
+	/**
+	 * Create the [pinterest_image] shortcode.
+	 *
+	 * @since  3.2.0 | 25 JUL 2018 | Created
+	 * @param  array $atts  Shortcode parameters
+	 * @return string       The rendered HTML for a Pinterest image.
+	 *
+	 */
     public function pinterest_image( $atts ) {
         global $post;
 
