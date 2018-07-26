@@ -218,3 +218,26 @@ endif;
 
      return $notices;
 }
+
+function edit_media_custom_field( $form_fields, $post ) {
+    $form_fields['swp_pinterest_description'] = array(
+        'label' => 'Social Warfare Pin Description',
+        'input' => 'textarea',
+        'value' => get_post_meta( $post->ID, 'swp_pinterest_description', true )
+    );
+    return $form_fields;
+}
+
+function save_media_custom_field( $post, $attachment ) {
+    update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
+    return $post;
+}
+
+function add_pinterest_description_field() {
+    // add_filter('attachment_fields_to_edit', array($this, 'edit_media_custom_field', 11, 2 ) );
+    add_filter('attachment_fields_to_edit', 'edit_media_custom_field', 11, 2 );
+    // add_filter('attachment_fields_to_save', array($this, 'save_media_custom_field', 11, 2 ) );
+    add_filter('attachment_fields_to_save', 'save_media_custom_field', 11, 2 );
+}
+
+add_pinterest_description_field();
