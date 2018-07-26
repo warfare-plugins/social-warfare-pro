@@ -33,6 +33,7 @@ class SWP_Pro_Pinterest {
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) :
+            $image = get_post( $id );
             //* The description as set in the Media Gallery.
             $description = $image->post_content;
         endif;
