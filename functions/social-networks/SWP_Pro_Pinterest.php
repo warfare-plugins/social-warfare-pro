@@ -1,6 +1,19 @@
 <?php
 
+/**
+ * Hosts our Pro features for Pinterst.
+ *
+ * @since  3.2.0 | 26 JUL 2018 | Created the class.
+ *
+ */
 class SWP_Pro_Pinterest {
+
+    /**
+     * Initialize the hooks and filters.
+     *
+     * @since  3.2.0 | 26 JUL 2018
+     *
+     */
     public function __construct() {
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
     }
@@ -95,12 +108,12 @@ class SWP_Pro_Pinterest {
         $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 
             $html .= '<img ';
-                $html .= 'src="' . $url . '"';
-                $html .= 'width="' . $width . '"';
-                $html .= 'height="' . $height . '"';
-                $html .= 'class="swp-pinterest-image"';
-                $html .= 'title="' . $title . '"';
-                $html .= 'alt="' . $alt . '"';
+                $html .= ' src="' . $url . '"';
+                $html .= ' width="' . $width . '"';
+                $html .= ' height="' . $height . '"';
+                $html .= ' class="swp-pinterest-image"';
+                $html .= ' title="' . $title . '"';
+                $html .= ' alt="' . $alt . '"';
             $html .= "/>";
 
         $html .= '</div>';
