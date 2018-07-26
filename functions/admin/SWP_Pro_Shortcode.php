@@ -63,30 +63,7 @@ class SWP_Pro_Shortcode {
 
         $image = get_post( $id );
 
-        //* Prefer the user-defined Pin Description.
-        $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-
-        if ( empty( $description ) ) :
-            //* The description as set in the Media Gallery.
-            $description = $image->post_content;
-        endif;
-
-        //* Pinterest limits the description to 500 characters.
-        if ( empty( $description ) || strlen( $description ) > 500 ) {
-            $alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
-
-            if ( !empty( $alt ) ) :
-                $description = $alt;
-            else:
-                //* Use the caption instead.
-                $description = $image->post_excerpt;
-            endif;
-        }
-
-        if ( empty( $description ) ) :
-            $description = $image->post_title;
-        endif;
-
+        $description = SWP_Pro_Pinterest::get_pin_description( $id );
 
         if ( !empty( $width ) && !empty( $height ) ):
             $dimensions = ' width="' . $width . '"';
