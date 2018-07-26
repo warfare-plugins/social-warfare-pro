@@ -76,21 +76,7 @@ class SWP_Pro_Shortcode {
             $class = "swp-pinterest-image";
         endif;
 
-        if ( !empty( $alignment ) ) :
-            switch ( $alignment ) {
-                default:
-                    $alignment = '';
-                case 'left':
-                    $alignment = 'style="text-align: left";';
-                    break;
-                case 'right':
-                    $alignment = 'style="text-align: right";';
-                    break;
-                case 'center':
-                    $alignment = 'style="text-align: center"';
-                    break;
-            }
-        endif;
+        $alignment = SWP_Pro_Pinterest::get_alignment( $alignment );
 
         $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
             $html .= '<img src="' . $src . '"';
