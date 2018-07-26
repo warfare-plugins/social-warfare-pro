@@ -41,7 +41,8 @@ class Social_Warfare_Pro extends SWP_Addon {
                 'Pocket',
                 'Tumblr',
                 'Whatsapp',
-                'Yummly'
+                'Yummly',
+                'Pro_Pinterest'
             );
             $this->load_files( '/functions/social-networks/', $social_networks);
 
@@ -73,6 +74,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 	public function instantiate_addon() {
         if ( $this->is_registered()) :
             new SWP_Pro_Options_Page();
+            new SWP_Pro_Pinterest();
         else:
             // die("not registerd");
         endif;
