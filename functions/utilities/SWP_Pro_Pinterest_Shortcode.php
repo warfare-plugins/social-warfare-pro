@@ -12,7 +12,7 @@
  * @since     3.2.0
  *
  */
-class SWP_Pro_Shortcode {
+class SWP_Pro_Pinterest_Shortcode {
 
 
 	/**
@@ -26,9 +26,10 @@ class SWP_Pro_Shortcode {
 	 * @return none
 	 *
 	 */
-    public function __construct() {
-        add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
-
+    public function __construct( $attributes = array() ) {
+		global $post;
+		$this->post_id = $post->ID;
+        $this->attributes = $attributes;
 	}
 
 

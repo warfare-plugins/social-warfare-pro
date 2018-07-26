@@ -16,12 +16,28 @@ class SWP_Pro_Pinterest {
      */
     public function __construct() {
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
+		add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
     }
+
+
+	/**
+	 * A method to load up the Pinterest image shortcodes.
+	 *
+	 * @since  3.2.0 | 26 JUL 2018 | Created
+	 * @param  array $attr An array of attributes from the shortcode.
+	 * @return string      The HTML of the rendered shortcode.
+	 *
+	 */
+	public function pinterest_image_shortcode( $attr ) {
+		$shortcode = new SWP_Pro_Pinterest_Shortcode( $attr );
+		return $shortcode->render_html();
+	}
 
 
     /**
      * Get the Pinterest description set by the Admin, or a fallback.
      *
+     * @since  3.2.0 | 26 JUL 2018 | Moved from core to pro.
      * @param  int $id The Post to check for a pinterest description.
      * @return string $html Our version of the markup.
      *
@@ -58,6 +74,7 @@ class SWP_Pro_Pinterest {
     /**
      * Get the image alignment style for the image wrapper.
      *
+     * @since  3.2.0 | 26 JUL 2018 | Moved from core to pro.
      * @param  string $alignment One of '', 'center', 'left', 'right'
      * @return string $style The style declaration for an image wrapper element.
      *
@@ -88,7 +105,9 @@ class SWP_Pro_Pinterest {
      * $html is the fully rendered HTML that WordPress created.
      * We are bascially ignoring it and creating our own.
      *
+     * @since  3.2.0 | 26 JUL 2018 | Created
      * @return $html Our version of the markup.
+     *
      */
     public function editor_add_pin_description( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
         global $post;
@@ -121,12 +140,15 @@ class SWP_Pro_Pinterest {
         return $html;
     }
 
+
     /**
-     * Taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
-     *
      * Defines utility functions for handling WordPress's image sizing.
      *
+     * Taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
+     *
+     * @since  3.2.0 | 26 JUL 2018 | Created
      * @return function get_image_size( $size )
+     *
      */
     public function get_size( $size ) {
         /**
@@ -158,12 +180,15 @@ class SWP_Pro_Pinterest {
         	return $sizes;
         }
 
+
         /**
          * Get size information for a specific image size.
          *
+         * @since  3.2.0 | 26 JUL 2018 | Created
          * @uses   get_image_sizes()
          * @param  string $size The image size for which to retrieve data.
          * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+         *
          */
         function get_image_size( $size ) {
         	$sizes = get_image_sizes();
@@ -178,9 +203,11 @@ class SWP_Pro_Pinterest {
         /**
          * Get the width of a specific image size.
          *
+         * @since  3.2.0 | 26 JUL 2018 | Created
          * @uses   get_image_size()
          * @param  string $size The image size for which to retrieve data.
          * @return bool|string $size Width of an image size or false if the size doesn't exist.
+         *
          */
         function get_image_width( $size ) {
         	if ( ! $size = get_image_size( $size ) ) {
@@ -197,6 +224,7 @@ class SWP_Pro_Pinterest {
         /**
          * Get the height of a specific image size.
          *
+         * @since  3.2.0 | 26 JUL 2018 | Created 
          * @uses   get_image_size()
          * @param  string $size The image size for which to retrieve data.
          * @return bool|string $size Height of an image size or false if the size doesn't exist.
