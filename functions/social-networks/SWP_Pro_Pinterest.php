@@ -2,10 +2,17 @@
 
 class SWP_Pro_Pinterest {
     public function __construct() {
-        add_filter( 'image_send_to_editor', array( $this, 'add_pin_description') );
+        add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
     }
 
 
+    /**
+     * Get the Pinterest description set by the Admin, or a fallback.
+     *
+     * @param  int $id The Post to check for a pinterest description.
+     * @return string $html Our version of the markup.
+     *
+     */
     public static function get_pin_description( $id ) {
         //* Prefer the user-defined Pin Description.
         $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
@@ -34,6 +41,14 @@ class SWP_Pro_Pinterest {
         return $description;
     }
 
+
+    /**
+     * Get the image alignment style for the image wrapper.
+     *
+     * @param  string $alignment One of '', 'center', 'left', 'right'
+     * @return string $style The style declaration for an image wrapper element.
+     *
+     */
     public static function get_alignment_style( $alignment ) {
         switch ( $alignment ) {
             default:
@@ -53,8 +68,16 @@ class SWP_Pro_Pinterest {
     }
 
 
-
-    public function add_pin_description( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
+    /**
+     *
+     *
+     * This filter callback receives many variables.
+     * $html is the fully rendered HTML that WordPress created.
+     * We are bascially ignoring it and creating our own.
+     *
+     * @return $html Our version of the markup.
+     */
+    public function editor_add_pin_description( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
         global $post;
 
         $description = $this::get_pin_description( $post->ID );
@@ -83,8 +106,6 @@ class SWP_Pro_Pinterest {
         $html .= '</div>';
 
         return $html;
-
-
     }
 
     /**
