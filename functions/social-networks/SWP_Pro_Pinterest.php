@@ -17,6 +17,7 @@ class SWP_Pro_Pinterest {
     public function __construct() {
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
+        // $this->add_pinterest_description_field();
     }
 
 
@@ -29,7 +30,7 @@ class SWP_Pro_Pinterest {
      */
     public static function get_pin_description( $id ) {
         //* Prefer the user-defined Pin Description.
-        $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+        $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) :
             //* The description as set in the Media Gallery.
@@ -91,33 +92,44 @@ class SWP_Pro_Pinterest {
      *
      * @return $html Our version of the markup.
      */
-    public function editor_add_pin_description( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
-        global $post;
-
-        $description = $this::get_pin_description( $post->ID );
+    public function editor_add_pin_description( $html, $image_id, $caption, $title, $align, $url, $size = "", $alt ) {
+        $description = $this::get_pin_description( $image_id );
         $alignment = $this::get_alignment_style( $alignment );
 
-
         if ( is_string( $size ) ) {
-            $size = get_size( $size );
+            $size = $this->get_size( $size );
         }
-        //* Else $size is array( $width, $height )
 
+        //* Else $size is array( $width, $height )
         $width = $size[0];
         $height = $size[1];
 
-        $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
+        if ( class_exists( 'DOMDocument') ) :
+            $doc = DOMDocument::loadHTML( $html );
+            $img = $doc->getElementsByTagName("img")[0];
 
-            $html .= '<img ';
-                $html .= ' src="' . $url . '"';
-                $html .= ' width="' . $width . '"';
-                $html .= ' height="' . $height . '"';
-                $html .= ' class="swp-pinterest-image"';
-                $html .= ' title="' . $title . '"';
-                $html .= ' alt="' . $alt . '"';
-            $html .= "/>";
+            $replacement = $img->cloneNode();
+            $replacement->setAttribute( "data-pin-description", $description );
 
-        $html .= '</div>';
+            $img->parentNode->replaceChild($replacement, $img);
+
+            $html = $doc->saveHTML();
+
+        else:
+            $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
+
+                $html .= '<img ';
+                    $html .= ' src="' . $url . '"';
+                    $html .= ' width="' . $width . '"';
+                    $html .= ' height="' . $height . '"';
+                    $html .= ' class="swp-pinterest-image"';
+                    $html .= ' data-pin-description="' . $description . '"';
+                    $html .= ' title="' . $title . '"';
+                    $html .= ' alt="' . $alt . '"';
+                $html .= "/>";
+
+            $html .= '</div>';
+        endif;
 
         return $html;
     }
@@ -232,7 +244,8 @@ class SWP_Pro_Pinterest {
         		return $sizes[ $size ];
         	}
 
-        	return false;
+            //* Return a dummy array of [$width, $height]
+        	return array("", "");
         }
 
         /**
@@ -275,5 +288,7 @@ class SWP_Pro_Pinterest {
 
         return get_image_size( $size );
     }
+
+
 
 }
