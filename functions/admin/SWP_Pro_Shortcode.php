@@ -67,10 +67,6 @@ class SWP_Pro_Shortcode {
         $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) :
-            $description = $image->post_title;
-        endif;
-
-        if ( empty( $description ) ) :
             //* The description as set in the Media Gallery.
             $description = $image->post_content;
         endif;
@@ -86,6 +82,11 @@ class SWP_Pro_Shortcode {
                 $description = $image->post_excerpt;
             endif;
         }
+
+        if ( empty( $description ) ) :
+            $description = $image->post_title;
+        endif;
+
 
         if ( !empty( $width ) && !empty( $height ) ):
             $dimensions = ' width="' . $width . '"';
