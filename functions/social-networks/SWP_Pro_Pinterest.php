@@ -28,8 +28,8 @@ class SWP_Pro_Pinterest {
 	 * @return string      The HTML of the rendered shortcode.
 	 *
 	 */
-	public function pinterest_image_shortcode( $attr ) {
-		$shortcode = new SWP_Pro_Pinterest_Shortcode( $attr );
+	public function pinterest_image_shortcode( $attributes ) {
+		$shortcode = new SWP_Pro_Pinterest_Shortcode( $attributes );
 		return $shortcode->render_html();
 	}
 
@@ -224,7 +224,7 @@ class SWP_Pro_Pinterest {
         /**
          * Get the height of a specific image size.
          *
-         * @since  3.2.0 | 26 JUL 2018 | Created 
+         * @since  3.2.0 | 26 JUL 2018 | Created
          * @uses   get_image_size()
          * @param  string $size The image size for which to retrieve data.
          * @return bool|string $size Height of an image size or false if the size doesn't exist.
