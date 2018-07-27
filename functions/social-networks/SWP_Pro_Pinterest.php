@@ -20,7 +20,7 @@ class SWP_Pro_Pinterest {
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
 
-        if ( true === $swp_user_options['pinterest_data_attribute'] ) :
+        if ( isset( $swp_user_options['pinterest_data_attribute'] ) && true === $swp_user_options['pinterest_data_attribute'] ) :
             add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
         endif;
     }
@@ -164,7 +164,7 @@ class SWP_Pro_Pinterest {
 
                 $replacement = $img->cloneNode();
 
-                if ( 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
+                if ( isset( $swp_user_options['pinit_image_description'] ) && 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
                 } else {
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
