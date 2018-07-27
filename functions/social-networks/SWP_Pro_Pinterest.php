@@ -149,7 +149,7 @@ class SWP_Pro_Pinterest {
     public function content_add_pin_description( $content ) {
         global $post, $swp_user_options;
 
-        $description_fallback = $this::get_pin_description( $post->ID );
+        $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
         $alignment = $this::get_alignment_style( $alignment );
 
         if ( class_exists( 'DOMDocument') ) :
