@@ -94,7 +94,13 @@ class SWP_Pro_Pinterest {
      * @return $html Our version of the markup.
      */
     public function editor_add_pin_description( $html, $image_id, $caption, $title, $align, $url, $size = "", $alt ) {
-        $description = $this::get_pin_description( $image_id );
+        $description = $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+
+        if ( empty( $description ) ) {
+            //* We only permastore the pin description when they have specifically set one for this image.
+            return $html;
+        }
+
         $alignment = $this::get_alignment_style( $alignment );
 
         if ( is_string( $size ) ) {
