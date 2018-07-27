@@ -131,7 +131,18 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' )
                 ->set_priority( 40 );
 
-        $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback, $pinterest_data_attribute] );
+            $pinit_image_description = new SWP_Option_Select( __( 'Description Source', 'social-warfare' ), 'pinit_image_description' );
+			$pinit_image_description->set_priority( 70 )
+				->set_choices( [
+					'alt_text' => __( 'Image ALT Text' , 'social-warfare' ) ,
+					'custom'   => __( 'Custom Pin Description' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-300' )
+				->set_default( 'image' )
+				->set_premium( 'pro' )
+                ->set_priority( 50 );
+
+        $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback, $pinterest_data_attribute, $pinit_image_description] );
 
         $share_recovery = new SWP_Options_Page_Section( __( 'Share Recovery', 'social-warfare' ), 'share_recovery' );
         $share_recovery->set_description( __( 'If at any point you have changed permalink structures or have gone from http to https (SSL) then you will have undoubtedly lost all of your share counts. This tool allows you to recover them. See <a target="_blank" href="https://warfareplugins.com/support/recover-social-share-counts-after-changing-permalink-settings/">this guide</a> for more detailed instructions on how to use this feature.', 'social-warfare') )
@@ -346,16 +357,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
-			$pinit_image_description = new SWP_Option_Select( __( 'Description Source', 'social-warfare' ), 'pinit_image_description' );
-			$pinit_image_description->set_priority( 70 )
-				->set_choices( [
-					'alt_text' => __( 'Image ALT Text' , 'social-warfare' ) ,
-					'custom'   => __( 'Custom Pin Description' , 'social-warfare' )
-				])
-				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-				->set_default( 'image' )
-				->set_dependency( 'pinit_toggle', [true] )
-				->set_premium( 'pro' );
+
 
             $pinit_hide_on_anchors = new SWP_Option_Toggle( __( 'Hide on Anchors (links)', 'social-warfare'), 'pinit_hide_on_anchors' );
             $pinit_hide_on_anchors->set_priority( 80 )
@@ -368,7 +370,6 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $pinit_location_horizontal,
             $pinit_location_vertical,
             $pinit_image_source,
-            $pinit_image_description,
             $pinit_min_width,
             $pinit_min_height,
             $pinit_hide_on_anchors
