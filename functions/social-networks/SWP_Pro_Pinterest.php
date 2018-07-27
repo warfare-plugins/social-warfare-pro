@@ -166,8 +166,10 @@ class SWP_Pro_Pinterest {
 
                 if ( isset( $swp_user_options['pinit_image_description'] ) && 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
-                } else {
+                } else if ( !empty( $description_fallback ) ) {
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
+                } else {
+                    continue;
                 }
 
                 $img->parentNode->replaceChild($replacement, $img);
