@@ -8,6 +8,7 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->key = 'pro';
         $this->product_id = 63157;
         $this->version = SWPP_VERSION;
+        $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
         add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
@@ -16,11 +17,11 @@ class Social_Warfare_Pro extends SWP_Addon {
 		$this->initiate_plugin();
 
         add_filter( 'swp_registrations', array( $this, 'add_self' ) );
+
+
 	}
 
 	public function load_classes() {
-
-
             /**
              * The Social Network Classes
              *
@@ -39,7 +40,8 @@ class Social_Warfare_Pro extends SWP_Addon {
                 'Pocket',
                 'Tumblr',
                 'Whatsapp',
-                'Yummly'
+                'Yummly',
+                'Pro_Pinterest'
             );
             $this->load_files( '/functions/social-networks/', $social_networks);
 
@@ -49,11 +51,13 @@ class Social_Warfare_Pro extends SWP_Addon {
 			 *
 			 */
 			$utilities = array(
-				'Meta_Box_Loader'
+				'Meta_Box_Loader',
+				'Pro_Pinterest_Shortcode'
 			);
 
 			$this->load_files( '/functions/utilities/', $utilities );
             // $this->add_pinterest_description_field();
+
 
     		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
 
@@ -69,6 +73,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 	public function instantiate_addon() {
         if ( $this->is_registered()) :
             new SWP_Pro_Options_Page();
+            new SWP_Pro_Pinterest();
         else:
             // die("not registerd");
         endif;
@@ -154,23 +159,6 @@ class Social_Warfare_Pro extends SWP_Addon {
             require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
         }
     }
-    //
-    // protected function edit_media_custom_field( $form_fields, $post ) {
-    //     $form_fields['swp_pinterest_image_description'] = array(
-    //         'label' => 'Social Warafre Pin Description',
-    //         'input' => 'textarea',
-    //         'value' => get_post_meta( $post->ID, '_swp_pinterest_image_description', true )
-    //     );
-    //     return $form_fields;
-    // }
-    //
-    // protected function save_media_custom_field( $post, $attachment ) {
-    //     update_post_meta( $post['ID'], '_swp_pinterest_description', $attachment['swp_pinterest_image_description'] );
-    //     return $post;
-    // }
-    //
-    // protected function add_pinterest_description_field() {
-    //     add_filter('attachment_fields_to_edit', array($this, 'edit_media_custom_field', 11, 2 ) );
-    //     add_filter('attachment_fields_to_save', array($this, 'save_media_custom_field', 11, 2 ) );
-    // }
+
+    
 }

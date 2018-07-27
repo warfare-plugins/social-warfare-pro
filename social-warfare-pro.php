@@ -20,39 +20,73 @@ define( 'SWPP_VERSION', '3.1.1' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'EDD_SL_STORE_URL', 'https://warfareplugins.com' );
-
-define( 'EDD_SL_PRODUCT_ID', 63157 );
-// define( 'EDD_SL_PRODUCT_ID', 189418 );  // Test product id.
+define( 'SWPP_SL_PRODUCT_ID', 189418 );  // Pro Utility Product id
 
 add_action('plugins_loaded' , 'initialize_social_warfare_pro' , 20 );
 
 function initialize_social_warfare_pro() {
-    //* TODO
-    //* If the versions are not up to date, we need to display a message
-    //* saying somthing like "To reap all the features of Pro, update to the latest version."
+    if ( !defined( 'SWP_VERSION' ) ) :
+        //* The original notice saying Core is required for Pro.
+        //* Note: This notice is not permadismissable. It is just a normal admin notice.
+        add_action( 'admin_notices', 'swp_needs_core' );
+        return;
+    endif;
 
-    if ( defined( 'SWP_VERSION' ) && SWP_VERSION != SWPP_VERSION ) {
-        add_filter( 'swp_admin_notices', 'update_notification' );
-    }
-
-	// if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
+	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
     		new Social_Warfare_Pro();
 
             // Queue up out footer hook function
             add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
-
         endif;
-    //
-    // elseif ( !defined('SWP_VERSION')) :
-    //     add_action( 'admin_notices', 'needs_core' );
-    //     return;
-    // else:
-    //     add_action( 'admin_notices', 'mismatch_notification' );
-    //     return;
-	// endif;
+    else:
+        add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
+        //* Do not instantiate Pro. Instead make them update.
+
+        /** TODO: Add checks for compatability throughout Core
+         * so we do not have to force them to update to Pro.
+         *
+         * For example:
+         * In some_core_file.php:
+         *
+         * if ( class_exists( 'SWP_Pro_Feature_4.3.1' ) ) {
+         *     $pro = new SWP_Pro_Feature_4.3.1();
+         *     $pro->do_awesome_magic();
+         * }
+         *
+         *
+         * OR, we create a system of filters/hooks leaves space for addons to
+         * change Core.
+         *
+         *
+         * For example:
+         * In some_core_file.php:
+         *
+         * class SWP_Pinterest() {
+         *     __construct() {
+         *         $this->init();
+         *         apply_filters( 'swp_pin_features', array());
+         *     }
+         * }
+         *
+         * In some_pro_file.php:
+         *
+         * class SWP_Pro_Pinterest {
+         *     __construct() {
+         *         add_filter( 'swp_pin_features', array( $this, 'pro_callbacks') );
+         *     }
+         *
+         *      public function pro_callbacks() {
+         *          $this->add_pro_metabox();
+         *          $this->add_pin_hover();
+         *          $this->add_pin_vars();
+         *      }
+         * }
+         *
+         */
+        return;
+	endif;
 
     /**
      * Note regarding keys:
@@ -74,27 +108,18 @@ function initialize_social_warfare_pro() {
      *
      */
 
-    // retrieve our license key from the DB
-    $options = get_option( 'social_warfare_settings' );
-    $license_key = trim( $options['pro_license_key'] );
-
-    //* $test_product_key pairs with item_id 189418 for 'Test Product for Updates'
-    $test_product_key = 'cf88c0df1bf351d2142ce82edb5a10be';
-
-    //* An expired Pro key.
-    // $expired_key = 'ab81a8227a5ee7a180ca2dbf89b5b935';
-
-    if ( !class_exists( 'SWP_EDD_SL_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
-        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_EDD_SL_Plugin_Updater.php' );
+    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
+        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
     }
 
-    $edd_updater = new SWP_EDD_SL_Plugin_Updater( EDD_SL_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// current version number
-    	'license' 	=> $license_key,	// license key (used get_option above to retrieve from DB)
-        'item_id'   => EDD_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// author of this plugin
+    //* Everybody gets Pro updates, whether or not their license is active or valid.
+    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
+    	'version' 	=> SWPP_VERSION,		// Current version number.
+    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
+        'item_id'   => SWPP_SL_PRODUCT_ID,
+    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
     	'url'           => home_url(),
-        'beta'          => false // set to true if you wish customers to receive update notifications of beta releases
+        'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
     ) );
 }
 
@@ -137,13 +162,16 @@ function swp_pinit_controls_output($info){
 	return $info;
 }
 
-function needs_core() {
-    ?>
-    <div class="update-nag notice is-dismissable">
-        <p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the WordPress repo or from our <a href="https://warfareplugins.com" target="_blank">website</a>.</p>
-    </div>
-    <?php
-}
+
+if ( !function_exists( 'swp_needs_core' ) ) :
+    function swp_needs_core() {
+        ?>
+        <div class="update-nag notice is-dismissable">
+            <p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the WordPress repo or from our <a href="https://warfareplugins.com" target="_blank">website</a>.</p>
+        </div>
+        <?php
+    }
+endif;
 
 
 /**
@@ -168,18 +196,18 @@ function needs_core() {
  * @return void
  *
  */
- function update_notification( $notices = array() ) {
+ function swp_pro_update_notification( $notices = array() ) {
      if (is_string( $notices ) ) {
          $notices = array();
      }
 
      $notices[] = array(
          'key'   => 'update_notice_pro_' . SWPP_VERSION, // database key unique to this version.
-         'message'   => 'Looks like your copy of Social Warfare - Pro isn\t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
+         'message'   => 'Looks like your copy of Social Warfare - Pro isn\'t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
          'ctas'  => array(
              array(
                  'action'    => 'Remind me in a week.',
-                 'timeframe' => 7 // permadismiss for this version.
+                 'timeframe' => 7 // dismiss for one week.
              ),
              array(
                  'action'    => 'Thanks for letting me know.',
@@ -190,3 +218,26 @@ function needs_core() {
 
      return $notices;
 }
+
+function edit_media_custom_field( $form_fields, $post ) {
+    $form_fields['swp_pinterest_description'] = array(
+        'label' => 'Social Warfare Pin Description',
+        'input' => 'textarea',
+        'value' => get_post_meta( $post->ID, 'swp_pinterest_description', true )
+    );
+    return $form_fields;
+}
+
+function save_media_custom_field( $post, $attachment ) {
+    update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
+    return $post;
+}
+
+function add_pinterest_description_field() {
+    // add_filter('attachment_fields_to_edit', array($this, 'edit_media_custom_field', 11, 2 ) );
+    add_filter('attachment_fields_to_edit', 'edit_media_custom_field', 11, 2 );
+    // add_filter('attachment_fields_to_save', array($this, 'save_media_custom_field', 11, 2 ) );
+    add_filter('attachment_fields_to_save', 'save_media_custom_field', 11, 2 );
+}
+
+add_pinterest_description_field();
