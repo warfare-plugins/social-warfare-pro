@@ -15,9 +15,14 @@ class SWP_Pro_Pinterest {
      *
      */
     public function __construct() {
+        global $swp_user_options;
+
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
-        // $this->add_pinterest_description_field();
+
+        if ( true === $swp_user_options['pinterest_data_attribute'] ) :
+            add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
+        endif;
     }
 
 
@@ -119,6 +124,55 @@ class SWP_Pro_Pinterest {
             $replacement->setAttribute( "data-pin-description", $description );
 
             $img->parentNode->replaceChild($replacement, $img);
+
+            $html = $doc->saveHTML();
+
+        else:
+            $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
+
+                $html .= '<img ';
+                    $html .= ' src="' . $url . '"';
+                    $html .= ' width="' . $width . '"';
+                    $html .= ' height="' . $height . '"';
+                    $html .= ' class="swp-pinterest-image"';
+                    $html .= ' data-pin-description="' . $description . '"';
+                    $html .= ' title="' . $title . '"';
+                    $html .= ' alt="' . $alt . '"';
+                $html .= "/>";
+
+            $html .= '</div>';
+        endif;
+
+        return $html;
+    }
+
+    public function content_add_pin_description( $content ) {
+        global $post, $swp_user_options;
+
+        $description_fallback = $this::get_pin_description( $post->ID );
+        $alignment = $this::get_alignment_style( $alignment );
+
+        if ( class_exists( 'DOMDocument') ) :
+            $doc = DOMDocument::loadHTML( $content );
+            $imgs = $doc->getElementsByTagName("img");
+
+            foreach( $imgs as $img ) {
+
+                if ( $img->hasAttribute( "data-pin-description" ) ) {
+                    continue;
+                }
+
+                $replacement = $img->cloneNode();
+
+                if ( 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
+                    $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
+                } else {
+                    $replacement->setAttribute( "data-pin-description", $description_fallback );
+                }
+
+                $img->parentNode->replaceChild($replacement, $img);
+
+            }
 
             $html = $doc->saveHTML();
 
