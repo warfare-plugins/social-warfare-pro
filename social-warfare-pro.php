@@ -85,42 +85,22 @@ function initialize_social_warfare_pro() {
          * }
          *
          */
-        return;
 	endif;
 
-    /**
-     * Note regarding keys:
-     *
-     * As I was testing, it seemd that the 'license' field trumps 'item_id'
-     * as far as product validation goes. For example:
-     *
-     * Set item_id to a Test Product id
-     * set license to a valid Test Product license
-     * Result: Finds updates for Test Product
-     *
-     * Set item_id to a Test Product id
-     * Set license to a valid Socail Warfare Pro license
-     * Result: Finds updates for Social Warfare Pro
 
-     * Set item_id to a Test Product id
-     * Set license to "x"
-     * Result: Finds no updates for anything.
-     *
-     */
-
-    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) {
+    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) && file_exists( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' ) ) {
         require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
-    }
 
-    //* Everybody gets Pro updates, whether or not their license is active or valid.
-    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// Current version number.
-    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
-        'item_id'   => SWPP_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
-    	'url'           => home_url(),
-        'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
-    ) );
+        //* Everybody gets Pro updates, whether or not their license is active or valid.
+        $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
+        	'version' 	=> SWPP_VERSION,		// Current version number.
+        	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
+            'item_id'   => SWPP_SL_PRODUCT_ID,
+        	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
+        	'url'           => home_url(),
+            'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
+        ) );
+    }
 }
 
 
