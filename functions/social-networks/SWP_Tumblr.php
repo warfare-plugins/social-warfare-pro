@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Tumblr
@@ -93,8 +94,9 @@ class SWP_Tumblr extends SWP_Social_Network {
         $parameters .= '&canonicalUrl=' . $this->get_shareable_permalink( $post_data);
         if ( isset($post_data['post_title'] ) ) :
             $parameters .= '&title=' . urlencode( $post_data['post_title'] );
-        endif; 
+        endif;
         $share_link = $this->base_share_url . $parameters;
         return $share_link;
     }
 }
+endif;

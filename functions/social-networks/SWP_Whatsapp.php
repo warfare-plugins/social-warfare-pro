@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * WhatsApp
@@ -43,5 +44,6 @@ class SWP_WhatsApp extends SWP_Social_Network {
 
 		$this->init_social_network();
 	}
-
 }
+
+endif;

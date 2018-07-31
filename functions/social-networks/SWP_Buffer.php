@@ -1,5 +1,5 @@
 <?php
-
+if ( class_exists( 'SWP_Social_Network' ) ) :
 /**
  * Buffer
  *
@@ -38,7 +38,7 @@ class SWP_Buffer extends SWP_Social_Network {
 		$this->cta            = __( 'Buffer','social-warfare' );
 		$this->key            = 'buffer';
 		$this->default        = 'false';
-    $this->premium        = 'pro';
+        $this->premium        = 'pro';
 		$this->base_share_url = 'https://bufferapp.com/add?url=';
 
 		$this->init_social_network();
@@ -107,3 +107,5 @@ class SWP_Buffer extends SWP_Social_Network {
     return $share_link;
     }
 }
+
+endif;

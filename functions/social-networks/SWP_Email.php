@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Email
@@ -125,3 +126,4 @@ class SWP_Email extends SWP_Social_Network {
 
 	}
 }
+endif;

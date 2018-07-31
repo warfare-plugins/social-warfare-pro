@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Flipboard
@@ -45,3 +46,4 @@ class SWP_Flipboard extends SWP_Social_Network {
 	}
 
 }
+endif;
