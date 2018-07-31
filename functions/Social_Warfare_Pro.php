@@ -1,5 +1,6 @@
 <?php
 
+
 class Social_Warfare_Pro extends SWP_Addon {
 
 	public function __construct( ) {
@@ -13,94 +14,13 @@ class Social_Warfare_Pro extends SWP_Addon {
 
         add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
 
-		$this->registration_update_notification();
 		$this->initiate_plugin();
 
         add_filter( 'swp_registrations', array( $this, 'add_self' ) );
-
-
-	}
-
-	public function load_classes() {
-            /**
-             * The Social Network Classes
-             *
-             * This family of classes provides the framework and the model needed for creating
-             * a unique object for each social network. It also provides for maximum extensibility
-             * to allow addons even easier access than ever before to create and add more social
-             * networks to the plugin.
-             *
-             */
-            $social_networks = array(
-                'Buffer',
-                'Reddit',
-                'Flipboard',
-                'Email',
-                'Hackernews',
-                'Pocket',
-                'Tumblr',
-                'Whatsapp',
-                'Yummly',
-                'Pro_Pinterest'
-            );
-            $this->load_files( '/functions/social-networks/', $social_networks);
-
-
-			/**
-			 * The Utilities Classes
-			 *
-			 */
-			$utilities = array(
-				'Meta_Box_Loader',
-				'Pro_Pinterest_Shortcode'
-			);
-
-			$this->load_files( '/functions/utilities/', $utilities );
-            // $this->add_pinterest_description_field();
-
-
-    		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
-
 	}
 
 
     /**
-     * Instantiates the addon's functionality.
-     *
-     * @return void
-     *
-     */
-	public function instantiate_addon() {
-        if ( $this->is_registered()) :
-            new SWP_Pro_Options_Page();
-            new SWP_Pro_Pinterest();
-        else:
-            // die("not registerd");
-        endif;
-	}
-
-
-	/**
-	 * Hook into the registration functions in core and add this plugin to the array
-	 *
-	 * @param  $array Array An array of registrations to be processed and handled
-	 * @return $array Array The modified array of registrations to be processed
-	 * @since  2.3.3 | 13 SEP 2017 | Created
-	 * @access public
-	 *
-	 */
-	public function social_warfare_pro_registration_key($array) {
-	    $array['pro'] = array(
-	        'plugin_name' => 'Social Warfare - Pro',
-	        'key' => 'pro',
-	        'product_id' => SWPP_ITEM_ID,
-	        'version' => SWPP_VERSION,
-	    );
-
-	    return $array;
-	}
-
-	/**
 	 * Defer the loading of functions.
 	 * We don't want these functions to run until after core has loaded.
 	 *
@@ -122,29 +42,64 @@ class Social_Warfare_Pro extends SWP_Addon {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
 			new SWP_Pro_Settings_link();
 		}
-
 	}
 
-
-
-	/**
-	 * Registration Update Notification
-	 *
-	 *
-	 * @since 2.3.0
-	 * @access public
-	 * @return void
-	 *
-	 */
-	public  function registration_update_notification() {
-	    $options = get_option( 'social_warfare_settings', array() );
-	    if( !empty($options['premiumCode']) && empty( $options['pro_license_key'] ) ):
-	        echo '<div class="notice-error notice is-dismissable"><p>' . __( '<b>Important:</b> We’ve just made some significant upgrades to your <i>Social Warfare - Pro</i> license. You will need to <a href="https://warfareplugins.com/my-account/">grab your license key</a> and re-register the plugin. Read <a href="https://warfareplugins.com/support/how-to-register-your-license-key/">the full details</a> to find out why this change was necessary.', 'social-warfare' ) . '</p></div>';
-	    endif;
-	}
 
     /**
-     * Loads an array of related files.
+     * Instantiates the addon's functionality.
+     *
+     * @return void
+     *
+     */
+	public function instantiate_addon() {
+        if ( $this->is_registered()) :
+            new SWP_Pro_Options_Page();
+            new SWP_Pro_Pinterest();
+        endif;
+	}
+
+
+	public function load_classes() {
+        /**
+         * The Social Network Classes
+         *
+         * This family of classes provides the framework and the model needed for creating
+         * a unique object for each social network. It also provides for maximum extensibility
+         * to allow addons even easier access than ever before to create and add more social
+         * networks to the plugin.
+         *
+         */
+        $social_networks = array(
+            'Buffer',
+            'Reddit',
+            'Flipboard',
+            'Email',
+            'Hackernews',
+            'Pocket',
+            'Tumblr',
+            'Whatsapp',
+            'Yummly',
+            'Pro_Pinterest'
+        );
+        $this->load_files( '/functions/social-networks/', $social_networks);
+
+		/**
+		 * The Utilities Classes
+		 *
+		 */
+		$utilities = array(
+			'Meta_Box_Loader',
+			'Pro_Pinterest_Shortcode'
+		);
+
+		$this->load_files( '/functions/utilities/', $utilities );
+
+		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
+	}
+
+
+    /**
+     * Loads an array of sibling files.
      *
      * @param  string   $path  The relative path to the files home.
      * @param  array    $files The name of the files (classes), no vendor prefix.
@@ -159,6 +114,4 @@ class Social_Warfare_Pro extends SWP_Addon {
             require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
         }
     }
-
-    
 }
