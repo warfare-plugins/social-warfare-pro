@@ -1,5 +1,6 @@
 <?php
 
+if (class_exists( 'SWP_Addon' ) ) :
 
 class Social_Warfare_Pro extends SWP_Addon {
 
@@ -115,3 +116,5 @@ class Social_Warfare_Pro extends SWP_Addon {
         }
     }
 }
+
+endif;
