@@ -45,7 +45,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
 
-            if ( class_exits( 'SWP_Pro_Settings_Link' ) ) :
+            if ( class_exists( 'SWP_Pro_Settings_Link' ) ) :
     			new SWP_Pro_Settings_link();
             endif;
 		}
