@@ -36,12 +36,18 @@ class Social_Warfare_Pro extends SWP_Addon {
         require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
 
-		new SWP_Pro_Header_Output();
+        if ( class_exists( 'SWP_Header_Output' ) ) :
+    		new SWP_Pro_Header_Output();
+        endif;
+
 		new SWP_Meta_Box_Loader();
 
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
-			new SWP_Pro_Settings_link();
+
+            if ( class_exits( 'SWP_Pro_Settings_Link' ) ) :
+    			new SWP_Pro_Settings_link();
+            endif;
 		}
 	}
 
@@ -54,7 +60,10 @@ class Social_Warfare_Pro extends SWP_Addon {
      */
 	public function instantiate_addon() {
         if ( $this->is_registered()) :
-            new SWP_Pro_Options_Page();
+            if ( class_exists( 'SWP_Pro_Options_Page' ) ) :
+                new SWP_Pro_Options_Page();
+            endif;
+
             new SWP_Pro_Pinterest();
         endif;
 	}
