@@ -36,7 +36,7 @@ class Social_Warfare_Pro extends SWP_Addon {
         require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
 
-        if ( class_exists( 'SWP_Header_Output' ) ) :
+        if ( class_exists( 'SWP_Pro_Header_Output' ) ) :
     		new SWP_Pro_Header_Output();
         endif;
 
