@@ -1,5 +1,7 @@
 <?php
 
+if ( class_exists( 'SWP_Header_Output' ) ) :
+
 /**
  * Register and output open graph tags, Twitter cards, custom color CSS, and the icon fonts.
  *
@@ -818,3 +820,5 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         return $info;
     }
 }
+
+endif;
