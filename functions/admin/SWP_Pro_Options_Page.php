@@ -1,4 +1,6 @@
 <?php
+if ( class_exists( 'SWP_Options_Page' ) ) :
+
 class SWP_Pro_Options_Page extends SWP_Options_Page {
     /**
     * Reference to the global SWP_Options_Page object.
@@ -748,3 +750,5 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         return $this;
     }
 }
+
+endif;
