@@ -13,9 +13,11 @@ class Social_Warfare_Pro extends SWP_Addon {
         $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
-        add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
-
-		$this->initiate_plugin();
+        if ( $this->is_registered() ) {
+            $this->load_networks();
+            add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
+            $this->initiate_plugin();
+        }
 
         add_filter( 'swp_registrations', array( $this, 'add_self' ) );
 	}
@@ -59,17 +61,33 @@ class Social_Warfare_Pro extends SWP_Addon {
      *
      */
 	public function instantiate_addon() {
-        if ( $this->is_registered()) :
-            if ( class_exists( 'SWP_Pro_Options_Page' ) ) :
-                new SWP_Pro_Options_Page();
-            endif;
-
-            new SWP_Pro_Pinterest();
+        if ( class_exists( 'SWP_Pro_Options_Page' ) ) :
+            new SWP_Pro_Options_Page();
         endif;
+
+        new SWP_Pro_Pinterest();
 	}
 
 
 	public function load_classes() {
+
+
+		/**
+		 * The Utilities Classes
+		 *
+		 */
+		$utilities = array(
+			'Meta_Box_Loader',
+			'Pro_Pinterest_Shortcode'
+		);
+
+		$this->load_files( '/functions/utilities/', $utilities );
+
+		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
+	}
+
+
+    public function load_networks() {
         /**
          * The Social Network Classes
          *
@@ -92,20 +110,7 @@ class Social_Warfare_Pro extends SWP_Addon {
             'Pro_Pinterest'
         );
         $this->load_files( '/functions/social-networks/', $social_networks);
-
-		/**
-		 * The Utilities Classes
-		 *
-		 */
-		$utilities = array(
-			'Meta_Box_Loader',
-			'Pro_Pinterest_Shortcode'
-		);
-
-		$this->load_files( '/functions/utilities/', $utilities );
-
-		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
-	}
+    }
 
 
     /**
