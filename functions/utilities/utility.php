@@ -48,19 +48,19 @@ function swp_insert_pinterest_image( $content ) {
 	// Fetch the user's settings
 	global $swp_user_options, $post;
 	$post_id = $post->ID;
-	$swp_advanced_pin_image = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
-	$swp_advanced_pin_image_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
+	$pin_image = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
+	$pin_image_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
 	/**
 	 * A conditional to see if this feature should be turned on or off on a given post
 	 *
 	 */
 	// First check to see if it's turned on on the post
-	if( '' != $swp_advanced_pin_image && 'on' === $swp_advanced_pin_image ):
+	if( '' != $pin_image && 'on' === $pin_image ):
 		$status = true;
 
 	// Second check to see if it's turned off on the post
-	elseif( '' != $swp_advanced_pin_image && 'off' === $swp_advanced_pin_image ):
+	elseif( '' != $pin_image && 'off' === $pin_image ):
 		$status = false;
 
 	// Third check if it's turned on or off in the options
@@ -77,8 +77,8 @@ function swp_insert_pinterest_image( $content ) {
 	 *
 	 */
 	// First check to see if it's set at the post level
-	if( '' != $swp_advanced_pin_image_location && 'default' !== $swp_advanced_pin_image_location ):
-		$location = $swp_advanced_pin_image_location;
+	if( '' != $pin_image_location && 'default' !== $pin_image_location ):
+		$location = $pin_image_location;
 
 	// Second, see if it's set in the options
 	elseif( isset( $swp_user_options['pinterest_image_location'] ) ):
