@@ -153,6 +153,7 @@ class SWP_Pro_Pinterest {
         $alignment = $this::get_alignment_style( $alignment );
 
         if ( class_exists( 'DOMDocument') ) :
+            $content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
             $doc = DOMDocument::loadHTML( $content );
             $imgs = $doc->getElementsByTagName("img");
 
