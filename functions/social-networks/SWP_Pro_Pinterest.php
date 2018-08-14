@@ -117,7 +117,11 @@ class SWP_Pro_Pinterest {
         $height = $size[1];
 
         if ( class_exists( 'DOMDocument') ) :
+            libxml_use_internal_errors( true );
             $doc = DOMDocument::loadHTML( $html );
+            libxml_use_internal_errors( false );
+            libxml_clear_errors();
+
             $img = $doc->getElementsByTagName("img")[0];
 
             $replacement = $img->cloneNode();
@@ -167,8 +171,10 @@ class SWP_Pro_Pinterest {
 
                 if ( isset( $swp_user_options['pinit_image_description'] ) && 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
-                } else {
+                } else if ( !empty( $description_fallback ) ) {
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
+                } else {
+                    continue;
                 }
 
                 $img->parentNode->replaceChild($replacement, $img);
