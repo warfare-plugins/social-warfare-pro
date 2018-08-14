@@ -117,7 +117,11 @@ class SWP_Pro_Pinterest {
         $height = $size[1];
 
         if ( class_exists( 'DOMDocument') ) :
+            libxml_use_internal_errors( true );
             $doc = DOMDocument::loadHTML( $html );
+            libxml_use_internal_errors( false );
+            libxml_clear_errors();
+
             $img = $doc->getElementsByTagName("img")[0];
 
             $replacement = $img->cloneNode();
