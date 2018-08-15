@@ -195,7 +195,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $recovery_prefix = new SWP_Option_Select( __( 'Previous Domain Prefix', 'social-warfare' ), 'recovery_prefix' );
             $recovery_prefix->set_choices( [
-                'Unchanged' => __( 'Unchanged', 'social-warfare' ),
+                'unchanged' => __( 'Unchanged', 'social-warfare' ),
                 'www'       => 'www',
                 'nonwww'    => 'non-www',
             ])
