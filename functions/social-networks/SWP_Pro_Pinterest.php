@@ -118,7 +118,7 @@ class SWP_Pro_Pinterest {
 
         if ( class_exists( 'DOMDocument') ) :
             libxml_use_internal_errors( true );
-            $doc = DOMDocument::loadHTML( $html );
+            $doc = @DOMDocument::loadHTML( $html );
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
