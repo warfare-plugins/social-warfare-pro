@@ -158,7 +158,12 @@ class SWP_Pro_Pinterest {
 
         if ( class_exists( 'DOMDocument') ) :
             $content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
-            $doc = DOMDocument::loadHTML( $content );
+            
+            libxml_use_internal_errors( true );
+            $doc = @DOMDocument::loadHTML( $content );
+            libxml_use_internal_errors( false );
+            libxml_clear_errors();
+
             $imgs = $doc->getElementsByTagName("img");
 
             foreach( $imgs as $img ) {
