@@ -203,7 +203,7 @@ class SWP_Meta_Box_Loader {
     	$meta_boxes[0] = array(
     		'id'       => 'social_warfare',
     		'title'    => __( 'Social Warfare Custom Options','social-warfare' ),
-    		'pages'    => swp_get_post_types(),
+    		'pages'    => SWP_Utility::get_post_types(),
     		'context'  => 'normal',
     		'priority' => apply_filters( 'swp_metabox_priority', 'high' ),
     		'fields'   => array()

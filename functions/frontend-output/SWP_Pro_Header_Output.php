@@ -222,7 +222,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	elseif ( !empty( $yoast_seo_title ) ) :
     		$info['meta_tag_values']['og_title'] = $yoast_seo_title;
     	else :
-    		$info['meta_tag_values']['og_title'] = trim( convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
+    		$info['meta_tag_values']['og_title'] = trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
     	endif;
 
     	/**
@@ -236,7 +236,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	elseif ( !empty( $yoast_seo_description ) ) :
     		$info['meta_tag_values']['og_description'] = $yoast_seo_description;
     	else :
-    		$info['meta_tag_values']['og_description'] = html_entity_decode( convert_smart_quotes( htmlspecialchars_decode( swp_get_excerpt_by_id( $info['postID'] ) ) ) );
+    		$info['meta_tag_values']['og_description'] = html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $info['postID'] ) ) ) );
     	endif;
 
     	/**
@@ -588,7 +588,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     private function establish_custom_colors() {
 
         //* Static custom color.
-        if ( swp_get_option('default_colors') == 'custom_color' || swp_get_option('single_colors') == 'custom_color' || swp_get_option('hover_colors') == 'custom_color' ) :
+        if ( SWP_Utility::get_option('default_colors') == 'custom_color' || SWP_Utility::get_option('single_colors') == 'custom_color' || SWP_Utility::get_option('hover_colors') == 'custom_color' ) :
 
             $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
             $this->custom_color = $custom_color;
@@ -598,7 +598,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Float custom color.
-        if ( swp_get_option('float_default_colors') == 'float_custom_color' ||  swp_get_option('float_single_colors') == 'float_custom_color' ||  swp_get_option('float_hover_colors') == 'float_custom_color' ) :
+        if ( SWP_Utility::get_option('float_default_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color' ) :
 
             if ( true === $this->options['float_style_source'] ) :
                 //* Inherit the static button style.
@@ -612,7 +612,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Static custom outlines.
-        if ( swp_get_option('default_colors') == 'custom_color_outlines' ||  swp_get_option('single_colors') == 'custom_color_outlines' ||  swp_get_option('hover_colors') == 'custom_color_outlines' ) :
+        if ( SWP_Utility::get_option('default_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('single_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('hover_colors') == 'custom_color_outlines' ) :
 
             $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
             $this->custom_color_outlines = $custom_color_outlines;
@@ -621,7 +621,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $this->custom_color_outlines = '';
         endif;
 
-        if (  swp_get_option('float_default_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_single_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
+        if (  SWP_Utility::get_option('float_default_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
             if ( true === $this->options['float_style_source'] ) :
 
                 //* Inherit the static button style.
@@ -671,7 +671,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Default: Custom Color
-        if ( swp_get_option($float . "default_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color" ) :
             $css .= "
 
             $class.swp_default_" . $float . "custom_color a
@@ -685,7 +685,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Default: Custom Outlines
-        if ( swp_get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
+        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
                 $css .= "
 
             $class.swp_default_" . $float . "custom_color_outlines a
@@ -705,7 +705,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Individual: Custom Color
-        if ( swp_get_option($float . "single_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color" ) :
             $css .= "
 
             html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
@@ -719,7 +719,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         // Individual: Custom Outlines
-        if ( swp_get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
+        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
@@ -739,7 +739,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Other: Custom Color
-        if ( swp_get_option($float . "hover_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color" ) :
             $css .= "
 
             body $class$panel.swp_other_" . $float . "custom_color:hover a
@@ -753,7 +753,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Other: Custom Outlines
-        if (swp_get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
+        if (SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
@@ -784,7 +784,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
     public function output_custom_color( $info ) {
         $static = $this->get_css();
-        $floaters_on = swp_get_option( 'floating_panel' );
+        $floaters_on = SWP_Utility::get_option( 'floating_panel' );
         $floating = $this->get_css( $floaters_on );
 
         $css = $static . $floating;

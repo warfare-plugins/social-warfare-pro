@@ -65,7 +65,7 @@ class SWP_Email extends SWP_Social_Network {
 		// Collect the Description
 		$body = get_post_meta( $post_data['ID'] , 'nc_og_description' , true );
 		if ( false == $body ) :
-			$body = swp_get_excerpt_by_id( $post_data['ID'] );
+			$body = SWP_Utility::get_the_excerpt( $post_data['ID'] );
 		endif;
 
 		$permalink = $this->get_shareable_permalink( $post_data );
@@ -102,7 +102,7 @@ class SWP_Email extends SWP_Social_Network {
 		$icon .= '</span>';
 
 		if ( true === $this->are_shares_shown( $share_counts , $options ) ) :
-			$icon .= '<span class="swp_count">' . swp_kilomega( $share_counts[$this->key] ) . '</span>';
+			$icon .= '<span class="swp_count">' . SWP_Utility::kilomega( $share_counts[$this->key] ) . '</span>';
 		else :
 			$icon = '<span class="swp_count swp_hide">' . $icon . '</span>';
 		endif;
