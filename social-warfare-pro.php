@@ -104,8 +104,7 @@ function initialize_social_warfare_pro() {
     	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
         'item_id'   => SWPP_SL_PRODUCT_ID,
     	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
-    	'url'           => home_url(),
-        'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
+        'beta'      => false // Set to true if you wish customers to receive update notifications of beta releases
     ) );
 }
 
