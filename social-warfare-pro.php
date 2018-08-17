@@ -87,14 +87,16 @@ function initialize_social_warfare_pro() {
          */
 	endif;
 
-    if ( !class_exists( 'SWP_Puc_v4_Factory') ) :
+    if ( !class_exists( 'Puc_v4_Factory') ) :
         require SWP_PLUGIN_DIR . '/functions/plugin-update-checker/plugin-update-checker.php';
 
-        $update_checker = SWP_Puc_v4_Factory::buildUpdateChecker(
+        $update_checker = Puc_v4_Factory::buildUpdateChecker(
         	'https://github.com/warfare-plugins/social-warfare-pro/',
         	__FILE__,
         	'social-warfare-pro'
         );
+
+        $update_checker->getVcsApi()->enableReleaseAssets();
 
     endif;
 
