@@ -87,6 +87,19 @@ function initialize_social_warfare_pro() {
          */
 	endif;
 
+    if ( !class_exists( 'SWP_Puc_v4_Factory') ) :
+        require SWP_PLUGIN_DIR . '/funtions/plugin-update-checker/plugin-update-checker.php';
+
+        $update_checker = SWP_Puc_v4_Factory::buildUpdateChecker(
+        	'https://github.com/warfare-plugins/social-warfare-pro/',
+        	__FILE__,
+        	'social-warfare-pro'
+        );
+
+        $update_checker->setBranch('master');
+    endif;
+
+
 
     if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) :
 
