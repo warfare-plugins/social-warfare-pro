@@ -98,7 +98,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             $pin_browser_extension = new SWP_Option_Toggle( __( 'Pinterest Image for Browser Extensions', 'social-warfare' ), 'pin_browser_extension' );
             $pin_browser_extension->set_default( false )
                 ->set_size( 'sw-col-300')
-                ->set_premium( 'pro' );
+                ->set_premium( 'pro' )
+                ->set_priority( 10 );
 
             //* advanced_pinterest_image_location => pinterest_image_location
             $pinterest_image_location = new SWP_Option_Select( __( 'Pinterest Image Location', 'social-warfare' ), 'pinterest_image_location' );
@@ -110,7 +111,8 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_default( 'hidden ')
                 ->set_size( 'sw-col-300' )
                 ->set_dependency( 'pin_browser_extension', true )
-                ->set_premium( 'pro' );
+                ->set_premium( 'pro' )
+                ->set_priority( 20 );
 
             //* advanced_pinterest_fallback => pinterest_fallback
             $pinterest_fallback = new SWP_Option_Select( __( 'Pinterest Image Fallback', 'social-warfare' ), 'pinterest_fallback' );
@@ -120,9 +122,27 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             ])
                 ->set_size( 'sw-col-300' )
                 ->set_default( 'all' )
-                ->set_premium( 'pro' );
+                ->set_premium( 'pro' )
+                ->set_priority( 30 );
 
-        $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback] );
+            $pinterest_data_attribute = new SWP_Option_Toggle( __( 'Add a <code>data-pin-description</code> to images that do not have one', 'social-warfare' ), 'pinterest_data_attribute' );
+            $pinterest_data_attribute->set_default( false )
+                ->set_size( 'sw-col-300' )
+                ->set_premium( 'pro' )
+                ->set_priority( 40 );
+
+            $pinit_image_description = new SWP_Option_Select( __( 'Description Source', 'social-warfare' ), 'pinit_image_description' );
+			$pinit_image_description->set_priority( 70 )
+				->set_choices( [
+					'alt_text' => __( 'Image ALT Text' , 'social-warfare' ) ,
+					'custom'   => __( 'Custom Pin Description' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-300' )
+				->set_default( 'image' )
+				->set_premium( 'pro' )
+                ->set_priority( 50 );
+
+        $advanced_pinterest->add_options( [$pin_browser_extension, $pinterest_image_location, $pinterest_fallback, $pinterest_data_attribute, $pinit_image_description] );
 
         $share_recovery = new SWP_Options_Page_Section( __( 'Share Recovery', 'social-warfare' ), 'share_recovery' );
         $share_recovery->set_description( __( 'If at any point you have changed permalink structures or have gone from http to https (SSL) then you will have undoubtedly lost all of your share counts. This tool allows you to recover them. See <a target="_blank" href="https://warfareplugins.com/support/recover-social-share-counts-after-changing-permalink-settings/">this guide</a> for more detailed instructions on how to use this feature.', 'social-warfare') )
@@ -337,18 +357,23 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
-			$pinit_image_description = new SWP_Option_Select( __( 'Description Source', 'social-warfare' ), 'pinit_image_description' );
-			$pinit_image_description->set_priority( 70 )
-				->set_choices( [
-					'alt_text' => __( 'Image ALT Text' , 'social-warfare' ) ,
-					'custom'   => __( 'Custom Pin Description' , 'social-warfare' )
-				])
-				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-				->set_default( 'image' )
-				->set_dependency( 'pinit_toggle', [true] )
-				->set_premium( 'pro' );
 
-        $image_hover->add_options( [$pinit_toggle,$pinit_location_horizontal,$pinit_location_vertical,$pinit_image_source,$pinit_image_description,$pinit_min_width,$pinit_min_height] );
+
+            $pinit_hide_on_anchors = new SWP_Option_Toggle( __( 'Hide on Anchors (links)', 'social-warfare'), 'pinit_hide_on_anchors' );
+            $pinit_hide_on_anchors->set_priority( 80 )
+                ->set_default( false )
+                ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+                ->set_dependency( 'pinit_toggle', [true] )
+                ->set_premium( 'pro' );
+
+        $image_hover->add_options( [$pinit_toggle,
+            $pinit_location_horizontal,
+            $pinit_location_vertical,
+            $pinit_image_source,
+            $pinit_min_width,
+            $pinit_min_height,
+            $pinit_hide_on_anchors
+        ] );
 
         $yummly_display = new SWP_Options_Page_Section( __( 'Yummly Display Control', 'social-warfare' ), 'yummly_display' );
         $yummly_display->set_description( __( 'If you would like the Yummly button to only display on posts of a specific category or tag, enter the category or tag name below (e.g "Recipe"). Leave blank to display the button on all posts.', 'social-warfare') )
@@ -420,10 +445,11 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //    ->set_premium( 'pro' );
 
             $tweet_count_source = new SWP_Option_Select( __( 'Tweet Count Source', 'social-warfare' ), 'tweet_count_source' );
-            $tweet_count_source->set_choices( [
-                'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
-    			'newsharecounts'	=> __( 'NewShareCounts.com' , 'social-warfare' )
-                ] )->set_default( 'opensharecount' )
+            $tweet_count_source->set_choices( array(
+	                'opensharecount'	=> __( 'OpenShareCount.com' , 'social-warfare' ),
+					'twitcount'         => __( 'TwitCount.com' , 'social-warfare')
+				) )
+				->set_default( 'opensharecount' )
                 ->set_priority( 30 )
 				->set_size( 'sw-col-300' )
                 ->set_premium( 'pro' );
@@ -569,7 +595,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_priority( 40 )
                 ->set_default( 'bottom' )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
-                ->set_dependency( 'float_location', ['left', 'right'] )
+                ->set_dependency( 'floating_panel', [true] )
                 ->set_premium( 'pro' );
 
             //* floatStyle => float_button_shape
