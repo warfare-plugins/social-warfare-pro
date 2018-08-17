@@ -87,8 +87,7 @@ function initialize_social_warfare_pro() {
          */
 	endif;
 
-    if ( !class_exists( 'Puc_v4_Factory') ) :
-        require SWP_PLUGIN_DIR . '/functions/plugin-update-checker/plugin-update-checker.php';
+    if ( class_exists( 'Puc_v4_Factory') ) :
 
         $update_checker = Puc_v4_Factory::buildUpdateChecker(
         	'https://github.com/warfare-plugins/social-warfare-pro/',
@@ -100,27 +99,6 @@ function initialize_social_warfare_pro() {
 
     endif;
 
-
-
-    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) :
-
-		if( file_exists( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' ) ) :
-	        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
-		else:
-			return;
-		endif;
-
-	endif;
-
-    //* Everybody gets Pro updates, whether or not their license is active or valid.
-    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// Current version number.
-    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
-        'item_id'   => SWPP_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
-    	'url'       => 'beta.warfareplugins.com/',
-        'beta'      => false // Set to true if you wish customers to receive update notifications of beta releases
-    ) );
 }
 
 
