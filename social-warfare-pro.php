@@ -96,7 +96,6 @@ function initialize_social_warfare_pro() {
         	'social-warfare-pro'
         );
 
-        $update_checker->setBranch('master');
     endif;
 
 
