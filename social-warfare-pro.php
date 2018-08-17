@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.2.0
+ * Version:     3.2.1
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
@@ -16,7 +16,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.2.0' );
+define( 'SWPP_VERSION', '3.2.1' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -87,26 +87,18 @@ function initialize_social_warfare_pro() {
          */
 	endif;
 
+    if ( class_exists( 'Puc_v4_Factory') ) :
 
-    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) :
+        $update_checker = Puc_v4_Factory::buildUpdateChecker(
+        	'https://github.com/warfare-plugins/social-warfare-pro/',
+        	__FILE__,
+        	'social-warfare-pro'
+        );
 
-		if( file_exists( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' ) ) :
-	        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
-		else:
-			return;
-		endif;
+        $update_checker->getVcsApi()->enableReleaseAssets();
 
-	endif;
+    endif;
 
-    //* Everybody gets Pro updates, whether or not their license is active or valid.
-    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// Current version number.
-    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
-        'item_id'   => SWPP_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
-    	'url'       => 'beta.warfareplugins.com/',
-        'beta'      => false // Set to true if you wish customers to receive update notifications of beta releases
-    ) );
 }
 
 
