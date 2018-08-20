@@ -42,7 +42,7 @@ function _swp_get_twitter_handle( $fallback = false ) {
 /**
  * Build the options fields.
  *
- * @since  3.3.0 | 20 AUG 2018 | Added call to SWP::Utility, else legacy code. 
+ * @since  3.3.0 | 20 AUG 2018 | Added call to SWP::Utility, else legacy code.
  *
  * @param  array $meta_boxes The existing meta boxes.
  * @return array $meta_boxes The modified meta boxes.
@@ -204,13 +204,6 @@ function swp_register_meta_boxes( $meta_boxes ) {
 				'class' => 'twitterIDWrapper',
 				'type'  => 'hidden',
 				'std'   => $twitter_handle,
-			),
-			array(
-				'name'  => (is_swp_addon_registered('pro') ? 'true' : 'false'),
-				'id'    => (is_swp_addon_registered('pro') ? 'true' : 'false'),
-				'class' => 'registrationWrapper',
-				'type'  => 'hidden',
-				'std'   => (is_swp_addon_registered('pro') ? 'true' : 'false'),
 			),
 		),
 	);
