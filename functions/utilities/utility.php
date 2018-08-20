@@ -49,6 +49,7 @@ function swp_insert_pinterest_image( $content ) {
 	$pin_image = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
 	$pin_image_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
+    // Bail early if not using a pinterest image. 
     if ( 'off' == $pin_image && '' != $pin_image ) :
         return $content;
     endif;
