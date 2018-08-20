@@ -1,6 +1,8 @@
 <?php
 
-if (class_exists( 'SWP_Addon' ) ) :
+if ( !class_exists( 'Social_Warfare_Addon' ) ) :
+    require_once SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon';
+endif;
 
 class Social_Warfare_Pro extends Social_Warfare_Addon {
 
@@ -128,5 +130,3 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
         }
     }
 }
-
-endif;
