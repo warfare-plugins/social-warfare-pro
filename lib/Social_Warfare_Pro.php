@@ -2,7 +2,7 @@
 
 if (class_exists( 'SWP_Addon' ) ) :
 
-class Social_Warfare_Pro extends SWP_Addon {
+class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 	public function __construct( ) {
         parent::__construct();

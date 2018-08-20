@@ -32,6 +32,11 @@ function initialize_social_warfare_pro() {
         return;
     endif;
 
+    if ( !class_exists( 'Social_Warfare_Addon' ) ) :
+        require_once( SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php' );
+    endif;
+
+
 	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
