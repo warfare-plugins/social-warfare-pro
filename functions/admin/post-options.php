@@ -42,6 +42,8 @@ function _swp_get_twitter_handle( $fallback = false ) {
 /**
  * Build the options fields.
  *
+ * @since  3.3.0 | 20 AUG 2018 | Added call to SWP::Utility, else legacy code. 
+ *
  * @param  array $meta_boxes The existing meta boxes.
  * @return array $meta_boxes The modified meta boxes.
  */
@@ -55,11 +57,21 @@ function swp_register_meta_boxes( $meta_boxes ) {
 
 	$twitter_handle = _swp_get_twitter_handle( $twitter_id );
 
+    if ( class_exists( SWP::Utility ) ) :
+        $pages = SWP_Utility::get_post_types();
+    else:
+        //* Legacy code.
+        $types = get_post_types( array( 'public' => true, '_builtin' => false ), 'names' );
+        $types = array_merge( $types, array( 'post', 'page' ) );
+
+    	$pages = apply_filters( 'swp_post_types', $types );
+    endif;
+
 	// Setup our meta box using an array.
 	$meta_boxes[0] = array(
 		'id'       => 'socialWarfare',
 		'title'    => __( 'Social Warfare Custom Options','social-warfare' ),
-		'pages'    => SWP_Utility::get_post_types(),
+		'pages'    => $pages,
 		'context'  => 'normal',
 		'priority' => apply_filters( 'swp_metabox_priority', 'high' ),
 		'fields'   => array(
