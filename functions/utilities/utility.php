@@ -79,52 +79,51 @@ function swp_insert_pinterest_image( $content ) {
 	// Collect the user's custom defined Pinterest specific Image
 	$pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
-	// Exit if the user doesn't have a custom defined image
-	if( false !== $pinterest_image_url && !empty($pinterest_image_url) ):
+    if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) :
+        return $content;
+    endif;
 
-		// Fetch the user's custom Pinterest description
-		$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
+	// Fetch the user's custom Pinterest description
+	$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
-		// Collect the user's Pinterest username
-		if ( !empty( $swp_user_options['pinterest_id'] ) ) :
-			$pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterest_id'] );
-		else :
-			$pinterest_username = '';
+	// Collect the user's Pinterest username
+	if ( !empty( $swp_user_options['pinterest_id'] ) ) :
+		$pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterest_id'] );
+	else :
+		$pinterest_username = '';
+	endif;
+
+	// If there is no custom description, use the post Title
+	if( false === $pinterest_description || empty($pinterest_image_url) ):
+		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
+	endif;
+
+	// Fetch the Permalink
+	$permalink = get_the_permalink();
+
+	// Check if this image is hidden and add display:none to it.
+	if( 'hidden' === $location ) :
+
+		// Compile the image
+		$image_html = '<img class="no_pin swp_hidden_pin_image" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-description="'.$pinterest_description.'" />';
+
+		// Add the hidden image to the content string
+		$content .= $image_html;
+
+	// Check if the this image is not hidden and do not add display:none to it.
+	elseif( 'hidden' !== $location ) :
+
+		// Compile the image
+		$image_html = '<div class="swp-pinterest-image-wrapper"><img class="swp-featured-pinterest-image" src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" /></div>';
+
+		// Add the visible image to the top of the content
+		if('top' === $location):
+			$content = $image_html . $content;
 		endif;
 
-		// If there is no custom description, use the post Title
-		if( false === $pinterest_description || empty($pinterest_image_url) ):
-			$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
-		endif;
-
-		// Fetch the Permalink
-		$permalink = get_the_permalink();
-
-		// Check if this image is hidden and add display:none to it.
-		if( 'hidden' === $location ) :
-
-			// Compile the image
-			$image_html = '<img class="no_pin swp_hidden_pin_image" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-description="'.$pinterest_description.'" />';
-
-			// Add the hidden image to the content string
+		// Add the visible image to the bottom of the content
+		if('bottom' === $location):
 			$content .= $image_html;
-
-		// Check if the this image is not hidden and do not add display:none to it.
-		elseif( 'hidden' !== $location ) :
-
-			// Compile the image
-			$image_html = '<div class="swp-pinterest-image-wrapper"><img class="swp-featured-pinterest-image" src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" /></div>';
-
-			// Add the visible image to the top of the content
-			if('top' === $location):
-				$content = $image_html . $content;
-			endif;
-
-			// Add the visible image to the bottom of the content
-			if('bottom' === $location):
-				$content .= $image_html;
-			endif;
-
 		endif;
 
 	endif;
