@@ -47,7 +47,7 @@ function swp_insert_pinterest_image( $content ) {
 	global $post;
 	$post_id = $post->ID;
 	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
-	$pin_browser_extension_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
+	$pin_browser_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
     // Bail early if not using a pinterest image.
     if ( 'off' == $pin_browser_extension ) :
@@ -58,22 +58,22 @@ function swp_insert_pinterest_image( $content ) {
          return $content;
     endif;
 
-	/**
-	 * A conditional to see where the image should be displayed
-	 *
-	 */
-	// First check to see if it's set at the post level
-	if( '' != $pin_browser_extension_location && 'default' !== $pin_browser_extension_location ):
-		$location = $pin_browser_extension_location;
+    if ( class_exists( 'SWP_Utility' ) ) :
+        $location = $pin_browser_location == 'defualt' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
+    else :
+    //* Legacy code.
 
-	// Second, see if it's set in the options
-	elseif( isset( $swp_user_options['pinterest_image_location'] ) ):
-		$location = $swp_user_options['pinterest_image_location'];
+        global $swp_user_options;
 
-	// Third, if nothing is set, set it to hidden.
-	else:
-		$location = 'hidden';
-	endif;
+        if( 'default' !== $pin_browser_location ):
+            $location = $pin_browser_location;
+        elseif( isset( $swp_user_options['pinterest_image_location'] ) ):
+            $location = $swp_user_options['pinterest_image_location'];
+        else:
+            $location = 'hidden';
+        endif;
+
+    endif;
 
 
 	// Collect the user's custom defined Pinterest specific Image
