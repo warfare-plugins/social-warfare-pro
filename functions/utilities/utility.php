@@ -44,7 +44,8 @@ add_action('template_redirect', 'swp_pre_insert_pinterest_image');
  * @return string $content The filtered content
  */
 function swp_insert_pinterest_image( $content ) {
-	global $post;
+    //* Call $swp_user_options for legacy code.
+	global $post, $swp_user_options;
 	$post_id = $post->ID;
 	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
 	$pin_browser_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
@@ -61,9 +62,7 @@ function swp_insert_pinterest_image( $content ) {
     if ( class_exists( 'SWP_Utility' ) ) :
         $location = $pin_browser_location == 'defualt' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
     else :
-    //* Legacy code.
-
-        global $swp_user_options;
+        //* Legacy code.
 
         if( 'default' !== $pin_browser_location ):
             $location = $pin_browser_location;
@@ -75,46 +74,62 @@ function swp_insert_pinterest_image( $content ) {
 
     endif;
 
-
-	// Collect the user's custom defined Pinterest specific Image
 	$pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
     if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) :
         return $content;
     endif;
 
-	// Fetch the user's custom Pinterest description
-	$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
+    //* Set up the Pinterest username, if it exists.
+    if ( class_exists( 'SWP_Utility' ) ) :
 
-	// Collect the user's Pinterest username
-	if ( !empty( $swp_user_options['pinterest_id'] ) ) :
-		$pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterest_id'] );
-	else :
-		$pinterest_username = '';
-	endif;
+        $id = SWP_Utility::get_option( 'pinterest_id' );
+        $pinterest_username = $id ? ' via @' . str_replace( '@' , '' , $id ) : '';
+
+    else:
+        //* Legacy code.
+
+        if ( !empty( $swp_user_options['pinterest_id'] ) ) :
+            $pinterest_username = ' via @' . str_replace( '@' , '' , $swp_user_options['pinterest_id'] );
+        else :
+            $pinterest_username = '';
+        endif;
+
+    endif;
+
+
+    $pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
 	// If there is no custom description, use the post Title
-	if( false === $pinterest_description || empty($pinterest_image_url) ):
+	if( false === $pinterest_description || empty( $pinterest_image_url ) ):
 		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
 	endif;
 
 	// Fetch the Permalink
 	$permalink = get_the_permalink();
 
-	// Check if this image is hidden and add display:none to it.
+	// If the image is hidden, give it the swp_hidden_pin_image class.
 	if( 'hidden' === $location ) :
 
 		// Compile the image
-		$image_html = '<img class="no_pin swp_hidden_pin_image" src="'.$pinterest_image_url.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-description="'.$pinterest_description.'" />';
+		$image_html = '<img class="no_pin swp_hidden_pin_image" src="' . $pinterest_image_url .
+                      '" data-pin-url="' . $permalink .
+                      '" data-pin-media="' . $pinterest_image_url .
+                      '" alt="' . $pinterest_description .
+                      '" data-pin-description="' . $pinterest_description .
+                      '" />';
 
-		// Add the hidden image to the content string
 		$content .= $image_html;
 
-	// Check if the this image is not hidden and do not add display:none to it.
-	elseif( 'hidden' !== $location ) :
-
-		// Compile the image
-		$image_html = '<div class="swp-pinterest-image-wrapper"><img class="swp-featured-pinterest-image" src="'.$pinterest_image_url.'" alt="'.$pinterest_description.'" data-pin-url="'.$permalink.'" data-pin-media="'.$pinterest_image_url.'" data-pin-description="'.$pinterest_description.'" /></div>';
+	else :
+        $image_html = '<div class="swp-pinterest-image-wrapper">
+                          <img class="swp-featured-pinterest-image" src="'.$pinterest_image_url.
+                        '" alt="'.$pinterest_description.
+                        '" data-pin-url="'.$permalink.
+                        '" data-pin-media="'.$pinterest_image_url.
+                        '" data-pin-description="'.$pinterest_description.
+                        '" />
+                      </div>';
 
 		// Add the visible image to the top of the content
 		if('top' === $location):
@@ -127,7 +142,6 @@ function swp_insert_pinterest_image( $content ) {
 		endif;
 
 	endif;
-
 
 	return $content;
 
