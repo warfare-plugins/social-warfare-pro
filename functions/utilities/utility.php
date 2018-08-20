@@ -71,7 +71,7 @@ function swp_insert_pinterest_image( $content ) {
     // This post is using some kind of Pinterest Image, so prepare the data to compile an image.
 
     if ( class_exists( 'SWP_Utility' ) ) :
-        $location = $pin_browser_location == 'defualt' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
+        $location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
     else :
         //* Legacy code.
 
@@ -137,11 +137,11 @@ function swp_insert_pinterest_image( $content ) {
                         '" />
                       </div>';
 
-		if('top' === $location):
+		if ('top' === $location):
 			$content = $image_html . $content;
 		endif;
 
-		if('bottom' === $location):
+		if ('bottom' === $location):
 			$content .= $image_html;
 		endif;
 
