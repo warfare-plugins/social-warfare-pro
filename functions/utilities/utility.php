@@ -38,10 +38,13 @@ add_action('template_redirect', 'swp_pre_insert_pinterest_image');
 /**
  * A function to insert the Pinterest image for browser extensions
  *
- * @since  2.2.4 | Created | 09 MAR 2017
+ * @since  2.2.4 | 09 MAR 2017 | Created
+ * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
  * @access public
+ * 
  * @param  string $content The post content to filter
  * @return string $content The filtered content
+ *
  */
 function swp_insert_pinterest_image( $content ) {
     //* Call $swp_user_options for legacy code.
@@ -119,7 +122,7 @@ function swp_insert_pinterest_image( $content ) {
                       '" />';
 
 		$content .= $image_html;
-        
+
     // Put the image in a container otherwise
 	else :
 
