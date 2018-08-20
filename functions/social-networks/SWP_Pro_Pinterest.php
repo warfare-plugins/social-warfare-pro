@@ -27,7 +27,6 @@ class SWP_Pro_Pinterest {
         if ( is_singular() && !is_feet() && !function_exists( 'is_amp_endpoint' ) ) :
             add_filter( 'the_content', array( $this, 'insert_pinterest_image' ), 10 );
         endif;
-
     }
 
     /**

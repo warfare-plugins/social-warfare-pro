@@ -14,13 +14,11 @@
  */
 class SWP_Meta_Box_Loader {
 
-
 	public function __construct() {
 		if ( true === is_admin() ) {
 			add_filter( 'swpmb_meta_boxes', array( $this, 'load_meta_boxes') );
 		}
 	}
-
 
 	/**
 	 * Load Meta Boxes
