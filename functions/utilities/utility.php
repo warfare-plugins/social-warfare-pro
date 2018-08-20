@@ -41,7 +41,7 @@ add_action('template_redirect', 'swp_pre_insert_pinterest_image');
  * @since  2.2.4 | 09 MAR 2017 | Created
  * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
  * @access public
- * 
+ *
  * @param  string $content The post content to filter
  * @return string $content The filtered content
  *
@@ -126,7 +126,9 @@ function swp_insert_pinterest_image( $content ) {
     // Put the image in a container otherwise
 	else :
 
-        $image_html = '<div class="swp-pinterest-image-wrapper">
+        $extra_class = 'swp-pinterest-image-' . $location;
+
+        $image_html = '<div class="swp-pinterest-image-wrapper ' . $extra_class . '">
                           <img class="swp-featured-pinterest-image" src="' . $pinterest_image_url .
                         '" alt="' . $pinterest_description .
                         '" data-pin-url="' . get_the_permalink() .
