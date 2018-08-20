@@ -33,10 +33,10 @@ class Social_Warfare_Pro extends SWP_Addon {
 	 */
 	public function initiate_plugin() {
 
-        require_once SWPP_PLUGIN_DIR . '/functions/meta-box/meta-box.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/utilities/utility.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/admin/post-options.php';
-        require_once SWPP_PLUGIN_DIR . '/functions/frontend-output/SWP_Pro_Header_Output.php';
+        require_once SWPP_PLUGIN_DIR . '/lib/meta-box/meta-box.php';
+        require_once SWPP_PLUGIN_DIR . '/lib/utilities/utility.php';
+        require_once SWPP_PLUGIN_DIR . '/lib/admin/post-options.php';
+        require_once SWPP_PLUGIN_DIR . '/lib/frontend-output/SWP_Pro_Header_Output.php';
 
         if ( class_exists( 'SWP_Pro_Header_Output' ) ) :
     		new SWP_Pro_Header_Output();
@@ -45,7 +45,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 		new SWP_Meta_Box_Loader();
 
 		if ( is_admin() ) {
-	        require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Settings_Link.php';
+	        require_once SWPP_PLUGIN_DIR . '/lib/admin/SWP_Pro_Settings_Link.php';
 
             if ( class_exists( 'SWP_Pro_Settings_Link' ) ) :
     			new SWP_Pro_Settings_link();
@@ -81,9 +81,9 @@ class Social_Warfare_Pro extends SWP_Addon {
 			'Pro_Pinterest_Shortcode'
 		);
 
-		$this->load_files( '/functions/utilities/', $utilities );
+		$this->load_files( '/lib/utilities/', $utilities );
 
-		require_once SWPP_PLUGIN_DIR . '/functions/admin/SWP_Pro_Options_Page.php';
+		require_once SWPP_PLUGIN_DIR . '/lib/admin/SWP_Pro_Options_Page.php';
 	}
 
 
@@ -109,7 +109,7 @@ class Social_Warfare_Pro extends SWP_Addon {
             'Yummly',
             'Pro_Pinterest'
         );
-        $this->load_files( '/functions/social-networks/', $social_networks);
+        $this->load_files( '/lib/social-networks/', $social_networks);
     }
 
 
