@@ -34,7 +34,6 @@ class Social_Warfare_Pro extends SWP_Addon {
 	public function initiate_plugin() {
 
         require_once SWPP_PLUGIN_DIR . '/lib/meta-box/meta-box.php';
-        require_once SWPP_PLUGIN_DIR . '/lib/utilities/utility.php';
         require_once SWPP_PLUGIN_DIR . '/lib/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/lib/frontend-output/SWP_Pro_Header_Output.php';
 
@@ -77,8 +76,7 @@ class Social_Warfare_Pro extends SWP_Addon {
 		 *
 		 */
 		$utilities = array(
-			'Meta_Box_Loader',
-			'Pro_Pinterest_Shortcode'
+			'Meta_Box_Loader'
 		);
 
 		$this->load_files( '/lib/utilities/', $utilities );
