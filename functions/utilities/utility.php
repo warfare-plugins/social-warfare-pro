@@ -59,6 +59,14 @@ function swp_insert_pinterest_image( $content ) {
          return $content;
     endif;
 
+    $pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
+
+    if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) :
+        return $content;
+    endif;
+
+    // This post is using some kind of Pinterest Image, so prepare the data to compile an image.
+
     if ( class_exists( 'SWP_Utility' ) ) :
         $location = $pin_browser_location == 'defualt' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
     else :
@@ -72,12 +80,6 @@ function swp_insert_pinterest_image( $content ) {
             $location = 'hidden';
         endif;
 
-    endif;
-
-	$pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
-
-    if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) :
-        return $content;
     endif;
 
     //* Set up the Pinterest username, if it exists.
@@ -105,15 +107,13 @@ function swp_insert_pinterest_image( $content ) {
 		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
 	endif;
 
-	// Fetch the Permalink
-	$permalink = get_the_permalink();
 
 	// If the image is hidden, give it the swp_hidden_pin_image class.
 	if( 'hidden' === $location ) :
 
 		// Compile the image
 		$image_html = '<img class="no_pin swp_hidden_pin_image" src="' . $pinterest_image_url .
-                      '" data-pin-url="' . $permalink .
+                      '" data-pin-url="' . get_the_permalink() .
                       '" data-pin-media="' . $pinterest_image_url .
                       '" alt="' . $pinterest_description .
                       '" data-pin-description="' . $pinterest_description .
@@ -123,11 +123,11 @@ function swp_insert_pinterest_image( $content ) {
 
 	else :
         $image_html = '<div class="swp-pinterest-image-wrapper">
-                          <img class="swp-featured-pinterest-image" src="'.$pinterest_image_url.
-                        '" alt="'.$pinterest_description.
-                        '" data-pin-url="'.$permalink.
-                        '" data-pin-media="'.$pinterest_image_url.
-                        '" data-pin-description="'.$pinterest_description.
+                          <img class="swp-featured-pinterest-image" src="' . $pinterest_image_url .
+                        '" alt="' . $pinterest_description .
+                        '" data-pin-url="' . get_the_permalink() .
+                        '" data-pin-media="' . $pinterest_image_url .
+                        '" data-pin-description="' . $pinterest_description .
                         '" />
                       </div>';
 
