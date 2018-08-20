@@ -129,7 +129,7 @@ function swp_insert_pinterest_image( $content ) {
         $extra_class = 'swp-pinterest-image-' . $location;
 
         $image_html = '<div class="swp-pinterest-image-wrapper ' . $extra_class . '">
-                          <img class="swp-featured-pinterest-image" src="' . $pinterest_image_url .
+                          <img class="swp-pinterest-image " src="' . $pinterest_image_url .
                         '" alt="' . $pinterest_description .
                         '" data-pin-url="' . get_the_permalink() .
                         '" data-pin-media="' . $pinterest_image_url .
