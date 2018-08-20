@@ -111,7 +111,6 @@ function swp_insert_pinterest_image( $content ) {
 	// If the image is hidden, give it the swp_hidden_pin_image class.
 	if( 'hidden' === $location ) :
 
-		// Compile the image
 		$image_html = '<img class="no_pin swp_hidden_pin_image" src="' . $pinterest_image_url .
                       '" data-pin-url="' . get_the_permalink() .
                       '" data-pin-media="' . $pinterest_image_url .
@@ -120,8 +119,10 @@ function swp_insert_pinterest_image( $content ) {
                       '" />';
 
 		$content .= $image_html;
-
+        
+    // Put the image in a container otherwise
 	else :
+
         $image_html = '<div class="swp-pinterest-image-wrapper">
                           <img class="swp-featured-pinterest-image" src="' . $pinterest_image_url .
                         '" alt="' . $pinterest_description .
@@ -131,12 +132,10 @@ function swp_insert_pinterest_image( $content ) {
                         '" />
                       </div>';
 
-		// Add the visible image to the top of the content
 		if('top' === $location):
 			$content = $image_html . $content;
 		endif;
 
-		// Add the visible image to the bottom of the content
 		if('bottom' === $location):
 			$content .= $image_html;
 		endif;
