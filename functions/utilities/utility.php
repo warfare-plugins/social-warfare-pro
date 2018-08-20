@@ -46,30 +46,25 @@ add_action('template_redirect', 'swp_pre_insert_pinterest_image');
 function swp_insert_pinterest_image( $content ) {
 	global $post;
 	$post_id = $post->ID;
-	$pin_image = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
-	$pin_image_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
+	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
+	$pin_browser_extension_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
-    // Bail early if not using a pinterest image. 
-    if ( 'off' == $pin_image && '' != $pin_image ) :
+    // Bail early if not using a pinterest image.
+    if ( 'off' == $pin_browser_extension ) :
         return $content;
     endif;
 
-    if (
-        'on' === $pin_image &&
-        '' != $pin_image &&
-        !SWP_Utility::get_option( 'pin_browser_extension' )
-        ) {
+    if ( 'on' === $pin_browser_extension && !SWP_Utility::get_option( 'pin_browser_extension' ) ) :
          return $content;
-    }
-
+    endif;
 
 	/**
 	 * A conditional to see where the image should be displayed
 	 *
 	 */
 	// First check to see if it's set at the post level
-	if( '' != $pin_image_location && 'default' !== $pin_image_location ):
-		$location = $pin_image_location;
+	if( '' != $pin_browser_extension_location && 'default' !== $pin_browser_extension_location ):
+		$location = $pin_browser_extension_location;
 
 	// Second, see if it's set in the options
 	elseif( isset( $swp_user_options['pinterest_image_location'] ) ):
