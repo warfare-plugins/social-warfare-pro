@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.2.1
+ * Version:     3.2.2
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
@@ -16,7 +16,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.2.1' );
+define( 'SWPP_VERSION', '3.2.2' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -35,11 +35,8 @@ function initialize_social_warfare_pro() {
 	if( defined('SWP_VERSION') && SWP_VERSION == SWPP_VERSION ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/functions/Social_Warfare_Pro.php';
-            if ( class_exists( 'Social_Warfare_Pro' ) ) :
+    		new Social_Warfare_Pro();
 
-        		new Social_Warfare_Pro();
-            endif;
-            
             // Queue up out footer hook function
             add_filter( 'swp_footer_scripts', 'swp_pinit_controls_output');
         endif;
@@ -90,26 +87,18 @@ function initialize_social_warfare_pro() {
          */
 	endif;
 
+    if ( class_exists( 'Puc_v4_Factory') ) :
 
-    if ( !class_exists( 'SWP_Plugin_Updater' ) && defined( 'SWP_PLUGIN_DIR' ) ) :
+        $update_checker = Puc_v4_Factory::buildUpdateChecker(
+        	'https://github.com/warfare-plugins/social-warfare-pro/',
+        	__FILE__,
+        	'social-warfare-pro'
+        );
 
-		if( file_exists( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' ) ) :
-	        require_once( SWP_PLUGIN_DIR . '/functions/utilities/SWP_Plugin_Updater.php' );
-		else:
-			return;
-		endif;
+        $update_checker->getVcsApi()->enableReleaseAssets();
 
-	endif;
+    endif;
 
-    //* Everybody gets Pro updates, whether or not their license is active or valid.
-    $edd_updater = new SWP_Plugin_Updater( SWP_STORE_URL, __FILE__, array(
-    	'version' 	=> SWPP_VERSION,		// Current version number.
-    	'license' 	=> 'cf88c0df1bf351d2142ce82edb5a10be',	// Update check key.
-        'item_id'   => SWPP_SL_PRODUCT_ID,
-    	'author' 	=> 'Warfare Plugins',	// Author of this plugin.
-    	'url'           => home_url(),
-        'beta'          => false // Set to true if you wish customers to receive update notifications of beta releases
-    ) );
 }
 
 
