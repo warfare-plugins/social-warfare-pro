@@ -15,8 +15,6 @@ class SWP_Pro_Pinterest {
      *
      */
     public function __construct() {
-        global $swp_user_options;
-
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
 
@@ -41,8 +39,7 @@ class SWP_Pro_Pinterest {
      *
      */
     public function insert_pinterest_image( $content ) {
-        //* Call $swp_user_options for legacy code.
-    	global $post, $swp_user_options;
+    	global $post;
     	$post_id = $post->ID;
     	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
     	$pin_browser_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
@@ -244,7 +241,7 @@ class SWP_Pro_Pinterest {
     }
 
     public function content_add_pin_description( $content ) {
-        global $post, $swp_user_options;
+        global $post;
 
         $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
         $alignment = $this::get_alignment_style( $alignment );
@@ -267,7 +264,7 @@ class SWP_Pro_Pinterest {
 
                 $replacement = $img->cloneNode();
 
-                if ( isset( $swp_user_options['pinit_image_description'] ) && 'alt_text' == $swp_user_options['pinit_image_description'] && $img->hasAttribute( 'alt' ) ) {
+                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && $img->hasAttribute( 'alt' ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
                 } else if ( !empty( $description_fallback ) ) {
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
@@ -460,32 +457,34 @@ class SWP_Pro_Pinterest {
      * A function to output the Pin Button option controls
      *
      * @since  2.1.4
+     * @since  3.3.0 | 21 AUG 2018 | Moved from main file into SWP_Pro_Pinterest.
      * @access public
+     *
      * @param  array $info An array of footer script information.
      * @return array $info A modified array of footer script information.
+     *
      */
-    function swp_pinit_controls_output($info){
-    	global $swp_user_options;
+    public function swp_pinit_controls_output($info){
 
     	$pin_vars = array(
     		'enabled' => false,
     	);
 
-    	if ( $swp_user_options['pinit_toggle'] ) {
+    	if ( SWP_Utility::get_option( 'pinit_toggle' ) ) {
     		$pin_vars['enabled']   = true;
-    		$pin_vars['hLocation'] = $swp_user_options['pinit_location_horizontal'];
-    		$pin_vars['vLocation'] = $swp_user_options['pinit_location_vertical'];
-    		$pin_vars['minWidth']  = str_replace( 'px', '', $swp_user_options['pinit_min_width'] );
-    		$pin_vars['minHeight'] = str_replace( 'px', '', $swp_user_options['pinit_min_height'] );
-            $pin_vars['disableOnAnchors'] = $swp_user_options['pinit_hide_on_anchors'];
+    		$pin_vars['hLocation'] = SWP_Utility::get_option( 'pinit_location_horizontal' );
+    		$pin_vars['vLocation'] = SWP_Utility::get_option( 'pinit_location_vertical' );
+    		$pin_vars['minWidth']  = str_replace( 'px', '', SWP_Utility::get_option( 'pinit_min_width' ) );
+    		$pin_vars['minHeight'] = str_replace( 'px', '', SWP_Utility::get_option( 'pinit_min_height' ) );
+            $pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
 
     		// Set the image source
-    		if(isset($swp_user_options['pinit_image_source']) && 'custom' == $swp_user_options['pinit_image_source'] && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ):
+    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ):
     			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
     		endif;
 
     		// Set the description Source
-    		if(isset($swp_user_options['pinit_image_description']) && 'custom' == $swp_user_options['pinit_image_description'] && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ):
+    		if('custom' == SWP_Utility::get_option( 'pinit_image_description' ) && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ):
     			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
     		endif;
     	}
