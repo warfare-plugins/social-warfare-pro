@@ -515,14 +515,6 @@ class SWP_Pro_Pinterest {
             'value' => get_post_meta( $post->ID, 'swp_pinterest_description', true )
         );
 
-        $checked = get_post_meta( $post->ID, 'swp_pin_button_opt_out', false ) ? 'checked="checked"' : '';
-
-    	$form_fields['swp_pin_button_opt_out'] = array(
-    		'label' => 'Hover Pin Opt Out',
-    		'input' => 'html',
-    		'html'  => '<input type="checkbox" name="attachments[{$post->ID}][swp_pin_button_opt_out]" id="attachments[{$post->ID}][swp_pin_button_opt_out]" value="1" {$checked} /><br />',
-    	);
-
         return $form_fields;
     }
 
@@ -540,13 +532,6 @@ class SWP_Pro_Pinterest {
      */
     public function save_media_custom_field( $post, $attachment ) {
         update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
-
-        if ( isset( $attachment['swp_pin_button_opt_out'] ) ) {
-    		update_post_meta( $post['ID'], 'swp_pin_button_opt_out', 1 );
-    	} else {
-    		update_post_meta( $post['ID'], 'swp_pin_button_opt_out', 0 );
-    	}
-        
         return $post;
     }
 }
