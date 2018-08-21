@@ -25,6 +25,8 @@ class SWP_Pro_Pinterest {
         if ( is_singular() && !is_feet() && !function_exists( 'is_amp_endpoint' ) ) :
             add_filter( 'the_content', array( $this, 'insert_pinterest_image' ), 10 );
         endif;
+
+        add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
     }
 
     /**
@@ -464,8 +466,7 @@ class SWP_Pro_Pinterest {
      * @return array $info A modified array of footer script information.
      *
      */
-    public function swp_pinit_controls_output($info){
-
+    public function pinit_controls_output( $info ) {
     	$pin_vars = array(
     		'enabled' => false,
     	);
@@ -489,7 +490,8 @@ class SWP_Pro_Pinterest {
     		endif;
     	}
 
-    	$info['footer_output'] .= ' swpPinIt='.json_encode($pin_vars).';';
+    	$info['footer_output'] .= ' swpPinIt=' . json_encode($pin_vars) . ';';
+
     	return $info;
     }
 }
