@@ -20,8 +20,6 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
             add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
             $this->initiate_plugin();
         }
-
-        add_filter( 'swp_registrations', array( $this, 'add_self' ) );
 	}
 
 
