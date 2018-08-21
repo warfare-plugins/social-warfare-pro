@@ -34,7 +34,6 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	public function initiate_plugin() {
 
         require_once SWPP_PLUGIN_DIR . '/lib/meta-box/meta-box.php';
-        require_once SWPP_PLUGIN_DIR . '/lib/admin/post-options.php';
         require_once SWPP_PLUGIN_DIR . '/lib/frontend-output/SWP_Pro_Header_Output.php';
 
         if ( class_exists( 'SWP_Pro_Header_Output' ) ) :
