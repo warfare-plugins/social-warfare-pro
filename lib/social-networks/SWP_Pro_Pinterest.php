@@ -27,6 +27,8 @@ class SWP_Pro_Pinterest {
         endif;
 
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
+        add_filter('attachment_fields_to_edit', 'edit_media_custom_field', 11, 2 );
+        add_filter('attachment_fields_to_save', 'save_media_custom_field', 11, 2 );
     }
 
     /**
@@ -493,5 +495,42 @@ class SWP_Pro_Pinterest {
     	$info['footer_output'] .= ' swpPinIt=' . json_encode($pin_vars) . ';';
 
     	return $info;
+    }
+
+    /**
+     * Adds the Pinterest Description custom field when editing an image.
+     *
+     * @since  3.2.0 | 07 AUG 2018 | Creatd
+     *
+     * @param  array $form_fields The other fields present in the media editor.
+     * @param  object $post The WP Attachment object.
+     *
+     * @return array $form_fields The filtered form fields, now including our box.
+     *
+     */
+    public function edit_media_custom_field( $form_fields, $post ) {
+        $form_fields['swp_pinterest_description'] = array(
+            'label' => 'Social Warfare Pin Description',
+            'input' => 'textarea',
+            'value' => get_post_meta( $post->ID, 'swp_pinterest_description', true )
+        );
+        return $form_fields;
+    }
+
+
+    /**
+     * Adds the Pinterest Description custom field when editing an image.
+     *
+     * @since  3.2.0 | 07 AUG 2018 | Creatd
+     *
+     * @param  object $post The WP Attachment object.
+     * @param  array  $attachment $key => $value data about $post.
+     *
+     * @return array $post The updated post object.
+     *
+     */
+    public function save_media_custom_field( $post, $attachment ) {
+        update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
+        return $post;
     }
 }
