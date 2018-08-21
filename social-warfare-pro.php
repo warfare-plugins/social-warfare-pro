@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.2.1
+ * Version:     3.2.2
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
@@ -16,7 +16,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.2.1' );
+define( 'SWPP_VERSION', '3.2.2' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -44,47 +44,6 @@ function initialize_social_warfare_pro() {
         add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
         //* Do not instantiate Pro. Instead make them update.
 
-        /** TODO: Add checks for compatability throughout Core
-         * so we do not have to force them to update to Pro.
-         *
-         * For example:
-         * In some_core_file.php:
-         *
-         * if ( class_exists( 'SWP_Pro_Feature_4.3.1' ) ) {
-         *     $pro = new SWP_Pro_Feature_4.3.1();
-         *     $pro->do_awesome_magic();
-         * }
-         *
-         *
-         * OR, we create a system of filters/hooks leaves space for addons to
-         * change Core.
-         *
-         *
-         * For example:
-         * In some_core_file.php:
-         *
-         * class SWP_Pinterest() {
-         *     __construct() {
-         *         $this->init();
-         *         apply_filters( 'swp_pin_features', array());
-         *     }
-         * }
-         *
-         * In some_pro_file.php:
-         *
-         * class SWP_Pro_Pinterest {
-         *     __construct() {
-         *         add_filter( 'swp_pin_features', array( $this, 'pro_callbacks') );
-         *     }
-         *
-         *      public function pro_callbacks() {
-         *          $this->add_pro_metabox();
-         *          $this->add_pin_hover();
-         *          $this->add_pin_vars();
-         *      }
-         * }
-         *
-         */
 	endif;
 
     if ( class_exists( 'Puc_v4_Factory') ) :
