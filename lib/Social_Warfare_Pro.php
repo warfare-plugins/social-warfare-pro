@@ -6,12 +6,18 @@ endif;
 
 class Social_Warfare_Pro extends Social_Warfare_Addon {
 
-	public function __construct( ) {
-        parent::__construct();
-        $this->name = 'Social Warfare - Pro';
-        $this->key = 'pro';
-        $this->product_id = 63157;
-        $this->version = SWPP_VERSION;
+	public function __construct() {
+
+        $args = array(
+            'name' => 'Social Warfare - Pro',
+            'key' => 'pro',
+            'product_id' => 63157,
+            'version' => SWPP_VERSION,
+            'core_required' => '3.3.0'
+        );
+
+        parent::__construct( $args );
+
         $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
