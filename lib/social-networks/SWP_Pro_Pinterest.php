@@ -206,11 +206,15 @@ class SWP_Pro_Pinterest {
 
         if ( is_string( $size ) ) {
             $size = $this->get_image_size( $size );
+            $width = $size['width'];
+            $height = $size['height'];
+        } else {
+            $width = '';
+            $height = '';
         }
 
         //* Else $size is array( $width, $height )
-        $width = $size[0];
-        $height = $size[1];
+
 
         if ( class_exists( 'DOMDocument') ) :
             libxml_use_internal_errors( true );
@@ -348,12 +352,10 @@ class SWP_Pro_Pinterest {
             $$var = isset( $atts[$var] ) ? sanitize_text_field( trim ( $atts[$var] ) ) : "";
         }
 
-        if ( empty( $id ) ) {
+        if ( empty( $id ) && is_object( $post )) :
             $id = get_post_meta( $post->ID, 'swp_pinterest_image', true);
             $src = get_post_meta( $post->ID, 'swp_pinterest_image_url', true );
-        } else {
-            $src = wp_get_attachment_url( $id );
-        }
+        endif;
 
         if ( !is_numeric( $id ) ) {
             return;
@@ -546,14 +548,14 @@ class SWP_Pro_Pinterest {
 
         if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) :
 
-            $checked = get_post_meta( $post->ID, 'swp_pin_button_opt_out', false ) ? 'checked="checked"' : '';
+            $bool = get_post_meta( $post->ID, 'swp_pin_button_opt_out', true );
+            $checked = (int) $bool === 1 ? 'checked' : '';
 
         	$form_fields['swp_pin_button_opt_out'] = array(
         		'label' => 'Hover Pin Opt Out',
         		'input' => 'html',
-        		'html'  => '<input type="checkbox" name="attachments[{$post->ID}][swp_pin_button_opt_out]" id="attachments[{$post->ID}][swp_pin_button_opt_out]" value="1" {$checked} /><br />',
+        		'html'  => '<input type="checkbox" name="attachments[ ' . $post->ID . '][swp_pin_button_opt_out]" id="attachments[{$post->ID}][swp_pin_button_opt_out]" value="1" checked ' . $checked . ' /><br />',
         	);
-
         endif;
 
         return $form_fields;
@@ -573,7 +575,6 @@ class SWP_Pro_Pinterest {
      */
     public function save_media_custom_field( $post, $attachment ) {
         update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
-
         if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) :
             $checked = isset( $attachment['swp_pin_button_opt_out'] );
             update_post_meta( $post['ID'], 'swp_pin_button_opt_out', $checked );
