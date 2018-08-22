@@ -203,7 +203,7 @@ class SWP_Pro_Pinterest {
         $alignment = $this::get_alignment_style( $alignment );
 
         if ( is_string( $size ) ) {
-            $size = $this->get_size( $size );
+            $size = $this->get_image_size( $size );
         }
 
         //* Else $size is array( $width, $height )
@@ -361,101 +361,97 @@ class SWP_Pro_Pinterest {
 
 
     /**
-     * Taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
+     *@credits 
      *
-     * Defines utility functions for handling WordPress's image sizing.
+     * These methods are taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
      *
-     * @return function get_image_size( $size )
      */
-    public function get_size( $size ) {
-        /**
-         * Get size information for all currently-registered image sizes.
-         *
-         * @global $_wp_additional_image_sizes
-         * @uses   get_intermediate_image_sizes()
-         * @return array $sizes Data for all currently-registered image sizes.
-         */
-        function get_image_sizes() {
-        	global $_wp_additional_image_sizes;
 
-        	$sizes = array();
 
-        	foreach ( get_intermediate_image_sizes() as $_size ) {
-        		if ( in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large') ) ) {
-        			$sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
-        			$sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
-        			$sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
-        		} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
-        			$sizes[ $_size ] = array(
-        				'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
-        				'height' => $_wp_additional_image_sizes[ $_size ]['height'],
-        				'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
-        			);
-        		}
-        	}
+    /**
+     * Get size information for all currently-registered image sizes.
+     *
+     * @global $_wp_additional_image_sizes
+     * @uses   get_intermediate_image_sizes()
+     * @return array $sizes Data for all currently-registered image sizes.
+     */
+    private function get_image_sizes() {
+        global $_wp_additional_image_sizes;
 
-        	return $sizes;
+        $sizes = array();
+
+        foreach ( get_intermediate_image_sizes() as $_size ) {
+            if ( in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large') ) ) {
+                $sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
+                $sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
+                $sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
+            } elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
+                $sizes[ $_size ] = array(
+                    'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
+                    'height' => $_wp_additional_image_sizes[ $_size ]['height'],
+                    'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
+                );
+            }
         }
 
-        /**
-         * Get size information for a specific image size.
-         *
-         * @uses   get_image_sizes()
-         * @param  string $size The image size for which to retrieve data.
-         * @return bool|array $size Size data about an image size or false if the size doesn't exist.
-         */
-        function get_image_size( $size ) {
-        	$sizes = get_image_sizes();
-
-        	if ( isset( $sizes[ $size ] ) ) {
-        		return $sizes[ $size ];
-        	}
-
-            //* Return a dummy array of [$width, $height]
-        	return array("", "");
-        }
-
-        /**
-         * Get the width of a specific image size.
-         *
-         * @uses   get_image_size()
-         * @param  string $size The image size for which to retrieve data.
-         * @return bool|string $size Width of an image size or false if the size doesn't exist.
-         */
-        function get_image_width( $size ) {
-        	if ( ! $size = get_image_size( $size ) ) {
-        		return false;
-        	}
-
-        	if ( isset( $size['width'] ) ) {
-        		return $size['width'];
-        	}
-
-        	return false;
-        }
-
-        /**
-         * Get the height of a specific image size.
-         *
-         * @uses   get_image_size()
-         * @param  string $size The image size for which to retrieve data.
-         * @return bool|string $size Height of an image size or false if the size doesn't exist.
-         */
-        function get_image_height( $size ) {
-        	if ( ! $size = get_image_size( $size ) ) {
-        		return false;
-        	}
-
-        	if ( isset( $size['height'] ) ) {
-        		return $size['height'];
-        	}
-
-        	return false;
-        }
-
-        return get_image_size( $size );
+        return $sizes;
     }
 
+    /**
+     * Get size information for a specific image size.
+     *
+     * @uses   get_image_sizes()
+     * @param  string $size The image size for which to retrieve data.
+     * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+     */
+    private function get_image_size( $size ) {
+        $sizes = get_image_sizes();
+
+        if ( isset( $sizes[ $size ] ) ) {
+            return $sizes[ $size ];
+        }
+
+        //* Return a dummy array of [$width, $height]
+        return array("", "");
+    }
+
+    /**
+     * Get the width of a specific image size.
+     *
+     * @uses   get_image_size()
+     * @param  string $size The image size for which to retrieve data.
+     * @return bool|string $size Width of an image size or false if the size doesn't exist.
+     */
+    private function get_image_width( $size ) {
+        if ( ! $size = get_image_size( $size ) ) {
+            return false;
+        }
+
+        if ( isset( $size['width'] ) ) {
+            return $size['width'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the height of a specific image size.
+     *
+     * @uses   get_image_size()
+     * @param  string $size The image size for which to retrieve data.
+     * @return bool|string $size Height of an image size or false if the size doesn't exist.
+     */
+    private function get_image_height( $size ) {
+        if ( ! $size = get_image_size( $size ) ) {
+            return false;
+        }
+
+        if ( isset( $size['height'] ) ) {
+            return $size['height'];
+        }
+
+        return false;
+    }
 
     /**
      * A function to output the Pin Button option controls
