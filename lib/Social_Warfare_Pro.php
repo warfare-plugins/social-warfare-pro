@@ -7,7 +7,7 @@ endif;
 class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 	public function __construct() {
-
+        //* Define the Addon data.
         $args = array(
             'name' => 'Social Warfare - Pro',
             'key' => 'pro',
@@ -21,9 +21,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
         $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
-        if ( $this->is_registered() ) {
+        if ( $this->is_registered ) {
             $this->load_networks();
             add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
+            // add_action( 'plugins_loaded', array( $this, 'instantiate_addon') );
             $this->initiate_plugin();
         }
 	}
@@ -38,7 +39,6 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	 *
 	 */
 	public function initiate_plugin() {
-
         require_once SWPP_PLUGIN_DIR . '/lib/meta-box/meta-box.php';
         require_once SWPP_PLUGIN_DIR . '/lib/frontend-output/SWP_Pro_Header_Output.php';
 
@@ -48,12 +48,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 		new SWP_Meta_Box_Loader();
 
+        //* Load admin-specific classes.
 		if ( is_admin() ) {
 	        require_once SWPP_PLUGIN_DIR . '/lib/admin/SWP_Pro_Settings_Link.php';
-
-            if ( class_exists( 'SWP_Pro_Settings_Link' ) ) :
-    			new SWP_Pro_Settings_link();
-            endif;
+    		new SWP_Pro_Settings_link();
 		}
 	}
 
@@ -65,10 +63,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
      *
      */
 	public function instantiate_addon() {
-        if ( class_exists( 'SWP_Pro_Options_Page' ) ) :
-            new SWP_Pro_Options_Page();
-        endif;
-
+        new SWP_Pro_Options_Page();
         new SWP_Pro_Pinterest();
 	}
 
