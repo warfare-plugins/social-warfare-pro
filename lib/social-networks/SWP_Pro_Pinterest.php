@@ -361,11 +361,31 @@ class SWP_Pro_Pinterest {
 
 
     /**
-     *@credits 
+     *
+     * @credits
      *
      * These methods are taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
      *
      */
+
+
+     /**
+      * Get size information for a specific image size.
+      *
+      * @uses   get_image_sizes()
+      * @param  string $size The image size for which to retrieve data.
+      * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+      */
+     private function get_image_size( $size ) {
+         $sizes = $this->get_image_sizes();
+
+         if ( isset( $sizes[ $size ] ) ) {
+             return $sizes[ $size ];
+         }
+
+         //* Return a dummy array of [$width, $height]
+         return array("", "");
+     }
 
 
     /**
@@ -397,23 +417,6 @@ class SWP_Pro_Pinterest {
         return $sizes;
     }
 
-    /**
-     * Get size information for a specific image size.
-     *
-     * @uses   get_image_sizes()
-     * @param  string $size The image size for which to retrieve data.
-     * @return bool|array $size Size data about an image size or false if the size doesn't exist.
-     */
-    private function get_image_size( $size ) {
-        $sizes = get_image_sizes();
-
-        if ( isset( $sizes[ $size ] ) ) {
-            return $sizes[ $size ];
-        }
-
-        //* Return a dummy array of [$width, $height]
-        return array("", "");
-    }
 
     /**
      * Get the width of a specific image size.
@@ -423,7 +426,7 @@ class SWP_Pro_Pinterest {
      * @return bool|string $size Width of an image size or false if the size doesn't exist.
      */
     private function get_image_width( $size ) {
-        if ( ! $size = get_image_size( $size ) ) {
+        if ( ! $size = $this->get_image_size( $size ) ) {
             return false;
         }
 
@@ -442,7 +445,7 @@ class SWP_Pro_Pinterest {
      * @return bool|string $size Height of an image size or false if the size doesn't exist.
      */
     private function get_image_height( $size ) {
-        if ( ! $size = get_image_size( $size ) ) {
+        if ( ! $size = $this->get_image_size( $size ) ) {
             return false;
         }
 
