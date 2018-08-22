@@ -24,6 +24,10 @@ class SWP_Pro_Pinterest {
 
         if ( is_singular() && !is_feet() && !function_exists( 'is_amp_endpoint' ) ) :
             add_filter( 'the_content', array( $this, 'insert_pinterest_image' ), 10 );
+
+            if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) :
+                add_filter( 'the_content', array( $this, 'content_add_pinterest_hover_toggle' ), 10 );
+            endif;
         endif;
 
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
@@ -243,17 +247,17 @@ class SWP_Pro_Pinterest {
         return $html;
     }
 
-    public function content_add_pin_description( $content ) {
+    public function content_add_pin_description( $the_content ) {
         global $post;
 
         $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
 
         if ( class_exists( 'DOMDocument') ) :
-            $content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
+            $html = '<?xml version="1.0" encoding="UTF-8"?>' . $the_content;
 
             libxml_use_internal_errors( true );
-            $doc = @DOMDocument::loadHTML( $content );
+            $doc = DOMDocument::loadHTML( $html );
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
@@ -279,26 +283,51 @@ class SWP_Pro_Pinterest {
 
             }
 
-            $html = $doc->saveHTML();
+            $the_content = $doc->saveHTML();
 
-        else:
-            $alignment = self::get_alignment_style();
-            $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
-
-                $html .= '<img ';
-                    $html .= ' src="' . $url . '"';
-                    $html .= ' width="' . $width . '"';
-                    $html .= ' height="' . $height . '"';
-                    $html .= ' class="swp-pinterest-image"';
-                    $html .= ' data-pin-description="' . $description . '"';
-                    $html .= ' title="' . $title . '"';
-                    $html .= ' alt="' . $alt . '"';
-                $html .= "/>";
-
-            $html .= '</div>';
         endif;
 
-        return $html;
+        return $the_content;
+    }
+
+    public function content_add_pinterest_hover_toggle( $the_content ) {
+        global $post;
+
+        $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+
+
+        if ( class_exists( 'DOMDocument') ) :
+            $html = '<?xml version="1.0" encoding="UTF-8"?>' . $the_content;
+
+            libxml_use_internal_errors( true );
+            $doc = DOMDocument::loadHTML( $html );
+            libxml_use_internal_errors( false );
+            libxml_clear_errors();
+
+            $imgs = $doc->getElementsByTagName("img");
+
+            foreach( $imgs as $img ) {
+                $class = $img->getAttribute('class');
+
+                if ( isset( $class ) && strpos($div->getAttribute('class'), 'no-pin') ) :
+                    continue;
+                endif;
+
+                $replacement = $img->cloneNode();
+
+                $class = isset( $class ) ? $class . ' no-pin ' : 'no-pin';
+
+                $replacement->setAttribute( 'class', $class );
+
+                $img->parentNode->replaceChild($replacement, $img);
+
+            }
+
+            $the_content = $doc->saveHTML();
+
+        endif;
+
+        return $the_content;
     }
 
     /**
