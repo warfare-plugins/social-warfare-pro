@@ -164,7 +164,7 @@ class SWP_Pro_Pinterest {
      * @return string $style The style declaration for an image wrapper element.
      *
      */
-    public static function get_alignment_style( $alignment ) {
+    public static function get_alignment_style( $alignment = '' ) {
         switch ( $alignment ) {
             default:
                 $style = '';
@@ -192,15 +192,13 @@ class SWP_Pro_Pinterest {
      *
      * @return $html Our version of the markup.
      */
-    public function editor_add_pin_description( $html, $image_id, $caption, $title, $align, $url, $size = "", $alt ) {
+    public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
         $description = $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) {
             //* We only permastore the pin description when they have specifically set one for this image.
             return $html;
         }
-
-        $alignment = $this::get_alignment_style( $alignment );
 
         if ( is_string( $size ) ) {
             $size = $this->get_image_size( $size );
@@ -226,6 +224,7 @@ class SWP_Pro_Pinterest {
             $html = $doc->saveHTML();
 
         else:
+            $alignment = $this::get_alignment_style( $alignment );
             $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 
                 $html .= '<img ';
@@ -248,7 +247,7 @@ class SWP_Pro_Pinterest {
         global $post;
 
         $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-        $alignment = $this::get_alignment_style( $alignment );
+
 
         if ( class_exists( 'DOMDocument') ) :
             $content = '<?xml version="1.0" encoding="UTF-8"?>' . $content;
@@ -283,6 +282,7 @@ class SWP_Pro_Pinterest {
             $html = $doc->saveHTML();
 
         else:
+            $alignment = self::get_alignment_style();
             $html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 
                 $html .= '<img ';
