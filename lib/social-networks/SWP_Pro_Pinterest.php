@@ -356,7 +356,6 @@ class SWP_Pro_Pinterest {
 
         //* All images use the pin on hover feature.
         if ( 0 == count( $opt_out_images ) ) :
-            die("No images to disabled");
             return $the_content;
         endif;
 
