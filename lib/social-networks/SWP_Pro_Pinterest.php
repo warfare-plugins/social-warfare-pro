@@ -15,24 +15,38 @@ class SWP_Pro_Pinterest {
      *
      */
     public function __construct() {
+        if ( $this->should_bail() ) :
+            return;
+        endif;
+
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
         add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
+
+        add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image' ), 10 );
 
         if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) :
             add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
         endif;
 
-        if ( is_singular() && !is_feet() && !function_exists( 'is_amp_endpoint' ) ) :
-            add_filter( 'the_content', array( $this, 'insert_pinterest_image' ), 10 );
-
-            if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) :
-                add_filter( 'the_content', array( $this, 'content_add_pinterest_hover_toggle' ), 10 );
-            endif;
+        if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) :
+            add_filter( 'the_content', array( $this, 'content_maybe_add_no_pin' ), 10 );
         endif;
 
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
         add_filter('attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
         add_filter('attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
+    }
+
+    public function should_bail() {
+        if (  is_feed() ) :
+            return true;
+        endif;
+
+        if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) :
+            return true;
+        endif;
+
+        return false;
     }
 
     /**
@@ -46,7 +60,7 @@ class SWP_Pro_Pinterest {
      * @return string $content The filtered content
      *
      */
-    public function insert_pinterest_image( $content ) {
+    public function maybe_insert_pinterest_image( $content ) {
     	global $post;
     	$post_id = $post->ID;
     	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
@@ -213,10 +227,18 @@ class SWP_Pro_Pinterest {
             $height = '';
         }
 
-        //* Else $size is array( $width, $height )
-
 
         if ( class_exists( 'DOMDocument') ) :
+
+            //* DOMDocument works better with an XML delcaration.
+            if ( false === strpos( $the_content, '?xml version' ) ) :
+                $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+                $html = $xml_statement . $the_content;
+                $added_xml_statement = true;
+            else :
+                $html = $the_content;
+            endif;
+
             libxml_use_internal_errors( true );
             $doc = @DOMDocument::loadHTML( $html );
             libxml_use_internal_errors( false );
@@ -230,6 +252,10 @@ class SWP_Pro_Pinterest {
             $img->parentNode->replaceChild($replacement, $img);
 
             $html = $doc->saveHTML();
+
+            if ( $added_xml_statement ) :
+                $html = str_replace( $xml_statement, '', $the_content );
+            endif;
 
         else:
             $alignment = $this::get_alignment_style( $alignment );
@@ -258,7 +284,15 @@ class SWP_Pro_Pinterest {
 
 
         if ( class_exists( 'DOMDocument') ) :
-            $html = '<?xml version="1.0" encoding="UTF-8"?>' . $the_content;
+
+            //* DOMDocument works better with an XML delcaration.
+            if ( false === strpos( $the_content, '?xml version' ) ) :
+                $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+                $html = $xml_statement . $the_content;
+                $added_xml_statement = true;
+            else :
+                $html = $the_content;
+            endif;
 
             libxml_use_internal_errors( true );
             $doc = DOMDocument::loadHTML( $html );
@@ -289,19 +323,57 @@ class SWP_Pro_Pinterest {
 
             $the_content = $doc->saveHTML();
 
+            if ( $added_xml_statement ) :
+                $the_content = str_replace( $xml_statement, '', $the_content );
+            endif;
+
         endif;
 
         return $the_content;
     }
 
-    public function content_add_pinterest_hover_toggle( $the_content ) {
+    /**
+     * Adds the 'no-pin' CSS class to an image for opted-out images.
+     *
+     * @param  string $the_content The post content, passsed by WordPress
+     * @return string $the_content The filtered content, with or without classnames.
+     *
+     */
+    public function content_maybe_add_no_pin( $the_content ) {
         global $post;
 
-        $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+        if ( !class_exists( 'DOMDocument') ) :
+            return $the_content;
+        endif;
 
+        $images = get_attached_media( 'image' );
+
+        //* Filter image array to only include those that opted out of Pin Hover
+        $images = array_filter($images, function($image) {
+            $checked = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+            return (bool) $checked == 1;
+        });
+
+        //* All images use the pin on hover feature.
+        if ( 0 == count( $image ) ) :
+            return $the_content;
+        endif;
+
+
+        foreach( $images as $image ) {
+
+        }
 
         if ( class_exists( 'DOMDocument') ) :
-            $html = '<?xml version="1.0" encoding="UTF-8"?>' . $the_content;
+
+            //* DOMDocument works better with an XML delcaration.
+            if ( false === strpos( $the_content, '?xml version' ) ) :
+                $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+                $html = $xml_statement . $the_content;
+                $added_xml_statement = true;
+            else :
+                $html = $the_content;
+            endif;
 
             libxml_use_internal_errors( true );
             $doc = DOMDocument::loadHTML( $html );
@@ -328,6 +400,10 @@ class SWP_Pro_Pinterest {
             }
 
             $the_content = $doc->saveHTML();
+
+            if ( $added_xml_statement ) :
+                $the_content = str_replace( $xml_statement, '', $the_content );
+            endif;
 
         endif;
 
