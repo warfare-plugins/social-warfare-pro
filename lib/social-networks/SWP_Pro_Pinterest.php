@@ -349,63 +349,64 @@ class SWP_Pro_Pinterest {
         $images = get_attached_media( 'image' );
 
         //* Filter image array to only include those that opted out of Pin Hover
-        $images = array_filter($images, function($image) {
+        $opt_out_images = array_filter($images, function($image) {
             $checked = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
             return (bool) $checked == 1;
         });
 
         //* All images use the pin on hover feature.
-        if ( 0 == count( $image ) ) :
+        if ( 0 == count( $opt_out_images ) ) :
+            die("No images to disabled");
             return $the_content;
         endif;
 
+        /**
+         * Begin processing the DOM to add a no-pin class to targeted images.
+         */
 
-        foreach( $images as $image ) {
+        //* DOMDocument works better with an XML delcaration.
+        if ( false === strpos( $the_content, '?xml version' ) ) :
+            $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+            $html = $xml_statement . $the_content;
+            $added_xml_statement = true;
+        else :
+            $html = $the_content;
+        endif;
 
+        libxml_use_internal_errors( true );
+        $doc = DOMDocument::loadHTML( $html );
+        libxml_use_internal_errors( false );
+        libxml_clear_errors();
+
+        $dom_images = $doc->getElementsByTagName("img");
+
+        //* Replace existing nodes with updated 'no-pin' notes.
+        foreach( $dom_images as $image ) {
+            $src = $image->getAttribute('src');
+
+            foreach( $opt_out_images as $i ) {
+                $href = wp_get_attachment_url( $i->ID );
+                $guid = $i->guid;
+
+                if ( $href == $src || $guid == $src ) {
+                    $img = $image->cloneNode();
+                    $class = $img->getAttribute('class');
+
+                    $class = $class ? $class . ' no-pin ' : 'no-pin';
+
+                    $img->setAttribute('class', $class);
+
+                    $image->parentNode->replaceChild($img, $image);
+                }
+            }
         }
 
-        if ( class_exists( 'DOMDocument') ) :
+        $the_content = $doc->saveHTML();
 
-            //* DOMDocument works better with an XML delcaration.
-            if ( false === strpos( $the_content, '?xml version' ) ) :
-                $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-                $html = $xml_statement . $the_content;
-                $added_xml_statement = true;
-            else :
-                $html = $the_content;
-            endif;
-
-            libxml_use_internal_errors( true );
-            $doc = DOMDocument::loadHTML( $html );
-            libxml_use_internal_errors( false );
-            libxml_clear_errors();
-
-            $imgs = $doc->getElementsByTagName("img");
-
-            foreach( $imgs as $img ) {
-                $class = $img->getAttribute('class');
-
-                if ( isset( $class ) && strpos($div->getAttribute('class'), 'no-pin') ) :
-                    continue;
-                endif;
-
-                $replacement = $img->cloneNode();
-
-                $class = isset( $class ) ? $class . ' no-pin ' : 'no-pin';
-
-                $replacement->setAttribute( 'class', $class );
-
-                $img->parentNode->replaceChild($replacement, $img);
-
-            }
-
-            $the_content = $doc->saveHTML();
-
-            if ( $added_xml_statement ) :
-                $the_content = str_replace( $xml_statement, '', $the_content );
-            endif;
-
+        if ( $added_xml_statement ) :
+            $the_content = str_replace( $xml_statement, '', $the_content );
         endif;
+
 
         return $the_content;
     }
