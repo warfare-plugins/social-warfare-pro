@@ -41,7 +41,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' )
                 ->do_bitly_authentication_button();
 
-            $bitly->add_options( [$bitly_authentication, $bitly_connection] );
+            $bitly_start_date = new SWP_Section_HTML( __('When should we start making Bitly links? This can be in the past.', 'social-warfare'), '$bitly_start_date' );
+            $bitly_start_date->set_priority( 30 )
+                ->set_premium( 'pro' )
+                ->set_dependency( 'bitly_authentication', array( true ) )
+                ->do_bitly_start_date();
+
+            $bitly->add_options( [$bitly_authentication, $bitly_connection, $bitly_start_date] );
 
 
         $analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ), 'analytics_tracking' );
