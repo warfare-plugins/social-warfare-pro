@@ -38,7 +38,7 @@ class SWP_Pro_Pinterest {
     }
 
     public function should_bail() {
-        if (  is_feed() ) :
+        if (  is_feed() || is_archive() ) :
             return true;
         endif;
 
