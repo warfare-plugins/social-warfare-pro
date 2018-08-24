@@ -1,4 +1,6 @@
 <?php
+if ( class_exists( 'SWP_Options_Page' ) ) :
+
 class SWP_Pro_Options_Page extends SWP_Options_Page {
     /**
     * Reference to the global SWP_Options_Page object.
@@ -6,9 +8,6 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     */
 
 	public function __construct() {
-		global $SWP_Options_Page;
-        $this->core = $SWP_Options_Page;
-
 		$this->update_display_tab();
 		$this->update_styles_tab();
 		$this->update_social_tab();
@@ -21,7 +20,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     * @return SWP_Pro_Options_Page $this The calling instance, for method chaining.
     */
     public function update_advanced_tab() {
-        $advanced = $this->core->tabs->advanced;
+        global $SWP_Options_Page;
+
+        $advanced = $SWP_Options_Page->tabs->advanced;
 
         $bitly = new SWP_Options_Page_Section( __( 'Bitly Link Shortening', 'social-warfare'), 'bitly' );
         $bitly->set_description( __( 'If you like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
@@ -40,7 +41,13 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
                 ->set_premium( 'pro' )
                 ->do_bitly_authentication_button();
 
-            $bitly->add_options( [$bitly_authentication, $bitly_connection] );
+            $bitly_start_date = new SWP_Section_HTML( __('When should we start making Bitly links? This can be in the past.', 'social-warfare'), 'bitly_start_date' );
+            $bitly_start_date->set_priority( 30 )
+                ->set_premium( 'pro' )
+                ->set_dependency( 'bitly_authentication', array( true ) )
+                ->do_bitly_start_date();
+
+            $bitly->add_options( [$bitly_authentication, $bitly_connection, $bitly_start_date] );
 
 
         $analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ), 'analytics_tracking' );
@@ -193,7 +200,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $recovery_prefix = new SWP_Option_Select( __( 'Previous Domain Prefix', 'social-warfare' ), 'recovery_prefix' );
             $recovery_prefix->set_choices( [
-                'Unchanged' => __( 'Unchanged', 'social-warfare' ),
+                'unchanged' => __( 'Unchanged', 'social-warfare' ),
                 'www'       => 'www',
                 'nonwww'    => 'non-www',
             ])
@@ -252,7 +259,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     * @return SWP_Pro_Options_Page $this The calling instance, for method chaining.
     */
     public function update_display_tab() {
-        $display = $this->core->tabs->display;
+        global $SWP_Options_Page;
+
+        $display = $SWP_Options_Page->tabs->display;
 
             $order_of_icons = new SWP_Option_Select( __( 'Button Ordering', 'social-warfare' ), 'order_of_icons_method' );
             $order_of_icons->set_priority( 30 )
@@ -397,7 +406,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     * @return SWP_Pro_Options_Page $this The calling instance, for method chaining.
     */
     public function update_social_tab() {
-        $social_identity = $this->core->tabs->social_identity;
+        global $SWP_Options_Page;
+
+        $social_identity = $SWP_Options_Page->tabs->social_identity;
 
             $open_graph = new SWP_Options_Page_Section( __( 'Open Graph og:type Values', 'social-warfare' ), 'open_graph' );
             $open_graph->set_description( __( 'These options allow you to control which value you would like to use for the Open Graph og:type tag for each post type.', 'social-warfare') )
@@ -469,7 +480,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
     * @return SWP_Pro_Options_Page $this The calling instance, for method chaining.
     */
     public function update_styles_tab() {
-        $styles = $this->core->tabs->styles;
+        global $SWP_Options_Page;
+
+        $styles = $SWP_Options_Page->tabs->styles;
 
         $visual_options = new SWP_Options_Page_Section( __( 'Visual Options', 'social-warfare' ), 'visual_options' );
         $visual_options->set_description( __( 'Use the settings below to customize the look of your share buttons.', 'social-warfare') )
@@ -748,3 +761,5 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
         return $this;
     }
 }
+
+endif;

@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Yummly
@@ -138,6 +139,7 @@ class SWP_Yummly extends SWP_Social_Network {
 	}
 
 }
+endif;
 
 // private function check_taxonomy_conditionals() {
 //     global $post;

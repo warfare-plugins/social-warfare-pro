@@ -1,9 +1,10 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
- * Flipboard
+ * WhatsApp
  *
- * Class to add a Flipboard share button to the available buttons
+ * Class to add a WhatsApp share button to the available buttons
  *
  * @package   SocialWarfare\Functions\Social-Networks
  * @copyright Copyright (c) 2018, Warfare Plugins, LLC
@@ -13,7 +14,7 @@
  * @since     3.0.0 | 05 APR 2018 | Rebuilt into a class-based system.
  *
  */
-class SWP_Flipboard extends SWP_Social_Network {
+class SWP_WhatsApp extends SWP_Social_Network {
 
 
 	/**
@@ -34,14 +35,15 @@ class SWP_Flipboard extends SWP_Social_Network {
 	public function __construct() {
 
 		// Update the class properties for this network
-		$this->name           = __( 'Flipboard','social-warfare' );
-		$this->cta            = __( 'Flip','social-warfare' );
-		$this->key            = 'flipboard';
+		$this->name           = __( 'WhatsApp','social-warfare' );
+		$this->cta            = __( 'WhatsApp','social-warfare' );
+		$this->key            = 'whatsapp';
 		$this->default        = false;
         $this->premium        = 'pro';
-		$this->base_share_url = 'https://share.flipboard.com/bookmarklet/popout?v=2&title=Tools%20-%20Flipboard&url=';
+		$this->base_share_url = 'whatsapp://send?text=';
 
 		$this->init_social_network();
 	}
-
 }
+
+endif;

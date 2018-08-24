@@ -1,9 +1,10 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
- * Buffer
+ * Tumblr
  *
- * Class to add a Buffer share button to the available buttons
+ * Class to add a Tumblr share button to the available buttons
  *
  * @package   SocialWarfare\Functions\Social-Networks
  * @copyright Copyright (c) 2018, Warfare Plugins, LLC
@@ -13,7 +14,7 @@
  * @since     3.0.0 | 05 APR 2018 | Rebuilt into a class-based system.
  *
  */
-class SWP_Buffer extends SWP_Social_Network {
+class SWP_Tumblr extends SWP_Social_Network {
 
 
 	/**
@@ -34,12 +35,12 @@ class SWP_Buffer extends SWP_Social_Network {
 	public function __construct() {
 
 		// Update the class properties for this network
-		$this->name           = __( 'Buffer','social-warfare' );
-		$this->cta            = __( 'Buffer','social-warfare' );
-		$this->key            = 'buffer';
-		$this->default        = 'false';
-    $this->premium        = 'pro';
-		$this->base_share_url = 'https://bufferapp.com/add?url=';
+		$this->name           = __( 'Tumblr','social-warfare' );
+		$this->cta            = __( 'Share','social-warfare' );
+		$this->key            = 'tumblr';
+		$this->default        = false;
+        $this->premium        = 'pro';
+		$this->base_share_url = 'https://www.tumblr.com/widgets/share/tool?';
 
 		$this->init_social_network();
 	}
@@ -55,7 +56,7 @@ class SWP_Buffer extends SWP_Social_Network {
 	 *
 	 */
 	public function get_api_link( $url ) {
-		return 'https://api.bufferapp.com/1/links/shares.json?url=' . $url;
+		return 'https://api.tumblr.com/v2/share/stats?url=' . $url;
 	}
 
 
@@ -70,7 +71,7 @@ class SWP_Buffer extends SWP_Social_Network {
 	 */
 	public function parse_api_response( $response ) {
         $response = json_decode( $response, true );
-    	return isset( $response['shares'] )?intval( $response['shares'] ) : 0;
+    	return isset( $response['response']['note_count'] ) ? intval( $response['response']['note_count'] ) : 0;
 	}
 
     /**
@@ -89,21 +90,13 @@ class SWP_Buffer extends SWP_Social_Network {
      *
      */
     public function generate_share_link( $post_data ) {
-
-		$title = get_post_meta( $post_data['ID'] , 'nc_ogTitle' , true );
-
-		if ( !$title ) :
-			$title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
-		endif;
-
-		if( !$title ) :
-			$title = get_the_title();
-		endif;
-
-		$title = urldecode( $title );
-
-    $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&text=' . $title;
-
-    return $share_link;
+        $parameters = 'posttype=link';
+        $parameters .= '&canonicalUrl=' . $this->get_shareable_permalink( $post_data);
+        if ( isset($post_data['post_title'] ) ) :
+            $parameters .= '&title=' . urlencode( $post_data['post_title'] );
+        endif;
+        $share_link = $this->base_share_url . $parameters;
+        return $share_link;
     }
 }
+endif;

@@ -14,13 +14,11 @@
  */
 class SWP_Meta_Box_Loader {
 
-
 	public function __construct() {
 		if ( true === is_admin() ) {
 			add_filter( 'swpmb_meta_boxes', array( $this, 'load_meta_boxes') );
 		}
 	}
-
 
 	/**
 	 * Load Meta Boxes
@@ -190,20 +188,13 @@ class SWP_Meta_Box_Loader {
             'std'   => $twitter_handle,
         );
 
-        $hidden = array(
-            'name'  => (is_swp_addon_registered('pro') ? 'true' : 'false'),
-            'id'    => (is_swp_addon_registered('pro') ? 'true' : 'false'),
-            'class' => 'registrationWrapper',
-            'type'  => 'hidden',
-            'std'   => (is_swp_addon_registered('pro') ? 'true' : 'false'),
-        );
 
 
     	// Setup our meta box using an array.
     	$meta_boxes[0] = array(
     		'id'       => 'social_warfare',
     		'title'    => __( 'Social Warfare Custom Options','social-warfare' ),
-    		'pages'    => swp_get_post_types(),
+    		'pages'    => SWP_Utility::get_post_types(),
     		'context'  => 'normal',
     		'priority' => apply_filters( 'swp_metabox_priority', 'high' ),
     		'fields'   => array()
@@ -227,7 +218,6 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $float_location;
         $meta_boxes[0]['fields'][] = $divider2;
         $meta_boxes[0]['fields'][] = $twitter_handle_box;
-        $meta_boxes[0]['fields'][] = $hidden;
 
     	return $meta_boxes;
 	}

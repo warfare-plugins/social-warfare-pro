@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Reddit
@@ -87,5 +88,6 @@ class SWP_Reddit extends SWP_Social_Network {
         return $score;
 
     }
-
 }
+
+endif;

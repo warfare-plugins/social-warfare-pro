@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Hacker News
@@ -92,3 +93,4 @@ class SWP_HackerNews extends SWP_Social_Network {
         return $share_link;
     }
 }
+endif;
