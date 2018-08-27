@@ -8,22 +8,12 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 	public function __construct() {
         //* Define the Addon data.
-<<<<<<< HEAD
-
-        $this->name = 'Social Warfare - Pro';
-        $this->key = 'pro';
-        $this->product_id = 63157;
-        $this->verison = SWPP_VERSION;
-        $this->core_required = '3.3.0';
-
-=======
         $this->name = 'Social Warfare - Pro';
         $this->key = 'pro';
         $this->product_id = 63157;
         $this->version = SWPP_VERSION;
         $this->core_required = '3.3.0';
 
->>>>>>> development-pro-3.3
         parent::__construct();
 
         $this->filepath = SWPP_PLUGIN_FILE;
