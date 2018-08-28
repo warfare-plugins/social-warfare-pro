@@ -93,14 +93,10 @@ class SWP_Buffer extends SWP_Social_Network {
 		$title = get_post_meta( $post_data['ID'] , 'nc_ogTitle' , true );
 
 		if ( !$title ) :
-			$title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+			$title = isset( $post_data['post_title'] ) ? $post_data['post_title'] : get_the_title();
 		endif;
 
-		if( !$title ) :
-			$title = get_the_title();
-		endif;
-
-		$title = urldecode( $title );
+		$title = urlencode( $title );
 
     $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&text=' . $title;
 
