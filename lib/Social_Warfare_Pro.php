@@ -19,7 +19,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
         $this->filepath = SWPP_PLUGIN_FILE;
 		$this->load_classes();
 
-        if ( $this->is_registered ) {
+        if ( $this->is_registered && ! Social_Warfare::has_plugin_conflict() ) {
             $this->load_networks();
             add_action( 'wp_loaded', array( $this, 'instantiate_addon') );
             // add_action( 'plugins_loaded', array( $this, 'instantiate_addon') );

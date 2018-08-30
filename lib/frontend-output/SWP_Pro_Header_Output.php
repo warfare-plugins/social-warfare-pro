@@ -49,13 +49,12 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
-        global $swp_user_options, $post;
+        global $post;
 
         if ( !empty( $post ) && is_object( $post ) ) {
             //* Store the post for wpseo_replace_vars().
             $this->post = $post;
         }
-        $this->options = $swp_user_options;
         $this->establish_custom_colors();
         $this->init();
     }
@@ -95,9 +94,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] && isset( $this->options['twitter_cards'] ) && false === $this->options['twitter_cards'] ){
-    		return $info;
-    	}
+    	if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) :
+            return $info;
+        endif;
+
 
     	/**
     	 * Begin by fetching the user's default custom settings
@@ -199,17 +199,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 * Open Graph Type
     	 * @since 2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
     	 */
-    	$swp_post_type = get_post_type();
-    	if(!isset($this->options['swp_og_type_'.$swp_post_type])):
-    		$this->options['swp_og_type_'.$swp_post_type] = 'article';
+    	$type = get_post_type();
+
+    	if ( !SWP_Utility::get_option( 'swp_og_type_' . $type ) ) :
+    		$this->options['swp_og_type_'.$type] = 'article';
     	endif;
-    	$og_type_from_global_options = $this->options['swp_og_type_'.$swp_post_type];
-    	$og_type_from_custom_field = get_post_meta( $info['postID'] , 'swp_og_type' , true );
-    	if( $og_type_from_custom_field ):
-    		$info['meta_tag_values']['og_type'] = $og_type_from_custom_field;
-    	else:
-     		$info['meta_tag_values']['og_type'] = $og_type_from_global_options;
-    	endif;
+
+        $og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
+
+        if ( empty( $og_type ) ) :
+            $og_type = SWP_Utility::get_option( 'swp_og_type_' . $type );
+        endif;
+
+
+        $info['meta_tag_values']['og_type'] = $og_type;
 
     	/**
     	 *  Open Graph Title: Create an open graph title meta tag
@@ -402,8 +405,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
-
+    	if ( SWP_Utility::get_option( 'twitter_cards' ) ) :
     		/**
     		 * Begin by fetching the user's default custom settings
     		 *
@@ -504,6 +506,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		endif;
 
     	endif;
+
     	return $info;
     }
 

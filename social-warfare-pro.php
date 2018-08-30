@@ -37,7 +37,7 @@ function initialize_social_warfare_pro() {
     endif;
 
 
-	if( defined( 'SWP_VERSION' ) && SWP_VERSION == SWPP_VERSION ):
+	if( defined( 'SWP_VERSION' ) && version_compare( SWP_VERSION , 3.2.90 ) >= 0 ):
         if ( file_exists( SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php' ) ) :
     		require_once SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
     		new Social_Warfare_Pro();
