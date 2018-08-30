@@ -41,6 +41,7 @@ class SWP_Tumblr extends SWP_Social_Network {
 		$this->default        = false;
         $this->premium        = 'pro';
 		$this->base_share_url = 'https://www.tumblr.com/widgets/share/tool?';
+        $this->api_key        = 'PiEjtbt2aJJFIUChMbXTpCnYAmfKQMowd1Z25SWCCS9SfDsa76';
 
 		$this->init_social_network();
 	}
