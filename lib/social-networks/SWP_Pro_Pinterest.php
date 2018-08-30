@@ -63,16 +63,12 @@ class SWP_Pro_Pinterest {
     public function maybe_insert_pinterest_image( $content ) {
     	global $post;
     	$post_id = $post->ID;
-    	$pin_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
+    	$meta_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
     	$pin_browser_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
 
         // Bail early if not using a pinterest image.
-        if ( 'off' == $pin_browser_extension ) :
+        if ( 'off' == $meta_browser_extension ) :
             return $content;
-        endif;
-
-        if ( 'on' === $pin_browser_extension && !SWP_Utility::get_option( 'pin_browser_extension' ) ) :
-             return $content;
         endif;
 
         $pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
