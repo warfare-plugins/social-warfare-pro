@@ -308,17 +308,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $info The modified info array
      */
     public function open_graph_html($info) {
-    	if( false === is_singular() ) {
+    	if ( false === is_singular() ) {
     		return $info;
     	}
 
     	// Don't compile them if the OG Tags are Disabled on the options page
-    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ){
+    	if ( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ) {
     		return $info;
     	}
 
     	// Check to ensure that we don't need to defer to Yoast
-    	if(false === $info['yoast_og_setting']):
+    	if( !isset( $info['yoast_og_setting'] ) || false === $info['yoast_og_setting'] ):
 
     		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
@@ -494,14 +494,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 * The Twitter Card Site
     		 *
     		 */
-    		if ( $this->options['twitter_id'] ) :
+    		if ( isset( $this->options['twitter_id'] ) ) :
     			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
     		endif;
 
     		/**
     		 * The Twitter Card Creator
     		 */
-    		if ( $user_twitter_handle ) :
+    		if ( isset( $user_twitter_handle ) ) :
     			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( $user_twitter_handle ) );
     		endif;
 
@@ -528,7 +528,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
+    	if ( isset( $this->options['twitter_cards'] ) ) :
 
     		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
