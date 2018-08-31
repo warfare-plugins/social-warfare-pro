@@ -291,7 +291,8 @@ class SWP_Pro_Pinterest {
             endif;
 
             libxml_use_internal_errors( true );
-            $doc = DOMDocument::loadHTML( $html );
+            $doc = new DOMDocument();
+            $doc->loadHTML( $html );
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
@@ -369,7 +370,8 @@ class SWP_Pro_Pinterest {
         endif;
 
         libxml_use_internal_errors( true );
-        $doc = DOMDocument::loadHTML( $html );
+        $doc = new DOMDocument();
+        $doc->loadHTML( $html );
         libxml_use_internal_errors( false );
         libxml_clear_errors();
 
