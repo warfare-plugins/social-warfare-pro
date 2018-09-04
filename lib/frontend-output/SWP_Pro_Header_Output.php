@@ -573,7 +573,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             return  "#333333";
         endif;
 
-        if ( strpos( $hex, "#" !== 0 ) ) :
+        if ( strpos( $hex, "#" ) != 0 ) :
             $hex = "#" . $hex;
         endif;
 
