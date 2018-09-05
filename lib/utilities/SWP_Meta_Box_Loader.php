@@ -17,7 +17,7 @@ class SWP_Meta_Box_Loader {
 	public function __construct() {
 		if ( true === is_admin() ) {
 			add_filter( 'swpmb_meta_boxes', array( $this, 'load_meta_boxes') );
-            add_action( 'swpmb_before_social_warfare', array( $this, 'prepend_content') );
+            add_action( 'swpmb_before_social_warfare', array( $this, 'before_content') );
             add_action( 'swpmb_after_social_warfare', array( $this, 'after_content' ) );
 		}
 	}
@@ -250,14 +250,33 @@ class SWP_Meta_Box_Loader {
 		return $twitter_handle;
 	}
 
-    public function prepend_content( $meta_box  ) {
-        echo '<h3>' . __( 'Share Customization', 'social-warfare') . '</h3>';
-        echo '<p>Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.</p>';
-        
+    /**
+     * Echoes content before any meta box fields are printed.
+     *
+     * You must echo your content immediately, and return the $meta_box.
+     *
+     * @param  object $meta_box The Rylwis meta_box object.
+     * @return object $meta_box The (optionally) filtered meta box.
+     *
+     */
+    public function before_content( $meta_box  ) {
+        // echo '';
+
         return $meta_box;
     }
 
-    public function after_content( $d ) {
+    /**
+     * Echoes content after the meta box fields are printed.
+     *
+     * You must echo your content immediately, and return the $meta_box.
+     *
+     * @param  object $meta_box The Rylwis meta_box object.
+     * @return object $meta_box The (optionally) filtered meta box.
+     *
+     */
+    public function after_content( $meta_box ) {
+        // echo '';
 
+        return $meta_box;
     }
 }
