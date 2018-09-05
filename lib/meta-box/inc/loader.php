@@ -217,10 +217,14 @@ class SWPMB_Loader
             'fields/input',
             'fields/hidden',
 
+            'fields/text',
+
+
             'fields/media',
             'fields/image-advanced',
 
             'fields/divider',
+            'fields/heading',
             'fields/textarea',
         );
         foreach ( $files as $file )
