@@ -224,6 +224,7 @@ class SWPMB_Loader
             'fields/image-advanced',
 
             'fields/divider',
+            'fields/heading',
             'fields/display-text',
             'fields/textarea',
         );
