@@ -191,11 +191,11 @@ class SWP_Meta_Box_Loader {
         );
 
         $heading = array(
-            'name'  => 'Social Warfare Custom Options',
+            'name'  => 'Share Customization',
             'id'    => 'swp_meta_box_heading',
             'class' => '',
             'type'  => 'heading',
-            'desc'  => 'This is new content for us.',
+            'desc'  => 'Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.',
 
         );
 
