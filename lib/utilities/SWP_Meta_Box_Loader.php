@@ -39,7 +39,7 @@ class SWP_Meta_Box_Loader {
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
 
         // Setup the Open Graph image.
-        $social_media_image = array(
+        $open_graph_image = array(
             'name'  => __( 'Open Graph Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
             'id'    => $prefix . 'og_image',
@@ -50,9 +50,9 @@ class SWP_Meta_Box_Loader {
         );
 
         // Setup the Open Graph title.
-        $social_media_title = array(
+        $open_graph_title = array(
             'name'  => __( 'Open Graph Title','social-warfare' ),
-            'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+            'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
             'id'    => $prefix . 'og_title',
             'type'  => 'textarea',
             'class' => $prefix . 'og_title',
@@ -60,11 +60,42 @@ class SWP_Meta_Box_Loader {
         );
 
         // Setup the Open Graph description.
-        $social_meda_description = array(
+        $open_graph_description = array(
             'name'  => __( 'Open Graph Description','social-warfare' ),
-            'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
+            'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
             'id'    => $prefix . 'og_description',
             'class' => $prefix . 'og_description',
+            'type'  => 'textarea',
+            'clone' => false,
+        );
+
+        // Setup the Open Graph image.
+        $twitter_image = array(
+            'name'  => __( 'Twitter Card Image','social-warfare' ),
+            'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
+            'id'    => $prefix . 'twitter_card_image',
+            'type'  => 'image_advanced',
+            'clone' => false,
+            'class' => $prefix . 'twitter_card_imageWrapper',
+            'max_file_uploads' => 1,
+        );
+
+        // Setup the Open Graph title.
+        $twitter_title = array(
+            'name'  => __( 'Twitter Card Title','social-warfare' ),
+            'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+            'id'    => $prefix . 'twitter_card_title',
+            'type'  => 'textarea',
+            'class' => $prefix . 'twitter_card_title',
+            'clone' => false,
+        );
+
+        // Setup the Open Graph description.
+        $twitter_description = array(
+            'name'  => __( 'Twitter Card Description','social-warfare' ),
+            'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
+            'id'    => $prefix . 'twitter_card_description',
+            'class' => $prefix . 'twitter_card_description',
             'type'  => 'textarea',
             'clone' => false,
         );
@@ -90,6 +121,7 @@ class SWP_Meta_Box_Loader {
         // Setup the Custom Tweet box.
         $custom_tweet = array(
             'name'  => __( 'Custom Tweet','social-warfare' ),
+            'placeholder' => '(if left empty, defaults to the following:) \'Open Graph Title\'' . the_permalink() . $twitter_handle ,
             'desc'  => ( $twitter_id ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ),str_replace( '@','',$twitter_handle ),'<span class="counterNumber">140</span>' ) : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
             'id'    => $prefix . 'custom_tweet',
             'class' => $prefix . 'custom_tweetWrapper',
@@ -108,7 +140,7 @@ class SWP_Meta_Box_Loader {
 
         $pinterest_description = array(
             'name'  => __( 'Pinterest Description','social-warfare' ),
-            'desc'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
+            'placeholder'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
             'id'    => $prefix . 'pinterest_description',
             'class' => $prefix . 'pinterest_descriptionWrapper',
             'type'  => 'textarea',
@@ -119,7 +151,6 @@ class SWP_Meta_Box_Loader {
         $pin_browser_extension = array(
             'name'    => __( 'Pin Image for Browser Extensions','social-warfare' ),
             'id'      => 'swp_pin_browser_extension',
-            'class'   => 'swp_pin_browser_extensionWrapper',
             'type'    => 'select',
             'options' => array(
                 'default' => __( 'Default','social-warfare' ),
@@ -133,7 +164,6 @@ class SWP_Meta_Box_Loader {
         $pin_browser_extension_location = array(
             'name'    => __( 'Pin Browser Image Location','social-warfare' ),
             'id'      => 'swp_pin_browser_extension_location',
-            'class'   => 'swp_pin_browser_extension_locationWrapper',
             'type'    => 'select',
             'options' => array(
                 'default' => __( 'Default','social-warfare' ),
@@ -149,7 +179,6 @@ class SWP_Meta_Box_Loader {
         $post_location = array(
             'name'    =>  __( 'Horizontal Buttons Location','social-warfare' ),
             'id'      => $prefix . 'post_location',
-            'class'   => $prefix . 'post_locationWrapper',
             'type'    => 'select',
             'options' => array(
                 'default' => __( 'Default','social-warfare' ),
@@ -165,7 +194,6 @@ class SWP_Meta_Box_Loader {
         $float_location = array(
             'name'    =>  __( 'Floating Buttons','social-warfare' ),
             'id'      => $prefix . 'float_location',
-            'class'   => $prefix . 'float_locationWrapper',
             'type'    => 'select',
             'options' => array(
                 'default' => __( 'Default','social-warfare' ),
@@ -199,6 +227,17 @@ class SWP_Meta_Box_Loader {
 
         );
 
+        $open_graph_twitter_card = new SWP_Option_Toggle( __( 'Use Open Graph for Twitter Cards' , 'social-warfare' ), 'swp_open_graph_twitter_card' );
+        $open_graph_twitter_card->set_default( false )
+            ->set_premium( 'pro' );
+
+        $open_graph_toggle = array(
+            'name'  => '',
+            'id'    => '',
+            'type'  => 'display-text',
+            'desc'  =>  $open_graph_twitter_card->render_HTML()
+        );
+
     	// Setup our meta box using an array.
     	$meta_boxes[0] = array(
     		'id'       => 'social_warfare',
@@ -209,13 +248,15 @@ class SWP_Meta_Box_Loader {
     		'fields'   => array()
     	);
 
+
         $meta_boxes[0]['fields'][] = $heading;
-        $meta_boxes[0]['fields'][] = $social_media_image;
-        $meta_boxes[0]['fields'][] = $social_media_title;
-        $meta_boxes[0]['fields'][] = $social_meda_description;
+        $meta_boxes[0]['fields'][] = $open_graph_image;
+        $meta_boxes[0]['fields'][] = $open_graph_title;
+        $meta_boxes[0]['fields'][] = $open_graph_description;
         $meta_boxes[0]['fields'][] = $divider;
         $meta_boxes[0]['fields'][] = $pinterst_image;
         $meta_boxes[0]['fields'][] = $custom_tweet;
+        $meta_boxes[0]['fields'][] = $open_graph_toggle;
 
         if ( isset( $swp_user_options['recover_shares'] ) && true === $swp_user_options['recover_shares'] ) {
             $meta_boxes[0]['fields'][] = $recover_shares_box;
@@ -233,7 +274,7 @@ class SWP_Meta_Box_Loader {
 	}
 
 
-	public function get_twitter_handle( $fallback = false ) {
+	public function get_twitter_handle( $fallback = '' ) {
 		// Fetch the Twitter handle for the Post Author if it exists.
 		if ( isset( $_GET['post'] ) ) {
 			$user_id = SWP_User_Profile::get_author( absint( $_GET['post'] ) );
