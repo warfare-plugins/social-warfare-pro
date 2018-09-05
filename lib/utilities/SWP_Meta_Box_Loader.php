@@ -17,8 +17,8 @@ class SWP_Meta_Box_Loader {
 	public function __construct() {
 		if ( true === is_admin() ) {
 			add_filter( 'swpmb_meta_boxes', array( $this, 'load_meta_boxes') );
-            add_action( 'swpmb_before_social_warfare', array( $this, 'before_content') );
-            add_action( 'swpmb_after_social_warfare', array( $this, 'after_content' ) );
+            add_action( 'swpmb_before_social_warfare', array( $this, 'before_meta_boxes') );
+            add_action( 'swpmb_after_social_warfare', array( $this, 'after_meta_boxes' ) );
 		}
 	}
 
@@ -259,7 +259,7 @@ class SWP_Meta_Box_Loader {
      * @return object $meta_box The (optionally) filtered meta box.
      *
      */
-    public function before_content( $meta_box  ) {
+    public function before_meta_boxes( $meta_box  ) {
         // echo '';
 
         return $meta_box;
@@ -274,7 +274,7 @@ class SWP_Meta_Box_Loader {
      * @return object $meta_box The (optionally) filtered meta box.
      *
      */
-    public function after_content( $meta_box ) {
+    public function after_meta_boxes( $meta_box ) {
         // echo '';
 
         return $meta_box;
