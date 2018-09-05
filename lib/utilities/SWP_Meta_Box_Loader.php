@@ -17,6 +17,8 @@ class SWP_Meta_Box_Loader {
 	public function __construct() {
 		if ( true === is_admin() ) {
 			add_filter( 'swpmb_meta_boxes', array( $this, 'load_meta_boxes') );
+            add_action( 'swpmb_before_social_warfare', array( $this, 'prepend_content') );
+            add_action( 'swpmb_after_social_warfare', array( $this, 'after_content' ) );
 		}
 	}
 
@@ -36,9 +38,9 @@ class SWP_Meta_Box_Loader {
 
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
 
-        // Setup the social media image.
+        // Setup the Open Graph image.
         $social_media_image = array(
-            'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Image','social-warfare' ),
+            'name'  => __( 'Open Graph Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
             'id'    => $prefix . 'og_image',
             'type'  => 'image_advanced',
@@ -47,9 +49,9 @@ class SWP_Meta_Box_Loader {
             'max_file_uploads' => 1,
         );
 
-        // Setup the social media title.
+        // Setup the Open Graph title.
         $social_media_title = array(
-            'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Title','social-warfare' ),
+            'name'  => __( 'Open Graph Title','social-warfare' ),
             'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
             'id'    => $prefix . 'og_title',
             'type'  => 'textarea',
@@ -57,9 +59,9 @@ class SWP_Meta_Box_Loader {
             'clone' => false,
         );
 
-        // Setup the social media description.
+        // Setup the Open Graph description.
         $social_meda_description = array(
-            'name'  => '<span class="dashicons dashicons-share"></span> ' . __( 'Social Media Description','social-warfare' ),
+            'name'  => __( 'Open Graph Description','social-warfare' ),
             'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
             'id'    => $prefix . 'og_description',
             'class' => $prefix . 'og_description',
@@ -76,7 +78,7 @@ class SWP_Meta_Box_Loader {
 
         // Setup the pinterest optimized image.
         $pinterst_image = array(
-            'name'  => '<i class="sw sw-pinterest"></i> ' . __( 'Pinterest Image','social-warfare' ),
+            'name'  => __( 'Pinterest Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
             'id'    => $prefix . 'pinterest_image',
             'class' => $prefix . 'pinterest_imageWrapper',
@@ -87,7 +89,7 @@ class SWP_Meta_Box_Loader {
 
         // Setup the Custom Tweet box.
         $custom_tweet = array(
-            'name'  => '<i class="sw swp_twitter_icon"></i> ' . __( 'Custom Tweet','social-warfare' ),
+            'name'  => __( 'Custom Tweet','social-warfare' ),
             'desc'  => ( $twitter_id ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ),str_replace( '@','',$twitter_handle ),'<span class="counterNumber">140</span>' ) : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
             'id'    => $prefix . 'custom_tweet',
             'class' => $prefix . 'custom_tweetWrapper',
@@ -96,7 +98,7 @@ class SWP_Meta_Box_Loader {
         );
 
         $recover_shares_box = array(
-            'name'  =>'<span class="dashicons dashicons-randomize"></span> ' . __( 'Share Recovery','social-warfare' ),
+            'name'  => __( 'Share Recovery','social-warfare' ),
             'desc'  => __( 'If you have changed the permalink for just this post, paste in the previous full URL for this post so we can recover shares for that link.','social-warfare' ),
             'id'    => 'swp_recovery_url',
             'class' => $prefix . 'share_recoveryWrapper',
@@ -105,7 +107,7 @@ class SWP_Meta_Box_Loader {
         );
 
         $pinterest_description = array(
-            'name'  => '<i class="sw sw-pinterest"></i>' . __( 'Pinterest Description','social-warfare' ),
+            'name'  => __( 'Pinterest Description','social-warfare' ),
             'desc'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
             'id'    => $prefix . 'pinterest_description',
             'class' => $prefix . 'pinterest_descriptionWrapper',
@@ -115,7 +117,7 @@ class SWP_Meta_Box_Loader {
 
         // Setup the pinterest description.
         $pin_browser_extension = array(
-            'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Image for Browser Extensions','social-warfare' ),
+            'name'    => __( 'Pin Image for Browser Extensions','social-warfare' ),
             'id'      => 'swp_pin_browser_extension',
             'class'   => 'swp_pin_browser_extensionWrapper',
             'type'    => 'select',
@@ -129,7 +131,7 @@ class SWP_Meta_Box_Loader {
         );
 
         $pin_browser_extension_location = array(
-            'name'    => '<i class="sw sw-pinterest"></i> ' . __( 'Pin Browser Image Location','social-warfare' ),
+            'name'    => __( 'Pin Browser Image Location','social-warfare' ),
             'id'      => 'swp_pin_browser_extension_location',
             'class'   => 'swp_pin_browser_extension_locationWrapper',
             'type'    => 'select',
@@ -145,7 +147,7 @@ class SWP_Meta_Box_Loader {
 
         // Set up the location on post options.
         $post_location = array(
-            'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Horizontal Buttons Location','social-warfare' ),
+            'name'    =>  __( 'Horizontal Buttons Location','social-warfare' ),
             'id'      => $prefix . 'post_location',
             'class'   => $prefix . 'post_locationWrapper',
             'type'    => 'select',
@@ -161,7 +163,7 @@ class SWP_Meta_Box_Loader {
         );
 
         $float_location = array(
-            'name'    => '<span class="dashicons dashicons-randomize"></span> ' . __( 'Floating Buttons','social-warfare' ),
+            'name'    =>  __( 'Floating Buttons','social-warfare' ),
             'id'      => $prefix . 'float_location',
             'class'   => $prefix . 'float_locationWrapper',
             'type'    => 'select',
@@ -188,7 +190,14 @@ class SWP_Meta_Box_Loader {
             'std'   => $twitter_handle,
         );
 
+        $heading = array(
+            'name'  => 'Social Warfare Custom Options',
+            'id'    => 'swp_meta_box_heading',
+            'class' => '',
+            'type'  => 'heading',
+            'desc'  => 'This is new content for us.',
 
+        );
 
     	// Setup our meta box using an array.
     	$meta_boxes[0] = array(
@@ -200,6 +209,7 @@ class SWP_Meta_Box_Loader {
     		'fields'   => array()
     	);
 
+        $meta_boxes[0]['fields'][] = $heading;
         $meta_boxes[0]['fields'][] = $social_media_image;
         $meta_boxes[0]['fields'][] = $social_media_title;
         $meta_boxes[0]['fields'][] = $social_meda_description;
@@ -239,4 +249,15 @@ class SWP_Meta_Box_Loader {
 
 		return $twitter_handle;
 	}
+
+    public function prepend_content( $meta_box  ) {
+        echo '<h3>' . __( 'Share Customization', 'social-warfare') . '</h3>';
+        echo '<p>Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.</p>';
+        
+        return $meta_box;
+    }
+
+    public function after_content( $d ) {
+
+    }
 }
