@@ -45,7 +45,7 @@ class SWP_Meta_Box_Loader {
             'id'    => $prefix . 'og_image',
             'type'  => 'image_advanced',
             'clone' => false,
-            'class' => $prefix . 'og_imageWrapper',
+            'class' => $prefix . 'small_image',
             'max_file_uploads' => 1,
         );
 
@@ -76,7 +76,7 @@ class SWP_Meta_Box_Loader {
             'id'    => $prefix . 'twitter_card_image',
             'type'  => 'image_advanced',
             'clone' => false,
-            'class' => $prefix . 'twitter_card_imageWrapper',
+            'class' => $prefix . 'small_image',
             'max_file_uploads' => 1,
         );
 
@@ -112,7 +112,7 @@ class SWP_Meta_Box_Loader {
             'name'  => __( 'Pinterest Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
             'id'    => $prefix . 'pinterest_image',
-            'class' => $prefix . 'pinterest_imageWrapper',
+            'class' => $prefix . 'large_image',
             'type'  => 'image_advanced',
             'clone' => false,
             'max_file_uploads' => 1,
@@ -232,10 +232,9 @@ class SWP_Meta_Box_Loader {
             ->set_premium( 'pro' );
 
         $open_graph_toggle = array(
-            'name'  => '',
-            'id'    => '',
-            'type'  => 'display-text',
-            'desc'  =>  $open_graph_twitter_card->render_HTML()
+            'id'    => 'open_graph_toggle',
+            'type'  => 'toggle',
+            'desc'  =>  'Use Open Graph for Twitter Card?'
         );
 
     	// Setup our meta box using an array.
@@ -255,8 +254,12 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $open_graph_description;
         $meta_boxes[0]['fields'][] = $divider;
         $meta_boxes[0]['fields'][] = $pinterst_image;
-        $meta_boxes[0]['fields'][] = $custom_tweet;
         $meta_boxes[0]['fields'][] = $open_graph_toggle;
+        $meta_boxes[0]['fields'][] = $twitter_image;
+        $meta_boxes[0]['fields'][] = $twitter_title;
+        $meta_boxes[0]['fields'][] = $twitter_description;
+
+        $meta_boxes[0]['fields'][] = $custom_tweet;
 
         if ( isset( $swp_user_options['recover_shares'] ) && true === $swp_user_options['recover_shares'] ) {
             $meta_boxes[0]['fields'][] = $recover_shares_box;
