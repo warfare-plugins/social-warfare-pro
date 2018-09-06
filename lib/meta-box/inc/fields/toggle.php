@@ -38,16 +38,16 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-        $toggle = '<div>
-            <span>ON</span>
-            <span>OFF</span>
-        </div>';
+        $id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
 
+        $toggle = "<div $id class='sw-checkbox-toggle' status='off'>
+                       <div class='sw-checkbox-on'>ON</div>
+                       <div class='sw-checkbox-off'>OFF</div>
+                   </div>";
+
+        $toggle .= "<input type='hidden' $id />";
+
+        //* Close the div opened in begin_html().
         return $toggle . '</div>';
-
-
-		$id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
-
-		return $field['desc'] ? "<p{$id} class='toggle'>{$field['desc']}</p>" : '';
 	}
 }
