@@ -42,6 +42,7 @@ class SWP_Meta_Box_Loader {
             'name'  => 'Share Customization',
             'id'    => 'swp_meta_box_heading',
             'type'  => 'heading',
+            'class' => 'heading',
             'desc'  => 'Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.',
         );
 
@@ -177,6 +178,14 @@ class SWP_Meta_Box_Loader {
             'std'   => 'default',
         );
 
+        $pin_force_image = array(
+            'id'    => 'swp_force_pin_image',
+            'type'  => 'toggle',
+            'desc'  =>  'Allow only this Pinterest image when pinning?',
+            'value' => true,
+            'class' => 'pinterest',
+        );
+
         $recover_shares_box = array(
             'name'  => __( 'Share Recovery','social-warfare' ),
             'desc'  => __( 'If you have changed the permalink for just this post, paste in the previous full URL for this post so we can recover shares for that link.','social-warfare' ),
@@ -225,6 +234,7 @@ class SWP_Meta_Box_Loader {
             'id'    => 'open_graph_toggle',
             'type'  => 'toggle',
             'desc'  =>  'Use Open Graph for Twitter Card?',
+            'vallue'=> false,
             'class' => 'twitter',
         );
 
@@ -243,6 +253,7 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $open_graph_title;
         $meta_boxes[0]['fields'][] = $open_graph_description;
         $meta_boxes[0]['fields'][] = $pinterst_image;
+        $meta_boxes[0]['fields'][] = $pin_force_image;
         $meta_boxes[0]['fields'][] = $open_graph_toggle;
         $meta_boxes[0]['fields'][] = $twitter_image;
         $meta_boxes[0]['fields'][] = $twitter_title;
@@ -292,10 +303,11 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-        echo '<div class="swp-meta-container open-graph"></div>';
-        echo '<div class="swp-meta-container pinterest"></div>';
-        echo '<div class="swp-meta-container twitter"></div>';
-        echo '<div class="swp-meta-container other"></div>';
+        echo '<div class="swp-meta-container" data-type="heading"></div>';
+        echo '<div class="swp-meta-container" data-type="open-graph"></div>';
+        echo '<div class="swp-meta-container" data-type="pinterest"></div>';
+        echo '<div class="swp-meta-container" data-type="twitter"></div>';
+        echo '<div class="swp-meta-container" data-type="other"></div>';
 
         return $meta_box;
     }
