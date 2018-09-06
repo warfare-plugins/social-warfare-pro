@@ -38,8 +38,6 @@ class SWPMB_Display_Text_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-		$id = $field['id'] ? " id='{$field['id']}-description'" : '';
-
-		return $field['desc'] ? "<p{$id} class='description'>{$field['desc']}</p>" : '';
+		
 	}
 }
