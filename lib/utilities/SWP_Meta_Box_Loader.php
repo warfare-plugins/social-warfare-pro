@@ -41,10 +41,8 @@ class SWP_Meta_Box_Loader {
         $heading = array(
             'name'  => 'Share Customization',
             'id'    => 'swp_meta_box_heading',
-            'class' => '',
             'type'  => 'heading',
             'desc'  => 'Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.',
-
         );
 
 
@@ -227,7 +225,7 @@ class SWP_Meta_Box_Loader {
             'id'    => 'open_graph_toggle',
             'type'  => 'toggle',
             'desc'  =>  'Use Open Graph for Twitter Card?',
-            'class' => 'twittter',
+            'class' => 'twitter',
         );
 
     	// Setup our meta box using an array.
@@ -297,7 +295,7 @@ class SWP_Meta_Box_Loader {
         echo '<div class="swp-meta-container open-graph"></div>';
         echo '<div class="swp-meta-container pinterest"></div>';
         echo '<div class="swp-meta-container twitter"></div>';
-        echo '<div class="swp-meta-container other></div>';
+        echo '<div class="swp-meta-container other"></div>';
 
         return $meta_box;
     }
