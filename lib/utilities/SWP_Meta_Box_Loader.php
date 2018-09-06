@@ -112,7 +112,7 @@ class SWP_Meta_Box_Loader {
             'name'  => __( 'Pinterest Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
             'id'    => $prefix . 'pinterest_image',
-            'class' => $prefix . 'large_image',
+            'class' => $prefix . 'large_image pinterest',
             'type'  => 'image_advanced',
             'clone' => false,
             'max_file_uploads' => 1,
@@ -304,7 +304,10 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-        // echo '';
+        echo '<div class="swp-meta-container open-graph"></div>';
+        echo '<div class="swp-meta-container pinterest"></div>';
+        echo '<div class="swp-meta-container twitter"></div>';
+        echo '<div class="swp-meta-container other></div>';
 
         return $meta_box;
     }
