@@ -197,7 +197,7 @@ class SWP_Meta_Box_Loader {
 
         // Set up the location on post options.
         $post_location = array(
-            'name'    =>  __( 'Horizontal Buttons Location','social-warfare' ),
+            'name'    =>  __( 'Static Buttons Location','social-warfare' ),
             'id'      => $prefix . 'post_location',
             'type'    => 'select',
             'options' => array(
@@ -213,7 +213,7 @@ class SWP_Meta_Box_Loader {
         );
 
         $float_location = array(
-            'name'    =>  __( 'Floating Buttons','social-warfare' ),
+            'name'    =>  __( 'Floating Buttons Location','social-warfare' ),
             'id'      => $prefix . 'float_location',
             'type'    => 'select',
             'options' => array(
