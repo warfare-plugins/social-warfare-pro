@@ -226,6 +226,7 @@ class SWPMB_Loader
             'fields/divider',
             'fields/heading',
             'fields/display-text',
+            'fields/toggle',
             'fields/textarea',
         );
         foreach ( $files as $file )
