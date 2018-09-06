@@ -40,12 +40,12 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	{
         $id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
 
-        $toggle = "<div $id class='sw-checkbox-toggle' status='off'>
+        $toggle = "<div class='sw-checkbox-toggle' status='off' data-field='#${field['id']}'>
                        <div class='sw-checkbox-on'>ON</div>
                        <div class='sw-checkbox-off'>OFF</div>
                    </div>";
 
-        $toggle .= "<input type='hidden' $id />";
+        $toggle .= "<input $id type='checkbox' style='display: none;' />";
 
         //* Close the div opened in begin_html().
         return $toggle . '</div>';
