@@ -503,8 +503,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		/**
     		 * The Twitter Card Creator
     		 */
-    		if ( isset( $user_twitter_handle ) ) :
-    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( $user_twitter_handle ) );
+    		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
+    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
     		endif;
 
     	endif;
@@ -679,9 +679,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color" ) :
             $css .= "
 
-            $class.swp_default_" . $float . "custom_color a
+            $class.swp_default_custom_color a
                 {color:white !important}
-            $class$panel.swp_default_" . $float . "custom_color .nc_tweetContainer
+            $class$panel.swp_default_custom_color .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
                     border:1px solid " . $custom_color . ";
@@ -693,9 +693,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
                 $css .= "
 
-            $class.swp_default_" . $float . "custom_color_outlines a
+            $class.swp_default_custom_color_outlines a
                 {color: " . $custom_outlines . " !important}
-            $class.swp_default_" . $float . "custom_color_outlines .nc_tweetContainer
+            $class.swp_default_custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
                     border:1px solid " . $custom_outlines . " ;
@@ -713,9 +713,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color" ) :
             $css .= "
 
-            html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
+            html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover a
                 {color:white !important}
-            html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover
+            html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color:" . $custom_color . "!important;
                     border:1px solid " . $custom_color . "!important;
@@ -727,9 +727,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
-            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
+            html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
                 {color:" . $custom_outlines . " !important}
-            html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
+            html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
                 {
                     background-color: transparent !important;
                     border:1px solid " . $custom_outlines . "!important ;
@@ -747,9 +747,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color" ) :
             $css .= "
 
-            body $class$panel.swp_other_" . $float . "custom_color:hover a
+            body $class$panel.swp_other_custom_color:hover a
                 {color:white !important}
-            body $class$panel.swp_other_" . $float . "custom_color:hover .nc_tweetContainer
+            body $class$panel.swp_other_custom_color:hover .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
                     border:1px solid " . $custom_color . ";
