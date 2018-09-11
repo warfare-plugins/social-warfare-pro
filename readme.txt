@@ -193,6 +193,18 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.3.0 (11 SEP 2018) =
+* Added style to Pinterest Images to display more spaciously in posts.
+* Added new options for limiting Bitly link creation.
+* Added a "Pin On Hover?" checkbox for each image in the media gallery. 
+* Fixed the extra padding on mobile floating buttons.
+* Changed the update check mechanism so Pro does not depend on Core's verison.
+* Updated scoped functions to class methods.
+
+= 3.2.2 (21 AUG 2018) =
+* Rebuilt and fully rectified the automatic updates processes.
+* Fixed javascript error that broke images when pinning from Pin On Hover button.
+
 = 3.0.9 (08 JUN 2018) =
 * Fix for slow page loads on some sites.
 * Added notice to warn that StumbleUpon is being removed at the end of the month.
