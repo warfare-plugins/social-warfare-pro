@@ -1,9 +1,9 @@
 === WordPress Social Sharing Plugin - Social Warfare ===
 Contributors: holas84, dustinwstout, webinator, warfareplugins, nutsandboltsmedia, cdegraff1, ckmahoney
-Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, stumbleupon button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
+Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 3.5.1
 Tested up to: 4.9
-Stable tag: 3.2.2
+Stable tag: 3.3.0
 License: GNU General Public License v2.0 or later
 
 The most beautiful, responsive, lightning fast social share buttons built to boost shares and drive more traffic without slowing down your site.
@@ -193,58 +193,17 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.3.0 (11 SEP 2018) =
+* Added style to Pinterest Images to display more spaciously in posts.
+* Added new options for limiting Bitly link creation.
+* Added a "Pin On Hover?" checkbox for each image in the media gallery.
+* Fixed the extra padding on mobile floating buttons.
+* Changed the update check mechanism so Pro does not depend on Core's verison.
+* Updated scoped functions to class methods.
+
 = 3.2.2 (21 AUG 2018) =
 * Rebuilt and fully rectified the automatic updates processes.
 * Fixed javascript error that broke images when pinning from Pin On Hover button.
-
-= 3.2.1 (16 AUG 2018) =
-* Fixed a minor DOMDocument warning that was appearing when data-pin-description was ON
-
-= 3.2.0 (13 AUG 2018) =
-* Shoutout to our Warfare Community beta testers- thank you so much!
-* Created shortcode for Pinterest Image.
-* Created Custom Pinterst Description on a per-image basis.
-* Fixed the Total Shares icon/counts not displaying.
-* Fixed many JS related issues on floating and mobile buttons.
-* Fixed an issue where some buttons did not display on some posts (after 'post_updated' fires).
-* Fixed the total shares missing counts from LinkedIn and Google Plus.
-* Fixed floating buttons not showing until bottom of content.
-* Fixed where posts were receiving false share counts from Facebook.
-* Fixed the update process for addons (like Pro) so it should now receive dashboard notifications.
-* Fixed sharing on Pinterest when images use relative paths instead of absolute paths.
-* Fixed hidden Pinterest image from covering content "below".
-* Changed the cursor from cursor to pointer for Total Shares hover state.
-* Added option to add data-pin-description to all images in a post.
-* Added !important tags for our Custom Color option.
-* Added check for whether or not to fetch share counts (based on Button Count and Total Count settings).
-* Updated the visibility of Mobile Float Location option.
-* Replaced New Share Counts with Twitcount.
-
-= 3.1.1 (12 JUl 2018) =
-* Fixed Javascript "minWidth" is undefined.
-* Fixed which buttons are displayed when using Dynamic Sorting.
-* Fixed "Undefined Index: post_id" error.
-* Changed default "Float Before Content" from "ON" to "OFF".
-* Removed excess printing of "Float Before Content" variable.
-
-= 3.1.0 (09 JUl 2018) =
-* Fixed incompatibility with Yoast update
-* Fixed side floating button fade effect.
-* Fixed the shares icon CSS in the side floating buttons.
-* Added option for post-specific share recovery
-* Added option to show/hide buttons before content.
-* Added "noopener noreferrer" to outbound links.
-* Added two Pinterest image selectors.
-* Added the Pinterest character counter.
-* Added Google Tag Manager compatibility for Click/Event Tracking
-* Removed the StumbleUpon button.
-* Updated references of http to https where possible.
-* Updated the Facebook share count system.
-* Updated notifications to read from WarfarePlugins server.
-* Major update to the metadata caching system.
-* Major updates on floating buttons and mobile buttons.
-* Updated the plugin update processes.
-* Ensures all custom post types are showing in the "Position Share Buttons" display section.
 
 = 3.0.9 (08 JUN 2018) =
 * Fix for slow page loads on some sites.

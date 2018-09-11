@@ -1,5 +1,5 @@
 <?php
-
+if ( class_exists( 'SWP_Social_Network' ) ) :
 /**
  * Buffer
  *
@@ -38,7 +38,7 @@ class SWP_Buffer extends SWP_Social_Network {
 		$this->cta            = __( 'Buffer','social-warfare' );
 		$this->key            = 'buffer';
 		$this->default        = 'false';
-    $this->premium        = 'pro';
+        $this->premium        = 'pro';
 		$this->base_share_url = 'https://bufferapp.com/add?url=';
 
 		$this->init_social_network();
@@ -93,17 +93,15 @@ class SWP_Buffer extends SWP_Social_Network {
 		$title = get_post_meta( $post_data['ID'] , 'nc_ogTitle' , true );
 
 		if ( !$title ) :
-			$title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+			$title = isset( $post_data['post_title'] ) ? $post_data['post_title'] : get_the_title();
 		endif;
 
-		if( !$title ) :
-			$title = get_the_title();
-		endif;
-
-		$title = urldecode( $title );
+		$title = urlencode( $title );
 
     $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&text=' . $title;
 
     return $share_link;
     }
 }
+
+endif;

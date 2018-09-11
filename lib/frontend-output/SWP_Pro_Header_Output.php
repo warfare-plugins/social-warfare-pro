@@ -1,5 +1,7 @@
 <?php
 
+if ( class_exists( 'SWP_Header_Output' ) ) :
+
 /**
  * Register and output open graph tags, Twitter cards, custom color CSS, and the icon fonts.
  *
@@ -47,13 +49,12 @@
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
-        global $swp_user_options, $post;
+        global $post;
 
         if ( !empty( $post ) && is_object( $post ) ) {
             //* Store the post for wpseo_replace_vars().
             $this->post = $post;
         }
-        $this->options = $swp_user_options;
         $this->establish_custom_colors();
         $this->init();
     }
@@ -93,9 +94,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] && isset( $this->options['twitter_cards'] ) && false === $this->options['twitter_cards'] ){
-    		return $info;
-    	}
+    	if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) :
+            return $info;
+        endif;
+
 
     	/**
     	 * Begin by fetching the user's default custom settings
@@ -197,17 +199,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 * Open Graph Type
     	 * @since 2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
     	 */
-    	$swp_post_type = get_post_type();
-    	if(!isset($this->options['swp_og_type_'.$swp_post_type])):
-    		$this->options['swp_og_type_'.$swp_post_type] = 'article';
+    	$type = get_post_type();
+
+    	if ( !SWP_Utility::get_option( 'swp_og_type_' . $type ) ) :
+    		$this->options['swp_og_type_'.$type] = 'article';
     	endif;
-    	$og_type_from_global_options = $this->options['swp_og_type_'.$swp_post_type];
-    	$og_type_from_custom_field = get_post_meta( $info['postID'] , 'swp_og_type' , true );
-    	if( $og_type_from_custom_field ):
-    		$info['meta_tag_values']['og_type'] = $og_type_from_custom_field;
-    	else:
-     		$info['meta_tag_values']['og_type'] = $og_type_from_global_options;
-    	endif;
+
+        $og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
+
+        if ( empty( $og_type ) ) :
+            $og_type = SWP_Utility::get_option( 'swp_og_type_' . $type );
+        endif;
+
+
+        $info['meta_tag_values']['og_type'] = $og_type;
 
     	/**
     	 *  Open Graph Title: Create an open graph title meta tag
@@ -220,7 +225,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	elseif ( !empty( $yoast_seo_title ) ) :
     		$info['meta_tag_values']['og_title'] = $yoast_seo_title;
     	else :
-    		$info['meta_tag_values']['og_title'] = trim( convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
+    		$info['meta_tag_values']['og_title'] = trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
     	endif;
 
     	/**
@@ -234,7 +239,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	elseif ( !empty( $yoast_seo_description ) ) :
     		$info['meta_tag_values']['og_description'] = $yoast_seo_description;
     	else :
-    		$info['meta_tag_values']['og_description'] = html_entity_decode( convert_smart_quotes( htmlspecialchars_decode( swp_get_excerpt_by_id( $info['postID'] ) ) ) );
+    		$info['meta_tag_values']['og_description'] = html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $info['postID'] ) ) ) );
     	endif;
 
     	/**
@@ -303,17 +308,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $info The modified info array
      */
     public function open_graph_html($info) {
-    	if( false === is_singular() ) {
+    	if ( false === is_singular() ) {
     		return $info;
     	}
 
     	// Don't compile them if the OG Tags are Disabled on the options page
-    	if( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ){
+    	if ( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ) {
     		return $info;
     	}
 
     	// Check to ensure that we don't need to defer to Yoast
-    	if(false === $info['yoast_og_setting']):
+    	if( !isset( $info['yoast_og_setting'] ) || false === $info['yoast_og_setting'] ):
 
     		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
@@ -400,8 +405,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
-
+    	if ( SWP_Utility::get_option( 'twitter_cards' ) ) :
     		/**
     		 * Begin by fetching the user's default custom settings
     		 *
@@ -490,18 +494,19 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		 * The Twitter Card Site
     		 *
     		 */
-    		if ( $this->options['twitter_id'] ) :
+    		if ( isset( $this->options['twitter_id'] ) ) :
     			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
     		endif;
 
     		/**
     		 * The Twitter Card Creator
     		 */
-    		if ( $user_twitter_handle ) :
+    		if ( isset( $user_twitter_handle ) ) :
     			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( $user_twitter_handle ) );
     		endif;
 
     	endif;
+
     	return $info;
     }
 
@@ -523,7 +528,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( is_singular() && $this->options['twitter_cards'] ) :
+    	if ( isset( $this->options['twitter_cards'] ) ) :
 
     		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
     			$info['html_output'] .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
@@ -586,7 +591,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     private function establish_custom_colors() {
 
         //* Static custom color.
-        if ( swp_get_option('default_colors') == 'custom_color' || swp_get_option('single_colors') == 'custom_color' || swp_get_option('hover_colors') == 'custom_color' ) :
+        if ( SWP_Utility::get_option('default_colors') == 'custom_color' || SWP_Utility::get_option('single_colors') == 'custom_color' || SWP_Utility::get_option('hover_colors') == 'custom_color' ) :
 
             $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
             $this->custom_color = $custom_color;
@@ -596,7 +601,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Float custom color.
-        if ( swp_get_option('float_default_colors') == 'float_custom_color' ||  swp_get_option('float_single_colors') == 'float_custom_color' ||  swp_get_option('float_hover_colors') == 'float_custom_color' ) :
+        if ( SWP_Utility::get_option('float_default_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color' ) :
 
             if ( true === $this->options['float_style_source'] ) :
                 //* Inherit the static button style.
@@ -610,7 +615,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         //* Static custom outlines.
-        if ( swp_get_option('default_colors') == 'custom_color_outlines' ||  swp_get_option('single_colors') == 'custom_color_outlines' ||  swp_get_option('hover_colors') == 'custom_color_outlines' ) :
+        if ( SWP_Utility::get_option('default_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('single_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('hover_colors') == 'custom_color_outlines' ) :
 
             $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
             $this->custom_color_outlines = $custom_color_outlines;
@@ -619,7 +624,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $this->custom_color_outlines = '';
         endif;
 
-        if (  swp_get_option('float_default_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_single_colors') == 'float_custom_color_outlines' ||  swp_get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
+        if (  SWP_Utility::get_option('float_default_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
             if ( true === $this->options['float_style_source'] ) :
 
                 //* Inherit the static button style.
@@ -669,7 +674,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Default: Custom Color
-        if ( swp_get_option($float . "default_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color" ) :
             $css .= "
 
             $class.swp_default_" . $float . "custom_color a
@@ -683,7 +688,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Default: Custom Outlines
-        if ( swp_get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
+        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
                 $css .= "
 
             $class.swp_default_" . $float . "custom_color_outlines a
@@ -703,7 +708,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Individual: Custom Color
-        if ( swp_get_option($float . "single_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color" ) :
             $css .= "
 
             html body $class$panel.swp_individual_" . $float . "custom_color .nc_tweetContainer:not(.total_shares):hover a
@@ -717,7 +722,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
         // Individual: Custom Outlines
-        if ( swp_get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
+        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_individual_" . $float . "custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
@@ -737,7 +742,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
         // Other: Custom Color
-        if ( swp_get_option($float . "hover_colors") === $float . "custom_color" ) :
+        if ( SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color" ) :
             $css .= "
 
             body $class$panel.swp_other_" . $float . "custom_color:hover a
@@ -751,7 +756,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         endif;
 
 		// Other: Custom Outlines
-        if (swp_get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
+        if (SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
@@ -782,7 +787,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
     public function output_custom_color( $info ) {
         $static = $this->get_css();
-        $floaters_on = swp_get_option( 'floating_panel' );
+        $floaters_on = SWP_Utility::get_option( 'floating_panel' );
         $floating = $this->get_css( $floaters_on );
 
         $css = $static . $floating;
@@ -818,3 +823,5 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         return $info;
     }
 }
+
+endif;

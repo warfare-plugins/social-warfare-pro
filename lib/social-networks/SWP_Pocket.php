@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Social_Network' ) ) :
 
 /**
  * Pocket
@@ -44,3 +45,4 @@ class SWP_Pocket extends SWP_Social_Network {
 		$this->init_social_network();
 	}
 }
+endif;

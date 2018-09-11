@@ -1,4 +1,5 @@
 <?php
+if ( class_exists( 'SWP_Settings_Link' ) ):
 
 /**
  * Adding the settings link to the plugins page
@@ -29,5 +30,6 @@ class SWP_Pro_Settings_Link extends SWP_Settings_Link {
 	public function __construct() {
 		add_filter( 'plugin_action_links_' . plugin_basename( SWPP_PLUGIN_FILE ), array( $this , 'add_settings_links' ) );
 	}
-
 }
+
+endif;
