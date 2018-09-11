@@ -193,6 +193,10 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.3.1 (11 SEP 2018) =
+* Fixed the broken twitter:creator meta tag. 
+* Fixed the distinction between custom color and float custom color.
+
 = 3.3.0 (11 SEP 2018) =
 * Added style to Pinterest Images to display more spaciously in posts.
 * Added new options for limiting Bitly link creation.

@@ -446,6 +446,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
             $tweet_activation = new SWP_Section_HTML( __( 'Tweet Activation', 'social-warfare'), 'tweet_activation' );
             $tweet_activation->set_priority( 10 )
+                ->set_default( false )
                 ->set_premium( 'pro' );
             $tweet_activation->do_tweet_count_registration();
 
