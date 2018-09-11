@@ -49,12 +49,14 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
-        global $post;
+        global $post, $swp_user_options;
 
         if ( !empty( $post ) && is_object( $post ) ) {
             //* Store the post for wpseo_replace_vars().
             $this->post = $post;
         }
+
+        $this->options = $swp_user_options;
         $this->establish_custom_colors();
         $this->init();
     }
@@ -202,7 +204,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	$type = get_post_type();
 
     	if ( !SWP_Utility::get_option( 'swp_og_type_' . $type ) ) :
-    		$this->options['swp_og_type_'.$type] = 'article';
+    		$this->options['swp_og_type_' . $type] = 'article';
     	endif;
 
         $og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
