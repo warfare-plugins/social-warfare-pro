@@ -226,10 +226,6 @@ class SWP_Meta_Box_Loader {
             'std'   => 'default',
         );
 
-        $open_graph_twitter_card = new SWP_Option_Toggle( __( 'Use Open Graph for Twitter Cards' , 'social-warfare' ), 'swp_open_graph_twitter_card' );
-        $open_graph_twitter_card->set_default( false )
-            ->set_premium( 'pro' );
-
         $open_graph_toggle = array(
             'id'    => 'open_graph_toggle',
             'type'  => 'toggle',
