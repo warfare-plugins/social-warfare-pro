@@ -503,8 +503,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		/**
     		 * The Twitter Card Creator
     		 */
-    		if ( isset( $user_twitter_handle ) ) :
-    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( $user_twitter_handle ) );
+    		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
+    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
     		endif;
 
     	endif;
