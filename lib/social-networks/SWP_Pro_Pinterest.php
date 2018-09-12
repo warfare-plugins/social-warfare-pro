@@ -137,12 +137,17 @@ class SWP_Pro_Pinterest {
     /**
      * Get the Pinterest description set by the Admin, or a fallback.
      *
+     * Order of Precedence:
+     * 1. The user defined pinterest description for the given image.
+     *
+     * @since  3.3.2 | 12 SEP 2018 |
      * @param  int $id The Post to check for a pinterest description.
      * @return string $html Our version of the markup.
      *
      */
     public static function get_pin_description( $id ) {
-        //* Prefer the user-defined Pin Description.
+
+        //* (1) Prefer the user-defined Pin Description.
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) :
@@ -311,15 +316,23 @@ class SWP_Pro_Pinterest {
 
                 $replacement = $img->cloneNode();
 
-                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && $img->hasAttribute( 'alt' ) ) {
-                    // check for alt text
+				// Check for alt text
+                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $img->getAttribute( 'alt' ) ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
+
+				// Check for the post pinterest description
                 } else if ( !empty( $description_fallback ) ) {
-                    // if no alt text, use fallback (currently empty)
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
+
+				// Use the post title and excerpt.
                 } else {
-                    // fail out
-                    continue;
+
+					$title = get_the_title();
+					$excerpt = SWP_Utility::get_the_excerpt( $post->ID );
+					$description = $title . ': ' . $excerpt;
+					$description = str_replace( '"', '\'', $description );
+					$replacement->setAttribute( "data-pin-description", $description );
+
                 }
 
                 $img->parentNode->replaceChild($replacement, $img);
