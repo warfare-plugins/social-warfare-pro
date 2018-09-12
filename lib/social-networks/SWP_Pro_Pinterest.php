@@ -16,7 +16,7 @@ class SWP_Pro_Pinterest {
      */
     public function __construct() {
         if ( $this->should_bail() ) :
-            return;
+            // return;
         endif;
 
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
@@ -142,7 +142,8 @@ class SWP_Pro_Pinterest {
      *
      */
     public static function get_pin_description( $id ) {
-        //* Prefer the user-defined Pin Description.
+
+        //* (1) Prefer the user-defined Pin Description.
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) :
@@ -207,7 +208,7 @@ class SWP_Pro_Pinterest {
      * @return $html Our version of the markup.
      */
     public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
-        $description = $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+        $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) {
             //* We only permastore the pin description when they have specifically set one for this image.
@@ -224,33 +225,34 @@ class SWP_Pro_Pinterest {
         }
 
 
-        if ( class_exists( 'DOMDocument') ) :
+        if ( class_exists( 'DOMDocument' ) ) :
 
             //* DOMDocument works better with an XML delcaration.
-            if ( false === strpos( $the_content, '?xml version' ) ) :
+            if ( false === strpos( $html, '?xml version' ) ) :
                 $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-                $html = $xml_statement . $the_content;
+                $html = $xml_statement . $html;
                 $added_xml_statement = true;
-            else :
-                $html = $the_content;
             endif;
 
+            //* Prevent warnings for 'Invalid Tag' on HTML5 tags.
             libxml_use_internal_errors( true );
-            $doc = @DOMDocument::loadHTML( $html );
+            $doc = new DOMDocument();
+            $doc->loadHTML( $html );
+
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
-            $img = $doc->getElementsByTagName("img")[0];
+            $img = $doc->getElementsByTagName( "img" )[0];
 
             $replacement = $img->cloneNode();
             $replacement->setAttribute( "data-pin-description", $description );
 
-            $img->parentNode->replaceChild($replacement, $img);
+            $img->parentNode->replaceChild( $replacement, $img );
 
             $html = $doc->saveHTML();
 
             if ( $added_xml_statement ) :
-                $html = str_replace( $xml_statement, '', $the_content );
+                $html = str_replace( $xml_statement, '', $html );
             endif;
 
         else:
@@ -273,28 +275,39 @@ class SWP_Pro_Pinterest {
         return $html;
     }
 
+
+	/**
+	 * Add data-pin-descriptions to all images that don't have one.
+	 *
+	 *
+     * Order of Precedence:
+     * 1. The user defined pinterest description for the given image.
+     * 2. The ALT text for the image.
+     * 3. The pinterest description set for the post.
+     * 4. The title and excerpt for the post.
+     *
+     * @since  3.3.2 | 12 SEP 2018 | Refined order of precedence logic
+	 * @param  string $the_content String of text for the content.
+	 * @return string The modified content text.
+	 *
+	 */
     public function content_add_pin_description( $the_content ) {
         global $post;
 
         $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
-
-        if ( class_exists( 'DOMDocument') ) :
-
-			if( true === SWP_Utility::debug('domdocument') ):
-				echo "<pre>DOMDocument is active on this server.</pre>";
-			endif;
+        if ( class_exists( 'DOMDocument') ) {
 
             //* DOMDocument works better with an XML delcaration.
-            if ( false === strpos( $the_content, '?xml version' ) ) :
+            if ( false === strpos( $the_content, '?xml version' ) ) {
                 $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
                 $html = $xml_statement . $the_content;
                 $added_xml_statement = true;
-            else :
+            } else {
                 $html = $the_content;
-            endif;
+            }
 
-            libxml_use_internal_errors( true );
+            //* Prevent warnings for 'Invalid Tag' on HTML5 tags. ibxml_use_internal_errors( true );
             $doc = new DOMDocument();
             $doc->loadHTML( $html );
             libxml_use_internal_errors( false );
@@ -310,12 +323,23 @@ class SWP_Pro_Pinterest {
 
                 $replacement = $img->cloneNode();
 
-                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && $img->hasAttribute( 'alt' ) ) {
+				// Check for alt text
+                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $img->getAttribute( 'alt' ) ) ) {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
+
+				// Check for the post pinterest description
                 } else if ( !empty( $description_fallback ) ) {
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
+
+				// Use the post title and excerpt.
                 } else {
-                    continue;
+
+					$title = get_the_title();
+					$excerpt = SWP_Utility::get_the_excerpt( $post->ID );
+					$description = $title . ': ' . $excerpt;
+					$description = str_replace( '"', '\'', $description );
+					$replacement->setAttribute( "data-pin-description", $description );
+
                 }
 
                 $img->parentNode->replaceChild($replacement, $img);
@@ -324,17 +348,10 @@ class SWP_Pro_Pinterest {
 
             $the_content = $doc->saveHTML();
 
-            if ( $added_xml_statement ) :
+            if ( $added_xml_statement ) {
                 $the_content = str_replace( $xml_statement, '', $the_content );
-            endif;
-
-		else:
-
-			if( true === SWP_Utility::debug('domdocument') ):
-				echo "<pre>DOMDocument is not active on this server.</pre>";
-			endif;
-
-        endif;
+            }
+		}
 
         return $the_content;
     }
