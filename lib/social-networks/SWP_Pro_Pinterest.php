@@ -281,6 +281,10 @@ class SWP_Pro_Pinterest {
 
         if ( class_exists( 'DOMDocument') ) :
 
+			if( true === SWP_Utility::debug('domdocument') ):
+				echo "<pre>DOMDocument is active on this server.</pre>";
+			endif;
+
             //* DOMDocument works better with an XML delcaration.
             if ( false === strpos( $the_content, '?xml version' ) ) :
                 $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
