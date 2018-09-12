@@ -16,7 +16,7 @@ class SWP_Pro_Pinterest {
      */
     public function __construct() {
         if ( $this->should_bail() ) :
-            return;
+            // return;
         endif;
 
         add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
@@ -207,7 +207,7 @@ class SWP_Pro_Pinterest {
      * @return $html Our version of the markup.
      */
     public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
-        $description = $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+        $description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
         if ( empty( $description ) ) {
             //* We only permastore the pin description when they have specifically set one for this image.
@@ -224,33 +224,34 @@ class SWP_Pro_Pinterest {
         }
 
 
-        if ( class_exists( 'DOMDocument') ) :
+        if ( class_exists( 'DOMDocument' ) ) :
 
             //* DOMDocument works better with an XML delcaration.
-            if ( false === strpos( $the_content, '?xml version' ) ) :
+            if ( false === strpos( $html, '?xml version' ) ) :
                 $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-                $html = $xml_statement . $the_content;
+                $html = $xml_statement . $html;
                 $added_xml_statement = true;
-            else :
-                $html = $the_content;
             endif;
 
+            //* Prevent warnings for 'Invalid Tag' on HTML5 tags.
             libxml_use_internal_errors( true );
-            $doc = @DOMDocument::loadHTML( $html );
+            $doc = new DOMDocument();
+            $doc->loadHTML( $html );
+
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
-            $img = $doc->getElementsByTagName("img")[0];
+            $img = $doc->getElementsByTagName( "img" )[0];
 
             $replacement = $img->cloneNode();
             $replacement->setAttribute( "data-pin-description", $description );
 
-            $img->parentNode->replaceChild($replacement, $img);
+            $img->parentNode->replaceChild( $replacement, $img );
 
             $html = $doc->saveHTML();
 
             if ( $added_xml_statement ) :
-                $html = str_replace( $xml_statement, '', $the_content );
+                $html = str_replace( $xml_statement, '', $html );
             endif;
 
         else:
@@ -281,20 +282,20 @@ class SWP_Pro_Pinterest {
 
         if ( class_exists( 'DOMDocument') ) :
 
-			if( true === SWP_Utility::debug('domdocument') ):
+			if( true === SWP_Utility::debug('domdocument') ) :
 				echo "<pre>DOMDocument is active on this server.</pre>";
 			endif;
 
             //* DOMDocument works better with an XML delcaration.
-            if ( false === strpos( $the_content, '?xml version' ) ) :
+            if ( false === strpos( $the_content, '?xml version' ) ) {
                 $xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
                 $html = $xml_statement . $the_content;
                 $added_xml_statement = true;
-            else :
+            } else {
                 $html = $the_content;
-            endif;
+            }
 
-            libxml_use_internal_errors( true );
+            //* Prevent warnings for 'Invalid Tag' on HTML5 tags. ibxml_use_internal_errors( true );
             $doc = new DOMDocument();
             $doc->loadHTML( $html );
             libxml_use_internal_errors( false );
@@ -311,10 +312,13 @@ class SWP_Pro_Pinterest {
                 $replacement = $img->cloneNode();
 
                 if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && $img->hasAttribute( 'alt' ) ) {
+                    // check for alt text
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
                 } else if ( !empty( $description_fallback ) ) {
+                    // if no alt text, use fallback (currently empty)
                     $replacement->setAttribute( "data-pin-description", $description_fallback );
                 } else {
+                    // fail out
                     continue;
                 }
 
