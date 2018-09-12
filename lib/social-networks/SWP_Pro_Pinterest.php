@@ -137,10 +137,6 @@ class SWP_Pro_Pinterest {
     /**
      * Get the Pinterest description set by the Admin, or a fallback.
      *
-     * Order of Precedence:
-     * 1. The user defined pinterest description for the given image.
-     *
-     * @since  3.3.2 | 12 SEP 2018 |
      * @param  int $id The Post to check for a pinterest description.
      * @return string $html Our version of the markup.
      *
@@ -279,17 +275,28 @@ class SWP_Pro_Pinterest {
         return $html;
     }
 
+
+	/**
+	 * Add data-pin-descriptions to all images that don't have one.
+	 *
+	 *
+     * Order of Precedence:
+     * 1. The user defined pinterest description for the given image.
+     * 2. The ALT text for the image.
+     * 3. The pinterest description set for the post.
+     * 4. The title and excerpt for the post.
+     *
+     * @since  3.3.2 | 12 SEP 2018 | Refined order of precedence logic
+	 * @param  string $the_content String of text for the content.
+	 * @return string The modified content text.
+	 *
+	 */
     public function content_add_pin_description( $the_content ) {
         global $post;
 
         $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
-
-        if ( class_exists( 'DOMDocument') ) :
-
-			if( true === SWP_Utility::debug('domdocument') ) :
-				echo "<pre>DOMDocument is active on this server.</pre>";
-			endif;
+        if ( class_exists( 'DOMDocument') ) {
 
             //* DOMDocument works better with an XML delcaration.
             if ( false === strpos( $the_content, '?xml version' ) ) {
@@ -341,17 +348,10 @@ class SWP_Pro_Pinterest {
 
             $the_content = $doc->saveHTML();
 
-            if ( $added_xml_statement ) :
+            if ( $added_xml_statement ) {
                 $the_content = str_replace( $xml_statement, '', $the_content );
-            endif;
-
-		else:
-
-			if( true === SWP_Utility::debug('domdocument') ):
-				echo "<pre>DOMDocument is not active on this server.</pre>";
-			endif;
-
-        endif;
+            }
+		}
 
         return $the_content;
     }
