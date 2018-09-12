@@ -324,6 +324,12 @@ class SWP_Pro_Pinterest {
                 $the_content = str_replace( $xml_statement, '', $the_content );
             endif;
 
+		else:
+
+			if( true === SWP_Utility::debug('domdocument') ):
+				echo "<pre>DOMDocument is not active on this server.</pre>";
+			endif;
+
         endif;
 
         return $the_content;
