@@ -680,7 +680,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             $class.swp_default_custom_color a
-                {color:white !important}
+                {color:white}
             $class$panel.swp_default_custom_color .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
@@ -694,7 +694,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
                 $css .= "
 
             $class.swp_default_custom_color_outlines a
-                {color: " . $custom_outlines . " !important}
+                {color: " . $custom_outlines . "}
             $class.swp_default_custom_color_outlines .nc_tweetContainer
                 {
                     background-color: transparent ;
@@ -748,7 +748,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             body $class$panel.swp_other_custom_color:hover a
-                {color:white !important}
+                {color:white}
             body $class$panel.swp_other_custom_color:hover .nc_tweetContainer
                 {
                     background-color:" . $custom_color . ";
@@ -762,7 +762,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $css .= "
 
             html body $class.swp_other_" . $float . "custom_color_outlines:hover a
-                {color:" . $custom_outlines . " !important }
+                {color:" . $custom_outlines . " }
             html body $class.swp_other_" . $float . "custom_color_outlines:hover .nc_tweetContainer
                 {
                     background-color: transparent ;
