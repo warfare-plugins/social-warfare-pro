@@ -294,7 +294,7 @@ class SWP_Pro_Pinterest {
     public function content_add_pin_description( $the_content ) {
         global $post;
 
-        $description_fallback = $description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+        $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
         if ( class_exists( 'DOMDocument') ) {
 
@@ -328,8 +328,8 @@ class SWP_Pro_Pinterest {
                     $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
 
 				// Check for the post pinterest description
-                } else if ( !empty( $description_fallback ) ) {
-                    $replacement->setAttribute( "data-pin-description", $description_fallback );
+				} else if ( !empty( $post_pinterest_description ) ) {
+                    $replacement->setAttribute( "data-pin-description", $post_pinterest_description );
 
 				// Use the post title and excerpt.
                 } else {
@@ -458,7 +458,12 @@ class SWP_Pro_Pinterest {
             $src = get_post_meta( $post->ID, 'swp_pinterest_image_url', true );
         endif;
 
-        if ( !is_numeric( $id ) ) {
+        if ( !is_numeric( $id ) && 'featured' == SWP_Utility::get_option( 'pinterest_fallback' ) ) {
+            $id = get_post_thumbnail_id();
+            $src = wp_get_attachment_image_src( $id, 'full' );
+
+            die(var_dump($src));
+        } else {
             return;
         }
 
