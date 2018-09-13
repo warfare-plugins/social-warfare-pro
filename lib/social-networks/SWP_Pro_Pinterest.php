@@ -54,6 +54,7 @@ class SWP_Pro_Pinterest {
      *
      * @since  2.2.4 | 09 MAR 2017 | Created
      * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
+     * @since  3.3.2 | 13 SEP 2018 | Added check for is_singular()
      * @access public
      *
      * @param  string $content The post content to filter
@@ -61,6 +62,11 @@ class SWP_Pro_Pinterest {
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
+
+		if( false === is_singular() ) {
+			return $content;
+		}
+
     	global $post;
     	$post_id = $post->ID;
     	$meta_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
