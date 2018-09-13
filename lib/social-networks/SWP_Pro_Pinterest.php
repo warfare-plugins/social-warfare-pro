@@ -309,6 +309,7 @@ class SWP_Pro_Pinterest {
 
             //* Prevent warnings for 'Invalid Tag' on HTML5 tags. ibxml_use_internal_errors( true );
             $doc = new DOMDocument();
+            libxml_use_internal_errors( true );
             $doc->loadHTML( $html );
             libxml_use_internal_errors( false );
             libxml_clear_errors();
