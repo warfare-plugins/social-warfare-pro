@@ -460,7 +460,7 @@ class SWP_Pro_Pinterest {
 
         if ( !is_numeric( $id ) && 'featured' == SWP_Utility::get_option( 'pinterest_fallback' ) ) {
             $id = get_post_thumbnail_id();
-            $src = wp_get_attachment_image_src( $id, 'full' );
+            $src = wp_get_attachment_image_src( $id, 'full' )[0];
         } else {
             return;
         }
