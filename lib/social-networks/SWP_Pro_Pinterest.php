@@ -184,13 +184,13 @@ class SWP_Pro_Pinterest {
             default:
                 $style = '';
             case 'left':
-                $style = 'style="text-align: left";';
+                $style = 'style="text-align: left;"';
                 break;
             case 'right':
-                $style = 'style="text-align: right";';
+                $style = 'style="text-align: right;"';
                 break;
             case 'center':
-                $style = 'style="text-align: center"';
+                $style = 'style="text-align: center;"';
                 break;
         }
 

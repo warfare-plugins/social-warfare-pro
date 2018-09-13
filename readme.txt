@@ -193,6 +193,12 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.3.2 (13 SEP 2018) =
+* Patched a recent small bug when 'Add data-pin-description' is enabled.
+* Fixed a bug when redirecting back to Social Warfare after authenticating Bitly.
+* (pending) Fixed the Bitly link creation.
+
+
 = 3.3.1 (11 SEP 2018) =
 * Fixed the broken twitter:creator meta tag.
 * Fixed the distinction between custom color and float custom color.
