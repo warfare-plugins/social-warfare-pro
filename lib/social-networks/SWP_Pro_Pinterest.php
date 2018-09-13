@@ -54,6 +54,7 @@ class SWP_Pro_Pinterest {
      *
      * @since  2.2.4 | 09 MAR 2017 | Created
      * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
+     * @since  3.3.2 | 13 SEP 2018 | Added check for is_singular()
      * @access public
      *
      * @param  string $content The post content to filter
