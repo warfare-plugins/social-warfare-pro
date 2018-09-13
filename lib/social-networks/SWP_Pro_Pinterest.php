@@ -61,6 +61,11 @@ class SWP_Pro_Pinterest {
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
+
+		if( false === is_singular() ) {
+			return $content;
+		}
+
     	global $post;
     	$post_id = $post->ID;
     	$meta_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
