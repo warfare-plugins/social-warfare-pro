@@ -469,6 +469,7 @@ class SWP_Pro_Pinterest {
 
         $description = SWP_Pro_Pinterest::get_pin_description( $id );
 
+        //* If the user provided width & height attributes.
         if ( !empty( $width ) && !empty( $height ) ):
             $dimensions = ' width="' . $width . '"';
             $dimensions .= ' height="' . $height . '"';
@@ -476,12 +477,17 @@ class SWP_Pro_Pinterest {
             $dimensions = "";
         endif;
 
+        //* Instantiate a default class regardless of user input.
         if ( empty( $class ) ) :
             $class = "swp-pinterest-image";
+        else :
+            $class .= " swp-pinterest-image ";
         endif;
 
+        //* Parse the alignment from user input to inline style declaration.
         $alignment = SWP_Pro_Pinterest::get_alignment_style( $alignment );
 
+        //* Display a Pinterest 'Save' button on hover? 
         if ( 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true ) ) :
             $class .= ' no-pin ';
         endif;
