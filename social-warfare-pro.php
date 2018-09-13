@@ -29,7 +29,9 @@ function initialize_social_warfare_pro() {
     if ( !defined( 'SWP_VERSION' ) ) :
         //* We can not do any Pro without Core. Let them know and bail.
         add_action( 'admin_notices', 'swp_needs_core' );
-        throw new Exception("Please install Social Warfare (the free core plguin) before you activate Social Warfare - Pro. You can download it <a href='https://warfareplugins.com/updates/social-warfare/social-warfare.zip' target='_blank'>here</a>.");
+        //* `wp_die()` and `throw new Exception()` are both too strong of error messages.
+        //* We need something that just prevents plugin activation, not kill PHP. 
+        // wp_die("Please install Social Warfare (the free core plguin) before you activate Social Warfare - Pro. You can download it <a href='https://warfareplugins.com/updates/social-warfare/social-warfare.zip' target='_blank'>here</a>.");
         return;
     endif;
 
