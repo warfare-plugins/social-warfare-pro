@@ -11,7 +11,8 @@ class SWP_Pro_Pinterest {
     /**
      * Initialize the hooks and filters.
      *
-     * @since  3.2.0 | 26 JUL 2018
+     * @since  3.2.0 | 26 JUL 2018 | Created
+     * @since  3.3.2 | 14 SEP 2018 | Added admin an singular checks.
      *
      */
     public function __construct() {
@@ -19,26 +20,35 @@ class SWP_Pro_Pinterest {
             return;
         }
 
-        add_shortcode( 'pinterest_image', array( $this, 'pinterest_image' ) );
-        add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
-
-        add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image' ), 10 );
-
-        if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
-            add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
+        //* Admin hooks for editing pinterest-specific content.
+        if ( is_admin() ) {
+            add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
+            add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
+            add_filter( 'attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
         }
 
-        if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
-            add_filter( 'the_content', array( $this, 'content_maybe_add_no_pin' ), 10 );
+        //* Frontend hooks for applying the edited content.
+        if ( is_singular() ) {
+            add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image' ), 10 );
+            add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
+
+            if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
+                add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
+            }
+
+            if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
+                add_filter( 'the_content', array( $this, 'content_maybe_add_no_pin' ), 10 );
+            }
+        } else {
+            //* Return false so the text "[pinterest_image]" is not displayed.
+            add_shortcode( 'pinterest_image' , '__return_false' );
         }
 
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
-        add_filter('attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
-        add_filter('attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
     }
 
     public function should_bail() {
-        if (   Social_Warfare::has_plugin_conflict() || is_feed() || is_archive() ) {
+        if ( Social_Warfare::has_plugin_conflict() || is_feed() || is_archive() ) {
             return true;
         }
 
@@ -450,7 +460,8 @@ class SWP_Pro_Pinterest {
 	 * @return string       The rendered HTML for a Pinterest image.
 	 *
 	 */
-    public function pinterest_image( $atts ) {
+    public function pinterest_image_shortcode( $atts ) {
+
         global $post;
 
 
