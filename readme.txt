@@ -193,11 +193,13 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
-= 3.3.2 (13 SEP 2018) =
-* Patched a recent small bug when 'Add data-pin-description' is enabled.
-* Fixed a bug when redirecting back to Social Warfare after authenticating Bitly.
-* (pending) Fixed the Bitly link creation.
-
+= 3.3.2 (14 SEP 2018) =
+* Updated Pinterest images to only display on singular pages.
+* Updated Pinterest image shortcode fallback to look for featured image, if selected.
+* Fixed custom color outline/background combinations.
+* Fixed a small bug that stopped 'Add data-pin-description' from working.
+* Fixed the redirection back to Social Warfare settings after authenticating Bitly.
+* Fixed the Bitly link creation.
 
 = 3.3.1 (11 SEP 2018) =
 * Fixed the broken twitter:creator meta tag.
