@@ -453,24 +453,54 @@ class SWP_Pro_Pinterest {
     public function pinterest_image( $atts ) {
         global $post;
 
-        $whitelist = ['id', 'width', 'height', 'class', 'alignment'];
 
-        //* Instantiate and santiize each of the variables passed as attributes.
+		/**
+		 * This is a list of acceptable arguments that can be passed into
+		 * the shortcode allowing the user some level of control as to how
+		 * the Pinterest image will be displayed on output. Anything outside
+		 * of this list will be filtered out of the passed arguments.
+		 *
+		 */
+        $whitelist = ['id', 'width', 'height', 'class', 'alignment'];
         foreach( $whitelist as $var ) {
             $$var = isset( $atts[$var] ) ? sanitize_text_field( trim ( $atts[$var] ) ) : "";
         }
 
+
+		/**
+		 * If an ID was not passed in as an argument, but we have a valid
+		 * $post object, we can use that to find the Pinterest image for
+		 * the post in which the shortcode is being used.
+		 *
+		 */
         if ( empty( $id ) && is_object( $post )) {
             $id = get_post_meta( $post->ID, 'swp_pinterest_image', true);
             $src = get_post_meta( $post->ID, 'swp_pinterest_image_url', true );
         }
 
-        if ( !is_numeric( $id ) && 'featured' == SWP_Utility::get_option( 'pinterest_fallback' ) ) {
+
+		/**
+		 * If we were not able to find a specific Pinterest image for this
+		 * post then we will attempt to see if the post has a featured
+		 * image, but we will only do this if the user has set the "featured
+		 * image" to be used as the fallback on the options page.
+		 *
+		 */
+        if ( empty( $id ) && 'featured' == SWP_Utility::get_option( 'pinterest_fallback' ) ) {
             $id = get_post_thumbnail_id();
             $src = wp_get_attachment_image_src( $id, 'full' )[0];
-        } else {
-            return;
         }
+
+
+        /**
+         * No ID was provided by shortcode attribute OR by setting a
+         * pinterest image in the meta box, OR by looking for a featured
+         * image.
+         *
+         */
+		if ( empty( $id ) ) {
+			return;
+		}
 
         $image = get_post( $id );
 
