@@ -76,8 +76,9 @@ function initialize_social_warfare_pro() {
 	 * class in core that Social_Warfare_Pro will be extending.
 	 *
 	 */
-    if ( !class_exists( 'Social_Warfare_Addon' ) ) :
-        require_once( SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php' );
+	$addon_path = SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php';
+    if ( !class_exists( 'Social_Warfare_Addon' ) && file_exists( $addon_path ) ) :
+        require_once( $addon_path );
     endif;
 
 
