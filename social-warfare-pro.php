@@ -96,16 +96,18 @@ function initialize_social_warfare_pro() {
 	 * load and instantiate the Social Warfare Pro class to fire up the plugin.
 	 *
 	 */
-	if( defined( 'SWP_VERSION' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ):
-        if ( file_exists( SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php' ) ) :
-    		require_once SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
-    		new Social_Warfare_Pro();
-        endif;
-    else:
+
+	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ) { 
+		$pro_class_path = SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
+		if( file_exists( $pro_class_path ) ) {
+			require_once $pro_class_path;
+			new Social_Warfare_Pro();
+		}
+    } else {
 
 		// If core is too far out of date, we will notify the user to update.
         add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
-	endif;
+	}
 
 
 	/**

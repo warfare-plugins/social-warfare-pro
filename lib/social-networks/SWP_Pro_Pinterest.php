@@ -3,6 +3,13 @@
 /**
  * Hosts our Pro features for Pinterst.
  *
+ * This class contains a host of methods that at some pretty cool Pinterest
+ * related functionality to the plugin.
+ *
+ * 1. It creates and controls the output for the [pinterest_image] shortcode.
+ * 2. It adds Pinterest images to posts via the_content filter.
+ * 3. It adds data-pin-description to images dynamically via the_content filter.
+ *
  * @since  3.2.0 | 26 JUL 2018 | Created the class.
  *
  */
@@ -13,6 +20,8 @@ class SWP_Pro_Pinterest {
      *
      * @since  3.2.0 | 26 JUL 2018 | Created
      * @since  3.3.2 | 14 SEP 2018 | Added admin an singular checks.
+     * @param  void
+     * @return void
      *
      */
     public function __construct() {
@@ -32,6 +41,7 @@ class SWP_Pro_Pinterest {
             add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image' ), 10 );
             add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
 
+
             if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
                 add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
             }
@@ -47,11 +57,29 @@ class SWP_Pro_Pinterest {
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
     }
 
+
+	/**
+	 * There are certain conditions under which we should simply exclude all of
+	 * the functionality in this class to avoid conflicts.
+	 *
+	 * @since 3.2.0 | 26 JUL 2018 | Created
+	 * @param  void
+	 * @return bool True: bail; false: continue
+	 *
+	 */
     public function should_bail() {
-        if ( Social_Warfare::has_plugin_conflict() || is_feed() || is_archive() ) {
+
+		// Bail if another plugin is causing a conflict with this one.
+        if ( Social_Warfare::has_plugin_conflict() ) {
             return true;
         }
 
+		// We don't want these Pinterest features on feeds and archives.
+		if( is_feed() || is_archive() ) {
+			return true;
+		}
+
+		// We don't need Pinterest images on pages delivered via AMP.
         if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
             return true;
         }
@@ -62,41 +90,45 @@ class SWP_Pro_Pinterest {
     /**
      * A function to insert the Pinterest image for browser extensions
      *
+     * This will add the user-defined, post-level Pinterest image directly into
+     * the post content complete with the necessary data-pin-description and
+     * other attributes. This way when Pinterest's official browser extension,
+     * and other like Tailwind scrape the page, they will pick up and see the
+     * Pinterest optimized image along with the Pinterest optimized description.
+     *
      * @since  2.2.4 | 09 MAR 2017 | Created
      * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
      * @since  3.3.2 | 13 SEP 2018 | Added check for is_singular()
      * @access public
-     *
      * @param  string $content The post content to filter
      * @return string $content The filtered content
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
 
+		// We ONLY output these images on single posts, not archives.
 		if( false === is_singular() ) {
 			return $content;
 		}
 
     	global $post;
     	$post_id = $post->ID;
-    	$meta_browser_extension = get_post_meta( $post_id , 'swp_pin_browser_extension' , true );
-    	$pin_browser_location = get_post_meta( $post_id , 'swp_pin_browser_extension_location' , true );
+    	$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
+    	$pin_browser_location   = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
+        $pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
         // Bail early if not using a pinterest image.
         if ( 'off' == $meta_browser_extension ) {
             return $content;
         }
 
-        $pinterest_image_url = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
-
+		// Bail if this post doesn't have a specifically defined Pinterest image.
         if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
             return $content;
         }
 
         // This post is using some kind of Pinterest Image, so prepare the data to compile an image.
-
         $location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
-
 
         //* Set up the Pinterest username, if it exists.
         $id = SWP_Utility::get_option( 'pinterest_id' );
@@ -147,7 +179,6 @@ class SWP_Pro_Pinterest {
     	return $content;
 
     }
-
 
 
     /**
