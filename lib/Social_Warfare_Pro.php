@@ -110,7 +110,6 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * before loading them.
 		 *
 		 */
-
  		if ( true === $this->is_registered ) {
 			$social_networks = array(
 				'Buffer',
@@ -127,6 +126,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			$this->load_files( '/lib/social-networks/', $social_networks);
 		}
 
+
 		/**
 		 * The Admin Classes
 		 *
@@ -142,6 +142,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			);
 			$this->load_files( '/lib/admin/', $admin );
 		}
+
 
 		/**
 		 * The Frontend-Output Classes
