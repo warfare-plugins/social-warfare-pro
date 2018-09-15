@@ -7,8 +7,8 @@
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
+ *
  */
-
 defined( 'WPINC' ) || die;
 
 
@@ -59,7 +59,7 @@ function initialize_social_warfare_pro() {
 	 * If core is not loaded, we leave the plugin active, but we do not proceed
 	 * to load up, activate, or instantiate any of pro's features. Instead we
 	 * simply activate a dashboard notification to let the user know that they
-	 * need to active core.
+	 * need to activate core.
 	 *
 	 */
     if ( !defined( 'SWP_VERSION' ) ) :
@@ -97,15 +97,21 @@ function initialize_social_warfare_pro() {
 	 *
 	 */
 
-	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ) { 
+	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ) {
 		$pro_class_path = SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
 		if( file_exists( $pro_class_path ) ) {
 			require_once $pro_class_path;
 			new Social_Warfare_Pro();
 		}
-    } else {
 
-		// If core is too far out of date, we will notify the user to update.
+
+	/**
+	 * If core is simply too far out of date, we will create a dashboard notice
+	 * to inform the user that they need to update core to the appropriate
+	 * version in order to get access to pro.
+	 *
+	 */
+    } else {
         add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
 	}
 
