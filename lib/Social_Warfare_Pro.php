@@ -111,7 +111,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 *
 		 */
 
- 		if ( true == $this->is_registered ) {
+ 		if ( true === $this->is_registered ) {
 			$social_networks = array(
 				'Buffer',
 				'Reddit',
@@ -134,13 +134,14 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * links, and whatnot inside that WordPress admin area.
 		 *
 		 */
-		$admin = array(
-			'Meta_Box_Loader',
-			'Pro_Settings_Link',
-			'Pro_Options_Page'
-		);
-		$this->load_files( '/lib/admin/', $admin );
-
+		if ( true === is_admin() ) {
+			$admin = array(
+				'Meta_Box_Loader',
+				'Pro_Settings_Link',
+				'Pro_Options_Page'
+			);
+			$this->load_files( '/lib/admin/', $admin );
+		}
 
 		/**
 		 * The Frontend-Output Classes
@@ -182,8 +183,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
     		new SWP_Pro_Header_Output();
         endif;
 
-		new SWP_Meta_Box_Loader();
-		new SWP_Pro_Settings_link();
+		if( true == is_admin() ) {
+			new SWP_Meta_Box_Loader();
+			new SWP_Pro_Settings_link();
+		}
 
 	}
 
@@ -197,8 +200,12 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
      *
      */
 	public function instantiate_deferred_classes() {
-        new SWP_Pro_Options_Page();
-        new SWP_Pro_Pinterest();
+
+		if( true == is_admin() ) {
+	        new SWP_Pro_Options_Page();
+		}
+
+		new SWP_Pro_Pinterest();
 	}
 
 
