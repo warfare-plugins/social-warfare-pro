@@ -15,7 +15,7 @@
  * simply including a class's file. The term "instantiate" refers to actually
  * calling and activating a class.
  *
- * @package   SocialWarfare\Utilities
+ * @package   Social_Warfare
  * @copyright Copyright (c) 2018, Warfare Plugins, LLC
  * @license   GPL-3.0+
  * @since     3.0.0 | 19 FEB 2018 | Created
