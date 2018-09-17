@@ -85,7 +85,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			 * which are not available until then.
 			 *
 			 */
-            add_action( 'wp_loaded', array( $this, 'instantiate_deferred_classes') );
+            add_action( 'wp_loaded', array( $this, 'instantiate_deferred_classes') , 20 );
 
         }
 	}
@@ -180,12 +180,43 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	 */
 	public function instantiate_classes() {
 
+
+		/**
+		 * Header Output
+		 *
+		 * This is the class that extends the Header_Output class in the
+		 * core plugin. It controls the output of things like the Open
+		 * Graph tags, Twitter Card tags, and the dynamically generated
+		 * custom color CSS.
+		 *
+		 * Since this class extends a core class, it is wrapped in an
+		 * existence check before it is defined. So we also wrap the actual
+		 * call to instantiate in a check for existence.
+		 *
+		 */
         if ( class_exists( 'SWP_Pro_Header_Output' ) ) :
     		new SWP_Pro_Header_Output();
         endif;
 
 		if( true == is_admin() ) {
+
+
+			/**
+			 * Meta Box Loader
+			 *
+			 * This is the class that loads up all of the "Social Warfare
+			 * Custom Options" fields on the post editor so that users have
+			 * a place to input their custom tweets, Pinterest images, etc.
+			 *
+			 */
 			new SWP_Meta_Box_Loader();
+
+
+			/**
+			 * This is the class that adds the the "settings" link to the
+			 * plugins listing page.
+			 *
+			 */
 			new SWP_Pro_Settings_link();
 		}
 
