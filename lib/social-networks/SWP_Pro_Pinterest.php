@@ -30,33 +30,12 @@ class SWP_Pro_Pinterest {
         }
 
         //* Admin hooks for editing pinterest-specific content.
-        if ( is_admin() ) {
-            add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
-            add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
-            add_filter( 'attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
-        }
+        $this->add_admin_actions();
 
-        //* Frontend hooks for applying the edited content.
-        if ( is_singular() ) {
-            add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image' ), 10 );
-            add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
-
-
-            if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
-                add_filter( 'the_content', array( $this, 'content_add_pin_description' ) );
-            }
-
-            if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
-                add_filter( 'the_content', array( $this, 'content_maybe_add_no_pin' ), 10 );
-            }
-        } else {
-            //* Return false so the text "[pinterest_image]" is not displayed.
-            add_shortcode( 'pinterest_image' , '__return_false' );
-        }
-
+        //* Defer to the_content so `global $post` is defined.
+        add_filter( 'template_redirect', array( $this, 'add_frontend_actions' ) );
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
     }
-
 
 	/**
 	 * There are certain conditions under which we should simply exclude all of
@@ -86,6 +65,58 @@ class SWP_Pro_Pinterest {
 
         return false;
     }
+
+
+	/**
+	 * Add the Pinterest related admin hooks and filters.
+	 *
+	 * @since  3.2.3 | 17 SEP 2018 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+    public function add_admin_actions() {
+		if ( !is_admin() ) {
+            return;
+        }
+
+	    add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
+        add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
+        add_filter( 'attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
+    }
+
+
+	/**
+	 * Add the Pinterest related frontend hooks and filters.
+	 *
+	 * This is deferred to the "template_redirect" hook so that we have access
+	 * to the necessary conditionals (e.g. is_singular()) in order to control
+	 * what gets queued up where and when.
+	 *
+	 * @since  3.2.3 | 17 SEP 2018 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+    public function add_frontend_actions() {
+        if ( !is_singular() ) {
+            //* Return false so the text "[pinterest_image]" is not displayed.
+            add_shortcode( 'pinterest_image' , '__return_false' );
+            return;
+        }
+
+        if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
+			add_filter( 'the_content' , array( $this, 'content_add_pin_description' ) );
+        }
+
+        if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
+			add_filter( 'the_content' , array( $this, 'content_maybe_add_no_pin' ) );
+        }
+
+		add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
+		add_filter( 'the_content', array( $this, 'maybe_insert_pinterest_image') ) ;
+    }
+
 
     /**
      * A function to insert the Pinterest image for browser extensions
@@ -177,7 +208,6 @@ class SWP_Pro_Pinterest {
     	}
 
     	return $content;
-
     }
 
 
@@ -372,8 +402,9 @@ class SWP_Pro_Pinterest {
                 $replacement = $img->cloneNode();
 
 				// Check for alt text
-                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $img->getAttribute( 'alt' ) ) ) {
-                    $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
+				$alt_attribute = $img->getAttribute( 'alt' );
+                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $alt_attribute ) ) {
+                    $replacement->setAttribute( "data-pin-description", $alt_attribute );
 
 				// Check for the post pinterest description
 				} else if ( !empty( $post_pinterest_description ) ) {
