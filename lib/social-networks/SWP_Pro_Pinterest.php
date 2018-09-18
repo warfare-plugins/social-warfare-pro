@@ -402,8 +402,9 @@ class SWP_Pro_Pinterest {
                 $replacement = $img->cloneNode();
 
 				// Check for alt text
-                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $img->getAttribute( 'alt' ) ) ) {
-                    $replacement->setAttribute( "data-pin-description", $img->getAttribute( "alt" ) );
+				$alt_attribute = $img->getAttribute( 'alt' );
+                if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $alt_attribute ) ) {
+                    $replacement->setAttribute( "data-pin-description", $alt_attribute );
 
 				// Check for the post pinterest description
 				} else if ( !empty( $post_pinterest_description ) ) {
