@@ -203,16 +203,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	 */
     	$type = get_post_type();
 
-    	if ( !SWP_Utility::get_option( 'swp_og_type_' . $type ) ) :
-    		$this->options['swp_og_type_' . $type] = 'article';
-    	endif;
+    	if ( !SWP_Utility::get_option( 'og_' . $type ) ) {
+    		$this->options['og_type_' . $type] = 'article';
+    	}
 
         $og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
 
-        if ( empty( $og_type ) ) :
-            $og_type = SWP_Utility::get_option( 'swp_og_type_' . $type );
-        endif;
+        if ( empty( $og_type ) ) {
+            $og_type = SWP_Utility::get_option( 'og_' . $type );
+        }
 
+		$og_type = str_replace( 'og_', '', $og_type);
 
         $info['meta_tag_values']['og_type'] = $og_type;
 
