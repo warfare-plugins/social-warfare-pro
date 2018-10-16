@@ -140,8 +140,14 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'Pro_Settings_Link',
 				'Pro_Options_Page'
 			);
-			$this->load_files( '/lib/admin/', $admin );
+
+		} else {
+			$admin = array (
+				'Pro_Options_Page'
+			);
 		}
+
+		$this->load_files( '/lib/admin/', $admin );
 
 
 		/**
@@ -232,17 +238,13 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
      *
      */
 	public function instantiate_deferred_classes() {
-
-		if( true == is_admin() ) {
-	        new SWP_Pro_Options_Page();
-		}
-
+        new SWP_Pro_Options_Page();
 		new SWP_Pro_Pinterest();
 	}
 
 
     /**
-     * Loads an array of sibling files.
+     // * Loads an array of sibling files.
      *
      * @param  string   $path  The relative path to the files home.
      * @param  array    $files The name of the files (classes), no vendor prefix.
