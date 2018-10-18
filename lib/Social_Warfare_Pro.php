@@ -135,10 +135,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * in the admin area.
 		 *
 		 */
-		$admin = array(
+		$options = array(
 			'Pro_Options_Page'
 		);
-		$this->load_files( '/lib/admin/', $admin );
+		$this->load_files( '/lib/admin/', $options );
 
 
 		/**
@@ -207,9 +207,9 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * call to instantiate in a check for existence.
 		 *
 		 */
-        if ( class_exists( 'SWP_Pro_Header_Output' ) ) :
+        if ( class_exists( 'SWP_Pro_Header_Output' ) ) {
     		new SWP_Pro_Header_Output();
-        endif;
+        }
 
 		if( true == is_admin() ) {
 
@@ -245,8 +245,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
      *
      */
 	public function instantiate_deferred_classes() {
-
-		new SWP_Pro_Options_Page();
+        new SWP_Pro_Options_Page();
 		new SWP_Pro_Pinterest();
 	}
 
