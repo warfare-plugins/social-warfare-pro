@@ -128,6 +128,20 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 
 		/**
+		 * The Options Classes
+		 *
+		 * While this is an options class, we need to be able to access it via
+		 * the frontend as well so we need to load it up everywhere, not just
+		 * in the admin area.
+		 *
+		 */
+		$admin = array(
+			'Pro_Options_Page'
+		);
+		$this->load_files( '/lib/admin/', $admin );
+
+
+		/**
 		 * The Admin Classes
 		 *
 		 * These files load up all the classes that we use to populate options,
@@ -137,8 +151,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		if ( true === is_admin() ) {
 			$admin = array(
 				'Meta_Box_Loader',
-				'Pro_Settings_Link',
-				'Pro_Options_Page'
+				'Pro_Settings_Link'
 			);
 			$this->load_files( '/lib/admin/', $admin );
 		}
@@ -233,10 +246,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
      */
 	public function instantiate_deferred_classes() {
 
-		if( true == is_admin() ) {
-	        new SWP_Pro_Options_Page();
-		}
-
+		new SWP_Pro_Options_Page();
 		new SWP_Pro_Pinterest();
 	}
 
