@@ -3,7 +3,7 @@
 if ( class_exists( 'SWP_Header_Output' ) ) :
 
 /**
- * Register and output open graph tags, Twitter cards, custom color CSS, and the icon fonts.
+ * Register and output open graph tags, Twitter cards, and custom color CSS.
  *
  * @package   SocialWarfare\Functions
  * @copyright Copyright (c) 2017, Warfare Plugins, LLC
