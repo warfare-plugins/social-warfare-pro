@@ -299,11 +299,12 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-        echo '<div class="swp-meta-container" data-type="heading"></div>';
-        echo '<div class="swp-meta-container" data-type="open-graph"></div>';
-        echo '<div class="swp-meta-container" data-type="pinterest"></div>';
-        echo '<div class="swp-meta-container" data-type="twitter"></div>';
-        echo '<div class="swp-meta-container" data-type="other"></div>';
+		$boxes = array('heading', 'open-graph', 'pintrest', 'twitter', 'other');
+		$boxes = apply_filters('swp_meta_boxes', $boxes );
+
+		foreach ($boxes as $box) {
+			echo '<div class="swp-meta-container" data-type="' . $box . '"></div>';
+		}
 
         return $meta_box;
     }
