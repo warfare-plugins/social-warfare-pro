@@ -136,12 +136,6 @@ class SWP_Pro_Pinterest {
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
-
-		// We ONLY output these images on single posts, not archives.
-		if( false === is_singular() ) {
-			return $content;
-		}
-
     	global $post;
     	$post_id = $post->ID;
     	$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
@@ -219,7 +213,7 @@ class SWP_Pro_Pinterest {
      *
      */
     public static function get_pin_description( $id ) {
-
+       die(__METHOD__);
         //* (1) Prefer the user-defined Pin Description.
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
