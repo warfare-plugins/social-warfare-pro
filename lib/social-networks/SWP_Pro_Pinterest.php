@@ -123,8 +123,8 @@ class SWP_Pro_Pinterest {
      *
      * This will add the user-defined, post-level Pinterest image directly into
      * the post content complete with the necessary data-pin-description and
-     * other attributes. This way when Pinterest's official browser extension,
-     * and other like Tailwind scrape the page, they will pick up and see the
+     * other attributes. When Pinterest's official browser extension
+     * and others like Tailwind scrape the page, they will pick up and see the
      * Pinterest optimized image along with the Pinterest optimized description.
      *
      * @since  2.2.4 | 09 MAR 2017 | Created
@@ -136,12 +136,6 @@ class SWP_Pro_Pinterest {
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
-
-		// We ONLY output these images on single posts, not archives.
-		if( false === is_singular() ) {
-			return $content;
-		}
-
     	global $post;
     	$post_id = $post->ID;
     	$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
@@ -158,7 +152,7 @@ class SWP_Pro_Pinterest {
             return $content;
         }
 
-        // This post is using some kind of Pinterest Image, so prepare the data to compile an image.
+        // This post is using some kind of Pinterest Image.
         $location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
 
         //* Set up the Pinterest username, if it exists.
@@ -167,12 +161,12 @@ class SWP_Pro_Pinterest {
         $pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
     	// If there is no custom description, use the post Title
-    	if( false === $pinterest_description || empty( $pinterest_image_url ) ) {
+    	if ( false === $pinterest_description || empty( $pinterest_image_url ) ) {
     		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
     	}
 
     	// If the image is hidden, give it the swp_hidden_pin_image class.
-    	if( 'hidden' === $location ) {
+    	if ( 'hidden' === $location ) {
 
     		$image_html = '<img class="no_pin swp_hidden_pin_image" src="' . $pinterest_image_url .
                           '" data-pin-url="' . get_the_permalink() .
@@ -219,7 +213,7 @@ class SWP_Pro_Pinterest {
      *
      */
     public static function get_pin_description( $id ) {
-
+       // die(__METHOD__);
         //* (1) Prefer the user-defined Pin Description.
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
@@ -319,6 +313,7 @@ class SWP_Pro_Pinterest {
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
+            //* There is only one image in the content passed in the filter.
             $img = $doc->getElementsByTagName( "img" )[0];
 
             $replacement = $img->cloneNode();
@@ -373,7 +368,7 @@ class SWP_Pro_Pinterest {
 
         $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
-        if ( class_exists( 'DOMDocument') ) {
+        if ( class_exists( 'DOMDocument' ) ) {
 
             //* DOMDocument works better with an XML delcaration.
             if ( false === strpos( $the_content, '?xml version' ) ) {
