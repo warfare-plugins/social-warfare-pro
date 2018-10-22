@@ -43,7 +43,7 @@ class SWP_Meta_Box_Loader {
             'id'    => 'swp_meta_box_heading',
             'type'  => 'heading',
             'class' => 'heading',
-            'desc'  => 'Make sure your content is shared exactly the way you want it to be shred by customizing the fields below.',
+            'desc'  => 'Make sure your content is shared exactly the way you want it to be shared by customizing the fields below.',
         );
 
 
