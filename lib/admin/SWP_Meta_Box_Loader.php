@@ -126,7 +126,7 @@ class SWP_Meta_Box_Loader {
             'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
             'vallue'=> false,
-            'class' => 'twitter swpmb-full-width',
+            'class' => 'twitter swpmb-right',
         );
 
         // $twitter_handle_box = array(
@@ -205,6 +205,14 @@ class SWP_Meta_Box_Loader {
             'clone' => false
         );
 
+		$other_post_options = array(
+            'name'  => 'Other Post Options',
+            'id'    => 'swp_other_heading',
+            'type'  => 'heading',
+            'class' => 'other swpmb-full-width',
+			'desc'	=> ''
+        );
+
         // Set up the location on post options.
         $post_location = array(
             'name'    =>  __( 'Static Buttons Location','social-warfare' ),
@@ -218,7 +226,7 @@ class SWP_Meta_Box_Loader {
                 'none'    => __( 'None/Manual Placement','social-warfare' ),
             ),
             'clone' => false,
-            'class' => 'other swpmb-full-width',
+            'class' => 'other swpmb-left inline-select',
             'std'	=> 'default',
         );
 
@@ -232,7 +240,7 @@ class SWP_Meta_Box_Loader {
                 'off'     => __( 'Off','social-warfare' ),
             ),
             'clone' => false,
-            'class' => 'other swpmb-full-width',
+            'class' => 'other swpmb-left inline-select',
             'std'   => 'default',
         );
 
@@ -266,6 +274,7 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $pinterest_description;
         $meta_boxes[0]['fields'][] = $pin_browser_extension;
         $meta_boxes[0]['fields'][] = $pin_browser_extension_location;
+		$meta_boxes[0]['fields'][] = $other_post_options;
         $meta_boxes[0]['fields'][] = $post_location;
         $meta_boxes[0]['fields'][] = $float_location;
         // $meta_boxes[0]['fields'][] = $twitter_handle_box;
