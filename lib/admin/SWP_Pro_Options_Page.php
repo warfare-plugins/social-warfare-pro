@@ -278,7 +278,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
             //* minTotes => minimum_shares
             $minimum_shares = new SWP_Option_Text( __( 'Minimum Shares', 'social-warfare' ), 'minimum_shares' );
             $minimum_shares->set_default( 0 )
-                ->set_priority( 30 )
+                ->set_priority( 40 )
                 ->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
                 ->set_premium( 'pro' );
 
