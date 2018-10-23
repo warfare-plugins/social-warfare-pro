@@ -138,7 +138,7 @@ class SWP_Meta_Box_Loader {
         // );
 
         // Setup the pinterest optimized image.
-        $pinterst_image = array(
+        $pinterest_image = array(
             'name'  => __( 'Pinterest Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
             'id'    => $prefix . 'pinterest_image',
@@ -258,7 +258,7 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $open_graph_image;
         $meta_boxes[0]['fields'][] = $open_graph_title;
         $meta_boxes[0]['fields'][] = $open_graph_description;
-        $meta_boxes[0]['fields'][] = $pinterst_image;
+        $meta_boxes[0]['fields'][] = $pinterest_image;
         $meta_boxes[0]['fields'][] = $pin_force_image;
         $meta_boxes[0]['fields'][] = $open_graph_toggle;
         $meta_boxes[0]['fields'][] = $twitter_image;
