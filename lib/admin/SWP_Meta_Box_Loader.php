@@ -54,7 +54,7 @@ class SWP_Meta_Box_Loader {
             'id'    => $prefix . 'og_image',
             'type'  => 'image_advanced',
             'clone' => false,
-            'class' => 'small_image open-graph  swpmb-child-half swpmb-image swpmb-left',
+            'class' => 'small_image open-graph swpmb-image swpmb-left',
             'max_file_uploads' => 1,
         );
 
@@ -64,7 +64,7 @@ class SWP_Meta_Box_Loader {
             'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
             'id'    => $prefix . 'og_title',
             'type'  => 'textarea',
-            'class' => 'open-graph  swpmb-child-half swpmb-right',
+            'class' => 'open-graph swpmb-right',
             'clone' => false,
         );
 
@@ -303,7 +303,13 @@ class SWP_Meta_Box_Loader {
 		$boxes = apply_filters('swp_meta_boxes', $boxes );
 
 		foreach ($boxes as $box) {
-			echo '<div class="swpmb-meta-container" data-type="' . $box . '"></div>';
+			$container = '<div class="swpmb-meta-container" data-type="' . $box . '">';
+				$container .= '<div class="swpmb-full-width-wrap swpmb-flex">';
+				$container .= '<div class="swpmb-left-wrap swpmb-flex">';
+			    $container .= '<div class="swpmb-right-wrap swpmb-flex">';
+			$container .= '</div>';
+
+			echo $container;
 		}
 
         return $meta_box;
