@@ -301,7 +301,7 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-		$boxes = array('heading', 'open-graph', 'pinterest', 'twitter', 'other');
+		$boxes = array('heading', 'open-graph', 'twitter', 'pinterest', 'other');
 		$boxes = apply_filters('swp_meta_boxes', $boxes );
 
 		foreach ($boxes as $box) {
