@@ -123,7 +123,8 @@ class SWP_Meta_Box_Loader {
 		$open_graph_toggle = array(
             'id'    => 'use_open_graph_twitter',
             'type'  => 'toggle',
-            'desc'  =>  'Use Open Graph for Twitter Card?',
+            'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
+			'desc'	=> '',
             'vallue'=> false,
             'class' => 'twitter swpmb-full-width',
         );
@@ -189,7 +190,8 @@ class SWP_Meta_Box_Loader {
         $pin_force_image = array(
             'id'    => 'swp_force_pin_image',
             'type'  => 'toggle',
-            'desc'  =>  'Allow only this Pinterest image when pinning?',
+            'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
+			'desc'  => '',
             'value' => true,
             'class' => 'pinterest swpmb-right',
         );
