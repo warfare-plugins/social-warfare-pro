@@ -42,6 +42,10 @@ class SWPMB_Toggle_Field extends SWPMB_Field
         $checked_prop = isset($field['value']) ? 'checked' : '';
         $status = $checked_prop ? 'on' : 'off';
 
+		$label = '<div class="swpmb-label">';
+		    $label .= '<label for="swp_custom_tweet">' . $field['name'] . '</label>';
+		$label .='</div>';
+
         $toggle = "<div class='sw-checkbox-toggle swp-post-editor' status='$status' field='#${field['id']}'>
                        <div class='sw-checkbox-on'>ON</div>
                        <div class='sw-checkbox-off'>OFF</div>
@@ -52,6 +56,6 @@ class SWPMB_Toggle_Field extends SWPMB_Field
         $toggle .= "<input $id $checked_prop type='checkbox' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
-        return $toggle . '</div>';
+        return $label . $toggle . '</div>';
 	}
 }
