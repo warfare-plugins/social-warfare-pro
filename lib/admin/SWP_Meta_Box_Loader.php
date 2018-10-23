@@ -304,9 +304,9 @@ class SWP_Meta_Box_Loader {
 
 		foreach ($boxes as $box) {
 			$container = '<div class="swpmb-meta-container" data-type="' . $box . '">';
-				$container .= '<div class="swpmb-full-width-wrap swpmb-flex">';
-				$container .= '<div class="swpmb-left-wrap swpmb-flex">';
-			    $container .= '<div class="swpmb-right-wrap swpmb-flex">';
+				$container .= '<div class="swpmb-full-width-wrap swpmb-flex"></div>';
+				$container .= '<div class="swpmb-left-wrap swpmb-flex"></div>';
+			    $container .= '<div class="swpmb-right-wrap swpmb-flex"></div>';
 			$container .= '</div>';
 
 			echo $container;
