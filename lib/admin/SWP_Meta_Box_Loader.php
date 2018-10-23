@@ -54,7 +54,7 @@ class SWP_Meta_Box_Loader {
             'id'    => $prefix . 'og_image',
             'type'  => 'image_advanced',
             'clone' => false,
-            'class' => 'small_image open-graph swpmb-image swpmb-left',
+            'class' => 'open-graph swpmb-left',
             'max_file_uploads' => 1,
         );
 
@@ -85,7 +85,7 @@ class SWP_Meta_Box_Loader {
             'id'    => $prefix . 'twitter_card_image',
             'type'  => 'image_advanced',
             'clone' => false,
-            'class' => 'small_image twitter swpmb-image swpmb-left',
+            'class' => 'twitter swpmb-left',
             'max_file_uploads' => 1,
         );
 
@@ -142,7 +142,7 @@ class SWP_Meta_Box_Loader {
             'name'  => __( 'Pinterest Image','social-warfare' ),
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 735x1102.','social-warfare' ),
             'id'    => $prefix . 'pinterest_image',
-            'class' => $prefix . 'large_image pinterest swpmb-image swpmb-left',
+            'class' => $prefix . 'pinterest swpmb-left',
             'type'  => 'image_advanced',
             'clone' => false,
             'max_file_uploads' => 1,
