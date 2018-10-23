@@ -39,8 +39,8 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	static function end_html( $meta, $field )
 	{
         $id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
-        $checked_prop = $field['value'] ? 'checked' : '';
-        $status = $field['value'] ? 'on' : 'off';
+        $checked_prop = isset($field['value']) ? 'checked' : '';
+        $status = $checked_prop ? 'on' : 'off';
 
         $toggle = "<div class='sw-checkbox-toggle swp-post-editor' status='$status' field='#${field['id']}'>
                        <div class='sw-checkbox-on'>ON</div>
