@@ -31,14 +31,15 @@ class SWP_Meta_Box_Loader {
 	 *
 	 */
 	public function load_meta_boxes( $meta_boxes ) {
+		$post_id = $_GET['post'];
     	$prefix = 'swp_';
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
 
 		//* Set a default value if the user has never toggled the switch.
-		if ( metadata_exists( 'post', $post->ID, 'swp_force_pin_image' ) ) {
-			$pin_force_image_value = get_post_meta($post->ID, 'swp_force_pin_image', true);
+		if ( metadata_exists( 'post', $post_id, 'swp_force_pin_image' ) ) {
+			$pin_force_image_value = get_post_meta($post_id, 'swp_force_pin_image', true);
 		} else {
 			$pin_force_image_value = true;
 		}

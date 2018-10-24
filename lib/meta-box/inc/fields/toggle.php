@@ -72,15 +72,15 @@ class SWPMB_Toggle_Field extends SWPMB_Field
      *
      */
 	static function get_value( $key ) {
-		global $post;
+		$post_id = (int) $_GET['post'];
 
 		$defaults = array(
 			'use_open_graph_twitter'	=> true,
 			'swp_force_pin_image'		=> false
 		);
 
-		if ( metadata_exists( 'post', $post->ID, $key ) ) {
-			return get_post_meta($post->ID, $key, true);
+		if ( metadata_exists( 'post', $post_id, $key ) ) {
+			return get_post_meta($post_id, $key, true);
 		}
 
 		if ( isset( $defaults[$id] ) ) {
