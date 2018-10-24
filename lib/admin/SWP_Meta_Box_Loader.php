@@ -31,8 +31,6 @@ class SWP_Meta_Box_Loader {
 	 *
 	 */
 	public function load_meta_boxes( $meta_boxes ) {
-        global $swp_user_options, $post;
-
     	$prefix = 'swp_';
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
@@ -276,7 +274,7 @@ class SWP_Meta_Box_Loader {
 
         $meta_boxes[0]['fields'][] = $custom_tweet;
 
-        if ( isset( $swp_user_options['recover_shares'] ) && true === $swp_user_options['recover_shares'] ) {
+        if ( SWP_Utility::get_option( 'recover_shares' ) ) {
             $meta_boxes[0]['fields'][] = $recover_shares_box;
         }
 
