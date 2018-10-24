@@ -42,13 +42,8 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 			return "</div>";
 		}
 
-		$checked = !empty( $field['value'] ) ? 'checked' : '';
-        $status = $checked ? 'on' : 'off';
-		$value = SWPMB_Toggle_Field::swp_get_value($field['id']);
-
-		if ( !isset( $value ) ) {
-			$value = false;
-		}
+		$value = isset( $field['value'] ) ? $field['value'] : SWPMB_Toggle_Field::swp_get_value($field['id']);
+        $status = $value ? 'on' : 'off';
 
 		$label = '<div class="swpmb-label">';
 		    $label .= '<label for="' . $field['id'] . '">' . $field['name'] . '</label>';
@@ -60,7 +55,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
                    </div>";
 
 
-        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' $checked type='checkbox' style='display: none;'  />";
+        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' value='$value' type='checkbox' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';
@@ -92,6 +87,6 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 			return $defaults[$key];
 		}
 
-		return null;
+		return false;
 	}
 }
