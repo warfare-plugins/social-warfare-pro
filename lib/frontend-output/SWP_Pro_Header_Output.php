@@ -412,6 +412,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		/**
+		 * JET PACK: If ours are activated, disable theirs
+		 *
+		 */
+		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
+
+		/**
 		 * Begin by fetching the user's default custom settings
 		 *
 		 */
@@ -457,11 +463,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			return $info;
 		}
 
-		/**
-		 * JET PACK: If ours are activated, disable theirs
-		 *
-		 */
-		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
 		/**
 		 * TWITTER TITLE
