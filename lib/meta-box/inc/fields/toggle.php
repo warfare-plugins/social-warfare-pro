@@ -42,8 +42,8 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 			return "</div>";
 		}
 
-		$checked_prop = isset($field['value']) ? 'checked' : '';
-        $status = $checked_prop ? 'on' : 'off';
+		$checked = !empty( $field['value'] ) ? 'checked' : '';
+        $status = $checked ? 'on' : 'off';
 		$value = SWPMB_Toggle_Field::swp_get_value($field['id']);
 
 		if ( !isset( $value ) ) {
@@ -60,8 +60,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
                    </div>";
 
 
-
-        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' $checked_prop type='checkbox' style='display: none;'  />";
+        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' $checked type='checkbox' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';

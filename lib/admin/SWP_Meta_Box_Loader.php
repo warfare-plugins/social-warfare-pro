@@ -129,7 +129,7 @@ class SWP_Meta_Box_Loader {
         );
 
 		$open_graph_toggle = array(
-            'id'    => 'use_open_graph_twitter',
+            'id'    => 'swp_twitter_use_open_graph',
             'type'  => 'toggle',
             'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
