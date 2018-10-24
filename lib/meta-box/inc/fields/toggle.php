@@ -37,10 +37,14 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-        $id = $field['id'] ? " id='{$field['id']}'" : '';
-        $checked_prop = isset($field['value']) ? 'checked' : '';
+		if ( !isset($field['id']) ) {
+			error_log("Social Warfare Notice: Please provide an ID for your toggle. SWPMB_Toggle_Field->end_html()");
+			return "</div>";
+		}
+
+		$checked_prop = isset($field['value']) ? 'checked' : '';
         $status = $checked_prop ? 'on' : 'off';
-		$value = SWPMB_Toggle_Field::swp_get_value($id);
+		$value = SWPMB_Toggle_Field::swp_get_value($field['id']);
 
 		if ( !isset( $value ) ) {
 			$value = false;
@@ -55,7 +59,9 @@ class SWPMB_Toggle_Field extends SWPMB_Field
                        <div class='sw-checkbox-off'>OFF</div>
                    </div>";
 
-        $toggle .= "<input $id $checked_prop type='checkbox' style='display: none;'  />";
+
+
+        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' $checked_prop type='checkbox' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';
