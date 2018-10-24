@@ -195,14 +195,14 @@ class SWP_Meta_Box_Loader {
             'std'   => 'default',
         );
 
-        $pin_force_image = array(
-            'id'    => 'swp_force_pin_image',
-            'type'  => 'toggle',
-            'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
-			'desc'  => '',
-            'value' => $pin_force_image_value,
-            'class' => 'pinterest swpmb-right',
-        );
+        // $pin_force_image = array(
+        //     'id'    => 'swp_force_pin_image',
+        //     'type'  => 'toggle',
+        //     'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
+		// 	'desc'  => '',
+        //     'value' => $pin_force_image_value,
+        //     'class' => 'pinterest swpmb-right',
+        // );
 
         $recover_shares_box = array(
             'name'  => __( 'Share Recovery','social-warfare' ),
@@ -267,7 +267,7 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $open_graph_title;
         $meta_boxes[0]['fields'][] = $open_graph_description;
         $meta_boxes[0]['fields'][] = $pinterest_image;
-        $meta_boxes[0]['fields'][] = $pin_force_image;
+        // $meta_boxes[0]['fields'][] = $pin_force_image;
         $meta_boxes[0]['fields'][] = $open_graph_toggle;
         $meta_boxes[0]['fields'][] = $twitter_image;
         $meta_boxes[0]['fields'][] = $twitter_title;
