@@ -31,12 +31,19 @@ class SWP_Meta_Box_Loader {
 	 *
 	 */
 	public function load_meta_boxes( $meta_boxes ) {
-        global $swp_user_options;
+        global $swp_user_options, $post;
 
     	$prefix = 'swp_';
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
+
+		//* Set a default value if the user has never toggled the switch.
+		if ( !metadata_exsits( 'post', $post->ID, 'swp_force_pin_image' ) ) {
+			$pin_force_image_value = true;
+		} else {
+			$pin_force_image_value = get_post_meta($post->ID, 'swp_force_pin_image', true);
+		}
 
         $heading = array(
             'name'  => 'Share Customization',
@@ -194,7 +201,7 @@ class SWP_Meta_Box_Loader {
             'type'  => 'toggle',
             'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
 			'desc'  => '',
-            'value' => true,
+            'value' => $pin_force_image_value,
             'class' => 'pinterest swpmb-right',
         );
 
