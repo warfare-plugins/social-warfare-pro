@@ -60,4 +60,33 @@ class SWPMB_Toggle_Field extends SWPMB_Field
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';
 	}
+
+    /**
+     * Fetches the stored value for a toggle, if it exists.
+	 *
+	 * If it DNE, then use a default provided by a map of defaults.
+	 *
+     * @param  string $key The post meta key to try fetching.
+     * @return bool        The value for this key.
+     * @since  3.4.0 | 24 OCT 2018 | Created
+     *
+     */
+	static function get_value( $key ) {
+		global $post;
+
+		$defaults = array(
+			'use_open_graph_twitter'	=> true,
+			'swp_force_pin_image'		=> false
+		);
+
+		if ( metadata_exists( 'post', $post->ID, $key ) ) {
+			return get_post_meta($post->ID, $key, true);
+		}
+
+		if ( isset( $defaults[$id] ) ) {
+			return $defaults[$id];
+		}
+
+		return null;
+	}
 }
