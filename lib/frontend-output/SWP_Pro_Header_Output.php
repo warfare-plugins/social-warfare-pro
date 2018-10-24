@@ -525,7 +525,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
 
-
+        return $info;
     }
 
 	/**
