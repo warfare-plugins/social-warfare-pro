@@ -39,7 +39,7 @@ class SWP_Meta_Box_Loader {
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
 
 		//* Set a default value if the user has never toggled the switch.
-		if ( !metadata_exsits( 'post', $post->ID, 'swp_force_pin_image' ) ) {
+		if ( !metadata_exists( 'post', $post->ID, 'swp_force_pin_image' ) ) {
 			$pin_force_image_value = true;
 		} else {
 			$pin_force_image_value = get_post_meta($post->ID, 'swp_force_pin_image', true);
