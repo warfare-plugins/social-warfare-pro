@@ -75,7 +75,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 		$post_id = (int) $_GET['post'];
 
 		$defaults = array(
-			'use_open_graph_twitter'	=> true,
+			'swp_twitter_use_open_graph'	=> true,
 			'swp_force_pin_image'		=> false
 		);
 
