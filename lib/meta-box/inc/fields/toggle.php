@@ -40,7 +40,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
         $id = $field['id'] ? " id='{$field['id']}'" : '';
         $checked_prop = isset($field['value']) ? 'checked' : '';
         $status = $checked_prop ? 'on' : 'off';
-		$value = SWPMB_Toggle_Field::get_value($id);
+		$value = SWPMB_Toggle_Field::swp_get_value($id);
 
 		if ( !isset( $value ) ) {
 			$value = false;
@@ -71,7 +71,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
      * @since  3.4.0 | 24 OCT 2018 | Created
      *
      */
-	static function get_value( $key ) {
+	static function swp_get_value( $key ) {
 		$post_id = (int) $_GET['post'];
 
 		$defaults = array(
