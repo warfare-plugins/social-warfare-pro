@@ -402,7 +402,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
     public function twitter_card_values($info) {
-
     	if( false === is_singular() ) {
     		return $info;
     	}
@@ -448,6 +447,32 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			// Cancel their output if ours have been defined so we don't have two sets of tags
 			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
 		endif;
+
+		/**
+		 * The Twitter Card Type
+		 *
+		 */
+		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
+			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
+		else:
+			$info['meta_tag_values']['twitter_card'] = 'summary';
+		endif;
+
+		/**
+		 * The Twitter Card Site
+		 *
+		 */
+		if ( isset( $this->options['twitter_id'] ) ) :
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
+		endif;
+
+		/**
+		 * The Twitter Card Creator
+		 */
+		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
+		endif;
+		// die(var_dump(get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true)));
 
 		if( true == get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
 			$twitter_to_og = array(
@@ -500,30 +525,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
 
-		/**
-		 * The Twitter Card Type
-		 *
-		 */
-		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-		else:
-			$info['meta_tag_values']['twitter_card'] = 'summary';
-		endif;
 
-		/**
-		 * The Twitter Card Site
-		 *
-		 */
-		if ( isset( $this->options['twitter_id'] ) ) :
-			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
-		endif;
-
-		/**
-		 * The Twitter Card Creator
-		 */
-		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
-			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
-		endif;
     }
 
 	/**
