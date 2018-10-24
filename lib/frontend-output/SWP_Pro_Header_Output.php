@@ -443,6 +443,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
 		endif;
 
+		if( true == get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
+			$twitter_to_og = array(
+				'twitter_title'	=> 'og_title',
+				'twitter_description'	=> 'og_description',
+				'twitter_image'	=>	'og_image'
+			);
+
+			foreach( $twitter_to_og as $twitter_key => $og_key) {
+				$info['meta_tag_values'][$twitter_key] = $info['meta_tag_values'][$og_key];
+			}
+
+			return $info;
+		}
+
 		/**
 		 * JET PACK: If ours are activated, disable theirs
 		 *
