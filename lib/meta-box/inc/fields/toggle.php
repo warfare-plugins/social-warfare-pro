@@ -24,8 +24,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function begin_html( $meta, $field )
 	{
-		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
-		return sprintf( '<div><p%s>%s</p>', $attributes, $field['desc'] );
+		return sprintf( '<div><p>%s</p>', $field['desc'] );
 	}
 
 	/**
@@ -38,20 +37,23 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-        $id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
+        $id = $field['id'] ? " id='{$field['id']}'" : '';
         $checked_prop = isset($field['value']) ? 'checked' : '';
         $status = $checked_prop ? 'on' : 'off';
+		$value = SWPMB_Toggle_Field::get_value($id);
+
+		if ( !isset( $value ) ) {
+			$value = false;
+		}
 
 		$label = '<div class="swpmb-label">';
-		    $label .= '<label for="swp_custom_tweet">' . $field['name'] . '</label>';
+		    $label .= '<label for="' . $field['id'] . '">' . $field['name'] . '</label>';
 		$label .='</div>';
 
         $toggle = "<div class='sw-checkbox-toggle swp-post-editor' status='$status' field='#${field['id']}'>
                        <div class='sw-checkbox-on'>ON</div>
                        <div class='sw-checkbox-off'>OFF</div>
                    </div>";
-
-
 
         $toggle .= "<input $id $checked_prop type='checkbox' style='display: none;'  />";
 
