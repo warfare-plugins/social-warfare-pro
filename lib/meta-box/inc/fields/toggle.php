@@ -83,8 +83,8 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 			return get_post_meta($post_id, $key, true);
 		}
 
-		if ( isset( $defaults[$id] ) ) {
-			return $defaults[$id];
+		if ( isset( $defaults[$key] ) ) {
+			return $defaults[$key];
 		}
 
 		return null;
