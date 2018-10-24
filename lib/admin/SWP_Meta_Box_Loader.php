@@ -31,7 +31,7 @@ class SWP_Meta_Box_Loader {
 	 *
 	 */
 	public function load_meta_boxes( $meta_boxes ) {
-		$post_id = $_GET['post'];
+		$post_id = isset($_GET['post']) ? $_GET['post'] : 0;
     	$prefix = 'swp_';
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
