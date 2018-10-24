@@ -407,109 +407,108 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	if ( SWP_Utility::get_option( 'twitter_cards' ) ) :
-    		/**
-    		 * Begin by fetching the user's default custom settings
-    		 *
-    		 */
-            $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
-            if ( !empty( $custom_og_title) ) :
-                $custom_og_title = htmlspecialchars( $custom_og_title );
-            endif;
+    	if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
+			return $info;
+		}
 
-            $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
-            if ( !empty( $custom_og_description ) ) :
-                $custom_og_description = htmlspecialchars( $custom_og_description );
-            endif;
-    		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-    		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
-    		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
+		/**
+		 * Begin by fetching the user's default custom settings
+		 *
+		 */
+        $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
+        if ( !empty( $custom_og_title) ) :
+            $custom_og_title = htmlspecialchars( $custom_og_title );
+        endif;
 
-    		/**
-    		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
-    		 *
-    		 */
-    		if ( defined( 'WPSEO_VERSION' ) ) :
-    			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
-    			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
-    			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
-    			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
-    			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
+        $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
+        if ( !empty( $custom_og_description ) ) :
+            $custom_og_description = htmlspecialchars( $custom_og_description );
+        endif;
+		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
+		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
+		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
 
-    			// Cancel their output if ours have been defined so we don't have two sets of tags
-    			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
-    		endif;
+		/**
+		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
+		 *
+		 */
+		if ( defined( 'WPSEO_VERSION' ) ) :
+			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
+			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
+			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
+			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
+			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
 
-    		/**
-    		 * JET PACK: If ours are activated, disable theirs
-    		 *
-    		 */
-    		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
+			// Cancel their output if ours have been defined so we don't have two sets of tags
+			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
+		endif;
 
-    		/**
-    		 * TWITTER TITLE
-    		 *
-    		 */
-    		if ( !empty( $custom_og_title ) ):
-    			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
-    		elseif( !empty( $yoast_twitter_title ) ) :
-    			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
-    		else:
-    			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
-    		endif;
+		/**
+		 * JET PACK: If ours are activated, disable theirs
+		 *
+		 */
+		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
-    		/**
-    		 * TWITTER DESCRIPTION
-    		 *
-    		 */
-    		if( !empty( $custom_og_description ) ):
-    			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
-    		elseif ( !empty( $yoast_twitter_description ) ) :
-    			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
-    		else:
-    			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
-    		endif;
+		/**
+		 * TWITTER TITLE
+		 *
+		 */
+		if ( !empty( $custom_og_title ) ):
+			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
+		elseif( !empty( $yoast_twitter_title ) ) :
+			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
+		else:
+			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
+		endif;
 
-    		/**
-    		 * TWITTER IMAGE
-    		 *
-    		 */
-    		if ( !empty( $custom_og_image_url ) ):
-    			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
-    		elseif ( !empty( $yoast_twitter_image ) ) :
-    			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
-    		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
-    			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
-    		endif;
+		/**
+		 * TWITTER DESCRIPTION
+		 *
+		 */
+		if( !empty( $custom_og_description ) ):
+			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
+		elseif ( !empty( $yoast_twitter_description ) ) :
+			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
+		else:
+			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
+		endif;
 
-    		/**
-    		 * The Twitter Card Type
-    		 *
-    		 */
-    		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-    			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-    		else:
-    			$info['meta_tag_values']['twitter_card'] = 'summary';
-    		endif;
+		/**
+		 * TWITTER IMAGE
+		 *
+		 */
+		if ( !empty( $custom_og_image_url ) ):
+			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
+		elseif ( !empty( $yoast_twitter_image ) ) :
+			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
+		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
+			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
+		endif;
 
-    		/**
-    		 * The Twitter Card Site
-    		 *
-    		 */
-    		if ( isset( $this->options['twitter_id'] ) ) :
-    			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
-    		endif;
+		/**
+		 * The Twitter Card Type
+		 *
+		 */
+		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
+			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
+		else:
+			$info['meta_tag_values']['twitter_card'] = 'summary';
+		endif;
 
-    		/**
-    		 * The Twitter Card Creator
-    		 */
-    		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
-    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
-    		endif;
+		/**
+		 * The Twitter Card Site
+		 *
+		 */
+		if ( isset( $this->options['twitter_id'] ) ) :
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
+		endif;
 
-    	endif;
-
-    	return $info;
+		/**
+		 * The Twitter Card Creator
+		 */
+		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
+		endif;
     }
 
 	/**
