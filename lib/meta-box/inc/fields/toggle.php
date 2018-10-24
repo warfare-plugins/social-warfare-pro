@@ -42,7 +42,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 			return "</div>";
 		}
 
-		$value = isset( $field['value'] ) ? $field['value'] : SWPMB_Toggle_Field::swp_get_value($field['id']);
+		$value = SWPMB_Toggle_Field::swp_get_value( $field['id'] );
         $status = $value ? 'on' : 'off';
 
 		$label = '<div class="swpmb-label">';
