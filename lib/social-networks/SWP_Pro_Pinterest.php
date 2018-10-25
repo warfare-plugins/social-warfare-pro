@@ -449,7 +449,6 @@ class SWP_Pro_Pinterest {
         //* Filter image array to only include those that opted out of Pin Hover
         $opt_out_images = array_filter($images, function($image) {
             return 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
-            return (bool) $checked == 1;
         });
 
         //* All images use the pin on hover feature.
