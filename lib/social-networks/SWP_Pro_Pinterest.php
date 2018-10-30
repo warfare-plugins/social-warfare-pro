@@ -724,6 +724,9 @@ class SWP_Pro_Pinterest {
      *
      */
     public function pinit_controls_output( $info ) {
+        $custom_pin_description = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+		$custom_pinterest_image = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+
     	$pin_vars = array(
     		'enabled' => false,
     	);
@@ -737,13 +740,13 @@ class SWP_Pro_Pinterest {
             $pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
 
     		// Set the image source
-    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ) {
-    			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && $custom_pinterest_image ) {
+    			$pin_vars['image_source'] = $custom_pinterest_image_url;
     		}
 
     		// Set the description Source
-    		if('custom' == SWP_Utility::get_option( 'pinit_image_description' ) && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ) {
-    			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+    		if( 'custom' == SWP_Utility::get_option( 'pinit_image_description' ) && $custom_pin_description ) {
+    			$pin_vars['image_description'] = $custom_pin_description;
     		}
     	}
 
