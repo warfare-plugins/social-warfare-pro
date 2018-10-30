@@ -741,7 +741,7 @@ class SWP_Pro_Pinterest {
 
     		// Set the image source
     		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && $custom_pinterest_image ) {
-    			$pin_vars['image_source'] = $custom_pinterest_image_url;
+    			$pin_vars['image_source'] = $custom_pinterest_image;
     		}
 
     		// Set the description Source
