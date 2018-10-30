@@ -149,7 +149,14 @@ class SWP_Pro_Pinterest {
 
 		// Bail if this post doesn't have a specifically defined Pinterest image.
         if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
-            return $content;
+			//* Check to see if the image is set, even if the url is not.
+			$pinterest_image_id = get_post_meta( $post_id, 'swp_pinterest_image', true );
+
+			if ( !$pinterest_image_id ) {
+				return $content;
+			}
+
+			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
         }
 
         // This post is using some kind of Pinterest Image.
