@@ -730,8 +730,9 @@ class SWP_Pro_Pinterest {
             $pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
 
     		// Set the image source
-    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ) {
-    			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image' , true ) ) {
+    			$image_id = get_post_meta( get_the_ID() , 'swp_pinterest_image' , true );
+				$pin_vars['image_source'] = wp_get_attachment_image_url( $image_id, 'full' );
     		}
 
     		// Set the description Source
