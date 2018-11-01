@@ -68,8 +68,6 @@ class SWP_Flipboard extends SWP_Social_Network {
 			$title = isset( $post_data['post_title'] ) ? $post_data['post_title'] : get_the_title();
 		endif;
 
-		$title = urlencode( $title );
-
 		$share_link = $this->base_share_url . "&title=" . $title . "&url=" . $this->get_shareable_permalink( $post_data );
 
 		return $share_link;
