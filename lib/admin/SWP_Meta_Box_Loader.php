@@ -31,12 +31,18 @@ class SWP_Meta_Box_Loader {
 	 *
 	 */
 	public function load_meta_boxes( $meta_boxes ) {
-        global $swp_user_options;
-
+		$post_id = isset($_GET['post']) ? $_GET['post'] : 0;
     	$prefix = 'swp_';
     	$twitter_id = isset( $options['twitter_id'] ) ? $options['twitter_id'] : false;
 
     	$twitter_handle = $this->get_twitter_handle( $twitter_id );
+
+		//* Set a default value if the user has never toggled the switch.
+		if ( metadata_exists( 'post', $post_id, 'swp_force_pin_image' ) ) {
+			$pin_force_image_value = get_post_meta($post_id, 'swp_force_pin_image', true);
+		} else {
+			$pin_force_image_value = true;
+		}
 
         $heading = array(
             'name'  => 'Share Customization',
@@ -123,11 +129,11 @@ class SWP_Meta_Box_Loader {
         );
 
 		$open_graph_toggle = array(
-            'id'    => 'use_open_graph_twitter',
+            'id'    => 'swp_twitter_use_open_graph',
             'type'  => 'toggle',
             'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
-            'vallue'=> false,
+            'value'=> '',
             'class' => 'twitter swpmb-right',
         );
 
@@ -189,14 +195,14 @@ class SWP_Meta_Box_Loader {
             'std'   => 'default',
         );
 
-        $pin_force_image = array(
-            'id'    => 'swp_force_pin_image',
-            'type'  => 'toggle',
-            'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
-			'desc'  => '',
-            'value' => true,
-            'class' => 'pinterest swpmb-right',
-        );
+        // $pin_force_image = array(
+        //     'id'    => 'swp_force_pin_image',
+        //     'type'  => 'toggle',
+        //     'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
+		// 	'desc'  => '',
+        //     'value' => $pin_force_image_value,
+        //     'class' => 'pinterest swpmb-right',
+        // );
 
         $recover_shares_box = array(
             'name'  => __( 'Share Recovery','social-warfare' ),
@@ -261,7 +267,7 @@ class SWP_Meta_Box_Loader {
         $meta_boxes[0]['fields'][] = $open_graph_title;
         $meta_boxes[0]['fields'][] = $open_graph_description;
         $meta_boxes[0]['fields'][] = $pinterest_image;
-        $meta_boxes[0]['fields'][] = $pin_force_image;
+        // $meta_boxes[0]['fields'][] = $pin_force_image;
         $meta_boxes[0]['fields'][] = $open_graph_toggle;
         $meta_boxes[0]['fields'][] = $twitter_image;
         $meta_boxes[0]['fields'][] = $twitter_title;
@@ -269,7 +275,7 @@ class SWP_Meta_Box_Loader {
 
         $meta_boxes[0]['fields'][] = $custom_tweet;
 
-        if ( isset( $swp_user_options['recover_shares'] ) && true === $swp_user_options['recover_shares'] ) {
+        if ( SWP_Utility::get_option( 'recover_shares' ) ) {
             $meta_boxes[0]['fields'][] = $recover_shares_box;
         }
 

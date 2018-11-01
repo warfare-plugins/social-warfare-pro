@@ -24,8 +24,7 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function begin_html( $meta, $field )
 	{
-		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
-		return sprintf( '<div><p%s>%s</p>', $attributes, $field['desc'] );
+		return sprintf( '<div><p>%s</p>', $field['desc'] );
 	}
 
 	/**
@@ -38,12 +37,16 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-        $id = $field['id'] ? " id='{$field['id']}-toggle'" : '';
-        $checked_prop = isset($field['value']) ? 'checked' : '';
-        $status = $checked_prop ? 'on' : 'off';
+		if ( !isset($field['id']) ) {
+			error_log("Social Warfare Notice: Please provide an ID for your toggle. SWPMB_Toggle_Field->end_html()");
+			return "</div>";
+		}
+
+		$value = SWPMB_Toggle_Field::swp_get_value( $field['id'] );
+        $status = $value ? 'on' : 'off';
 
 		$label = '<div class="swpmb-label">';
-		    $label .= '<label for="swp_custom_tweet">' . $field['name'] . '</label>';
+		    $label .= '<label for="' . $field['id'] . '">' . $field['name'] . '</label>';
 		$label .='</div>';
 
         $toggle = "<div class='sw-checkbox-toggle swp-post-editor' status='$status' field='#${field['id']}'>
@@ -52,10 +55,38 @@ class SWPMB_Toggle_Field extends SWPMB_Field
                    </div>";
 
 
-
-        $toggle .= "<input $id $checked_prop type='checkbox' style='display: none;'  />";
+        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' value='$value' type='checkbox' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';
+	}
+
+    /**
+     * Fetches the stored value for a toggle, if it exists.
+	 *
+	 * If it DNE, then use a default provided by a map of defaults.
+	 *
+     * @param  string $key The post meta key to try fetching.
+     * @return bool        The value for this key.
+     * @since  3.4.0 | 24 OCT 2018 | Created
+     *
+     */
+	static function swp_get_value( $key ) {
+		$post_id = (int) $_GET['post'];
+
+		$defaults = array(
+			'swp_twitter_use_open_graph'	=> true,
+			'swp_force_pin_image'		=> false
+		);
+
+		if ( metadata_exists( 'post', $post_id, $key ) ) {
+			return get_post_meta($post_id, $key, true);
+		}
+
+		if ( isset( $defaults[$key] ) ) {
+			return $defaults[$key];
+		}
+
+		return false;
 	}
 }

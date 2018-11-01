@@ -160,7 +160,14 @@ class SWP_Pro_Pinterest {
 
 		// Bail if this post doesn't have a specifically defined Pinterest image.
         if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
-            return $content;
+			//* Check to see if the image is set, even if the url is not.
+			$pinterest_image_id = get_post_meta( $post_id, 'swp_pinterest_image', true );
+
+			if ( !$pinterest_image_id ) {
+				return $content;
+			}
+
+			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
         }
 
         // This post is using some kind of Pinterest Image.
@@ -460,7 +467,6 @@ class SWP_Pro_Pinterest {
         //* Filter image array to only include those that opted out of Pin Hover
         $opt_out_images = array_filter($images, function($image) {
             return 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
-            return (bool) $checked == 1;
         });
 
         //* All images use the pin on hover feature.
@@ -729,6 +735,9 @@ class SWP_Pro_Pinterest {
      *
      */
     public function pinit_controls_output( $info ) {
+        $custom_pin_description = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+		$custom_pinterest_image = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+
     	$pin_vars = array(
     		'enabled' => false,
     	);
@@ -742,13 +751,13 @@ class SWP_Pro_Pinterest {
             $pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
 
     		// Set the image source
-    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ) {
-    			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && $custom_pinterest_image ) {
+    			$pin_vars['image_source'] = $custom_pinterest_image;
     		}
 
     		// Set the description Source
-    		if('custom' == SWP_Utility::get_option( 'pinit_image_description' ) && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ) {
-    			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+    		if( 'custom' == SWP_Utility::get_option( 'pinit_image_description' ) && $custom_pin_description ) {
+    			$pin_vars['image_description'] = $custom_pin_description;
     		}
     	}
 
