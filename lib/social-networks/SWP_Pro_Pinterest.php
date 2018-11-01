@@ -142,6 +142,17 @@ class SWP_Pro_Pinterest {
     	$pin_browser_location   = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
         $pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
+
+		/**
+		 * If the option is turned off globally, and the post level option is
+		 * set to default, bail out and keep this feature turned off. If the
+		 * post level option is set to off, it will get caught below.
+		 *
+		 */
+		if ( false == SWP_Utility::get_option( 'pin_browser_extension' ) && 'default' == $meta_browser_extension ) {
+			return $content;
+		}
+
         // Bail early if not using a pinterest image.
         if ( 'off' == $meta_browser_extension ) {
             return $content;
