@@ -205,8 +205,8 @@ class SWP_Pro_Pinterest {
         $pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
     	// If there is no custom description, use the post Title
-    	if ( false === $pinterest_description || empty( $pinterest_image_url ) ) {
-    		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
+    	if ( false == $pinterest_description || empty( $pinterest_image_url ) ) {
+    		$pinterest_description = get_the_title();
     	}
 
     	// If the image is hidden, give it the swp_hidden_pin_image class.
