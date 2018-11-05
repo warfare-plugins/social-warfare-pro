@@ -120,10 +120,10 @@ class SWP_Meta_Box_Loader {
         // Setup the Custom Tweet box.
         $custom_tweet = array(
             'name'  => __( 'Custom Tweet','social-warfare' ),
-            'placeholder' => 'If left empty, defaults to \'Open Graph Title\'' . the_permalink() . $twitter_handle ,
+            'placeholder' => 'If left empty, defaults to your content in Open Graph Title and this appened to the end: ' . the_permalink() . " " .  $twitter_handle ,
             'desc'  => ( $twitter_id
-			                 ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), <span class="tweetLinkSection">a link being added,</span> and the current content above, your tweet has %2$s characters remaining.','social-warfare' ), str_replace( '@','',$twitter_handle ), '<span class="counterNumber">140</span>' ) 
-							 : sprintf( __( 'If this is left blank your post title will be used. <span ="tweetLinkSection">Based on a link being added, and</span> the current content above, your tweet has %s characters remaining.','social-warfare' ),'<span class="counterNumber">140</span>' )),
+			                 ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), a link being added, and the current content above, your tweet has %2$s characters remaining.', 'social-warfare' ), str_replace( '@', '' ,$twitter_handle ), '<span class="counterNumber">280</span>' )
+							 : sprintf( __( 'If this is left blank your post title will be used. Based on a link being added, and the current content above, your tweet has %s characters remaining.','social-warfare' ), '<span class="counterNumber">280</span>' ) ),
             'id'    => $prefix . 'custom_tweet',
             'class' => $prefix . 'custom_tweetWrapper twitter  swpmb-full-width',
             'type'  => 'textarea',
