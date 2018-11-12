@@ -40,9 +40,34 @@ class SWP_WhatsApp extends SWP_Social_Network {
 		$this->key            = 'whatsapp';
 		$this->default        = false;
         $this->premium        = 'pro';
-		$this->base_share_url = 'whatsapp://send?text=';
+		$this->base_share_url = $this->establish_base_share_url(); // '';
 
 		$this->init_social_network();
+	}
+
+	protected function contains_user_agent( $agent ) {
+		return strpos( $_SERVER['HTTP_USER_AGENT'], $agent );
+	}
+
+    /**
+     * Adapted from
+     * https://medium.com/@jeanlivino/how-to-fix-whatsapp-api-in-desktop-browsers-fc661b513dc
+     *
+     * @return [type] [description]
+     */
+	public function establish_base_share_url() {
+		$mobiles = ['iPhone', 'Android', 'webOS', 'BlackBerry', 'iPod'];
+
+        //* Is mobile.
+		if ( array_filter( $mobiles, array( $this, 'contains_user_agent' ) ) ) {
+			// $this->base_share_url = "https://api.whatsapp.com/send?text=";
+			$this->base_share_url = "whatsapp://send?text=";
+		}
+
+		else {
+
+			$this->base_share_url = "https://web.whatsapp.com/send?text=";
+		}
 	}
 }
 
