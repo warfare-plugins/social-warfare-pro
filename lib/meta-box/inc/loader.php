@@ -147,68 +147,94 @@ class SWPMB_Loader
 			// Fields
 			'field',
 
-			'fields/multiple-values',
-			'fields/autocomplete',
-			'fields/text-list',
-
-			'fields/choice',
-
-			'fields/select',
-			'fields/select-advanced',
-			'fields/select-tree',
-
-			'fields/input-list',
-			'fields/radio',
-			'fields/checkbox-list',
-
-			'fields/object-choice',
-			'fields/post',
-			'fields/taxonomy',
-			'fields/taxonomy-advanced',
-			'fields/user',
-
-			'fields/input',
-
-			'fields/checkbox',
-			'fields/hidden',
-			'fields/number',
-			'fields/range',
-
-			'fields/text',
-			'fields/color',
-			'fields/datetime',
-			'fields/date',
-			'fields/time',
-			'fields/email',
-			'fields/fieldset-text',
-			'fields/key-value',
-			'fields/url',
-			'fields/oembed',
-			'fields/password',
-
-			'fields/media',
-			'fields/file-advanced',
-			'fields/file-upload',
-			'fields/image-advanced',
-			'fields/image-upload',
-			'fields/plupload-image',
-
-			'fields/file-input',
-			'fields/file',
-			'fields/image',
-			'fields/image-select',
-			'fields/thickbox-image',
-
-			'fields/button',
-			'fields/custom-html',
-			'fields/divider',
-			'fields/heading',
-			'fields/map',
-			'fields/slider',
-			'fields/textarea',
-			'fields/wysiwyg',
+			// 'fields/multiple-values',
+			// 'fields/autocomplete',
+			// 'fields/text-list',
+            //
+			// 'fields/choice',
+            //
+			// 'fields/select',
+			// 'fields/select-advanced',
+			// 'fields/select-tree',
+            //
+			// 'fields/input-list',
+			// 'fields/radio',
+			// 'fields/checkbox-list',
+            //
+			// 'fields/object-choice',
+			// 'fields/post',
+			// 'fields/taxonomy',
+			// 'fields/taxonomy-advanced',
+			// 'fields/user',
+            //
+			// 'fields/input',
+            //
+			// 'fields/checkbox',
+			// 'fields/hidden',
+			// 'fields/number',
+			// 'fields/range',
+            //
+			// 'fields/text',
+			// 'fields/color',
+			// 'fields/datetime',
+			// 'fields/date',
+			// 'fields/time',
+			// 'fields/email',
+			// 'fields/fieldset-text',
+			// 'fields/key-value',
+			// 'fields/url',
+			// 'fields/oembed',
+			// 'fields/password',
+            //
+			// 'fields/media',
+			// 'fields/file-advanced',
+			// 'fields/file-upload',
+			// 'fields/image-advanced',
+			// 'fields/image-upload',
+			// 'fields/plupload-image',
+            //
+			// 'fields/file-input',
+			// 'fields/file',
+			// 'fields/image',
+			// 'fields/image-select',
+			// 'fields/thickbox-image',
+            //
+			// 'fields/button',
+			// 'fields/custom-html',
+			// 'fields/divider',
+			// 'fields/heading',
+			// 'fields/map',
+			// 'fields/slider',
+			// 'fields/textarea',
+			// 'fields/wysiwyg',
 		);
-		foreach ( $files as $file )
+
+        $swp_fields = array(
+            'fields/choice',
+
+            'fields/select',
+
+            'fields/input',
+            'fields/hidden',
+
+            'fields/text',
+
+
+            'fields/media',
+            'fields/image-advanced',
+
+            'fields/divider',
+            'fields/heading',
+            'fields/display-text',
+            'fields/toggle',
+            'fields/textarea',
+        );
+        foreach ( $files as $file )
+		{
+			require SWPMB_INC_DIR . "$file.php";
+		}
+
+        foreach ( $swp_fields as $file )
 		{
 			require SWPMB_INC_DIR . "$file.php";
 		}

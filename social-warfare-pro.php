@@ -3,12 +3,12 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.3.3
+ * Version:     3.3.92
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
+ *
  */
-
 defined( 'WPINC' ) || die;
 
 
@@ -18,7 +18,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.3.3' );
+define( 'SWPP_VERSION', '3.3.92' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -59,7 +59,7 @@ function initialize_social_warfare_pro() {
 	 * If core is not loaded, we leave the plugin active, but we do not proceed
 	 * to load up, activate, or instantiate any of pro's features. Instead we
 	 * simply activate a dashboard notification to let the user know that they
-	 * need to active core.
+	 * need to activate core.
 	 *
 	 */
     if ( !defined( 'SWP_VERSION' ) ) :
@@ -76,8 +76,9 @@ function initialize_social_warfare_pro() {
 	 * class in core that Social_Warfare_Pro will be extending.
 	 *
 	 */
-    if ( !class_exists( 'Social_Warfare_Addon' ) ) :
-        require_once( SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php' );
+	$addon_path = SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php';
+    if ( !class_exists( 'Social_Warfare_Addon' ) && file_exists( $addon_path ) ) :
+        require_once( $addon_path );
     endif;
 
 
@@ -95,16 +96,24 @@ function initialize_social_warfare_pro() {
 	 * load and instantiate the Social Warfare Pro class to fire up the plugin.
 	 *
 	 */
-	if( defined( 'SWP_VERSION' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ):
-        if ( file_exists( SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php' ) ) :
-    		require_once SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
-    		new Social_Warfare_Pro();
-        endif;
-    else:
 
-		// If core is too far out of date, we will notify the user to update.
+	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ) {
+		$pro_class_path = SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
+		if( file_exists( $pro_class_path ) ) {
+			require_once $pro_class_path;
+			new Social_Warfare_Pro();
+		}
+
+
+	/**
+	 * If core is simply too far out of date, we will create a dashboard notice
+	 * to inform the user that they need to update core to the appropriate
+	 * version in order to get access to pro.
+	 *
+	 */
+    } else {
         add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
-	endif;
+	}
 
 
 	/**
