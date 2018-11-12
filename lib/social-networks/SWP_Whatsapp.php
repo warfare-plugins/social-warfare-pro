@@ -60,13 +60,13 @@ class SWP_WhatsApp extends SWP_Social_Network {
 
         //* Is mobile.
 		if ( array_filter( $mobiles, array( $this, 'contains_user_agent' ) ) ) {
-			// $this->base_share_url = "https://api.whatsapp.com/send?text=";
-			$this->base_share_url = "whatsapp://send?text=";
+			// $this->base_share_url = "https://api.whatsapp.com/send?text="; // opens the app
+			$this->base_share_url = "whatsapp://send?text="; // opened
 		}
 
 		else {
 
-			$this->base_share_url = "https://web.whatsapp.com/send?text=";
+			$this->base_share_url = "https://web.whatsapp.com/send?text="; // opened in the internet, then tried (and failed) to reach phone
 		}
 	}
 }
