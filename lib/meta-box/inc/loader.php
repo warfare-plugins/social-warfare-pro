@@ -186,17 +186,17 @@ class SWPMB_Loader
 			// 'fields/oembed',
 			// 'fields/password',
             //
-			'fields/media',
+			// 'fields/media',
 			// 'fields/file-advanced',
 			// 'fields/file-upload',
-			'fields/image-advanced',
+			// 'fields/image-advanced',
 			// 'fields/image-upload',
 			// 'fields/plupload-image',
             //
 			// 'fields/file-input',
 			// 'fields/file',
 			// 'fields/image',
-			'fields/image-select',
+			// 'fields/image-select',
 			// 'fields/thickbox-image',
             //
 			// 'fields/button',
@@ -222,7 +222,6 @@ class SWPMB_Loader
 
             'fields/media',
             'fields/image-advanced',
-			'fields/image-select',
 
             'fields/divider',
             'fields/heading',
@@ -232,12 +231,12 @@ class SWPMB_Loader
         );
         foreach ( $files as $file )
 		{
-			require_once SWPMB_INC_DIR . "$file.php";
+			require SWPMB_INC_DIR . "$file.php";
 		}
 
         foreach ( $swp_fields as $file )
 		{
-			require_once SWPMB_INC_DIR . "$file.php";
+			require SWPMB_INC_DIR . "$file.php";
 		}
 	}
 
