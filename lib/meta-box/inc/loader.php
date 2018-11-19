@@ -187,10 +187,10 @@ class SWPMB_Loader
 			// 'fields/password',
             //
 			'fields/media',
-			'fields/file-advanced',
-			'fields/file-upload',
+			// 'fields/file-advanced',
+			// 'fields/file-upload',
 			'fields/image-advanced',
-			'fields/image-upload',
+			// 'fields/image-upload',
 			// 'fields/plupload-image',
             //
 			// 'fields/file-input',
@@ -223,7 +223,6 @@ class SWPMB_Loader
             'fields/media',
             'fields/image-advanced',
 			'fields/image-select',
-			// 'fields/image-upload',
 
             'fields/divider',
             'fields/heading',
