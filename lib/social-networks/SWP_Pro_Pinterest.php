@@ -15,6 +15,7 @@
  */
 class SWP_Pro_Pinterest {
 
+
     /**
      * Initialize the hooks and filters.
      *
@@ -32,10 +33,11 @@ class SWP_Pro_Pinterest {
         //* Admin hooks for editing pinterest-specific content.
         $this->add_admin_actions();
 
-        //* Defer to the_content so `global $post` is defined.
+        //* Defer to a later hook so `global $post` is defined.
         add_filter( 'template_redirect', array( $this, 'add_frontend_actions' ) );
         add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
     }
+
 
 	/**
 	 * There are certain conditions under which we should simply exclude all of
@@ -76,7 +78,7 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
     public function add_admin_actions() {
-		if ( !is_admin() ) {
+		if ( false == is_admin() ) {
             return;
         }
 
@@ -99,16 +101,35 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
     public function add_frontend_actions() {
-        if ( !is_singular() ) {
-            //* Return false so the text "[pinterest_image]" is not displayed.
+
+		/**
+		 * By using the callback '__return_false', it will cause the shortcode
+		 * to be processed but not output anything. This will stop the raw
+		 * shortcode text [pinterest_image] from appearing on excerpts.
+		 *
+		 */
+        if ( false == is_singular() ) {
             add_shortcode( 'pinterest_image' , '__return_false' );
             return;
         }
 
+
+		/**
+		 * This is the filter that will add the data-pin-description to each
+		 * image in the post ensuring that Pinterest and Tailwind browser
+		 * extensions will have descriptions to use when sharing.
+		 *
+		 */
         if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
 			add_filter( 'the_content' , array( $this, 'content_add_pin_description' ) );
         }
 
+
+		/**
+		 * This is the filter that adds the "no-pin" class to images that the
+		 * user has opted out of the Image Hover Pin buttons.
+		 *
+		 */
         if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
 			add_filter( 'the_content' , array( $this, 'content_maybe_add_no_pin' ) );
         }
@@ -123,42 +144,59 @@ class SWP_Pro_Pinterest {
      *
      * This will add the user-defined, post-level Pinterest image directly into
      * the post content complete with the necessary data-pin-description and
-     * other attributes. This way when Pinterest's official browser extension,
-     * and other like Tailwind scrape the page, they will pick up and see the
+     * other attributes. When Pinterest's official browser extension
+     * and others like Tailwind scrape the page, they will pick up and see the
      * Pinterest optimized image along with the Pinterest optimized description.
      *
      * @since  2.2.4 | 09 MAR 2017 | Created
      * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
      * @since  3.3.2 | 13 SEP 2018 | Added check for is_singular()
-     * @access public
+     * @since  3.4.0 | 01 NOV 2018 | Added check for global on/off status.
      * @param  string $content The post content to filter
      * @return string $content The filtered content
      *
      */
     public function maybe_insert_pinterest_image( $content ) {
-
-		// We ONLY output these images on single posts, not archives.
-		if( false === is_singular() ) {
-			return $content;
-		}
-
     	global $post;
-    	$post_id = $post->ID;
+    	$post_id                = $post->ID;
     	$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
     	$pin_browser_location   = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
         $pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
-        // Bail early if not using a pinterest image.
+
+		/**
+		 * If the option is turned off globally, and the post level option is
+		 * set to default, bail out and keep this feature turned off. If the
+		 * post level option is set to off, it will get caught below.
+		 *
+		 */
+		if ( false == SWP_Utility::get_option( 'pin_browser_extension' ) && 'default' == $meta_browser_extension ) {
+			return $content;
+		}
+
+
+        /**
+         * Bail early if the Pinterest browser image is explicitly turned to the
+         * off position at the post level.
+         *
+         */
         if ( 'off' == $meta_browser_extension ) {
             return $content;
         }
 
 		// Bail if this post doesn't have a specifically defined Pinterest image.
         if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
-            return $content;
+			//* Check to see if the image is set, even if the url is not.
+			$pinterest_image_id = get_post_meta( $post_id, 'swp_pinterest_image', true );
+
+			if ( !$pinterest_image_id ) {
+				return $content;
+			}
+
+			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
         }
 
-        // This post is using some kind of Pinterest Image, so prepare the data to compile an image.
+        // This post is using some kind of Pinterest Image.
         $location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
 
         //* Set up the Pinterest username, if it exists.
@@ -167,14 +205,14 @@ class SWP_Pro_Pinterest {
         $pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
     	// If there is no custom description, use the post Title
-    	if( false === $pinterest_description || empty( $pinterest_image_url ) ) {
-    		$pinterest_description = urlencode( html_entity_decode( get_the_title() . $pinterest_username, ENT_COMPAT, 'UTF-8' ) );
+    	if ( false == $pinterest_description || empty( $pinterest_image_url ) ) {
+    		$pinterest_description = get_the_title();
     	}
 
     	// If the image is hidden, give it the swp_hidden_pin_image class.
-    	if( 'hidden' === $location ) {
+    	if ( 'hidden' === $location ) {
 
-    		$image_html = '<img class="no_pin swp_hidden_pin_image" src="' . $pinterest_image_url .
+    		$image_html = '<img class="no_pin swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
                           '" data-pin-url="' . get_the_permalink() .
                           '" data-pin-media="' . $pinterest_image_url .
                           '" alt="' . $pinterest_description .
@@ -219,7 +257,7 @@ class SWP_Pro_Pinterest {
      *
      */
     public static function get_pin_description( $id ) {
-
+       // die(__METHOD__);
         //* (1) Prefer the user-defined Pin Description.
         $description = get_post_meta( $id, 'swp_pinterest_description', true );
 
@@ -319,6 +357,7 @@ class SWP_Pro_Pinterest {
             libxml_use_internal_errors( false );
             libxml_clear_errors();
 
+            //* There is only one image in the content passed in the filter.
             $img = $doc->getElementsByTagName( "img" )[0];
 
             $replacement = $img->cloneNode();
@@ -373,7 +412,7 @@ class SWP_Pro_Pinterest {
 
         $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
-        if ( class_exists( 'DOMDocument') ) {
+        if ( class_exists( 'DOMDocument' ) ) {
 
             //* DOMDocument works better with an XML delcaration.
             if ( false === strpos( $the_content, '?xml version' ) ) {
@@ -454,7 +493,6 @@ class SWP_Pro_Pinterest {
         //* Filter image array to only include those that opted out of Pin Hover
         $opt_out_images = array_filter($images, function($image) {
             return 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
-            return (bool) $checked == 1;
         });
 
         //* All images use the pin on hover feature.
@@ -723,6 +761,9 @@ class SWP_Pro_Pinterest {
      *
      */
     public function pinit_controls_output( $info ) {
+        $custom_pin_description = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+		$custom_pinterest_image = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+
     	$pin_vars = array(
     		'enabled' => false,
     	);
@@ -736,13 +777,13 @@ class SWP_Pro_Pinterest {
             $pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
 
     		// Set the image source
-    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true ) ) {
-    			$pin_vars['image_source'] = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+    		if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && $custom_pinterest_image ) {
+    			$pin_vars['image_source'] = $custom_pinterest_image;
     		}
 
     		// Set the description Source
-    		if('custom' == SWP_Utility::get_option( 'pinit_image_description' ) && get_post_meta( get_the_ID() , 'swp_pinterest_description' , true ) ) {
-    			$pin_vars['image_description'] = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
+    		if( 'custom' == SWP_Utility::get_option( 'pinit_image_description' ) && $custom_pin_description ) {
+    			$pin_vars['image_description'] = $custom_pin_description;
     		}
     	}
 

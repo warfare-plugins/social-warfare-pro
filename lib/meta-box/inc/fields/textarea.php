@@ -72,7 +72,6 @@ class SWPMB_Textarea_Field extends SWPMB_Field
 			'readonly'    => $field['readonly'],
 			'placeholder' => $field['placeholder'],
 		) );
-		$attributes['class'] .= ' large-text';
 
 		return $attributes;
 	}

@@ -69,8 +69,9 @@ class SWP_Email extends SWP_Social_Network {
 		endif;
 
 		$permalink = $this->get_shareable_permalink( $post_data );
+		$newline = "%0D%0A";
 
-		$share_link = 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body) . __('Read More Here:' , 'social-warfare' ) . ' ' . $permalink;
+		$share_link = 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body) . $newline . $newline .  __('Read More Here:' , 'social-warfare' ) . '%20' . $permalink;
 		return $share_link;
 	}
 

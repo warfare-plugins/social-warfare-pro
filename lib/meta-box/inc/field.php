@@ -297,6 +297,18 @@ abstract class SWPMB_Field
 		// Remove post meta if it's empty
 		if ( '' === $new || array() === $new )
 		{
+			/**
+			 * Handler for our custom Field type.
+			 *
+		     * False is passed as an empty string,
+		     * whereas True is received as true.
+		     * 
+			 */
+			if ( 'toggle' == $field['type'] ) {
+				update_post_meta( $post_id, $name, false );
+				return;
+			}
+
 			delete_post_meta( $post_id, $name );
 			return;
 		}

@@ -2,7 +2,7 @@
 /**
  * Heading field class.
  */
-class SWPMB_Heading_Field extends SWPMB_Field
+class SWPMB_Display_Text_Field extends SWPMB_Field
 {
 	/**
 	 * Enqueue scripts and styles
@@ -25,7 +25,7 @@ class SWPMB_Heading_Field extends SWPMB_Field
 	static function begin_html( $meta, $field )
 	{
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
-		return sprintf( '<h1%s>%s</h1>', $attributes, $field['name'] );
+		return sprintf( '<p%s>%s</p>', $attributes, $field['desc'] );
 	}
 
 	/**
@@ -38,8 +38,6 @@ class SWPMB_Heading_Field extends SWPMB_Field
 	 */
 	static function end_html( $meta, $field )
 	{
-		$id = $field['id'] ? " id='{$field['id']}-description'" : '';
 
-		return $field['desc'] ? "<p{$id}'>{$field['desc']}</p>" : '';
 	}
 }
