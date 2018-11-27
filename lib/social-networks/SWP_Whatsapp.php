@@ -45,7 +45,7 @@ class SWP_WhatsApp extends SWP_Social_Network {
 		$this->init_social_network();
 	}
 
-	protected function contains_user_agent( $agent ) {
+	public function contains_user_agent( $agent ) {
 		return strpos( $_SERVER['HTTP_USER_AGENT'], $agent );
 	}
 
@@ -58,9 +58,9 @@ class SWP_WhatsApp extends SWP_Social_Network {
 	public function establish_base_share_url() {
 		$mobiles = ['iPhone', 'Android', 'webOS', 'BlackBerry', 'iPod'];
 
-		$this->base_share_url = array_filter( $mobiles, array( $this, 'contains_user_agent' ) )
-		                        ? "whatsapp://send?text="  // mobile
-								: "https://api.whatsapp.com/send?text="; // desktop
+		$is_mobile = count( array_filter( $mobiles, array( $this, 'contains_user_agent') ) );
+
+		$this->base_share_url = $is_mobile ? "whatsapp://send?text=" : "https://api.whatsapp.com/send?text="; 
 
 	}
 }
