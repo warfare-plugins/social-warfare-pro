@@ -197,6 +197,7 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 * Props to our Warfare Community beta testers- you guys rock!
 * Added support for Gutenberg block Pinterest Image (as of Gutenberg 4.5.1)
 * Added a fallback ghost buttons panel for floating panels to utilize.
+* Added new fields to Social Warfare metabox. 
 * Updated the layout for the Social Warfare metabox.
 * Updates to the mechanics behind Pinterest images and [pinterest_image] shortcode.
 * Updated Bitly integration to only create shortlinks for published posts.
