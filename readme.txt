@@ -3,7 +3,7 @@ Contributors: holas84, dustinwstout, webinator, warfareplugins, nutsandboltsmedi
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 3.5.1
 Tested up to: 4.9
-Stable tag: 3.3.95
+Stable tag: 3.4.0
 License: GNU General Public License v2.0 or later
 
 The most beautiful, responsive, lightning fast social share buttons built to boost shares and drive more traffic without slowing down your site.
@@ -197,7 +197,7 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 * Props to our Warfare Community beta testers- you guys rock!
 * Added support for Gutenberg block Pinterest Image (as of Gutenberg 4.5.1)
 * Added a fallback ghost buttons panel for floating panels to utilize.
-* Added new fields to Social Warfare metabox. 
+* Added new fields to Social Warfare metabox.
 * Updated the layout for the Social Warfare metabox.
 * Updates to the mechanics behind Pinterest images and [pinterest_image] shortcode.
 * Updated Bitly integration to only create shortlinks for published posts.
