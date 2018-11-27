@@ -193,6 +193,21 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.4.0 (27 NOV 2018) =
+* Props to our Warfare Community beta testers- you guys rock!
+* Added support for Gutenberg block Pinterest Image (as of Gutenberg 4.5.1)
+* Added a fallback ghost buttons panel for floating panels to utilize.
+* Updated the layout for the Social Warfare metabox.
+* Updates to the mechanics behind Pinterest images and [pinterest_image] shortcode.
+* Updated Bitly integration to only create shortlinks for published posts.
+* Restored the text length counter for tweets in the metabox.
+* Fixed the Pinterest button!
+* Fixed bug when using emojis in a Pinterest description.
+* Fixed title shared when sharing via Flipboard.
+* Fixed floating & mobile button placement rules.
+* Fixed bug where Pinterest image was still being printed when set to OFF.
+* Fixed bug where Bitly created links when set to OFF.
+
 = 3.3.3 (19 SEP 2018)
 * Fixed the output of the og:type meta tag.
 * Fixed the image output of the Pinterest share buttons; images are no longer broken.
