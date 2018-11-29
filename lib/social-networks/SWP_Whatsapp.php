@@ -40,8 +40,8 @@ class SWP_WhatsApp extends SWP_Social_Network {
 		$this->key            = 'whatsapp';
 		$this->default        = false;
         $this->premium        = 'pro';
+		$this->base_share_url = $this->establish_base_share_url(); // '';
 
-		$this->establish_base_share_url();
 		$this->init_social_network();
 	}
 
@@ -57,8 +57,10 @@ class SWP_WhatsApp extends SWP_Social_Network {
      */
 	public function establish_base_share_url() {
 		$mobiles = ['iPhone', 'Android', 'webOS', 'BlackBerry', 'iPod'];
+
 		$is_mobile = count( array_filter( $mobiles, array( $this, 'contains_user_agent') ) );
-		$this->base_share_url = $is_mobile ? "whatsapp://send?text=" : "https://api.whatsapp.com/send?text=";
+
+		$this->base_share_url = $is_mobile ? "whatsapp://send?text=" : "https://api.whatsapp.com/send?text="; 
 
 	}
 }
