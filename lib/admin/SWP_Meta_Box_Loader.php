@@ -139,14 +139,6 @@ class SWP_Meta_Box_Loader {
             'class' => 'twitter_og_toggle swpmb-left',
         );
 
-        // $twitter_handle_box = array(
-        //     'name'  => $twitter_handle,
-        //     'id'    => 'twitter_id',
-        //     'class' => 'twitterIDWrapper twitter',
-        //     'type'  => 'hidden',
-        //     'std'   => $twitter_handle,
-        // );
-
         // Setup the pinterest optimized image.
         $pinterest_image = array(
             'name'  => __( 'Pinterest Image','social-warfare' ),
@@ -196,15 +188,6 @@ class SWP_Meta_Box_Loader {
             'class' => 'pinterest swpmb-right',
             'std'   => 'default',
         );
-
-        // $pin_force_image = array(
-        //     'id'    => 'swp_force_pin_image',
-        //     'type'  => 'toggle',
-        //     'name'  =>  __( 'Allow only this Pinterest image when pinning?', 'social-warfare'),
-		// 	'desc'  => '',
-        //     'value' => $pin_force_image_value,
-        //     'class' => 'pinterest swpmb-right',
-        // );
 
         $recover_shares_box = array(
             'name'  => __( 'Share Recovery','social-warfare' ),
@@ -310,6 +293,7 @@ class SWP_Meta_Box_Loader {
 		return $twitter_handle;
 	}
 
+
     /**
      * Echoes content before any meta box fields are printed.
      * Note: You must echo your content immediately, and return the $meta_box.
@@ -321,7 +305,7 @@ class SWP_Meta_Box_Loader {
 	 *
 	 * - A unique key goe sin the $boxes array below.
 	 * - This key is correlated to a CSS class selector.
-	 * - All items of class X are put in $container X.
+	 * - All items of class X are put in $container data-type=[X].
 	 *
 	 * Therefore, to put a 'New Pinterest Thing' in the 'pinterest' section,
 	 * verify that the $new_pinterest_thing array created in load_meta_boxes()
@@ -335,8 +319,8 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-		$boxes = array('heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other');
-		$boxes = apply_filters('swp_meta_boxes', $boxes );
+		$boxes = array( 'heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other' );
+		$boxes = apply_filters( 'swp_meta_boxes', $boxes );
 
 		foreach ($boxes as $box) {
 			$container = '<div class="swpmb-meta-container" data-type="' . $box . '">';
@@ -361,8 +345,6 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function after_meta_boxes( $meta_box ) {
-        // echo '';
-
         return $meta_box;
     }
 }
