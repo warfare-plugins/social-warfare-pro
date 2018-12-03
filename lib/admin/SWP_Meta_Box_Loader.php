@@ -125,7 +125,7 @@ class SWP_Meta_Box_Loader {
 			                 ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), a link being added, and the current content above, your tweet has %2$s characters remaining.', 'social-warfare' ), str_replace( '@', '' ,$twitter_handle ), '<span class="counterNumber">280</span>' )
 							 : sprintf( __( 'If this is left blank your post title will be used. Based on a link being added, and the current content above, your tweet has %s characters remaining.','social-warfare' ), '<span class="counterNumber">280</span>' ) ),
             'id'    => $prefix . 'custom_tweet',
-            'class' => $prefix . 'custom_tweetWrapper twitter  swpmb-full-width',
+            'class' => $prefix . 'custom_tweetWrapper custom_tweet  swpmb-full-width',
             'type'  => 'textarea',
             'clone' => false,
         );
@@ -136,7 +136,7 @@ class SWP_Meta_Box_Loader {
             'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
             'value'=> '',
-            'class' => 'twitter swpmb-right',
+            'class' => 'twitter_og_toggle swpmb-left',
         );
 
         // $twitter_handle_box = array(
@@ -320,7 +320,7 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-		$boxes = array('heading', 'open-graph', 'twitter', 'pinterest', 'other');
+		$boxes = array('heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other');
 		$boxes = apply_filters('swp_meta_boxes', $boxes );
 
 		foreach ($boxes as $box) {
