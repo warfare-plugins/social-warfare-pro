@@ -474,7 +474,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
 		endif;
 
-		if( true == get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
+		if( 'true' === get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
 			$twitter_to_og = array(
 				'twitter_title'	=> 'og_title',
 				'twitter_description'	=> 'og_description',
