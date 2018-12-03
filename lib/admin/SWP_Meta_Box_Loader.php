@@ -318,7 +318,7 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-		$default_boxes = array( 'heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other' );
+		$default_boxes = array( 'heading', 'open-graph', 'custom_tweet', 'twitter_og_toggle', 'twitter', 'pinterest', 'other' );
 		$boxes = apply_filters( 'swp_meta_boxes', $default_boxes);
 
 		foreach ($boxes as $box) {
