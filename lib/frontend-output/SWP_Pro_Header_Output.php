@@ -487,19 +487,23 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER TITLE
 		 *
 		 */
-		if ( $twitter_use_open_graph ):
-			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
-		elseif( !empty( $yoast_twitter_title ) ) :
-			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
-		else:
-			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
-		endif;
+		 if( false === $twitter_use_open_graph && !empty( $twitter_card_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $twitter_card_title;
+         elseif ( !empty( $custom_og_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $custom_og_title;
+         elseif( !empty( $yoast_twitter_title ) ) :
+             $info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
+         else:
+             $info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
+         endif;
 
 		/**
 		 * TWITTER DESCRIPTION
 		 *
 		 */
-		if( $twitter_use_open_graph ):
+		if( false === $twitter_use_open_graph && !empty( $twitter_card_title ) ):
+ 			$info['meta_tag_values']['twitter_title'] = $twitter_card_description;
+ 		elseif ( !empty( $custom_og_description ) ):
 			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
 		elseif ( !empty( $yoast_twitter_description ) ) :
 			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
@@ -511,9 +515,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER IMAGE
 		 *
 		 */
-		 if( true === $twitter_use_open_graph && !empty( $twitter_title_field ) ):
-             $info['meta_tag_values']['twitter_title'] = get_post_meta
-		elseif ( !empty( $custom_og_title ) ):
+		 if( false === $twitter_use_open_graph && !empty( $twitter_card_image ) ):
+  			$info['meta_tag_values']['twitter_title'] = $twitter_card_image;
+  		elseif ( !empty( $custom_og_image_url ) ):
 			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
 		elseif ( !empty( $yoast_twitter_image ) ) :
 			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
