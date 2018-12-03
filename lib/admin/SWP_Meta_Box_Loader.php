@@ -56,7 +56,7 @@ $field = array(
 				 - use swpmb-full-width for 100% width
 				 - use swpmb-left for a 50% left-aligned column
 				 - use swpmb-right for a 50% right-aligned column
-	'desc'	=> string // Text to display with the field. 
+	'desc'	=> string // Text to display with the field.
 )
 		 */
 
@@ -75,7 +75,6 @@ $field = array(
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
             'id'    => $prefix . 'og_image',
             'type'  => 'image_advanced',
-            'clone' => false,
             'class' => 'open-graph swpmb-left',
             'max_file_uploads' => 1,
         );
@@ -88,7 +87,6 @@ $field = array(
             'type'  => 'textarea',
             'class' => 'open-graph swpmb-right',
 			'rows'	=> 1,
-            'clone' => false,
         );
 
         // Setup the Open Graph description.
@@ -98,7 +96,6 @@ $field = array(
             'id'    => $prefix . 'og_description',
             'class' => 'open-graph swpmb-right',
             'type'  => 'textarea',
-            'clone' => false,
         );
 
         // Setup the Open Graph image.
@@ -107,7 +104,6 @@ $field = array(
             'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
             'id'    => $prefix . 'twitter_card_image',
             'type'  => 'image_advanced',
-            'clone' => false,
             'class' => 'twitter swpmb-left',
             'max_file_uploads' => 1,
         );
@@ -120,7 +116,6 @@ $field = array(
             'type'  => 'textarea',
             'class' => $prefix . 'twitter_card_title twitter swpmb-right',
 			'rows'	=> 1,
-            'clone' => false,
         );
 
         // Setup the Twitter Card Description description.
@@ -130,7 +125,6 @@ $field = array(
             'id'    => $prefix . 'twitter_card_description',
             'class' => $prefix . 'twitter_card_description twitter swpmb-right',
             'type'  => 'textarea',
-            'clone' => false,
         );
 
         // Setup the Custom Tweet box.
@@ -143,7 +137,6 @@ $field = array(
             'id'    => $prefix . 'custom_tweet',
             'class' => $prefix . 'custom_tweetWrapper custom_tweet  swpmb-full-width',
             'type'  => 'textarea',
-            'clone' => false,
         );
 
 		$open_graph_toggle = array(
@@ -162,7 +155,6 @@ $field = array(
             'id'    => $prefix . 'pinterest_image',
             'class' => $prefix . 'large_image pinterest swpmb-left',
             'type'  => 'image_advanced',
-            'clone' => false,
             'max_file_uploads' => 1,
         );
 
@@ -172,7 +164,6 @@ $field = array(
             'id'    => $prefix . 'pinterest_description',
             'class' => $prefix . 'pinterest_descriptionWrapper pinterest swpmb-right',
             'type'  => 'textarea',
-            'clone' => false,
         );
 
         // Setup the pinterest description.
@@ -185,7 +176,6 @@ $field = array(
                 'on'      => __( 'On','social-warfare' ),
                 'off'     => __( 'Off','social-warfare' ),
             ),
-            'clone' => false,
             'class' => 'pinterest swpmb-right',
             'std'   => 'default',
         );
@@ -200,7 +190,6 @@ $field = array(
                 'top'     => __( 'At the Top of the Post','social-warfare' ),
                 'bottom'  => __( 'At the Bottom of the Post','social-warfare' ),
             ),
-            'clone' => false,
             'class' => 'pinterest swpmb-right',
             'std'   => 'default',
         );
@@ -211,7 +200,6 @@ $field = array(
             'id'    => 'swp_recovery_url',
             'class' => $prefix . 'share_recoveryWrapper other',
             'type'  => 'text',
-            'clone' => false
         );
 
 		$other_post_options = array(
@@ -234,7 +222,6 @@ $field = array(
                 'both'    => __( 'Both Above and Below the Content','social-warfare' ),
                 'none'    => __( 'None/Manual Placement','social-warfare' ),
             ),
-            'clone' => false,
             'class' => 'other swpmb-left inline-select',
             'std'	=> 'default',
         );
@@ -248,7 +235,6 @@ $field = array(
                 'on'      => __( 'On','social-warfare' ),
                 'off'     => __( 'Off','social-warfare' ),
             ),
-            'clone' => false,
             'class' => 'other swpmb-left inline-select',
             'std'   => 'default',
         );
