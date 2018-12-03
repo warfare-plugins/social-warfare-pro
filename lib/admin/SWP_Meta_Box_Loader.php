@@ -44,6 +44,22 @@ class SWP_Meta_Box_Loader {
 			$pin_force_image_value = true;
 		}
 
+		/**
+		 * Notes for creating fields
+
+$field = array(
+    'name'	=> string // Display Name for the component',
+	'id'	=> string // Unique key for storing post_meta keys',
+	'type'	=> string // One of the metabox types in meta-box/inc/fields
+	'class'	=> string // The CSS class name to give the element.
+	             - @see $this::before_meta_boxes()
+				 - use swpmb-full-width for 100% width
+				 - use swpmb-left for a 50% left-aligned column
+				 - use swpmb-right for a 50% right-aligned column
+	'desc'	=> string // Text to display with the field. 
+)
+		 */
+
         $heading = array(
             'name'  => 'Share Customization',
             'id'    => 'swp_meta_box_heading',
