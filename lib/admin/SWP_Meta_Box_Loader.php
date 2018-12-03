@@ -330,6 +330,8 @@ class SWP_Meta_Box_Loader {
      *
      * @param  object $meta_box The Rylwis meta_box object.
      * @return object $meta_box The (optionally) filtered meta box.
+     * @since  3.3.0 | September 2018 (estimate) | Created
+	 * @see    | social-warfare/assets/js/admin.js | putFieldsInContainers()
      *
      */
     public function before_meta_boxes( $meta_box  ) {
