@@ -38,12 +38,11 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	static function end_html( $meta, $field )
 	{
 		if ( !isset($field['id']) ) {
-			error_log("Social Warfare Notice: Please provide an ID for your toggle. SWPMB_Toggle_Field->end_html()");
 			return "</div>";
 		}
 
 		$value = SWPMB_Toggle_Field::swp_get_value( $field['id'] );
-        $status = $value ? 'on' : 'off';
+        $status = $value === 'true' ? 'on' : 'off';
 
 		$label = '<div class="swpmb-label">';
 		    $label .= '<label for="' . $field['id'] . '">' . $field['name'] . '</label>';
@@ -54,8 +53,10 @@ class SWPMB_Toggle_Field extends SWPMB_Field
                        <div class='sw-checkbox-off'>OFF</div>
                    </div>";
 
-
-        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' value='$value' type='checkbox' style='display: none;'  />";
+        //* @TODO
+		//* The type is set to 'text'. It should be 'checkbox'. This is a patch for 3.4.1 only with the corresponding JS in
+		//* admin.js setTempConditionalField
+        $toggle .= "<input id='{$field['id']}' name='{$field['id']}' value='$value' type='text' style='display: none;'  />";
 
         //* Close the div opened in begin_html().
         return $label . $toggle . '</div>';
@@ -74,14 +75,17 @@ class SWPMB_Toggle_Field extends SWPMB_Field
 	static function swp_get_value( $key ) {
 		$post_id = ( int ) $_GET['post'];
 		$value = get_post_meta( $post_id, $key, true );
+        $value = is_array( $value ) ? $value[0] : $value;
 
 		$defaults = array(
-			'swp_twitter_use_open_graph'	=> true,
-			'swp_force_pin_image'			=> false
+			'swp_twitter_use_open_graph'	=> 'true',
+			'swp_force_pin_image'			=> 'false',
 		);
 
-		if ( !empty( $value ) && isset( $value ) ) {
-			return $value;
+		if ( isset( $value ) && '' != $value ) {
+
+			//* Explicitly return strings.
+			return $value === 'true' ?  'true' : 'false';
 		}
 
 		if ( isset( $defaults[$key] ) ) {
