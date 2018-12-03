@@ -55,6 +55,7 @@ class SWP_Meta_Box_Loader {
 		// 				 - use swpmb-right for a 50% right-aligned column
 		// 	'desc'	=> string // Text to display with the field.
 		// )
+		//
 
         $heading = array(
             'name'  => 'Share Customization',
@@ -317,8 +318,8 @@ class SWP_Meta_Box_Loader {
      *
      */
     public function before_meta_boxes( $meta_box  ) {
-		$boxes = array( 'heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other' );
-		$boxes = apply_filters( 'swp_meta_boxes', $boxes );
+		$default_boxes = array( 'heading', 'open-graph', 'twitter_og_toggle', 'custom_tweet', 'twitter', 'pinterest', 'other' );
+		$boxes = apply_filters( 'swp_meta_boxes', $default_boxes);
 
 		foreach ($boxes as $box) {
 			$container = '<div class="swpmb-meta-container" data-type="' . $box . '">';
