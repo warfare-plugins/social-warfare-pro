@@ -411,6 +411,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			return $info;
 		}
 
+		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
+        $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
+
+		if ( $twitter_use_open_graph ) {
+			$twitter_card_title 		= get_post_meta( $info['postID'] , 'swp_twitter_card_title' , true );
+			$twitter_card_description 	= get_post_meta( $info['postID'] , 'swp_twitter_card_description' , true );
+			$twitter_card_image 		= get_post_meta( $info['postID'] , 'swp_twitter_card_image' , true );
+		}
+
 		/**
 		 * JET PACK: If ours are activated, disable theirs
 		 *
@@ -478,7 +487,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER TITLE
 		 *
 		 */
-		if ( !empty( $custom_og_title ) ):
+		if ( $twitter_use_open_graph ):
 			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
 		elseif( !empty( $yoast_twitter_title ) ) :
 			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
@@ -490,7 +499,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER DESCRIPTION
 		 *
 		 */
-		if( !empty( $custom_og_description ) ):
+		if( $twitter_use_open_graph ):
 			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
 		elseif ( !empty( $yoast_twitter_description ) ) :
 			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
@@ -502,7 +511,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER IMAGE
 		 *
 		 */
-		if ( !empty( $custom_og_image_url ) ):
+		 if( true === $twitter_use_open_graph && !empty( $twitter_title_field ) ):
+             $info['meta_tag_values']['twitter_title'] = get_post_meta
+		elseif ( !empty( $custom_og_title ) ):
 			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
 		elseif ( !empty( $yoast_twitter_image ) ) :
 			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
@@ -510,21 +521,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
 
-        $twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
-        //* Check for post-editor option swp_twitter_use_open_graph
-		if( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph ) {
-			$twitter_to_og = array(
-				'twitter_title'	=> 'og_title',
-				'twitter_description'	=> 'og_description',
-				'twitter_image'	=>	'og_image'
-			);
-
-			foreach( $twitter_to_og as $twitter_key => $og_key) {
-				$info['meta_tag_values'][$twitter_key] = $info['meta_tag_values'][$og_key];
-			}
-
-			return $info;
-		}
 
         return $info;
     }
