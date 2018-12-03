@@ -312,8 +312,21 @@ class SWP_Meta_Box_Loader {
 
     /**
      * Echoes content before any meta box fields are printed.
+     * Note: You must echo your content immediately, and return the $meta_box.
      *
-     * You must echo your content immediately, and return the $meta_box.
+     * Social Warfare uses this to create sections to organize each of the
+     * fields created in load_meta_boxes().
+     *
+	 * The field-to-section relationship is as follows:
+	 *
+	 * - A unique key goe sin the $boxes array below.
+	 * - This key is correlated to a CSS class selector.
+	 * - All items of class X are put in $container X.
+	 *
+	 * Therefore, to put a 'New Pinterest Thing' in the 'pinterest' section,
+	 * verify that the $new_pinterest_thing array created in load_meta_boxes()
+	 * has an index for 'class' which includes the string 'pinterest'.
+	 *
      *
      * @param  object $meta_box The Rylwis meta_box object.
      * @return object $meta_box The (optionally) filtered meta box.
