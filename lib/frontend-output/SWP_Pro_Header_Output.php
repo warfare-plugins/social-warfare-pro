@@ -474,21 +474,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
 		endif;
 
-		if( 'true' === get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
-			$twitter_to_og = array(
-				'twitter_title'	=> 'og_title',
-				'twitter_description'	=> 'og_description',
-				'twitter_image'	=>	'og_image'
-			);
-
-			foreach( $twitter_to_og as $twitter_key => $og_key) {
-				$info['meta_tag_values'][$twitter_key] = $info['meta_tag_values'][$og_key];
-			}
-
-			return $info;
-		}
-
-
 		/**
 		 * TWITTER TITLE
 		 *
@@ -524,6 +509,22 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
+
+        
+        //* Check for post-editor option swp_twitter_use_open_graph
+		if( 'true' == $twitter_use_open_graph || false == get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true ) ) {
+			$twitter_to_og = array(
+				'twitter_title'	=> 'og_title',
+				'twitter_description'	=> 'og_description',
+				'twitter_image'	=>	'og_image'
+			);
+
+			foreach( $twitter_to_og as $twitter_key => $og_key) {
+				$info['meta_tag_values'][$twitter_key] = $info['meta_tag_values'][$og_key];
+			}
+
+			return $info;
+		}
 
         return $info;
     }
