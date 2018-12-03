@@ -414,10 +414,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
         $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
 
-		if ( $twitter_use_open_graph ) {
+		if ( !$twitter_use_open_graph ) {
 			$twitter_card_title 		= get_post_meta( $info['postID'] , 'swp_twitter_card_title' , true );
 			$twitter_card_description 	= get_post_meta( $info['postID'] , 'swp_twitter_card_description' , true );
 			$twitter_card_image 		= get_post_meta( $info['postID'] , 'swp_twitter_card_image' , true );
+
+			if ( $twitter_card_image ) {
+				$twitter_card_image = wp_get_attachment_url( $twitter_card_image );
+			}
 		}
 
 		/**
@@ -487,7 +491,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER TITLE
 		 *
 		 */
-		 if( false === $twitter_use_open_graph && !empty( $twitter_card_title ) ):
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_title ) ):
              $info['meta_tag_values']['twitter_title'] = $twitter_card_title;
          elseif ( !empty( $custom_og_title ) ):
              $info['meta_tag_values']['twitter_title'] = $custom_og_title;
@@ -501,8 +505,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER DESCRIPTION
 		 *
 		 */
-		if( false === $twitter_use_open_graph && !empty( $twitter_card_title ) ):
- 			$info['meta_tag_values']['twitter_title'] = $twitter_card_description;
+		if( !$twitter_use_open_graph && !empty( $twitter_card_description ) ):
+ 			$info['meta_tag_values']['twitter_description'] = $twitter_card_description;
  		elseif ( !empty( $custom_og_description ) ):
 			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
 		elseif ( !empty( $yoast_twitter_description ) ) :
@@ -515,8 +519,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER IMAGE
 		 *
 		 */
-		 if( false === $twitter_use_open_graph && !empty( $twitter_card_image ) ):
-  			$info['meta_tag_values']['twitter_title'] = $twitter_card_image;
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_image ) ):
+  			$info['meta_tag_values']['twitter_image'] = $twitter_card_image;
   		elseif ( !empty( $custom_og_image_url ) ):
 			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
 		elseif ( !empty( $yoast_twitter_image ) ) :
