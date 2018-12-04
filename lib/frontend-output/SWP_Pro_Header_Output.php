@@ -421,6 +421,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 			if ( $twitter_card_image ) {
 				$twitter_card_image = wp_get_attachment_url( $twitter_card_image );
+			} else {
+				$twitter_card_image = '';
 			}
 		}
 
@@ -460,16 +462,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 			// Cancel their output if ours have been defined so we don't have two sets of tags
 			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
-		endif;
-
-		/**
-		 * The Twitter Card Type
-		 *
-		 */
-		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-		else:
-			$info['meta_tag_values']['twitter_card'] = 'summary';
 		endif;
 
 		/**
@@ -528,6 +520,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
+
+		/**
+		 * The Twitter Card Type
+		 *
+		 */
+		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
+			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
+		else:
+			$info['meta_tag_values']['twitter_card'] = 'summary';
+		endif;
+
 
 
         return $info;
