@@ -411,6 +411,21 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			return $info;
 		}
 
+		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
+        $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
+
+		if ( !$twitter_use_open_graph ) {
+			$twitter_card_title 		= get_post_meta( $info['postID'] , 'swp_twitter_card_title' , true );
+			$twitter_card_description 	= get_post_meta( $info['postID'] , 'swp_twitter_card_description' , true );
+			$twitter_card_image 		= get_post_meta( $info['postID'] , 'swp_twitter_card_image' , true );
+
+			if ( $twitter_card_image ) {
+				$twitter_card_image = wp_get_attachment_url( $twitter_card_image );
+			} else {
+				$twitter_card_image = '';
+			}
+		}
+
 		/**
 		 * JET PACK: If ours are activated, disable theirs
 		 *
@@ -450,63 +465,47 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		endif;
 
 		/**
-		 * The Twitter Card Type
-		 *
-		 */
-		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-		else:
-			$info['meta_tag_values']['twitter_card'] = 'summary';
-		endif;
-
-		/**
 		 * The Twitter Card Site
 		 *
 		 */
-		if ( isset( $this->options['twitter_id'] ) ) :
-			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
+		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
+		if ( !empty( $twitter_id ) ) :
+			$twitter_id = trim( $twitter_id );
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , $twitter_id );
 		endif;
 
-		/**
-		 * The Twitter Card Creator
-		 */
-		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
-			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
-		endif;
-		// die(var_dump(get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true)));
+		$author = SWP_User_Profile::get_author( $info['postID'] );
+        $author_twitter_handle = get_the_author_meta( 'swp_twitter' , $author );
 
-		if( true == get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true) ) {
-			$twitter_to_og = array(
-				'twitter_title'	=> 'og_title',
-				'twitter_description'	=> 'og_description',
-				'twitter_image'	=>	'og_image'
-			);
-
-			foreach( $twitter_to_og as $twitter_key => $og_key) {
-				$info['meta_tag_values'][$twitter_key] = $info['meta_tag_values'][$og_key];
-			}
-
-			return $info;
+		if ($author_twitter_handle) {
+			$twitter_id = trim( $author_twitter_handle );
 		}
 
+		if ( !empty( $twitter_id) ) {
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
+		}
 
 		/**
 		 * TWITTER TITLE
 		 *
 		 */
-		if ( !empty( $custom_og_title ) ):
-			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
-		elseif( !empty( $yoast_twitter_title ) ) :
-			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
-		else:
-			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
-		endif;
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $twitter_card_title;
+         elseif ( !empty( $custom_og_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $custom_og_title;
+         elseif( !empty( $yoast_twitter_title ) ) :
+             $info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
+         else:
+             $info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
+         endif;
 
 		/**
 		 * TWITTER DESCRIPTION
 		 *
 		 */
-		if( !empty( $custom_og_description ) ):
+		if( !$twitter_use_open_graph && !empty( $twitter_card_description ) ):
+ 			$info['meta_tag_values']['twitter_description'] = $twitter_card_description;
+ 		elseif ( !empty( $custom_og_description ) ):
 			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
 		elseif ( !empty( $yoast_twitter_description ) ) :
 			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
@@ -518,13 +517,27 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * TWITTER IMAGE
 		 *
 		 */
-		if ( !empty( $custom_og_image_url ) ):
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_image ) ):
+  			$info['meta_tag_values']['twitter_image'] = $twitter_card_image;
+  		elseif ( !empty( $custom_og_image_url ) ):
 			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
 		elseif ( !empty( $yoast_twitter_image ) ) :
 			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
 		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
 			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
 		endif;
+
+		/**
+		 * The Twitter Card Type
+		 *
+		 */
+		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
+			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
+		else:
+			$info['meta_tag_values']['twitter_card'] = 'summary';
+		endif;
+
+
 
         return $info;
     }
