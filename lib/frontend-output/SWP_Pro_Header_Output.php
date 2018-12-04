@@ -469,12 +469,21 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
 		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
-
 		if ( !empty( $twitter_id ) ) :
 			$twitter_id = trim( $twitter_id );
 			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , $twitter_id );
-			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
 		endif;
+
+		$author = SWP_User_Profile::get_author( $info['postID'] );
+        $author_twitter_handle = get_the_author_meta( 'swp_twitter' , $author );
+
+		if ($author_twitter_handle) {
+			$twitter_id = trim( $author_twitter_handle );
+		}
+
+		if ( !empty( $twitter_id) ) {
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
+		}
 
 		/**
 		 * TWITTER TITLE
