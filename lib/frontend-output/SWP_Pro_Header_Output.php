@@ -468,16 +468,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * The Twitter Card Site
 		 *
 		 */
-		if ( isset( $this->options['twitter_id'] ) && !empty( $this->options['twitter_id'] ) ) :
-			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
-		endif;
-
-		/**
-		 * The Twitter Card Creator
-		 */
 		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
-		if ( $twitter_id && !empty( $twitter_id )) :
-			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( $twitter_id ) );
+
+		if ( !empty( $twitter_id ) ) :
+			$twitter_id = trim( $twitter_id );
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , $twitter_id );
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
 		endif;
 
 		/**
