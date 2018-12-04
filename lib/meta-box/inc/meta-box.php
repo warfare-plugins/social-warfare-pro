@@ -98,7 +98,7 @@ class SWP_Meta_Box
 		if ( ! $this->is_edit_screen() )
 			return;
 
-		wp_enqueue_style( 'swpmb', SWPMB_CSS_URL . 'style.css', array(), SWP_VERSION );
+		// wp_enqueue_style( 'swpmb', SWPMB_CSS_URL . 'style.css', array(), SWP_VERSION );
 		if( is_rtl() )
 			wp_enqueue_style( 'swpmb-rtl', SWPMB_CSS_URL . 'style-rtl.css', array(), SWP_VERSION );
 

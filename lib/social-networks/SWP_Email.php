@@ -69,8 +69,9 @@ class SWP_Email extends SWP_Social_Network {
 		endif;
 
 		$permalink = $this->get_shareable_permalink( $post_data );
+		$newline = "%0D%0A";
 
-		$share_link = 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body) . __('Read More Here:' , 'social-warfare' ) . ' ' . $permalink;
+		$share_link = 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body) . $newline . $newline .  __('Read More Here: ' , 'social-warfare' ) . '%20' . $permalink;
 		return $share_link;
 	}
 
@@ -109,7 +110,7 @@ class SWP_Email extends SWP_Social_Network {
 
 		// Build the wrapper.
 		$html = '<div class="nc_tweetContainer swp_'.$this->key.'" data-network="'.$this->key.'">';
-			$html .= '<a rel="nofollow noreferrer noopener" href="' . $share_link . '" class="nc_tweet">';
+			$html .= '<a rel="nofollow noreferrer noopener" href="' . $share_link . '" class="nc_tweet noPop" target="_blank">';
 				// Put the button inside.
 				$html .= $icon;
 			$html.= '</a>';

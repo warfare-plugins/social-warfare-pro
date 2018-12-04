@@ -3,7 +3,7 @@
 if ( class_exists( 'SWP_Header_Output' ) ) :
 
 /**
- * Register and output open graph tags, Twitter cards, custom color CSS, and the icon fonts.
+ * Register and output open graph tags, Twitter cards, and custom color CSS.
  *
  * @package   SocialWarfare\Functions
  * @copyright Copyright (c) 2017, Warfare Plugins, LLC
@@ -321,64 +321,64 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	}
 
     	// Check to ensure that we don't need to defer to Yoast
-    	if( !isset( $info['yoast_og_setting'] ) || false === $info['yoast_og_setting'] ):
+    	if ( isset( $info['yoast_og_setting'] ) && false != $info['yoast_og_setting'] ) {
+			return $info;
+		}
 
-    		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['og_title'] ) && !empty( $info['meta_tag_values']['og_title'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_title'] ) && !empty( $info['meta_tag_values']['og_title'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['og_description'] ) && !empty( $info['meta_tag_values']['og_description'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_description'] ) && !empty( $info['meta_tag_values']['og_description'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
+		endif;
 
-    		if( isset( $info[ 'meta_tag_values'][ 'og_image' ] )         && !empty( $info['meta_tag_values']['og_image'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
-    		endif;
+		if( isset( $info[ 'meta_tag_values'][ 'og_image' ] )         && !empty( $info['meta_tag_values']['og_image'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
+		endif;
 
-    		if( isset( $info[ 'meta_tag_values'][ 'og_image_width' ] )  && !empty( $info['meta_tag_values']['og_image_width'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:image:width" content="'. trim( $info['meta_tag_values']['og_image_width'] ).'" />';
-    		endif;
-    		if( isset( $info[ 'meta_tag_values'][ 'og_image_height' ] ) && !empty( $info['meta_tag_values']['og_image_height'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
-    		endif;
+		if( isset( $info[ 'meta_tag_values'][ 'og_image_width' ] )  && !empty( $info['meta_tag_values']['og_image_width'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="og:image:width" content="'. trim( $info['meta_tag_values']['og_image_width'] ).'" />';
+		endif;
+		if( isset( $info[ 'meta_tag_values'][ 'og_image_height' ] ) && !empty( $info['meta_tag_values']['og_image_height'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['og_url'] ) && !empty( $info['meta_tag_values']['og_url'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:url" content="'. trim( $info['meta_tag_values']['og_url'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_url'] ) && !empty( $info['meta_tag_values']['og_url'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:url" content="'. trim( $info['meta_tag_values']['og_url'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
+			$info['html_output'] .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['article_author'] ) && !empty( $info['meta_tag_values']['article_author'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="article:author" content="'. trim( $info['meta_tag_values']['article_author'] ).'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['article_author'] ) && !empty( $info['meta_tag_values']['article_author'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="article:author" content="'. trim( $info['meta_tag_values']['article_author'] ).'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['article_publisher'] ) && !empty( $info['meta_tag_values']['article_publisher'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="article:publisher" content="'. trim( $info['meta_tag_values']['article_publisher'] ) .'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['article_publisher'] ) && !empty( $info['meta_tag_values']['article_publisher'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="article:publisher" content="'. trim( $info['meta_tag_values']['article_publisher'] ) .'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['article_published_time'] ) && !empty( $info['meta_tag_values']['article_published_time'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="article:published_time" content="'. trim( $info['meta_tag_values']['article_published_time'] ) .'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['article_published_time'] ) && !empty( $info['meta_tag_values']['article_published_time'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="article:published_time" content="'. trim( $info['meta_tag_values']['article_published_time'] ) .'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['article_modified_time'] ) && !empty( $info['meta_tag_values']['article_modified_time'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="article:modified_time" content="'. trim( $info['meta_tag_values']['article_modified_time'] ) .'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['article_modified_time'] ) && !empty( $info['meta_tag_values']['article_modified_time'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="article:modified_time" content="'. trim( $info['meta_tag_values']['article_modified_time'] ) .'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['og_modified_time'] ) && !empty( $info['meta_tag_values']['og_modified_time'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="og:updated_time" content="'. trim( $info['meta_tag_values']['og_modified_time'] ) .'" />';
-    		endif;
+		if( isset( $info['meta_tag_values']['og_modified_time'] ) && !empty( $info['meta_tag_values']['og_modified_time'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="og:updated_time" content="'. trim( $info['meta_tag_values']['og_modified_time'] ) .'" />';
+		endif;
 
-    		if( isset( $info['meta_tag_values']['fb_app_id'] ) && !empty( $info['meta_tag_values']['fb_app_id'] ) ):
-    			$info['html_output'] .= PHP_EOL . '<meta property="fb:app_id" content="'. trim( $info['meta_tag_values']['fb_app_id'] ).'" />';
-    		endif;
-
-    	endif;
+		if( isset( $info['meta_tag_values']['fb_app_id'] ) && !empty( $info['meta_tag_values']['fb_app_id'] ) ):
+			$info['html_output'] .= PHP_EOL . '<meta property="fb:app_id" content="'. trim( $info['meta_tag_values']['fb_app_id'] ).'" />';
+		endif;
 
     	return $info;
     }
@@ -403,114 +403,143 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
     public function twitter_card_values($info) {
-
     	if( false === is_singular() ) {
     		return $info;
     	}
 
-    	if ( SWP_Utility::get_option( 'twitter_cards' ) ) :
-    		/**
-    		 * Begin by fetching the user's default custom settings
-    		 *
-    		 */
-            $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
-            if ( !empty( $custom_og_title) ) :
-                $custom_og_title = htmlspecialchars( $custom_og_title );
-            endif;
+    	if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
+			return $info;
+		}
 
-            $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
-            if ( !empty( $custom_og_description ) ) :
-                $custom_og_description = htmlspecialchars( $custom_og_description );
-            endif;
-    		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-    		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
-    		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
+		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
+        $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
 
-    		/**
-    		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
-    		 *
-    		 */
-    		if ( defined( 'WPSEO_VERSION' ) ) :
-    			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
-    			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
-    			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
-    			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
-    			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
+		if ( !$twitter_use_open_graph ) {
+			$twitter_card_title 		= get_post_meta( $info['postID'] , 'swp_twitter_card_title' , true );
+			$twitter_card_description 	= get_post_meta( $info['postID'] , 'swp_twitter_card_description' , true );
+			$twitter_card_image 		= get_post_meta( $info['postID'] , 'swp_twitter_card_image' , true );
 
-    			// Cancel their output if ours have been defined so we don't have two sets of tags
-    			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
-    		endif;
+			if ( $twitter_card_image ) {
+				$twitter_card_image = wp_get_attachment_url( $twitter_card_image );
+			} else {
+				$twitter_card_image = '';
+			}
+		}
 
-    		/**
-    		 * JET PACK: If ours are activated, disable theirs
-    		 *
-    		 */
-    		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
+		/**
+		 * JET PACK: If ours are activated, disable theirs
+		 *
+		 */
+		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
-    		/**
-    		 * TWITTER TITLE
-    		 *
-    		 */
-    		if ( !empty( $custom_og_title ) ):
-    			$info['meta_tag_values']['twitter_title'] = $custom_og_title;
-    		elseif( !empty( $yoast_twitter_title ) ) :
-    			$info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
-    		else:
-    			$info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
-    		endif;
+		/**
+		 * Begin by fetching the user's default custom settings
+		 *
+		 */
+        $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
+        if ( !empty( $custom_og_title) ) :
+            $custom_og_title = htmlspecialchars( $custom_og_title );
+        endif;
 
-    		/**
-    		 * TWITTER DESCRIPTION
-    		 *
-    		 */
-    		if( !empty( $custom_og_description ) ):
-    			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
-    		elseif ( !empty( $yoast_twitter_description ) ) :
-    			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
-    		else:
-    			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
-    		endif;
+        $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
+        if ( !empty( $custom_og_description ) ) :
+            $custom_og_description = htmlspecialchars( $custom_og_description );
+        endif;
+		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
+		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
+		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
 
-    		/**
-    		 * TWITTER IMAGE
-    		 *
-    		 */
-    		if ( !empty( $custom_og_image_url ) ):
-    			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
-    		elseif ( !empty( $yoast_twitter_image ) ) :
-    			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
-    		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
-    			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
-    		endif;
+		/**
+		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
+		 *
+		 */
+		if ( defined( 'WPSEO_VERSION' ) ) :
+			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
+			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
+			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
+			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
+			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
 
-    		/**
-    		 * The Twitter Card Type
-    		 *
-    		 */
-    		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-    			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-    		else:
-    			$info['meta_tag_values']['twitter_card'] = 'summary';
-    		endif;
+			// Cancel their output if ours have been defined so we don't have two sets of tags
+			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
+		endif;
 
-    		/**
-    		 * The Twitter Card Site
-    		 *
-    		 */
-    		if ( isset( $this->options['twitter_id'] ) ) :
-    			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
-    		endif;
+		/**
+		 * The Twitter Card Site
+		 *
+		 */
+		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
+		if ( !empty( $twitter_id ) ) :
+			$twitter_id = trim( $twitter_id );
+			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , $twitter_id );
+		endif;
 
-    		/**
-    		 * The Twitter Card Creator
-    		 */
-    		if ( SWP_Utility::get_option( 'twitter_id' ) ) :
-    			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , trim( SWP_Utility::get_option( 'twitter_id' ) ) );
-    		endif;
+		$author = SWP_User_Profile::get_author( $info['postID'] );
+        $author_twitter_handle = get_the_author_meta( 'swp_twitter' , $author );
 
-    	endif;
+		if ($author_twitter_handle) {
+			$twitter_id = trim( $author_twitter_handle );
+		}
 
-    	return $info;
+		if ( !empty( $twitter_id) ) {
+			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
+		}
+
+		/**
+		 * TWITTER TITLE
+		 *
+		 */
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $twitter_card_title;
+         elseif ( !empty( $custom_og_title ) ):
+             $info['meta_tag_values']['twitter_title'] = $custom_og_title;
+         elseif( !empty( $yoast_twitter_title ) ) :
+             $info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
+         else:
+             $info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
+         endif;
+
+		/**
+		 * TWITTER DESCRIPTION
+		 *
+		 */
+		if( !$twitter_use_open_graph && !empty( $twitter_card_description ) ):
+ 			$info['meta_tag_values']['twitter_description'] = $twitter_card_description;
+ 		elseif ( !empty( $custom_og_description ) ):
+			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
+		elseif ( !empty( $yoast_twitter_description ) ) :
+			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
+		else:
+			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
+		endif;
+
+		/**
+		 * TWITTER IMAGE
+		 *
+		 */
+		 if( !$twitter_use_open_graph && !empty( $twitter_card_image ) ):
+  			$info['meta_tag_values']['twitter_image'] = $twitter_card_image;
+  		elseif ( !empty( $custom_og_image_url ) ):
+			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
+		elseif ( !empty( $yoast_twitter_image ) ) :
+			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
+		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
+			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
+		endif;
+
+		/**
+		 * The Twitter Card Type
+		 *
+		 */
+		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
+			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
+		else:
+			$info['meta_tag_values']['twitter_card'] = 'summary';
+		endif;
+
+
+
+        return $info;
     }
 
 	/**
