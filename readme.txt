@@ -193,6 +193,12 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.4.1 (4 DEC 2018) =
+* Fixed Twitter Card toggle button in post-editr.
+* Fixed Twitter Card logic when outputting <meta> tags.
+* Added support for author-specific twitter handle in Twitter Cards.
+* Updated layout of meta box.
+
 = 3.4.0 (27 NOV 2018) =
 * Props to our Warfare Community beta testers- you guys rock!
 * Added support for Gutenberg block Pinterest Image (as of Gutenberg 4.5.1)
