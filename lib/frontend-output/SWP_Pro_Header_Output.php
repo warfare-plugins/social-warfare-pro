@@ -468,7 +468,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * The Twitter Card Site
 		 *
 		 */
-		if ( isset( $this->options['twitter_id'] ) ) :
+		if ( isset( $this->options['twitter_id'] ) && !empty( $this->options['twitter_id'] ) ) :
 			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , trim( $this->options['twitter_id'] ) );
 		endif;
 
