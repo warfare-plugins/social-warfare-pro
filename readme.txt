@@ -196,7 +196,12 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 = 3.4.1 (4 DEC 2018) =
 * Fixed Twitter Card toggle button in post-editr.
 * Fixed Twitter Card logic when outputting <meta> tags.
+* Fixed bug when using Dynamic sorting and there were no shares for a post.
+* Fixed the WhatsApp button destination.
+* Fixed the variable name for Float Before Content option.
+* Fixed the email button.
 * Added support for author-specific twitter handle in Twitter Cards.
+* Updated the Pintrest character counter in the meta box.
 * Updated layout of meta box.
 
 = 3.4.0 (27 NOV 2018) =
