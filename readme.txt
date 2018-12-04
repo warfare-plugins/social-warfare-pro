@@ -3,7 +3,7 @@ Contributors: holas84, dustinwstout, webinator, warfareplugins, nutsandboltsmedi
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 3.5.1
 Tested up to: 4.9
-Stable tag: 3.4.1
+Stable tag: 3.4.0
 License: GNU General Public License v2.0 or later
 
 The most beautiful, responsive, lightning fast social share buttons built to boost shares and drive more traffic without slowing down your site.
@@ -192,17 +192,6 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
-
-= 3.4.1 (4 DEC 2018) =
-* Fixed Twitter Card toggle button in post-editr.
-* Fixed Twitter Card logic when outputting <meta> tags.
-* Fixed bug when using Dynamic sorting and there were no shares for a post.
-* Fixed the WhatsApp button destination.
-* Fixed the variable name for Float Before Content option.
-* Fixed the email button.
-* Added support for author-specific twitter handle in Twitter Cards.
-* Updated the Pintrest character counter in the meta box.
-* Updated layout of meta box.
 
 = 3.4.0 (27 NOV 2018) =
 * Props to our Warfare Community beta testers- you guys rock!
