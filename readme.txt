@@ -193,6 +193,12 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.4.2 (13 DEC 2018) =
+* Fixed the output of a necessary `.swp-content-locator` element.
+* Fixed Float Before Content to be independent of Pin It.
+* Fixed floating buttons not respecting home page settings. 
+* Created a patch query paramter to mass reset swp_float_location.
+
 = 3.4.1 (4 DEC 2018) =
 * Fixed Twitter Card toggle button in post-editr.
 * Fixed Twitter Card logic when outputting <meta> tags.
