@@ -154,9 +154,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             $custom_og_description = htmlspecialchars( $custom_og_description );
         endif;
 
-    	$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-    	$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
-    	$custom_og_image_data  = json_decode( get_post_meta( $info['postID'] , 'swp_open_graph_image_data' , true ) );
+		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
+		$custom_og_image_data  = SWP_Utility::get_meta_array( $info['postID'], 'swp_og_image_data' );
+		$custom_og_image_url   = $custom_og_image_data[0];
+		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
 
     	/**
     	 * Disable Jetpack's Open Graph tags
