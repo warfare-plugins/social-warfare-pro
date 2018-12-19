@@ -51,6 +51,33 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
         global $post, $swp_user_options;
 
+		array(
+			'og_type',
+			'og_title',
+			'og_description',
+			'og_image',
+			'og_image_width',
+			'og_image_height',
+			'og_url',
+			'og_site_name',
+		);
+
+		array(
+			'article_author',
+			'article_publisher',
+			'article_published_time',
+			'article_modified_time',
+		);
+
+		array(
+			'twitter_card',
+			'twitter_title',
+			'twitter_description',
+			'twitter_image',
+			'twitter_site',
+			'twitter_creator'
+		);
+
         if ( !empty( $post ) && is_object( $post ) ) {
             //* Store the post for wpseo_replace_vars().
             $this->post = $post;
@@ -80,10 +107,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return void
      */
 	public function establish_header_values() {
-		$this->setup_open_graph();
-		$this->setup_twitter();
+		// $this->setup_open_graph();
+		// $this->setup_twitter();
 	}
-
 
     /**
      * Open Graph Meta Tag Values
@@ -458,8 +484,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         if ( !empty( $custom_og_description ) ) :
             $custom_og_description = htmlspecialchars( $custom_og_description );
         endif;
+
 		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-		$custom_og_image_url   = get_post_meta( $info['postID'] , 'swp_open_graph_image_url' , true );
+		$custom_og_image_data  = SWP_Utility::get_meta_array( $info['postID'], 'swp_og_image_data' );
+		$custom_og_image_url   = $custom_og_image_data[0];
 		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
 
 		/**
