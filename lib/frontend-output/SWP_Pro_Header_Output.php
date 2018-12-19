@@ -28,21 +28,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         global $post, $swp_user_options;
 
         $this->options = $swp_user_options;
-		// $this->establish_header_values();
         $this->establish_custom_colors();
 
 		add_action( 'wp', array ($this, 'establish_header_values' ) );
 		add_filter( 'swp_header_html', array( $this, 'render_meta_html' ) );
-        $this->init();
-    }
-
-     public function init() {
-        // add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
-        // add_filter( 'swp_header_values' , array( $this , 'twitter_card_values' ) , 10 );
-        // add_filter( 'swp_header_html'   , array( $this , 'open_graph_html' ) , 5 );
-        // add_filter( 'swp_header_html'   , array( $this , 'twitter_card_html' ) , 10 );
-        // add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
-        // add_filter( 'swp_header_html'   , array( $this , 'output_custom_color' ), 15 );
     }
 
     /**
