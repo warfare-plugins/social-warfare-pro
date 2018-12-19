@@ -119,16 +119,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
     	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
 
-		$fields = array(
-			'og_title',
-			'og_description',
-			'og_image_url',
-			'og_image_width',
-			'og_image_height',
-			'og_url',
-			'og_site_name',
-		);
-
 		$known_fields = array(
 			'og:type' => 'article',
 			'og:url' => get_permalink(),
@@ -139,6 +129,42 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		);
 
         // 1 Get post meta, if it exists.
+		$fields = $this->fetch_social_warfare_og_fields();
+
+        // 2 & 3 Yoast, if it exists.
+		$fields = $this->fetch_yoast_og_fields( $fields );
+
+
+		// 4 Default to post content.
+		$fields = $this->apply_default_og_fields( $fields );
+
+		foreach( $fields as $key => $value ) {
+			$og_key = str_replace('og_', 'og:', $key);
+			unset($fields[$key]);
+			$fields[$og_key] = $value;
+		}
+
+		$fields = array_map( 'htmlspecialchars', $fields );
+		$this->og_data = array_merge( $known_fields, $fields );
+	}
+
+    /**
+     * Grabs OG data based on Social Warfare settings.
+     *
+     * @return array $fields Social Warfare field data.
+     *
+     */
+    protected function fetch_social_warfare_og_fields() {
+		$fields = array(
+			'og_title',         // These have a meta field.
+			'og_description',
+			'og_image_url',
+			'og_image_width',
+			'og_image_height',
+			'og_url',           // These do not have a meta field.
+			'og_site_name',
+		);
+
 		foreach ($fields as $index => $key) {
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
 			// Go from indexed array to associative, with possibly missing values.
@@ -146,26 +172,50 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$key] = $maybe_value;
 		}
 
-        // 2 & 3 Yoast, if it exists.
-		if ( defined( 'WPSEO_VERSION' ) ) {
-			global $wpseo_og;
-    		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
-			$fields = $this->fetch_yoast_og_fields( $fields );
-		}
-
-		// 4 Default to post content.
-		$fields = $this->apply_default_og_fields( $fields );
-		$fields = array_map( 'htmlspecialchars', $fields );
-
-		$fields = array_merge( $known_fields, $fields );
-
-		$this->og_data = $fields;
+		return $fields;
 	}
 
+	protected function fetch_social_warfare_twitter_fields() {
+		$twitter_fields = array(
+			'twitter_title',
+			'twitter_description',
+			'twitter_image'
+		);
+
+		foreach ($twitter_fields as $key) {
+			$field = str_replace( 'twitter_', 'swp_twitter_card_', $key );
+			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $field );
+
+			if ( !empty( $maybe_value ) ) {
+				$twitter_fields[$key] = $maybe_value;
+			}
+		}
+
+		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
+		if ( !empty( $twitter_id ) ) {
+			$twitter_id = '@' . str_replace( '@' , '' , trim ( $twitter_id ) );
+			$twitter_fields['twitter_site'] = $twitter_id;
+		}
+
+        $author_twitter_handle = get_the_author_meta( 'swp_twitter' );
+		if ( !empty( $author_twitter_handle ) ) {
+			$twitter_fields['twitter_creator'] = '@' . str_replace( '@' , '' , trim ( $author_twitter_handle ) );
+		} else {
+			$twitter_fields['twitter_creator'] = $twitter_id;
+		}
+
+		return $twitter_fields;
+	}
 
 	protected function fetch_yoast_og_fields( $fields ) {
+		if ( !defined( 'WPSEO_VERSION' ) ) {
+			return $fields;
+		}
+
 		global $wpseo_og;
-		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
+		if ( has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) ) ) {
+			remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
+		}
 
 		$yoast_og_map = array(
 			'og_title' => '_yoast_wpseo_opengraph-title',
@@ -258,6 +308,57 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return array_merge( $defaults, $fields );
 	}
 
+	protected function fetch_yoast_twitter_fields( $fields ) {
+		if ( !defined( 'WPSEO_VERSION' ) ) {
+			return $fields;
+		}
+
+		$yoast_to_twitter = array(
+			'_yoast_wpseo_twitter-title' => 'twitter_title',
+			'_yoast_wpseo_twitter-title' => 'twitter_description',
+			'_yoast_wpseo_twitter-image' => 'twitter_image'
+		);
+
+		foreach( $yoast_to_twitter as $yoast => $twitter ) {
+			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $yoast );
+			if ( !empty( $maybe_value ) ) {
+				if ( function_exists (' wpseo_replace_vars' ) ) {
+					$maybe_value = wpseo_replace_vars( $maybe_value, $this->post );
+				}
+				$fields[$twitter] = $maybe_value;
+			}
+		}
+
+		return $fields;
+	}
+
+    /**
+     * [apply_og_to_twitter description]
+     * @param  [type] $fields [description]
+     * @return [type]         [description]
+     */
+	protected function apply_og_to_twitter( $twitter_fields ) {
+		$shared_fields = array();
+		$field_map = array(
+			'og:title'	=> 'twitter_title',
+			'og:description' => 'twitter_description',
+			'og:author'	=> 'twitter_creator',
+			'og:image'	=> 'twitter_image'
+		);
+
+		foreach ( $field_map as $og => $twitter ) {
+			if ( !empty( $this->og_data[$key] ) ) {
+				$shared_fields[$twitter] = $this->og_data[$og];
+			}
+		}
+
+		if ( SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
+			return array_merge($twitter_fields, $shared_fields);
+		}
+
+		return array_merge( $shared_fields, $twitter_fields );
+	}
+
 
     /**
      * Loops through open graph data to create <meta> tags for the <head>
@@ -268,42 +369,25 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$meta = '';
 
         foreach ( $this->og_data as $key => $content ) {
-			$field = str_replace( 'og_', 'og:', $key ); // map post_meta keys directly to og:keys.
-			$meta .= "<meta property='$field' content='$content' >" . PHP_EOL;
+			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
 		}
 
 		$this->og_html = $meta;
 	}
 
-    /**
-     * A function to compile the meta tags into HTML
-     * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
-     * @param  array $info The info array
-     * @return array $info The modified info array
-     */
-    public function open_graph_html($meta_html) {
-
-    }
-
 	public function setup_twitter_card() {
-		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 		if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
 			return;
 		}
 
-		$fields = array(
-			'twitter_title',
-			'twitter_creator',
-			'twitter_description',
-			'twitter_image',
-			'twitter_card',
-			'twitter_site'
-		);
+		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
+		$fields = $this->fetch_social_warfare_twitter_fields();
+		$fields = $this->fetch_yoast_twitter_fields();
 
-		$fields = SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' )
-		          ? $this->og_data : array();
+		$fields['twitter_card'] = !empty( $fields['twitter_image']) ? 'summary_large_image' : 'summary';
 
+		$this->twitter_data = $fields;
 	}
 
 
@@ -386,22 +470,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * The Twitter Card Site
 		 *
 		 */
-		$twitter_id = SWP_Utility::get_option( 'twitter_id' );
-		if ( !empty( $twitter_id ) ) :
-			$twitter_id = trim( $twitter_id );
-			$info['meta_tag_values']['twitter_site'] = '@' . str_replace( '@' , '' , $twitter_id );
-		endif;
 
-		$author = SWP_User_Profile::get_author( $info['postID'] );
-        $author_twitter_handle = get_the_author_meta( 'swp_twitter' , $author );
-
-		if ($author_twitter_handle) {
-			$twitter_id = trim( $author_twitter_handle );
-		}
-
-		if ( !empty( $twitter_id) ) {
-			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
-		}
 
 
 
