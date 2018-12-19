@@ -72,7 +72,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		// $this->establish_header_values();
         $this->establish_custom_colors();
 
-		add_action( 'the_content', array ($this, 'establish_header_values' ) );
+		add_action( 'wp', array ($this, 'establish_header_values' ) );
+		add_filter( 'swp_header_html', array( $this, 'render_meta_html' ) );
         $this->init();
     }
 
@@ -80,9 +81,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         // add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
         add_filter( 'swp_header_values' , array( $this , 'twitter_card_values' ) , 10 );
         // add_filter( 'swp_header_html'   , array( $this , 'open_graph_html' ) , 5 );
-        add_filter( 'swp_header_html'   , array( $this , 'twitter_card_html' ) , 10 );
-        add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
-        add_filter( 'swp_header_html'   , array( $this , 'output_custom_color' ), 15 );
+        // add_filter( 'swp_header_html'   , array( $this , 'twitter_card_html' ) , 10 );
+        // add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
+        // add_filter( 'swp_header_html'   , array( $this , 'output_custom_color' ), 15 );
     }
 
     /**
@@ -102,7 +103,23 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		$this->post = $post;
 		$this->setup_open_graph();
+		$this->generate_og_html();
+
+		// die(var_dump(esc_html__($this->og_html)));
 		// $this->setup_twitter();
+	}
+
+    /**
+     * Appends $this object HTML to the <head>
+     *
+	 * @hook   swp_header_html | filter | origin SWP_Header_Output
+	 * @param  string $meta_html Ready to print HTML for the <head>.
+     * @return string $meta_html Ready to print HTML for the <head>.
+     *
+     */
+	public function render_meta_html( $meta_html ) {
+		$meta_html .= $this->og_html;
+		return $meta_html;
 	}
 
     /**
@@ -121,7 +138,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
 
 		$fields = array(
-			'og_type',
 			'og_title',
 			'og_description',
 			'og_image_url',
@@ -135,9 +151,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_type' => 'article',
 			'og_url' => get_permalink(),
 	    	'og_site_name' => get_bloginfo( 'name' ),
-	    	'article_published_time' => get_post_time( 'c' ),
-	    	'article_modified_time' => get_post_modified_time( 'c' ),
-	    	'og_modified_time' => get_post_modified_time( 'c' )
+	    	'article:published_time' => get_post_time( 'c' ),
+	    	'article:modified_time' => get_post_modified_time( 'c' ),
+	    	'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
         // 1. Get post meta, if it exists.
@@ -156,10 +172,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		// 4. Default to post content.
-
 		$fields = $this->apply_default_fields( $fields );
-		$fields = array_merge( $fields, $basic_fields );
 		$fields = array_map( 'htmlspecialchars', $fields );
+
+		$fields = array_merge( $basic_fields, $fields );
 
 		$this->og_data = $fields;
 	}
@@ -231,7 +247,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$defaults['og_image'] = $thumbnail_url;
 		}
 
-        // @TODO what is this? What is get_the_author_meta()?
+		$fields = array_merge( $defaults, $fields );
+
+		return $fields;
+
+
+        // @TODO what is this, What is get_the_author_meta()?
         // $author = SWP_User_Profile::get_author( $this->post->ID );
 		//
 		// if ( get_the_author_meta( 'swp_fb_author' , $author ) ) :
@@ -281,8 +302,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	return $info;
     }
 
-	public function render_og_html() {
+    /**
+     * Loops through open graph data to create <meta> tags for the <head>
+     *
+     * @return string The HTML for meta tags.
+     */
+	public function generate_og_html() {
+		$meta = '';
 
+        foreach ( $this->og_data as $key => $content ) {
+			$field = str_replace( 'og_', 'og:', $key ); // map post_meta keys directly to og:keys.
+			$meta .= "<meta property='$field' content='$content' >" . PHP_EOL;
+		}
+
+		$this->og_html = $meta;
 	}
 
     /**
