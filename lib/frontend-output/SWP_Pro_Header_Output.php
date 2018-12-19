@@ -52,17 +52,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         global $post, $swp_user_options;
 
 		array(
-			'og_type',
-			'og_title',
-			'og_description',
-			'og_image',
-			'og_image_width',
-			'og_image_height',
-			'og_url',
-			'og_site_name',
-		);
-
-		array(
 			'article_author',
 			'article_publisher',
 			'article_published_time',
@@ -107,8 +96,42 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return void
      */
 	public function establish_header_values() {
-		// $this->setup_open_graph();
+		global $post;
+		if( false === is_singular() || !is_object( $post ) ) {
+    		return;
+    	}
+
+		$this->post = $post;
+		$this->setup_open_graph();
 		// $this->setup_twitter();
+	}
+
+    /**
+	 * Priorities.
+     * 1. Did they fill out our open graph field?
+     * 2. Did they fill out Yoast's social field?
+     * 3. Did they fill out Yoast's SEO field?
+     * 4. Aauto-generate the field from the post.
+     */
+	public function setup_open_graph() {
+		if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) {
+            return;
+        }
+
+		$fields = array(
+			'og_type',
+			'og_title',
+			'og_description',
+			'og_image',
+			'og_image_width',
+			'og_image_height',
+			'og_url',
+			'og_site_name',
+		);
+
+		foreach ($fields as $index => $value) {
+			$maybe_value = SWP_Utility::get_meta( $post->ID)
+		}
 	}
 
     /**
@@ -138,7 +161,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     	if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) :
             return $info;
         endif;
-
 
     	/**
     	 * Begin by fetching the user's default custom settings
