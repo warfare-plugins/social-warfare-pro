@@ -13,38 +13,14 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  * @since     3.0.0 | 21 FEB 2018 | Refactored into a class-based system.
  * @since     3.0.8 | 23 MAY 2018 | Added compatibility for custom color/outline combos.
  * @since     3.1.0 | 05 JUL 2018 | Added global $post variable.
- *
+ * @since     3.5.0 | 18 DEC 2018 | Refactored for code optimization. 
  *
  * Hook into the core header filter
  *
  * Create and return the values to be used in the header meta tags
  *
- * All meta values will be returned in the $info['meta_tag_values'] array.
- *
- * The following values will be returned from the function open_graph_values():
- *     Open Graph Type          $info['meta_tag_values']['og_type']
- *     Open Graph Title         $info['meta_tag_values']['og_title']
- *     Open Graph Description   $info['meta_tag_values']['og_description']
- *     Open Graph Image         $info['meta_tag_values']['og_image']
- *     Open Graph Image Width   $info['meta_tag_values']['og_image_width']
- *     Open Graph Image Height  $info['meta_tag_values']['og_image_height']
- *     Open Graph URL           $info['meta_tag_values']['og_url']
- *     Open Graph Site Name     $info['meta_tag_values']['og_site_name']
- *     Article Author           $info['meta_tag_values']['article_author']
- *     Article Publisher        $info['meta_tag_values']['article_publisher']
- *     Article Published Time   $info['meta_tag_values']['article_published_time']
- *     Article Modified Time    $info['meta_tag_values']['article_modified_time']
- *     OG Modified Time         $info['meta_tag_values']['og_modified_time']
- *     Facebook App ID          $info['meta_tag_values']['fb_app_id']
- *
- * The following values will be returned from the function twitter_card_values():
- *     Twitter Card type        $info['meta_tag_values']['twitter_card']
- *     Twitter Title            $info['meta_tag_values']['twitter_title']
- *     Twitter Description      $info['meta_tag_values']['twitter_description']
- *     Twitter Image            $info['meta_tag_values']['twitter_image']
- *     Twitter Site             $info['meta_tag_values']['twitter_site']
- *     Twitter creator          $info['meta_tag_values']['twitter_creator']
- *
+ * To view which meta values are processed,
+ * see setup_open_graph() and setup_twitter_card().
  *
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
@@ -62,7 +38,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
      public function init() {
         // add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
-        add_filter( 'swp_header_values' , array( $this , 'twitter_card_values' ) , 10 );
+        // add_filter( 'swp_header_values' , array( $this , 'twitter_card_values' ) , 10 );
         // add_filter( 'swp_header_html'   , array( $this , 'open_graph_html' ) , 5 );
         // add_filter( 'swp_header_html'   , array( $this , 'twitter_card_html' ) , 10 );
         // add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
@@ -88,7 +64,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$this->setup_open_graph();
 		$this->setup_twitter_card();
 
-		$this->generate_og_html();
+		$this->generate_open_graph_html();
+		$this->generate_twitter_card_html();
 	}
 
     /**
@@ -100,16 +77,24 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
 	public function render_meta_html( $meta_html ) {
-		$meta_html .= $this->og_html;
+		$open_graph_html = $this->generate_meta_html( $this->og_data );
+		$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
+		$meta_html .= $open_graph_html . $twitter_card_html;
 		return $meta_html;
 	}
 
     /**
-	 * Priorities.
-     * 1. Did they fill out our open graph field?
-     * 2. Did they fill out Yoast's social field?
-     * 3. Did they fill out Yoast's SEO field?
-     * 4. Aauto-generate the field from the post.
+	 * Open Graph metadata can come from a variety of sources.
+	 *
+	 * This method prioritizes prioritizes OG data in this order:
+	 * 1. Values stored in Yoast fields
+	 * 2. Values stored in Social Warfare fields
+	 * 3. Values inferred from WordPress fields.
+	 *
+	 * The resulting array is stored locally for use in $this->render_meta_html().
+	 * @see $this render_meta_html()
+	 * @since 3.5.0 | 19 DEC 2018 | Created.
+	 *
      */
 	public function setup_open_graph() {
 		if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) {
@@ -128,15 +113,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	    	'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
-        // 1 Get post meta, if it exists.
-		$fields = $this->fetch_social_warfare_og_fields();
-
-        // 2 & 3 Yoast, if it exists.
-		$fields = $this->fetch_yoast_og_fields( $fields );
-
-
+        // 1 Post meta, if it exists.
+		// 2 & 3 Yoast, if it exists.
 		// 4 Default to post content.
-		$fields = $this->apply_default_og_fields( $fields );
+		$fields = $this->fetch_social_warfare_open_graph_fields();
+		$fields = $this->fetch_yoast_open_graph_fields( $fields );
+		$fields = $this->apply_default_open_graph_fields( $fields );
 
 		foreach( $fields as $key => $value ) {
 			$og_key = str_replace('og_', 'og:', $key);
@@ -154,7 +136,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $fields Social Warfare field data.
      *
      */
-    protected function fetch_social_warfare_og_fields() {
+    protected function fetch_social_warfare_open_graph_fields() {
 		$fields = array(
 			'og_title',         // These have a meta field.
 			'og_description',
@@ -207,7 +189,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $twitter_fields;
 	}
 
-	protected function fetch_yoast_og_fields( $fields ) {
+	protected function fetch_yoast_open_graph_fields( $fields ) {
 		if ( !defined( 'WPSEO_VERSION' ) ) {
 			return $fields;
 		}
@@ -267,7 +249,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
-    protected function apply_default_og_fields( $fields ) {
+    protected function apply_default_open_graph_fields( $fields ) {
 		$defaults = array(
 			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
 			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )
@@ -352,7 +334,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			}
 		}
 
-		if ( SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
+		if ( false !== SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
 			return array_merge($twitter_fields, $shared_fields);
 		}
 
@@ -365,14 +347,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      * @return string The HTML for meta tags.
      */
-	public function generate_og_html() {
+	public function generate_meta_html( $fields ) {
 		$meta = '';
 
-        foreach ( $this->og_data as $key => $content ) {
+        foreach ( $this->fields as $key => $content ) {
 			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
 		}
 
-		$this->og_html = $meta;
+		return $meta;
 	}
 
 	public function setup_twitter_card() {
@@ -383,153 +365,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
 		$fields = $this->fetch_social_warfare_twitter_fields();
-		$fields = $this->fetch_yoast_twitter_fields();
+		$fields = $this->fetch_yoast_twitter_fields( $fields );
 
 		$fields['twitter_card'] = !empty( $fields['twitter_image']) ? 'summary_large_image' : 'summary';
 
 		$this->twitter_data = $fields;
 	}
 
-
-    /**
-     *  Generate the Twitter Card fields
-     *
-     *	Notes: If the user has Twitter cards turned on, we
-     *	need to generate them, but we also like Yoast so we'll
-     *	pay attention to their settings as well. Here's the order
-     *	of preference for each field:
-     *	1. Did the user fill out the Social Media field?
-     *	2. Did the user fill out the Yoast Twitter Field?
-     *	3. Did the user fill out the Yoast SEO field?
-     *	4. We'll auto generate something logical from the post.
-     *
-     * @since 2.1.4
-     * @access public
-     * @param array $info An array of information about the post
-     * @return array $info The modified array
-     *
-     */
-    public function twitter_card_values($info) {
-
-		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
-        $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
-
-		if ( !$twitter_use_open_graph ) {
-			$twitter_card_title 		= get_post_meta( $info['postID'] , 'swp_twitter_card_title' , true );
-			$twitter_card_description 	= get_post_meta( $info['postID'] , 'swp_twitter_card_description' , true );
-			$twitter_card_image 		= get_post_meta( $info['postID'] , 'swp_twitter_card_image' , true );
-
-			if ( $twitter_card_image ) {
-				$twitter_card_image = wp_get_attachment_url( $twitter_card_image );
-			} else {
-				$twitter_card_image = '';
-			}
-		}
-
-		/**
-		 * JET PACK: If ours are activated, disable theirs
-		 *
-		 */
-
-
-		/**
-		 * Begin by fetching the user's default custom settings
-		 *
-		 */
-        $custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
-        if ( !empty( $custom_og_title) ) :
-            $custom_og_title = htmlspecialchars( $custom_og_title );
-        endif;
-
-        $custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
-        if ( !empty( $custom_og_description ) ) :
-            $custom_og_description = htmlspecialchars( $custom_og_description );
-        endif;
-
-		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-		$custom_og_image_data  = SWP_Utility::get_meta_array( $info['postID'], 'swp_og_image_data' );
-		$custom_og_image_url   = $custom_og_image_data[0];
-		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
-
-		/**
-		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
-		 *
-		 */
-		if ( defined( 'WPSEO_VERSION' ) ) :
-			$yoast_twitter_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-title' , true );
-			$yoast_twitter_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-description' , true );
-			$yoast_twitter_image        = get_post_meta( $info['postID'] , '_yoast_wpseo_twitter-image' , true );
-			$yoast_seo_title            = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
-			$yoast_seo_description      = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
-
-			// Cancel their output if ours have been defined so we don't have two sets of tags
-			remove_action( 'wpseo_head' , array( 'WPSEO_Twitter', 'get_instance' ) , 40 );
-		endif;
-
-		/**
-		 * The Twitter Card Site
-		 *
-		 */
-
-
-
-
-		/**
-		 * TWITTER TITLE
-		 *
-		 */
-		 if( !$twitter_use_open_graph && !empty( $twitter_card_title ) ):
-             $info['meta_tag_values']['twitter_title'] = $twitter_card_title;
-         elseif ( !empty( $custom_og_title ) ):
-             $info['meta_tag_values']['twitter_title'] = $custom_og_title;
-         elseif( !empty( $yoast_twitter_title ) ) :
-             $info['meta_tag_values']['twitter_title'] = $yoast_twitter_title;
-         else:
-             $info['meta_tag_values']['twitter_title'] = $info['meta_tag_values']['og_title'];
-         endif;
-
-		/**
-		 * TWITTER DESCRIPTION
-		 *
-		 */
-		if( !$twitter_use_open_graph && !empty( $twitter_card_description ) ):
- 			$info['meta_tag_values']['twitter_description'] = $twitter_card_description;
- 		elseif ( !empty( $custom_og_description ) ):
-			$info['meta_tag_values']['twitter_description'] = $custom_og_description;
-		elseif ( !empty( $yoast_twitter_description ) ) :
-			$info['meta_tag_values']['twitter_description'] = $yoast_twitter_description;
-		else:
-			$info['meta_tag_values']['twitter_description'] = $info['meta_tag_values']['og_description'];
-		endif;
-
-		/**
-		 * TWITTER IMAGE
-		 *
-		 */
-		 if( !$twitter_use_open_graph && !empty( $twitter_card_image ) ):
-  			$info['meta_tag_values']['twitter_image'] = $twitter_card_image;
-  		elseif ( !empty( $custom_og_image_url ) ):
-			$info['meta_tag_values']['twitter_image'] = $custom_og_image_url;
-		elseif ( !empty( $yoast_twitter_image ) ) :
-			$info['meta_tag_values']['twitter_image'] = $yoast_twitter_image;
-		elseif( !empty( $info['meta_tag_values']['og_image'] ) ):
-			$info['meta_tag_values']['twitter_image'] = $info['meta_tag_values']['og_image'];
-		endif;
-
-		/**
-		 * The Twitter Card Type
-		 *
-		 */
-		if( !empty( $info['meta_tag_values']['twitter_image'] ) ):
-			$info['meta_tag_values']['twitter_card'] = 'summary_large_image';
-		else:
-			$info['meta_tag_values']['twitter_card'] = 'summary';
-		endif;
-
-
-
-        return $info;
-    }
 
 	/**
      *  Generate the Twitter Card meta fields HTML
@@ -543,41 +385,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $info The modified array
      *
      */
-    public function twitter_card_html($meta_html) {
+    public function generate_twitter_card_html() {
+		$meta = '';
+		foreach ( $this->twitter_card_data as $key => $content ) {
+			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
+		}
 
-    	if( false === is_singular() ) {
-    		return $info;
-    	}
-
-    	if ( isset( $this->options['twitter_cards'] ) ) :
-
-    		if( isset( $info['meta_tag_values']['twitter_card'] ) && !empty( $info['meta_tag_values']['twitter_card'] ) ) :
-    			$meta_html .= PHP_EOL . '<meta name="twitter:card" content="'. trim( $info['meta_tag_values']['twitter_card'] ) .'">';
-    		endif;
-
-    		if( isset( $info['meta_tag_values']['twitter_title'] ) && !empty( $info['meta_tag_values']['twitter_title'] ) ) :
-    			$meta_html .= PHP_EOL . '<meta name="twitter:title" content="' . trim( $info['meta_tag_values']['twitter_title'] ) . '">';
-    		endif;
-
-    		if( isset( $info['meta_tag_values']['twitter_description'] ) && !empty( $info['meta_tag_values']['twitter_description'] ) ) :
-    			$meta_html .= PHP_EOL . '<meta name="twitter:description" content="' . trim( $info['meta_tag_values']['twitter_description'] ) . '">';
-    		endif;
-
-    		if( isset( $info['meta_tag_values']['twitter_image'] ) && !empty($info['meta_tag_values']['twitter_image']) ):
-    			$meta_html .= PHP_EOL . '<meta name="twitter:image" content="' . trim( $info['meta_tag_values']['twitter_image'] ) . '">';
-    		endif;
-
-    		if ( isset( $info['meta_tag_values']['twitter_site'] ) && !empty( $info['meta_tag_values']['twitter_site'] ) ) :
-    			$meta_html .= PHP_EOL . '<meta name="twitter:site" content="' . trim( $info['meta_tag_values']['twitter_site'] ) . '">';
-    		endif;
-
-    		if ( isset( $info['meta_tag_values']['twitter_creator'] ) && !empty( $info['meta_tag_values']['twitter_creator'] ) ) :
-    			$meta_html .= PHP_EOL . '<meta name="twitter:creator" content="' . trim( $info['meta_tag_values']['twitter_creator'] ) . '">';
-    		endif;
-
-    	endif;
-
-    	return $meta_html;
+    	$this->twitter_card_html = $meta;
     }
 
     /**
