@@ -302,7 +302,7 @@ abstract class SWPMB_Field
 			 *
 		     * False is passed as an empty string,
 		     * whereas True is received as true.
-		     * 
+		     *
 			 */
 			if ( 'toggle' == $field['type'] ) {
 				update_post_meta( $post_id, $name, false );
@@ -344,6 +344,7 @@ abstract class SWPMB_Field
 		}
 
 		// Default: just update post meta
+		//* Looks like for 'image_advanced' fields, stores the Image ID for $new.
 		update_post_meta( $post_id, $name, $new );
 	}
 
