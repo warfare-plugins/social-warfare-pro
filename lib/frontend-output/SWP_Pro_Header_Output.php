@@ -55,7 +55,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
     /**
-     * Appends $this object HTML to the <head>
+     * Takes stored class data and returns meta tag HTML.
      *
 	 * @hook   swp_header_html | filter | origin SWP_Header_Output
 	 * @param  string $meta_html Ready to print HTML for the <head>.
@@ -72,12 +72,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     /**
 	 * Open Graph metadata can come from a variety of sources.
 	 *
-	 * This method prioritizes prioritizes OG data in this order:
+	 * This method prioritizes prioritizes Open Graph data as follows:
 	 * 1. Values stored in Yoast fields
 	 * 2. Values stored in Social Warfare fields
 	 * 3. Values inferred from WordPress fields.
 	 *
+	 * However, we would rather use any valid value over an empty value, so
+	 * if the field does not exist by step 3, we keep the values found in 1 or 2.
+	 *
 	 * The resulting array is stored locally for use in $this->render_meta_html().
+	 *
 	 * @see $this render_meta_html()
 	 * @since 3.5.0 | 19 DEC 2018 | Created.
 	 *
@@ -320,8 +324,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			}
 		}
 
-		// die(var_dump($shared_fields));
-
 		if ( false !== SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
 			return array_merge($twitter_fields, $shared_fields);
 		}
@@ -337,8 +339,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
 	public function generate_meta_html( $fields ) {
 		$meta = '';
-
-		// var_dump($fields);
 
         foreach ( $fields as $key => $content ) {
 			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
