@@ -13,7 +13,7 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  * @since     3.0.0 | 21 FEB 2018 | Refactored into a class-based system.
  * @since     3.0.8 | 23 MAY 2018 | Added compatibility for custom color/outline combos.
  * @since     3.1.0 | 05 JUL 2018 | Added global $post variable.
- * @since     3.5.0 | 18 DEC 2018 | Refactored for code optimization. 
+ * @since     3.5.0 | 18 DEC 2018 | Refactored for code optimization.
  *
  * Hook into the core header filter
  *
@@ -63,9 +63,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$this->post = $post;
 		$this->setup_open_graph();
 		$this->setup_twitter_card();
-
-		$this->generate_open_graph_html();
-		$this->generate_twitter_card_html();
 	}
 
     /**
@@ -77,7 +74,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
 	public function render_meta_html( $meta_html ) {
-		$open_graph_html = $this->generate_meta_html( $this->og_data );
+		$open_graph_html = $this->generate_meta_html( $this->open_graph_data );
 		$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
 		$meta_html .= $open_graph_html . $twitter_card_html;
 		return $meta_html;
@@ -127,7 +124,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		$fields = array_map( 'htmlspecialchars', $fields );
-		$this->og_data = array_merge( $known_fields, $fields );
+		$this->open_graph_data = array_merge( $known_fields, $fields );
 	}
 
     /**
@@ -159,12 +156,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 	protected function fetch_social_warfare_twitter_fields() {
 		$twitter_fields = array(
-			'twitter_title',
-			'twitter_description',
-			'twitter_image'
+			'twitter_title' => false,
+			'twitter_description' => false,
+			'twitter_image' => false
 		);
 
-		foreach ($twitter_fields as $key) {
+		foreach ($twitter_fields as $key => $value) {
 			$field = str_replace( 'twitter_', 'swp_twitter_card_', $key );
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $field );
 
@@ -315,11 +312,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
     /**
-     * [apply_og_to_twitter description]
+     * [apply_open_graph_to_twitter description]
      * @param  [type] $fields [description]
      * @return [type]         [description]
      */
-	protected function apply_og_to_twitter( $twitter_fields ) {
+	protected function apply_open_graph_to_twitter( $twitter_fields ) {
 		$shared_fields = array();
 		$field_map = array(
 			'og:title'	=> 'twitter_title',
@@ -329,10 +326,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		);
 
 		foreach ( $field_map as $og => $twitter ) {
-			if ( !empty( $this->og_data[$key] ) ) {
-				$shared_fields[$twitter] = $this->og_data[$og];
+			if ( !empty( $this->open_graph_data[$og] ) ) {
+				$shared_fields[$twitter] = $this->open_graph_data[$og];
 			}
 		}
+
+		// die(var_dump($shared_fields));
 
 		if ( false !== SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
 			return array_merge($twitter_fields, $shared_fields);
@@ -350,7 +349,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	public function generate_meta_html( $fields ) {
 		$meta = '';
 
-        foreach ( $this->fields as $key => $content ) {
+		// var_dump($fields);
+
+        foreach ( $fields as $key => $content ) {
 			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
 		}
 
@@ -365,34 +366,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
 
 		$fields = $this->fetch_social_warfare_twitter_fields();
+		$fields = $this->apply_open_graph_to_twitter( $fields );
 		$fields = $this->fetch_yoast_twitter_fields( $fields );
 
 		$fields['twitter_card'] = !empty( $fields['twitter_image']) ? 'summary_large_image' : 'summary';
 
-		$this->twitter_data = $fields;
+		$this->twitter_card_data = $fields;
 	}
 
-
-	/**
-     *  Generate the Twitter Card meta fields HTML
-     *
-     * This function will take the values for the Twitter Cards and convert
-     * those values into HTML to be output to the screen.
-     *
-     * @since 2.1.4
-     * @access public
-     * @param array $info An array of information about the post
-     * @return array $info The modified array
-     *
-     */
-    public function generate_twitter_card_html() {
-		$meta = '';
-		foreach ( $this->twitter_card_data as $key => $content ) {
-			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
-		}
-
-    	$this->twitter_card_html = $meta;
-    }
 
     /**
      * Verifies that the color has been properly set.
