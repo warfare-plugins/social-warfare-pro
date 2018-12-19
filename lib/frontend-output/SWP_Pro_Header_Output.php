@@ -67,21 +67,19 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'twitter_creator'
 		);
 
-        if ( !empty( $post ) && is_object( $post ) ) {
-            //* Store the post for wpseo_replace_vars().
-            $this->post = $post;
-        }
 
         $this->options = $swp_user_options;
-		$this->establish_header_values();
+		// $this->establish_header_values();
         $this->establish_custom_colors();
+
+		add_action( 'the_content', array ($this, 'establish_header_values' ) );
         $this->init();
     }
 
-     private function init() {
-        add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
+     public function init() {
+        // add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
         add_filter( 'swp_header_values' , array( $this , 'twitter_card_values' ) , 10 );
-        add_filter( 'swp_header_html'   , array( $this , 'open_graph_html' ) , 5 );
+        // add_filter( 'swp_header_html'   , array( $this , 'open_graph_html' ) , 5 );
         add_filter( 'swp_header_html'   , array( $this , 'twitter_card_html' ) , 10 );
         add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
         add_filter( 'swp_header_html'   , array( $this , 'output_custom_color' ), 15 );
@@ -97,6 +95,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      */
 	public function establish_header_values() {
 		global $post;
+
 		if( false === is_singular() || !is_object( $post ) ) {
     		return;
     	}
@@ -118,6 +117,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
             return;
         }
 
+		add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
+    	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
+
 		$fields = array(
 			'og_type',
 			'og_title',
@@ -129,9 +131,98 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_site_name',
 		);
 
-		foreach ($fields as $index => $value) {
-			$maybe_value = SWP_Utility::get_meta( $post->ID)
+		$defaults = array(
+			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $info['postID'] ) ) ) )
+		);
+
+		$basic_fields = array(
+			'og_url' => get_permalink(),
+	    	'og_site_name' => get_bloginfo( 'name' ),
+	    	'article_published_time' => get_post_time( 'c' ),
+	    	'article_modified_time' => get_post_modified_time( 'c' ),
+	    	'og_modified_time' => get_post_modified_time( 'c' )
+		);
+
+        // 1. Get post meta, if it exists.
+		foreach ($fields as $index => $key) {
+			$maybe_value = SWP_Utility::get_meta( $post->ID, "swp_$key" );
+			// Go from indexed array to associative, with possibly missing values.
+			unset($fields[$index]);
+			$fields[$key] = $maybe_value;
 		}
+
+        // 2, 3. Yoast, if it exists.
+		if ( defined( 'WPSEO_VERSION' ) ) {
+			global $wpseo_og;
+    		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
+
+			$fields = $this->try_yoast_fields( $fields );
+		}
+
+		// 4. Default to post content.
+		$fields = array_merge( $fields, $basic_fields );
+		$fields = array_map( 'htmlspecialchars', $fields );
+
+		$this->og_data = $fields;
+
+        // echo '<pre>';
+		// die(var_dump($fields));
+	}
+
+	protected function try_yoast_fields( $fields ) {
+		global $wpseo_og;
+		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
+
+		$yoast_og_map = array(
+			'og_title' => '_yoast_wpseo_opengraph-title',
+			'og_description' => '_yoast_wpseo_opengraph-description',
+			'og_image'	=> '_yoast_wpseo_opengraph-image',
+		);
+
+		$yoast_social_map = array(
+			'og_title'	=> '_yoast_wpseo_title',
+			'og_description'	=> '_yoast_wpseo_metadesc'
+		);
+
+		// OG Values
+		foreach ($fields as $swp_meta_key => $maybe_value) {
+			if ( isset( $maybe_value ) ) {
+				// post_meta value already exists from SWP.
+				continue;
+			}
+
+			if ( array_key_exists( $swp_meta_key, $yoast_og_map ) ) :
+				foreach ($yoast_og_map as $swp_og_key => $yoast_og_key) {
+					$yoast_og_value = SWP_Utility::get_meta( $this->post->ID, $yoast_og_key );
+
+					if ( !empty( $yoast_og_value ) ) {
+						if ( function_exists (' wpseo_replace_vars' ) ) {
+							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
+						}
+						$fields[$swp_meta_key] = $yoast_og_value;
+						$maybe_value = $yoast_og_value;
+						break;
+					}
+				}
+			endif;
+
+			// Social Values
+			if ( empty( $maybe_value ) && array_key_exists( $swp_meta_key, $yoast_social_map) ) :
+				foreach( $yoast_social_map as $swp_og_key => $yoast_social_key ) {
+					$yoast_social_value = SWP_Utility::get_meta( $this->post->ID, $yoast_social_key );
+
+					if ( !empty( $yoast_og_value ) ) {
+						if ( function_exists (' wpseo_replace_vars' ) ) {
+							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
+						}
+						$fields[$swp_meta_key] = $yoast_social_value;
+						break;
+					}
+				}
+			endif;
+		}
+
+		return $fields;
 	}
 
     /**
@@ -157,107 +248,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     		return $info;
     	}
 
-    	// Don't compile them if both the OG Tags and Twitter Cards are Disabled on the options page
-    	if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) :
-            return $info;
-        endif;
 
-    	/**
-    	 * Begin by fetching the user's default custom settings
-    	 *
-    	 */
-    	$custom_og_title       = get_post_meta( $info['postID'] , 'swp_og_title' , true );
-        if ( !empty( $custom_og_title) ) :
-            $custom_og_title = htmlspecialchars( $custom_og_title );
-        endif;
-
-    	$custom_og_description = get_post_meta( $info['postID'] , 'swp_og_description' , true );
-        if ( !empty( $custom_og_description ) ) :
-            $custom_og_description = htmlspecialchars( $custom_og_description );
-        endif;
-
-		$custom_og_image_id    = get_post_meta( $info['postID'] , 'swp_og_image' , true );
-		$custom_og_image_data  = SWP_Utility::get_meta_array( $info['postID'], 'swp_og_image_data' );
-		$custom_og_image_url   = $custom_og_image_data[0];
-		$user_twitter_handle   = get_the_author_meta( 'swp_twitter' , SWP_User_Profile::get_author( $info['postID'] ) );
-
-    	/**
-    	 * Disable Jetpack's Open Graph tags
-    	 *
-    	 */
-    	add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
-    	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
-
-    	/**
-    	 * Check for and coordinate with Yoast to create the best possible values for each tag
-    	 *
-    	 */
-    	if ( defined( 'WPSEO_VERSION' ) ) :
-    		global $wpseo_og;
-    		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
-    	else :
-    		$info['yoast_og_setting'] = false;
-    	endif;
-
-    	// Check if the user has filled out at least one of the custom fields
-    	if ( defined( 'WPSEO_VERSION' ) && ( !empty( $custom_og_title ) || !empty( $custom_og_description ) || !empty( $custom_og_image_url ) ) ):
-
-    		/**
-    		 * YOAST SEO: It rocks, so if it's installed, let's coordinate with it
-    		 *
-    		 */
-
-    		// Collect their Social Descriptions as backups if they're not defined in ours
-    		$yoast_og_title         = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-title' , true );
-    		$yoast_og_description   = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-description' , true );
-    		$yoast_og_image         = get_post_meta( $info['postID'] , '_yoast_wpseo_opengraph-image' , true );
-    		$yoast_seo_title        = get_post_meta( $info['postID'] , '_yoast_wpseo_title' , true );
-    		$yoast_seo_description  = get_post_meta( $info['postID'] , '_yoast_wpseo_metadesc' , true );
-
-			if ( function_exists( 'wpseo_replace_vars' ) ) :
-				global $post;
-
-				if( false !== $yoast_og_title ):
-		            $yoast_og_title = wpseo_replace_vars( $yoast_og_title, $post );
-				endif;
-
-                if( false !== $yoast_og_description ):
-		            $yoast_og_description = wpseo_replace_vars( $yoast_og_description, $post );
-				endif;
-
-                if( false !== $yoast_og_image ):
-		            $yoast_og_image = wpseo_replace_vars( $yoast_og_image, $post );
-				endif;
-
-                if( false !== $yoast_seo_title ):
-		            $yoast_seo_title = wpseo_replace_vars( $yoast_seo_title, $post );
-				endif;
-
-                if( false !== $yoast_seo_description ):
-		            $yoast_seo_description = wpseo_replace_vars( $yoast_seo_description, $post );
-				endif;
-			endif;
-
-    		// Cancel their output if ours have been defined so we don't have two sets of tags
-    		global $wpseo_og;
-    		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
-    		$info['yoast_og_setting'] = false;
-
-    		// Fetch the WPSEO_SOCIAL Values
-    		$wpseo_social = get_option( 'wpseo_social' );
-
-    	// End of the Yoast Conditional
-    	endif;
 
     	/**
     	 * Open Graph Tags (The Easy Ones That Don't Need Conditional Fallbacks)
     	 *
     	 */
-    	$info['meta_tag_values']['og_url']                 = get_permalink();
-    	$info['meta_tag_values']['og_site_name']           = get_bloginfo( 'name' );
-    	$info['meta_tag_values']['article_published_time'] = get_post_time( 'c' );
-    	$info['meta_tag_values']['article_modified_time']  = get_post_modified_time( 'c' );
-    	$info['meta_tag_values']['og_modified_time']       = get_post_modified_time( 'c' );
+
 
     	/**
     	 * Open Graph Type
