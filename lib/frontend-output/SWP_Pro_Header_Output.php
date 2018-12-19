@@ -131,11 +131,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_site_name',
 		);
 
-		$defaults = array(
-			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) )
-		);
-
 		$basic_fields = array(
+			'og_type' => 'article',
 			'og_url' => get_permalink(),
 	    	'og_site_name' => get_bloginfo( 'name' ),
 	    	'article_published_time' => get_post_time( 'c' ),
@@ -159,6 +156,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		// 4. Default to post content.
+
+		$fields = $this->apply_default_fields( $fields );
 		$fields = array_merge( $fields, $basic_fields );
 		$fields = array_map( 'htmlspecialchars', $fields );
 
@@ -221,108 +220,31 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
-    /**
-     * Open Graph Meta Tag Values
-     *
-     * Notes: If the user specifies an Open Graph tag,
-     * we're going to develop a complete set of tags. Order
-     * of preference for each tag is as follows:
-     * 1. Did they fill out our open graph field?
-     * 2. Did they fill out Yoast's social field?
-     * 3. Did they fill out Yoast's SEO field?
-     * 4. We'll just auto-generate the field from the post.
-     *
-     * @since  2.1.4
-     * @since  3.0.0 | 03 FEB 2018 | Added the option to disable OG tag output
-     * @since  3.1.0 | 05 JUL 2018 | Added call to wpseo_replace_vars.
-     * @access public
-     * @param  array $info An array of data about the post
-     * @return array $info The modified array
-     */
+    protected function apply_default_fields( $fields ) {
+		$defaults = array(
+			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
+			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )
+		);
+
+		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
+		if ( $thumbnail_url ) {
+			$defaults['og_image'] = $thumbnail_url;
+		}
+
+        // @TODO what is this? What is get_the_author_meta()?
+        // $author = SWP_User_Profile::get_author( $this->post->ID );
+		//
+		// if ( get_the_author_meta( 'swp_fb_author' , $author ) ) :
+    	// 	$info['meta_tag_values']['article_author'] = get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) );
+    	// elseif ( get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) ) && defined( 'WPSEO_VERSION' ) ) :
+    	// 	$info['meta_tag_values']['article_author'] = get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) );
+    	// endif;
+	}
     public function open_graph_values(){
-    	if( false === is_singular() ) {
-    		return;
-    	}
-
-
-
-    	/**
-    	 * Open Graph Tags (The Easy Ones That Don't Need Conditional Fallbacks)
-    	 *
-    	 */
-
-
-    	/**
-    	 * Open Graph Type
-    	 * @since 2.2.4 | Updated | 05 MAY 2017 | Added the global options for og:type values
-    	 */
-    	$type = get_post_type();
-
-    	if ( !SWP_Utility::get_option( 'og_' . $type ) ) {
-    		$this->options['og_type_' . $type] = 'article';
-    	}
-
-        $og_type = get_post_meta( $info['postID'] , 'swp_og_type' , true );
-
-        if ( empty( $og_type ) ) {
-            $og_type = SWP_Utility::get_option( 'og_' . $type );
-        }
-
-		$og_type = str_replace( 'og_', '', $og_type);
-
-        $info['meta_tag_values']['og_type'] = $og_type;
-
-    	/**
-    	 *  Open Graph Title: Create an open graph title meta tag
-    	 *
-    	 */
-    	if ( !empty( $custom_og_title ) ) :
-    		$info['meta_tag_values']['og_title'] = $custom_og_title;
-    	elseif ( !empty( $yoast_og_title )) :
-    		$info['meta_tag_values']['og_title'] = $yoast_og_title;
-    	elseif ( !empty( $yoast_seo_title ) ) :
-    		$info['meta_tag_values']['og_title'] = $yoast_seo_title;
-    	else :
-    		$info['meta_tag_values']['og_title'] = trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) );
-    	endif;
-
-    	/**
-    	 * Open Graph Description
-    	 *
-    	 */
-    	if ( !empty( $custom_og_description ) ) :
-    		$info['meta_tag_values']['og_description'] = $custom_og_description;
-    	elseif ( !empty( $yoast_og_description ) ) :
-    		$info['meta_tag_values']['og_description'] = $yoast_og_description;
-    	elseif ( !empty( $yoast_seo_description ) ) :
-    		$info['meta_tag_values']['og_description'] = $yoast_seo_description;
-    	else :
-    		$info['meta_tag_values']['og_description'] = html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $info['postID'] ) ) ) );
-    	endif;
-
-    	/**
-    	 * Open Graph image
-    	 *
-    	 */
-    	if ( !empty( $custom_og_image_url ) ) :
-    		$info['meta_tag_values']['og_image'] = $custom_og_image_url;
-    	elseif ( !empty( $yoast_og_image ) ) :
-    		$info['meta_tag_values']['og_image'] = $yoast_og_image;
-    	else :
-    		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $info['postID'] ) );
-    		if ( $thumbnail_url ) :
-    			$info['meta_tag_values']['og_image'] = $thumbnail_url;
-    		endif;
-    	endif;
-
-    	/**
-    	 * Open Graph Image Dimensions
-    	 *
-    	 */
-    	if ( !empty( $custom_og_image_data ) ) :
-    		$info['meta_tag_values']['og_image_width']   = $custom_og_image_data[1];
-    		$info['meta_tag_values']['og_image_height']	 = $custom_og_image_data[2];
-    	endif;
+    	// if ( !empty( $custom_og_image_data ) ) :
+    	// 	$info['meta_tag_values']['og_image_width']   = $custom_og_image_data[1];
+    	// 	$info['meta_tag_values']['og_image_height']	 = $custom_og_image_data[2];
+    	// endif;
 
     	/**
     	 * Facebook Author
@@ -358,6 +280,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
     	return $info;
     }
+
+	public function render_og_html() {
+
+	}
 
     /**
      * A function to compile the meta tags into HTML
@@ -645,7 +571,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
     	endif;
 
-    	return $meta_html
+    	return $meta_html;
     }
 
     /**
