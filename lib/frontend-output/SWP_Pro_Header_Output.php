@@ -57,10 +57,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         }
 
         $this->options = $swp_user_options;
+		$this->establish_header_values();
         $this->establish_custom_colors();
         $this->init();
     }
-
 
      private function init() {
         add_filter( 'swp_header_values' , array( $this , 'open_graph_values' ), 5 );
@@ -70,6 +70,19 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
         add_filter( 'swp_header_html'   , array( $this , 'output_ctt_css' ) , 15 );
         add_filter( 'swp_header_html'   , array( $this , 'output_custom_color' ), 15 );
     }
+
+    /**
+     * Parses user options and prepares data for header output.
+     *
+     * Any <meta> tags which can be configured with options or post_meta will be
+     * touched by the callbacks in this method body.
+     *
+     * @return void
+     */
+	public function establish_header_values() {
+		$this->setup_open_graph();
+		$this->setup_twitter();
+	}
 
 
     /**
