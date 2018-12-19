@@ -124,7 +124,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_type',
 			'og_title',
 			'og_description',
-			'og_image',
+			'og_image_url',
 			'og_image_width',
 			'og_image_height',
 			'og_url',
@@ -132,7 +132,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		);
 
 		$defaults = array(
-			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $info['postID'] ) ) ) )
+			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) )
 		);
 
 		$basic_fields = array(
@@ -145,7 +145,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
         // 1. Get post meta, if it exists.
 		foreach ($fields as $index => $key) {
-			$maybe_value = SWP_Utility::get_meta( $post->ID, "swp_$key" );
+			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
 			// Go from indexed array to associative, with possibly missing values.
 			unset($fields[$index]);
 			$fields[$key] = $maybe_value;
@@ -155,8 +155,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		if ( defined( 'WPSEO_VERSION' ) ) {
 			global $wpseo_og;
     		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
-
-			$fields = $this->try_yoast_fields( $fields );
+			$fields = $this->fetch_yoast_fields( $fields );
 		}
 
 		// 4. Default to post content.
@@ -164,12 +163,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$fields = array_map( 'htmlspecialchars', $fields );
 
 		$this->og_data = $fields;
-
-        // echo '<pre>';
-		// die(var_dump($fields));
 	}
 
-	protected function try_yoast_fields( $fields ) {
+	protected function fetch_yoast_fields( $fields ) {
 		global $wpseo_og;
 		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
 
@@ -184,13 +180,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_description'	=> '_yoast_wpseo_metadesc'
 		);
 
-		// OG Values
 		foreach ($fields as $swp_meta_key => $maybe_value) {
 			if ( isset( $maybe_value ) ) {
 				// post_meta value already exists from SWP.
 				continue;
 			}
 
+			// OG Values
 			if ( array_key_exists( $swp_meta_key, $yoast_og_map ) ) :
 				foreach ($yoast_og_map as $swp_og_key => $yoast_og_key) {
 					$yoast_og_value = SWP_Utility::get_meta( $this->post->ID, $yoast_og_key );
