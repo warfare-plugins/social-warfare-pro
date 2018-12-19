@@ -51,23 +51,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
     public function __construct() {
         global $post, $swp_user_options;
 
-		array(
-			'article_author',
-			'article_publisher',
-			'article_published_time',
-			'article_modified_time',
-		);
-
-		array(
-			'twitter_card',
-			'twitter_title',
-			'twitter_description',
-			'twitter_image',
-			'twitter_site',
-			'twitter_creator'
-		);
-
-
         $this->options = $swp_user_options;
 		// $this->establish_header_values();
         $this->establish_custom_colors();
@@ -103,10 +86,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		$this->post = $post;
 		$this->setup_open_graph();
-		$this->generate_og_html();
+		$this->setup_twitter_card();
 
-		// die(var_dump(esc_html__($this->og_html)));
-		// $this->setup_twitter();
+		$this->generate_og_html();
 	}
 
     /**
@@ -147,7 +129,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_site_name',
 		);
 
-		$basic_fields = array(
+		$known_fields = array(
 			'og:type' => 'article',
 			'og:url' => get_permalink(),
 	    	'og:site_name' => get_bloginfo( 'name' ),
@@ -168,19 +150,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		if ( defined( 'WPSEO_VERSION' ) ) {
 			global $wpseo_og;
     		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
-			$fields = $this->fetch_yoast_fields( $fields );
+			$fields = $this->fetch_yoast_og_fields( $fields );
 		}
 
 		// 4 Default to post content.
-		$fields = $this->apply_default_fields( $fields );
+		$fields = $this->apply_default_og_fields( $fields );
 		$fields = array_map( 'htmlspecialchars', $fields );
 
-		$fields = array_merge( $basic_fields, $fields );
+		$fields = array_merge( $known_fields, $fields );
 
 		$this->og_data = $fields;
 	}
 
-	protected function fetch_yoast_fields( $fields ) {
+
+	protected function fetch_yoast_og_fields( $fields ) {
 		global $wpseo_og;
 		remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
 
@@ -212,7 +195,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 						}
 						$fields[$swp_meta_key] = $yoast_og_value;
 						$maybe_value = $yoast_og_value;
-						break;
 					}
 				}
 			endif;
@@ -227,7 +209,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
 						}
 						$fields[$swp_meta_key] = $yoast_social_value;
-						break;
 					}
 				}
 			endif;
@@ -236,12 +217,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
-    protected function apply_default_fields( $fields ) {
+    protected function apply_default_og_fields( $fields ) {
 		$defaults = array(
 			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
 			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )
 		);
 
+        // Author.
 		$author = get_the_author_meta( 'swp_fb_author' );
 		if ( empty( $author ) ) {
 			$author = get_the_author_meta( 'facebook' );
@@ -249,54 +231,33 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				$author = get_the_author();
 			}
 		}
-
 		$defaults['article_author'] = $author;
 
+		// Publisher.
+		$publisher = SWP_Utility::get_option('facebook_publisher_url');
+		if ( empty( $publisher ) ) {
+			//@TODO Before this update, there was a call to $wpseo_social['facebook_site']. Where does $wpseo_social come from, is it a global?
+			// $publisher = $wpseo_social['facebook_site'];
+			$publisher = $author;
+		}
+		$defaults['article_publisher'] = $publisher;
+
+        // Image.
 		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
 		if ( $thumbnail_url ) {
 			$defaults['og_image'] = $thumbnail_url;
 		}
 
-		$fields = array_merge( $defaults, $fields );
+		// Facebook App ID.
+		$app_id = SWP_Utility::get_option( 'facebook_app_id' );
+		if ( empty( $app_id ) ) {
+			// $wpseo_social['fbadminapp'];
+			$app_id = '529576650555031';
+		}
 
-		return $fields;
+		return array_merge( $defaults, $fields );
 	}
 
-    public function open_graph_values(){
-    	/**
-    	 * Facebook Author
-    	 *
-    	 */
-    	if ( get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) ) ) :
-    		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) );
-    	elseif ( get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) ) && defined( 'WPSEO_VERSION' ) ) :
-    		$info['meta_tag_values']['article_author'] = get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) );
-    	endif;
-
-    	/**
-    	 * Open Graph Publisher
-    	 *
-    	 */
-    	if ( !empty( $this->options['facebook_publisher_url'] )) :
-    		$info['meta_tag_values']['article_publisher'] = $this->options['facebook_publisher_url'];
-    	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['facebook_site'] ) ) :
-    		$info['meta_tag_values']['article_publisher'] = $wpseo_social['facebook_site'];
-    	endif;
-
-    	/**
-    	 * Open Graph App ID
-    	 *
-    	 */
-    	if ( !empty( $this->options['facebook_app_id'] ) ) :
-    		$info['meta_tag_values']['fb_app_id'] = $this->options['facebook_app_id'];
-    	elseif ( isset( $wpseo_social ) && !empty( $wpseo_social['fbadminapp'] ) ) :
-    		$info['meta_tag_values']['fb_app_id'] = $wpseo_social['fbadminapp'];
-    	else :
-    		$info['meta_tag_values']['fb_app_id'] = '529576650555031';
-    	endif;
-
-    	return $info;
-    }
 
     /**
      * Loops through open graph data to create <meta> tags for the <head>
@@ -321,74 +282,29 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      * @return array $info The modified info array
      */
     public function open_graph_html($meta_html) {
-    	if ( false === is_singular() ) {
-    		return $info;
-    	}
 
-    	// Don't compile them if the OG Tags are Disabled on the options page
-    	if ( isset( $this->options['og_tags'] ) && false === $this->options['og_tags'] ) {
-    		return $info;
-    	}
+    }
 
-    	// Check to ensure that we don't need to defer to Yoast
-    	if ( isset( $info['yoast_og_setting'] ) && false != $info['yoast_og_setting'] ) {
-			return $info;
+	public function setup_twitter_card() {
+		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
+		if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
+			return;
 		}
 
-		if( isset( $info['meta_tag_values']['og_type'] ) && !empty( $info['meta_tag_values']['og_type'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:type" content="'. trim( $info['meta_tag_values']['og_type'] ).'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['og_title'] ) && !empty( $info['meta_tag_values']['og_title'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:title" content="'. trim( $info['meta_tag_values']['og_title'] ).'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['og_description'] ) && !empty( $info['meta_tag_values']['og_description'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:description" content="'. trim( $info['meta_tag_values']['og_description'] ).'" />';
-		endif;
-
-		if( isset( $info[ 'meta_tag_values'][ 'og_image' ] )         && !empty( $info['meta_tag_values']['og_image'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:image" content="'. trim( $info['meta_tag_values']['og_image'] ).'" />';
-		endif;
-
-		if( isset( $info[ 'meta_tag_values'][ 'og_image_width' ] )  && !empty( $info['meta_tag_values']['og_image_width'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="og:image:width" content="'. trim( $info['meta_tag_values']['og_image_width'] ).'" />';
-		endif;
-		if( isset( $info[ 'meta_tag_values'][ 'og_image_height' ] ) && !empty( $info['meta_tag_values']['og_image_height'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
-		endif;
+		$fields = array(
+			'twitter_title',
+			'twitter_creator',
+			'twitter_description',
+			'twitter_image',
+			'twitter_card',
+			'twitter_site'
+		);
 
 
-		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
-		endif;
+		$fields = SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' )
+		          ? $this->og_data : array();
 
-		if( isset( $info['meta_tag_values']['article_author'] ) && !empty( $info['meta_tag_values']['article_author'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="article:author" content="'. trim( $info['meta_tag_values']['article_author'] ).'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['article_publisher'] ) && !empty( $info['meta_tag_values']['article_publisher'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="article:publisher" content="'. trim( $info['meta_tag_values']['article_publisher'] ) .'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['article_published_time'] ) && !empty( $info['meta_tag_values']['article_published_time'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="article:published_time" content="'. trim( $info['meta_tag_values']['article_published_time'] ) .'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['article_modified_time'] ) && !empty( $info['meta_tag_values']['article_modified_time'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="article:modified_time" content="'. trim( $info['meta_tag_values']['article_modified_time'] ) .'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['og_modified_time'] ) && !empty( $info['meta_tag_values']['og_modified_time'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="og:updated_time" content="'. trim( $info['meta_tag_values']['og_modified_time'] ) .'" />';
-		endif;
-
-		if( isset( $info['meta_tag_values']['fb_app_id'] ) && !empty( $info['meta_tag_values']['fb_app_id'] ) ):
-			$meta_html .= PHP_EOL . '<meta property="fb:app_id" content="'. trim( $info['meta_tag_values']['fb_app_id'] ).'" />';
-		endif;
-
-    	return $info;
-    }
+	}
 
 
     /**
@@ -410,13 +326,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
      *
      */
     public function twitter_card_values($info) {
-    	if( false === is_singular() ) {
-    		return $info;
-    	}
-
-    	if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
-			return $info;
-		}
 
 		$twitter_use_open_graph = get_post_meta( $info['postID'], 'swp_twitter_use_open_graph', true );
         $twitter_use_open_graph = ( 'true' == $twitter_use_open_graph || false == $twitter_use_open_graph );
@@ -437,7 +346,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * JET PACK: If ours are activated, disable theirs
 		 *
 		 */
-		add_filter( 'jetpack_disable_twitter_cards', '__return_true', 99 );
+
 
 		/**
 		 * Begin by fetching the user's default custom settings
@@ -493,6 +402,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		if ( !empty( $twitter_id) ) {
 			$info['meta_tag_values']['twitter_creator'] = '@' . str_replace( '@' , '' , $twitter_id );
 		}
+
+
 
 		/**
 		 * TWITTER TITLE
