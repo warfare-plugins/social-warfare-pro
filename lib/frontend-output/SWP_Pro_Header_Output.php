@@ -148,15 +148,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		);
 
 		$basic_fields = array(
-			'og_type' => 'article',
-			'og_url' => get_permalink(),
-	    	'og_site_name' => get_bloginfo( 'name' ),
+			'og:type' => 'article',
+			'og:url' => get_permalink(),
+	    	'og:site_name' => get_bloginfo( 'name' ),
 	    	'article:published_time' => get_post_time( 'c' ),
 	    	'article:modified_time' => get_post_modified_time( 'c' ),
 	    	'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
-        // 1. Get post meta, if it exists.
+        // 1 Get post meta, if it exists.
 		foreach ($fields as $index => $key) {
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
 			// Go from indexed array to associative, with possibly missing values.
@@ -164,14 +164,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$key] = $maybe_value;
 		}
 
-        // 2, 3. Yoast, if it exists.
+        // 2 & 3 Yoast, if it exists.
 		if ( defined( 'WPSEO_VERSION' ) ) {
 			global $wpseo_og;
     		$info['yoast_og_setting'] = has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) );
 			$fields = $this->fetch_yoast_fields( $fields );
 		}
 
-		// 4. Default to post content.
+		// 4 Default to post content.
 		$fields = $this->apply_default_fields( $fields );
 		$fields = array_map( 'htmlspecialchars', $fields );
 
@@ -242,6 +242,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )
 		);
 
+		$author = get_the_author_meta( 'swp_fb_author' );
+		if ( empty( $author ) ) {
+			$author = get_the_author_meta( 'facebook' );
+			if ( empty( $author ) )  {
+				$author = get_the_author();
+			}
+		}
+
+		$defaults['article_author'] = $author;
+
 		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
 		if ( $thumbnail_url ) {
 			$defaults['og_image'] = $thumbnail_url;
@@ -250,23 +260,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$fields = array_merge( $defaults, $fields );
 
 		return $fields;
-
-
-        // @TODO what is this, What is get_the_author_meta()?
-        // $author = SWP_User_Profile::get_author( $this->post->ID );
-		//
-		// if ( get_the_author_meta( 'swp_fb_author' , $author ) ) :
-    	// 	$info['meta_tag_values']['article_author'] = get_the_author_meta( 'swp_fb_author' , SWP_User_Profile::get_author( $info['postID'] ) );
-    	// elseif ( get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) ) && defined( 'WPSEO_VERSION' ) ) :
-    	// 	$info['meta_tag_values']['article_author'] = get_the_author_meta( 'facebook' , SWP_User_Profile::get_author( $info['postID'] ) );
-    	// endif;
 	}
-    public function open_graph_values(){
-    	// if ( !empty( $custom_og_image_data ) ) :
-    	// 	$info['meta_tag_values']['og_image_width']   = $custom_og_image_data[1];
-    	// 	$info['meta_tag_values']['og_image_height']	 = $custom_og_image_data[2];
-    	// endif;
 
+    public function open_graph_values(){
     	/**
     	 * Facebook Author
     	 *
@@ -362,9 +358,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$meta_html .= PHP_EOL . '<meta property="og:image:height" content="'. trim( $info['meta_tag_values']['og_image_height'] ).'" />';
 		endif;
 
-		if( isset( $info['meta_tag_values']['og_url'] ) && !empty( $info['meta_tag_values']['og_url'] ) ) :
-			$meta_html .= PHP_EOL . '<meta property="og:url" content="'. trim( $info['meta_tag_values']['og_url'] ).'" />';
-		endif;
 
 		if( isset( $info['meta_tag_values']['og_site_name'] ) && !empty( $info['meta_tag_values']['og_site_name'] ) ) :
 			$meta_html .= PHP_EOL . '<meta property="og:site_name" content="'. trim( $info['meta_tag_values']['og_site_name'] ).'" />';
