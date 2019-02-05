@@ -636,7 +636,8 @@ class SWP_Pro_Pinterest {
 		$alignment = SWP_Pro_Pinterest::get_alignment_style( $alignment );
 
 		//* Display a Pinterest 'Save' button on hover?
-		if ( 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true ) ) {
+		$pin_opt_out = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+		if ( true == (bool) $pin_opt_out ) {
 			$class .= ' no-pin ';
 		}
 
