@@ -24,44 +24,44 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  *
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
-    public function __construct() {
-        global $post, $swp_user_options;
+	public function __construct() {
+		global $post, $swp_user_options;
 
-        $this->options = $swp_user_options;
-        $this->establish_custom_colors();
+		$this->options = $swp_user_options;
+		$this->establish_custom_colors();
 
 		add_action( 'wp', array ($this, 'establish_header_values' ) );
 		add_filter( 'swp_header_html', array( $this, 'render_meta_html' ) );
-    }
+	}
 
-    /**
-     * Parses user options and prepares data for header output.
-     *
-     * Any <meta> tags which can be configured with options or post_meta will be
-     * touched by the callbacks in this method body.
-     *
-     * @return void
-     */
+	/**
+	 * Parses user options and prepares data for header output.
+	 *
+	 * Any <meta> tags which can be configured with options or post_meta will be
+	 * touched by the callbacks in this method body.
+	 *
+	 * @return void
+	 */
 	public function establish_header_values() {
 		global $post;
 
 		if( false === is_singular() || !is_object( $post ) ) {
-    		return;
-    	}
+			return;
+		}
 
 		$this->post = $post;
 		$this->setup_open_graph();
 		$this->setup_twitter_card();
 	}
 
-    /**
-     * Takes stored class data and returns meta tag HTML.
-     *
+	/**
+	 * Takes stored class data and returns meta tag HTML.
+	 *
 	 * @hook   swp_header_html | filter | origin SWP_Header_Output
 	 * @param  string $meta_html Ready to print HTML for the <head>.
-     * @return string $meta_html Ready to print HTML for the <head>.
-     *
-     */
+	 * @return string $meta_html Ready to print HTML for the <head>.
+	 *
+	 */
 	public function render_meta_html( $meta_html ) {
 		$open_graph_html = $this->generate_meta_html( $this->open_graph_data );
 		$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
@@ -69,7 +69,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $meta_html;
 	}
 
-    /**
+	/**
 	 * Open Graph metadata can come from a variety of sources.
 	 *
 	 * This method prioritizes prioritizes Open Graph data as follows:
@@ -85,25 +85,25 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * @see $this render_meta_html()
 	 * @since 3.5.0 | 19 DEC 2018 | Created.
 	 *
-     */
+	 */
 	public function setup_open_graph() {
 		if ( false === SWP_Utility::get_option( 'og_tags' ) && false === SWP_Utility::get_option( 'twitter_cards' ) ) {
-            return;
-        }
+			return;
+		}
 
 		add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
-    	add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
+		add_filter( 'jetpack_enable_open_graph', '__return_false', 99 );
 
 		$known_fields = array(
 			'og:type' => 'article',
 			'og:url' => get_permalink(),
-	    	'og:site_name' => get_bloginfo( 'name' ),
-	    	'article:published_time' => get_post_time( 'c' ),
-	    	'article:modified_time' => get_post_modified_time( 'c' ),
-	    	'og:updated_time' => get_post_modified_time( 'c' )
+			'og:site_name' => get_bloginfo( 'name' ),
+			'article:published_time' => get_post_time( 'c' ),
+			'article:modified_time' => get_post_modified_time( 'c' ),
+			'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
-        // 1 Post meta, if it exists.
+		// 1 Post meta, if it exists.
 		// 2 & 3 Yoast, if it exists.
 		// 4 Default to post content.
 		$fields = $this->fetch_social_warfare_open_graph_fields();
@@ -120,13 +120,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$this->open_graph_data = array_merge( $known_fields, $fields );
 	}
 
-    /**
-     * Grabs OG data based on Social Warfare settings.
-     *
-     * @return array $fields Social Warfare field data.
-     *
-     */
-    protected function fetch_social_warfare_open_graph_fields() {
+	/**
+	 * Grabs OG data based on Social Warfare settings.
+	 *
+	 * @return array $fields Social Warfare field data.
+	 *
+	 */
+	protected function fetch_social_warfare_open_graph_fields() {
 		$fields = array(
 			'og_title',         // These have a meta field.
 			'og_description',
@@ -169,7 +169,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$twitter_fields['twitter_site'] = $twitter_id;
 		}
 
-        $author_twitter_handle = get_the_author_meta( 'swp_twitter' );
+		$author_twitter_handle = get_the_author_meta( 'swp_twitter' );
 		if ( !empty( $author_twitter_handle ) ) {
 			$twitter_fields['twitter_creator'] = '@' . str_replace( '@' , '' , trim ( $author_twitter_handle ) );
 		} else {
@@ -239,13 +239,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
-    protected function apply_default_open_graph_fields( $fields ) {
+	protected function apply_default_open_graph_fields( $fields ) {
 		$defaults = array(
 			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
 			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )
 		);
 
-        // Author.
+		// Author.
 		$author = get_the_author_meta( 'swp_fb_author' );
 		if ( empty( $author ) ) {
 			$author = get_the_author_meta( 'facebook' );
@@ -264,7 +264,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 		$defaults['article_publisher'] = $publisher;
 
-        // Image.
+		// Image.
 		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
 		if ( $thumbnail_url ) {
 			$defaults['og_image'] = $thumbnail_url;
@@ -304,11 +304,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
-    /**
-     * [apply_open_graph_to_twitter description]
-     * @param  [type] $fields [description]
-     * @return [type]         [description]
-     */
+	/**
+	 * [apply_open_graph_to_twitter description]
+	 * @param  [type] $fields [description]
+	 * @return [type]         [description]
+	 */
 	protected function apply_open_graph_to_twitter( $twitter_fields ) {
 		$shared_fields = array();
 		$field_map = array(
@@ -332,15 +332,20 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 
-    /**
-     * Loops through open graph data to create <meta> tags for the <head>
-     *
-     * @return string The HTML for meta tags.
-     */
+	/**
+	 * Loops through open graph data to create <meta> tags for the <head>
+	 *
+	 * @return string The HTML for meta tags.
+	 */
 	public function generate_meta_html( $fields ) {
 		$meta = '';
 
-        foreach ( $fields as $key => $content ) {
+		if ( !is_array($fields)) {
+			error_log(__METHOD__.' (caught) Parameter \$fields should be an array. I got ' . gettype($fields) . ' :'.var_export($fields, 1));
+			return '';
+		}
+
+		foreach ( $fields as $key => $content ) {
 			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
 		}
 
@@ -364,85 +369,85 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 
-    /**
-     * Verifies that the color has been properly set.
-     *
-     * @since 3.0.8 | MAY 23 2018 | Created the method.
-     * @param string $hex The color to check.
-     * @return string $hex The sanitized color string.
-     *
-     */
-    private function parse_hex_color( $hex ) {
-        if ( !isset( $hex ) ) :
-            //* Default to a dark grey.
-            return  "#333333";
-        endif;
+	/**
+	 * Verifies that the color has been properly set.
+	 *
+	 * @since 3.0.8 | MAY 23 2018 | Created the method.
+	 * @param string $hex The color to check.
+	 * @return string $hex The sanitized color string.
+	 *
+	 */
+	private function parse_hex_color( $hex ) {
+		if ( !isset( $hex ) ) :
+			//* Default to a dark grey.
+			return  "#333333";
+		endif;
 
-        if ( strpos( $hex, "#" !== 0 ) ) :
-            $hex = "#" . $hex;
-        endif;
+		if ( strpos( $hex, "#" !== 0 ) ) :
+			$hex = "#" . $hex;
+		endif;
 
-        return $hex;
-    }
+		return $hex;
+	}
 
-    /**
-     * Localizes the custom color settings from admin.
-     *
-     * @since  3.0.8 | MAY 23 2018 | Created the method.
-     * @param  none
-     * @return void
-     *
-     */
-    private function establish_custom_colors() {
+	/**
+	 * Localizes the custom color settings from admin.
+	 *
+	 * @since  3.0.8 | MAY 23 2018 | Created the method.
+	 * @param  none
+	 * @return void
+	 *
+	 */
+	private function establish_custom_colors() {
 
-        //* Static custom color.
-        if ( SWP_Utility::get_option('default_colors') == 'custom_color' || SWP_Utility::get_option('single_colors') == 'custom_color' || SWP_Utility::get_option('hover_colors') == 'custom_color' ) :
+		//* Static custom color.
+		if ( SWP_Utility::get_option('default_colors') == 'custom_color' || SWP_Utility::get_option('single_colors') == 'custom_color' || SWP_Utility::get_option('hover_colors') == 'custom_color' ) :
 
-            $custom_color = $this->parse_hex_color( $this->options['custom_color'] );
-            $this->custom_color = $custom_color;
+			$custom_color = $this->parse_hex_color( $this->options['custom_color'] );
+			$this->custom_color = $custom_color;
 
-        else :
-            $this->custom_color = '';
-        endif;
+		else :
+			$this->custom_color = '';
+		endif;
 
-        //* Float custom color.
-        if ( SWP_Utility::get_option('float_default_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color' ) :
+		//* Float custom color.
+		if ( SWP_Utility::get_option('float_default_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color' ) :
 
-            if ( true === $this->options['float_style_source'] ) :
-                //* Inherit the static button style.
-                $this->float_custom_color = $this->custom_color;
-            else :
-                $this->float_custom_color = $this->parse_hex_color( $this->options['float_custom_color'] );
-            endif;
+			if ( true === $this->options['float_style_source'] ) :
+				//* Inherit the static button style.
+				$this->float_custom_color = $this->custom_color;
+			else :
+				$this->float_custom_color = $this->parse_hex_color( $this->options['float_custom_color'] );
+			endif;
 
-        else :
-            $this->float_custom_color = '';
-        endif;
+		else :
+			$this->float_custom_color = '';
+		endif;
 
-        //* Static custom outlines.
-        if ( SWP_Utility::get_option('default_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('single_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('hover_colors') == 'custom_color_outlines' ) :
+		//* Static custom outlines.
+		if ( SWP_Utility::get_option('default_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('single_colors') == 'custom_color_outlines' ||  SWP_Utility::get_option('hover_colors') == 'custom_color_outlines' ) :
 
-            $custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
-            $this->custom_color_outlines = $custom_color_outlines;
+			$custom_color_outlines = $this->parse_hex_color( $this->options['custom_color_outlines'] );
+			$this->custom_color_outlines = $custom_color_outlines;
 
-        else:
-            $this->custom_color_outlines = '';
-        endif;
+		else:
+			$this->custom_color_outlines = '';
+		endif;
 
-        if (  SWP_Utility::get_option('float_default_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
-            if ( true === $this->options['float_style_source'] ) :
+		if (  SWP_Utility::get_option('float_default_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_single_colors') == 'float_custom_color_outlines' ||  SWP_Utility::get_option('float_hover_colors') == 'float_custom_color_outlines' ) :
+			if ( true === $this->options['float_style_source'] ) :
 
-                //* Inherit the static button style.
-                $this->float_custom_color_outlines = $this->custom_color_outlines;
-            else:
-                $this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
-            endif;
+				//* Inherit the static button style.
+				$this->float_custom_color_outlines = $this->custom_color_outlines;
+			else:
+				$this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
+			endif;
 
-        else:
-            $this->float_custom_color_outlines = '';
-        endif;
+		else:
+			$this->float_custom_color_outlines = '';
+		endif;
 
-    }
+	}
 
 
 	/**
@@ -454,23 +459,23 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * @return string            The CSS to be output.
 	 *
 	 */
-    private function get_css( $floating = false ) {
-        $float = '';
-        $class = '';
+	private function get_css( $floating = false ) {
+		$float = '';
+		$class = '';
 		$panel = '';
-        $custom_color = $this->custom_color;
-        $custom_outlines = $this->custom_color_outlines;
+		$custom_color = $this->custom_color;
+		$custom_outlines = $this->custom_color_outlines;
 
-        if ( $floating ) {
-            $float = 'float_';
-            $class = '.swp_social_panelSide';
-            $custom_color = $this->float_custom_color;
-            $custom_outlines = $this->float_custom_color_outlines;
-        } else {
+		if ( $floating ) {
+			$float = 'float_';
+			$class = '.swp_social_panelSide';
+			$custom_color = $this->float_custom_color;
+			$custom_outlines = $this->float_custom_color_outlines;
+		} else {
 			$panel = '.swp_social_panel';
 		}
 
-        $css = '';
+		$css = '';
 
 
 		/**
@@ -478,33 +483,33 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Default: Custom Color
-        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color" ) :
-            $css .= "
+		// Default: Custom Color
+		if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color" ) :
+			$css .= "
 
-            $class.swp_default_custom_color a
-                {color:white}
-            $class$panel.swp_default_custom_color .nc_tweetContainer
-                {
-                    background-color:" . $custom_color . ";
-                    border:1px solid " . $custom_color . ";
-                }
-            ";
-        endif;
+			$class.swp_default_custom_color a
+				{color:white}
+			$class$panel.swp_default_custom_color .nc_tweetContainer
+				{
+					background-color:" . $custom_color . ";
+					border:1px solid " . $custom_color . ";
+				}
+			";
+		endif;
 
 		// Default: Custom Outlines
-        if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
-                $css .= "
+		if ( SWP_Utility::get_option($float . "default_colors") === $float . "custom_color_outlines" ) :
+				$css .= "
 
-            $class.swp_default_custom_color_outlines a
-                {color: " . $custom_outlines . "}
-            $class.swp_default_custom_color_outlines .nc_tweetContainer
-                {
-                    background-color: transparent ;
-                    border:1px solid " . $custom_outlines . " ;
-                }
-            ";
-        endif;
+			$class.swp_default_custom_color_outlines a
+				{color: " . $custom_outlines . "}
+			$class.swp_default_custom_color_outlines .nc_tweetContainer
+				{
+					background-color: transparent ;
+					border:1px solid " . $custom_outlines . " ;
+				}
+			";
+		endif;
 
 
 		/**
@@ -512,33 +517,33 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Individual: Custom Color
-        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color" ) :
-            $css .= "
+		// Individual: Custom Color
+		if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color" ) :
+			$css .= "
 
-            html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover a
-                {color:white !important}
-            html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover
-                {
-                    background-color:" . $custom_color . "!important;
-                    border:1px solid " . $custom_color . "!important;
-                }
-            ";
-        endif;
+			html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover a
+				{color:white !important}
+			html body $class$panel.swp_individual_custom_color .nc_tweetContainer:not(.total_shares):hover
+				{
+					background-color:" . $custom_color . "!important;
+					border:1px solid " . $custom_color . "!important;
+				}
+			";
+		endif;
 
-        // Individual: Custom Outlines
-        if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
-            $css .= "
+		// Individual: Custom Outlines
+		if ( SWP_Utility::get_option($float . "single_colors") === $float . "custom_color_outlines" ) :
+			$css .= "
 
-            html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
-                {color:" . $custom_outlines . " !important}
-            html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
-                {
-                    background-color: transparent !important;
-                    border:1px solid " . $custom_outlines . "!important ;
-                }
-            ";
-        endif;
+			html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover a
+				{color:" . $custom_outlines . " !important}
+			html body $class.swp_individual_custom_color_outlines .nc_tweetContainer:not(.total_shares):hover
+				{
+					background-color: transparent !important;
+					border:1px solid " . $custom_outlines . "!important ;
+				}
+			";
+		endif;
 
 
 		/**
@@ -546,87 +551,87 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 *
 		 */
-        // Other: Custom Color
-        if ( SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color" ) :
-            $css .= "
+		// Other: Custom Color
+		if ( SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color" ) :
+			$css .= "
 
-            body $class$panel.swp_other_custom_color:hover a
-                {color:white}
-            body $class$panel.swp_other_custom_color:hover .nc_tweetContainer
-                {
-                    background-color:" . $custom_color . ";
-                    border:1px solid " . $custom_color . ";
-                }
-            ";
-        endif;
+			body $class$panel.swp_other_custom_color:hover a
+				{color:white}
+			body $class$panel.swp_other_custom_color:hover .nc_tweetContainer
+				{
+					background-color:" . $custom_color . ";
+					border:1px solid " . $custom_color . ";
+				}
+			";
+		endif;
 
 		// Other: Custom Outlines
-        if (SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
-            $css .= "
+		if (SWP_Utility::get_option($float . "hover_colors") === $float . "custom_color_outlines" ) :
+			$css .= "
 
-            html body $class.swp_other_" . $float . "custom_color_outlines:hover a
-                {color:" . $custom_outlines . " }
-            html body $class.swp_other_" . $float . "custom_color_outlines:hover .nc_tweetContainer
-                {
-                    background-color: transparent ;
-                    border:1px solid " . $custom_outlines . " ;
-                }
-            ";
-        endif;
+			html body $class.swp_other_" . $float . "custom_color_outlines:hover a
+				{color:" . $custom_outlines . " }
+			html body $class.swp_other_" . $float . "custom_color_outlines:hover .nc_tweetContainer
+				{
+					background-color: transparent ;
+					border:1px solid " . $custom_outlines . " ;
+				}
+			";
+		endif;
 
-        return $css;
+		return $css;
 
-    }
+	}
 
 
-    /**
-     * Output the CSS for custom selected colors
-     *
-     * Don't nest the CSS. This way it will be fully "minified" on output.
-     *
-     * @since  1.4.0
-     * @access public
-     * @param  array $info The array of information about the post
-     * @return array $info The modified array
-     *
-     */
-    public function output_custom_color( $meta_html ) {
-        $static = $this->get_css();
-        $floaters_on = SWP_Utility::get_option( 'floating_panel' );
-        $floating = $this->get_css( $floaters_on );
+	/**
+	 * Output the CSS for custom selected colors
+	 *
+	 * Don't nest the CSS. This way it will be fully "minified" on output.
+	 *
+	 * @since  1.4.0
+	 * @access public
+	 * @param  array $info The array of information about the post
+	 * @return array $info The modified array
+	 *
+	 */
+	public function output_custom_color( $meta_html ) {
+		$static = $this->get_css();
+		$floaters_on = SWP_Utility::get_option( 'floating_panel' );
+		$floating = $this->get_css( $floaters_on );
 
-        $css = $static . $floating;
+		$css = $static . $floating;
 
-        if ( !empty( $css) ) :
-            $css = '<style type="text/css">' . $css . '</style>';
-        endif;
+		if ( !empty( $css) ) :
+			$css = '<style type="text/css">' . $css . '</style>';
+		endif;
 
-        //* Replaces newlines and excessive whitespace with a single space.
-        $meta_html .= trim( preg_replace( '/\s+/', ' ', $css ) );
+		//* Replaces newlines and excessive whitespace with a single space.
+		$meta_html .= trim( preg_replace( '/\s+/', ' ', $css ) );
 		// $meta_html .= $css;
-    	return $meta_html;
-    }
+		return $meta_html;
+	}
 
-    /**
-     * Output custom CSS for Click To Tweet
-     *
-     * Note: This is done in the header rather than in a CSS file to
-     * avoid having the styles called from a CDN
-     *
-     * @since  3.0.0
-     * @access public
-     * @param  array  $info An array of information about the post
-     * @return array  $info The modified array
-     */
-    public function output_ctt_css( $meta_html ) {
-        if (!empty($this->options['ctt_css']) && count($this->options)['ctt_css'] > 0) {
-            // Add it to our array if we're using the frontend Head Hook
-            $meta_html .= PHP_EOL . '<style id=ctt-css>' . $this->options['ctt_css'] . '</style>';
+	/**
+	 * Output custom CSS for Click To Tweet
+	 *
+	 * Note: This is done in the header rather than in a CSS file to
+	 * avoid having the styles called from a CDN
+	 *
+	 * @since  3.0.0
+	 * @access public
+	 * @param  array  $info An array of information about the post
+	 * @return array  $info The modified array
+	 */
+	public function output_ctt_css( $meta_html ) {
+		if (!empty($this->options['ctt_css']) && count($this->options)['ctt_css'] > 0) {
+			// Add it to our array if we're using the frontend Head Hook
+			$meta_html .= PHP_EOL . '<style id=ctt-css>' . $this->options['ctt_css'] . '</style>';
 
-        }
+		}
 
-        return $meta_html;
-    }
+		return $meta_html;
+	}
 }
 
 endif;
