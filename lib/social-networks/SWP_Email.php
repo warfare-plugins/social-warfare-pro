@@ -39,7 +39,7 @@ class SWP_Email extends SWP_Social_Network {
 		$this->cta            = __( 'Email','social-warfare' );
 		$this->key            = 'email';
 		$this->default        = true;
-        $this->premium        = 'pro';
+		$this->premium        = 'pro';
 		$this->base_share_url = 'mailto:?subject=';
 
 		$this->init_social_network();
@@ -109,8 +109,8 @@ class SWP_Email extends SWP_Social_Network {
 		endif;
 
 		// Build the wrapper.
-		$html = '<div class="nc_tweetContainer swp_'.$this->key.'" data-network="'.$this->key.'">';
-			$html .= '<a rel="nofollow noreferrer noopener" href="' . $share_link . '" class="nc_tweet noPop" target="_blank">';
+		$html = '<div class="nc_tweetContainer swp_share_button swp_'.$this->key.'" data-network="'.$this->key.'">';
+			$html .= '<a class="nc_tweet noPop swp_share_link" rel="nofollow noreferrer noopener" href="' . $share_link . '" target="_blank">';
 				// Put the button inside.
 				$html .= $icon;
 			$html.= '</a>';
