@@ -453,10 +453,20 @@ class SWP_Pro_Pinterest {
 				} else {
 
 					$title = get_the_title();
-					$excerpt = SWP_Utility::get_the_excerpt( $post->ID );
+
 					$description = $title . ': ' . $excerpt;
 					$description = str_replace( '"', '\'', $description );
-					$replacement->setAttribute( "data-pin-description", addslashes( $description ) );
+
+					$excerpt = SWP_Utility::get_the_excerpt( $post->ID );
+					if (strlen($description) > 500) {
+						$permalink = get_permalink();
+						if ( false === $permalink ) {
+							$permalink = '';
+						}
+						$read_more = '... read more at ' . $permalink;
+						$description = substr( $description, 0, 500 - strlen($permalink) );
+					}
+					$replacement->setAttribute( "data-pin-description", esc_html( $description ) );
 
 				}
 
