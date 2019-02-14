@@ -245,6 +245,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
+	/**
+	 * Sets values for Open Graph meta tags from default sources.
+	 *
+	 * This method will fill in the gaps missed by meta boxes and Yoast.
+	 *
+	 * @since  3.5.0 | 24 OCT 2018 | Created.
+	 * @param  array $fields array('og_key' => $og_value)
+	 * @return array $fields array('og_key2' => $default_og_value)
+	 *
+	 */
 	protected function apply_default_open_graph_fields( $fields ) {
 		$defaults = array(
 			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
@@ -286,6 +296,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return array_merge( $defaults, $fields );
 	}
 
+	/**
+	 * Sets values for Open Graph meta tags from known Yoast values.
+	 *
+	 * This method will fill in the gaps missed by meta boxes and Yoast.
+	 *
+	 * @since  3.5.0 | 24 OCT 2018 | Created.
+	 * @param  array $fields array('og_key' => $og_value)
+	 * @return array $fields array('og_key2' => $default_og_value)
+	 *
+	 */
 	protected function fetch_yoast_twitter_fields( $fields ) {
 		if ( !defined( 'WPSEO_VERSION' ) ) {
 			return $fields;
@@ -338,11 +358,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 
-	/**
-	 * Loops through open graph data to create <meta> tags for the <head>
-	 *
-	 * @return string The HTML for meta tags.
-	 */
+	 /**
+	  * Loops through open graph data to create <meta> tags for the <head>
+	  *
+	  * @since  3.5.0 | 24 OCT 2018 | Created.
+	  * @param  array $fields array('og_key' => $og_value)
+	  * @return string The HTML for meta tags.
+	  *
+	  */
 	public function generate_meta_html( $fields ) {
 		$meta = '';
 
@@ -358,6 +381,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $meta;
 	}
 
+
+	/**
+	* Loops through open graph data to create <meta> tags for the <head>
+	*
+	* @since  3.5.0 | 24 OCT 2018 | Created.
+	* @param  void
+	* @return array $fields array('og_key' => $og_value)
+	*
+	*/
 	public function setup_twitter_card() {
 		if ( !SWP_Utility::get_option( 'twitter_cards' ) ) {
 			return;
