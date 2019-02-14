@@ -40,6 +40,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * Any <meta> tags which can be configured with options or post_meta will be
 	 * touched by the callbacks in this method body.
 	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param void
 	 * @return void
 	 */
 	public function establish_header_values() {
@@ -57,6 +59,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	/**
 	 * Takes stored class data and returns meta tag HTML.
 	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
 	 * @hook   swp_header_html | filter | origin SWP_Header_Output
 	 * @param  string $meta_html Ready to print HTML for the <head>.
 	 * @return string $meta_html Ready to print HTML for the <head>.
@@ -84,6 +87,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 * @see $this render_meta_html()
 	 * @since 3.5.0 | 19 DEC 2018 | Created.
+	 * @param void
+	 * @return void
 	 *
 	 */
 	public function setup_open_graph() {
@@ -127,6 +132,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	/**
 	 * Grabs OG data based on Social Warfare settings.
 	 *
+	 * This is the most valuable source for og metadata. If we find a value
+	 * for a key here, then the remaining checks skip that key.
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param void
 	 * @return array $fields Social Warfare field data.
 	 *
 	 */
@@ -151,6 +161,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $fields;
 	}
 
+	/**
+	 * Sets values for Twitter card from known SW values.
+	 *
+	 * This is the most valuable source for twitter metadata. If we find a value for
+	 * a key here, then the remaining checks skip that key.
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param  array $fields array('og_key' => $og_value)
+	 * @return array $fields array('og_key2' => $default_og_value)
+	 *
+	 */
 	protected function fetch_social_warfare_twitter_fields() {
 		$twitter_fields = array(
 			'twitter_title' => false,
@@ -183,6 +204,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		return $twitter_fields;
 	}
 
+	/**
+	 * Grabs OG data based on Yoast boxes.
+	 *
+	 * If a value already exists for $key in $fields, we'll skip that one.
+	 * Only sets values for a key that still needs one.
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param array $fields Open graph field data
+	 * @return array $fields Open graph field data
+	 *
+	 */
 	protected function fetch_yoast_open_graph_fields( $fields ) {
 		if ( !defined( 'WPSEO_VERSION' ) ) {
 			return $fields;
@@ -246,13 +278,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 	/**
-	 * Sets values for Open Graph meta tags from default sources.
+	 * Sets values for meta tags from default sources.
 	 *
 	 * This method will fill in the gaps missed by meta boxes and Yoast.
 	 *
-	 * @since  3.5.0 | 24 OCT 2018 | Created.
-	 * @param  array $fields array('og_key' => $og_value)
-	 * @return array $fields array('og_key2' => $default_og_value)
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param  array $fields array('meta_key' => $meta_value)
+	 * @return array $fields array('meta_key2' => $default_meta_value)
 	 *
 	 */
 	protected function apply_default_open_graph_fields( $fields ) {
@@ -297,11 +329,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 	/**
-	 * Sets values for Open Graph meta tags from known Yoast values.
+	 * Sets values for Twitter card from known Yoast values.
 	 *
 	 * This method will fill in the gaps missed by meta boxes and Yoast.
 	 *
-	 * @since  3.5.0 | 24 OCT 2018 | Created.
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
 	 * @param  array $fields array('og_key' => $og_value)
 	 * @return array $fields array('og_key2' => $default_og_value)
 	 *
@@ -331,7 +363,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 	/**
-	 * [apply_open_graph_to_twitter description]
+	 * Sets values for Open Graph meta tags from known Twitter values.
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
 	 * @param  [type] $fields [description]
 	 * @return [type]         [description]
 	 */
@@ -361,7 +395,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 /**
 	  * Loops through open graph data to create <meta> tags for the <head>
 	  *
-	  * @since  3.5.0 | 24 OCT 2018 | Created.
+	  * @since  3.5.0 | 19 DEC 2018 | Created.
 	  * @param  array $fields array('og_key' => $og_value)
 	  * @return string The HTML for meta tags.
 	  *
@@ -385,7 +419,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	/**
 	* Loops through open graph data to create <meta> tags for the <head>
 	*
-	* @since  3.5.0 | 24 OCT 2018 | Created.
+	* @since  3.5.0 | 19 DEC 2018 | Created.
 	* @param  void
 	* @return array $fields array('og_key' => $og_value)
 	*
