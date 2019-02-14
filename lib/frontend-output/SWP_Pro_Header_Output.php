@@ -103,9 +103,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
-		// 1 Post meta, if it exists.
-		// 2 & 3 Yoast, if it exists.
-		// 4 Default to post content.
+		/**
+		 * We prioritize the source of a value in this order:
+		 * 1 Post meta
+		 * 2 Yoast (OG)
+		 * 3 Yoast (Social)
+		 * 4 Post content.
+		 */
 		$fields = $this->fetch_social_warfare_open_graph_fields();
 		$fields = $this->fetch_yoast_open_graph_fields( $fields );
 		$fields = $this->apply_default_open_graph_fields( $fields );
@@ -189,6 +193,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
 		}
 
+		// Establish the relationship between swp_keys => _yoast_keys
 		$yoast_og_map = array(
 			'og_title' => '_yoast_wpseo_opengraph-title',
 			'og_description' => '_yoast_wpseo_opengraph-description',
@@ -200,6 +205,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_description'	=> '_yoast_wpseo_metadesc'
 		);
 
+		// Fill in values based on priority.
 		foreach ($fields as $swp_meta_key => $maybe_value) {
 			if ( isset( $maybe_value ) ) {
 				// post_meta value already exists from SWP.
