@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.4.2
+ * Version:     3.4.9
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
@@ -18,7 +18,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.4.2' );
+define( 'SWPP_VERSION', '3.4.9' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -62,10 +62,10 @@ function initialize_social_warfare_pro() {
 	 * need to activate core.
 	 *
 	 */
-    if ( !defined( 'SWP_VERSION' ) ) :
-        add_action( 'admin_notices', 'swp_needs_core' );
-        return;
-    endif;
+	if ( !defined( 'SWP_VERSION' ) ) :
+		add_action( 'admin_notices', 'swp_needs_core' );
+		return;
+	endif;
 
 
 	/**
@@ -77,9 +77,9 @@ function initialize_social_warfare_pro() {
 	 *
 	 */
 	$addon_path = SWP_PLUGIN_DIR . '/lib/Social_Warfare_Addon.php';
-    if ( !class_exists( 'Social_Warfare_Addon' ) && file_exists( $addon_path ) ) :
-        require_once( $addon_path );
-    endif;
+	if ( !class_exists( 'Social_Warfare_Addon' ) && file_exists( $addon_path ) ) :
+		require_once( $addon_path );
+	endif;
 
 
 	/**
@@ -111,8 +111,8 @@ function initialize_social_warfare_pro() {
 	 * version in order to get access to pro.
 	 *
 	 */
-    } else {
-        add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
+	} else {
+		add_filter( 'swp_admin_notices', 'swp_pro_update_notification' );
 	}
 
 
@@ -124,14 +124,14 @@ function initialize_social_warfare_pro() {
 	 * exists, and if so, it uses it to check for updates from GitHub.
 	 *
 	 */
-    if ( class_exists( 'Puc_v4_Factory') ) :
-        $update_checker = Puc_v4_Factory::buildUpdateChecker(
-        	'https://github.com/warfare-plugins/social-warfare-pro/',
-        	__FILE__,
-        	'social-warfare-pro'
-        );
-        $update_checker->getVcsApi()->enableReleaseAssets();
-    endif;
+	if ( class_exists( 'Puc_v4_Factory') ) :
+		$update_checker = Puc_v4_Factory::buildUpdateChecker(
+			'https://github.com/warfare-plugins/social-warfare-pro/',
+			__FILE__,
+			'social-warfare-pro'
+		);
+		$update_checker->getVcsApi()->enableReleaseAssets();
+	endif;
 
 }
 
@@ -149,9 +149,9 @@ function initialize_social_warfare_pro() {
  *
  */
 if ( !function_exists( 'swp_needs_core' ) ) :
-    function swp_needs_core() {
-        echo '<div class="update-nag notice is-dismissable"><p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the <a href="https://wordpress.org/plugins/social-warfare/" target="_blank">WordPress plugins repository</a>.</p></div>';
-    }
+	function swp_needs_core() {
+		echo '<div class="update-nag notice is-dismissable"><p><b>Important:</b> You currently have Social Warfare - Pro installed without our Core plugin installed.<br/>Please download the free core version of our plugin from the <a href="https://wordpress.org/plugins/social-warfare/" target="_blank">WordPress plugins repository</a>.</p></div>';
+	}
 endif;
 
 
@@ -165,24 +165,24 @@ endif;
  *
  */
  function swp_pro_update_notification( $notices = array() ) {
-     if (is_string( $notices ) ) {
-         $notices = array();
-     }
+	 if (is_string( $notices ) ) {
+		 $notices = array();
+	 }
 
-     $notices[] = array(
-         'key'   => 'update_notice_pro_' . SWPP_VERSION, // database key unique to this version.
-         'message'   => 'Looks like your copy of Social Warfare - Pro isn\'t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
-         'ctas'  => array(
-             array(
-                 'action'    => 'Remind me in a week.',
-                 'timeframe' => 7 // dismiss for one week.
-             ),
-             array(
-                 'action'    => 'Thanks for letting me know.',
-                 'timeframe' => 0 // permadismiss for this version.
-             )
-         )
-     );
+	 $notices[] = array(
+		 'key'   => 'update_notice_pro_' . SWPP_VERSION, // database key unique to this version.
+		 'message'   => 'Looks like your copy of Social Warfare - Pro isn\'t up to date with Core. While you can still use both of these plugins, we highly recommend you keep both Core and Pro up-to-date for the best of what we have to offer.',
+		 'ctas'  => array(
+			 array(
+				 'action'    => 'Remind me in a week.',
+				 'timeframe' => 7 // dismiss for one week.
+			 ),
+			 array(
+				 'action'    => 'Thanks for letting me know.',
+				 'timeframe' => 0 // permadismiss for this version.
+			 )
+		 )
+	 );
 
-     return $notices;
+	 return $notices;
 }
