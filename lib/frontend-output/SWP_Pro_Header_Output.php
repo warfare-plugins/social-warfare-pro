@@ -409,6 +409,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		foreach ( $fields as $key => $content ) {
+			if ( $key == 'og:image' ) {
+				$meta .= "<meta name='image' property='$key' content='$content' >" . PHP_EOL;
+				continue;
+			}
 			$meta .= "<meta property='$key' content='$content' >" . PHP_EOL;
 		}
 
