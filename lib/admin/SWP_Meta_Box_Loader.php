@@ -129,7 +129,7 @@ class SWP_Meta_Box_Loader {
 			'name'  => __( 'Custom Tweet','social-warfare' ),
 			'placeholder' => 'Write your awesome custom tweet here...',
 			'desc'  => ( $twitter_id
-							 ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (@%1$s), a link being added, and the current content above, your tweet has %2$s characters remaining.', 'social-warfare' ), str_replace( '@', '' ,$twitter_handle ), '<span class="counterNumber">280</span>' )
+							 ? sprintf( __( 'If this is left blank your post title will be used. Based on your username (<span id="swp-twitter-handle">@%1$s</span>), a link being added, and the current content above, your tweet has %2$s characters remaining.', 'social-warfare' ), str_replace( '@', '' ,$twitter_handle ), '<span class="counterNumber">280</span>' )
 							 : sprintf( __( 'If this is left blank your post title will be used. Based on a link being added, and the current content above, your tweet has %s characters remaining.','social-warfare' ), '<span class="counterNumber">280</span>' ) ),
 			'id'    => $prefix . 'custom_tweet',
 			'class' => $prefix . 'custom_tweetWrapper custom_tweet  swpmb-full-width',
