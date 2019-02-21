@@ -410,8 +410,6 @@ class SWP_Pro_Pinterest {
 	public function content_add_pin_description( $the_content ) {
 		global $post;
 
-		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-
 		if ( class_exists( 'DOMDocument' ) ) {
 
 			//* DOMDocument works better with an XML delcaration.
@@ -443,14 +441,14 @@ class SWP_Pro_Pinterest {
 				// Check for alt text
 				$alt_attribute = $img->getAttribute( 'alt' );
 				if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $alt_attribute ) ) {
-					$replacement->setAttribute( "data-pin-description", addslashes( $alt_attribute ) );
-
+					$pinterest_description = $alt_attribute;
+				}
 				// Check for the post pinterest description
-				} else if ( !empty( $post_pinterest_description ) ) {
-					$replacement->setAttribute( "data-pin-description", addslashes( $post_pinterest_description ) );
-
+				else if ( !empty( get_post_meta( $post->ID, 'swp_pinterest_description', true ) ) ) {
+					$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+				}
 				// Use the post title and excerpt.
-				} else {
+				else {
 
 					$title = get_the_title();
 					$permalink = get_permalink();
@@ -459,20 +457,17 @@ class SWP_Pro_Pinterest {
 						$permalink = '';
 					}
 
-					$description = $title . ': ' . the_excerpt() . ' ' . $permalink;
+					$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
 
-					if (strlen($description) > 500) {
+					if ( strlen( $pinterest_description ) > 500 ) {
 						$read_more = '... read more at ' . $permalink;
-						$description = substr($title . ': ' . the_excerpt(), 0, 500 - strlen($read_more));
-						$description .= $read_more;
+						$pinterest_description = substr( $title . ': ' . the_excerpt(), 0, 500 - strlen( $read_more ) );
+						$pinterest_description .= $read_more;
 					}
-
-					$replacement->setAttribute( "data-pin-description", esc_html( $description ) );
-
 				}
 
-				$img->parentNode->replaceChild($replacement, $img);
-
+				$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
+				$img->parentNode->replaceChild( $replacement, $img );
 			}
 
 			$the_content = $doc->saveHTML();
