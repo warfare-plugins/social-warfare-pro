@@ -339,7 +339,6 @@ class SWP_Pro_Pinterest {
 			$height = '';
 		}
 
-
 		if ( class_exists( 'DOMDocument' ) ) {
 
 			//* DOMDocument works better with an XML delcaration.
@@ -361,10 +360,10 @@ class SWP_Pro_Pinterest {
 			$img = $doc->getElementsByTagName( "img" )[0];
 
 			$replacement = $img->cloneNode();
-			$replacement->setAttribute( "data-pin-description", addslashes( $description ) );
+			$pinterst_description = addslashes( $this->trim_pinterest_description( $description ) );
+			$replacement->setAttribute( "data-pin-description", $pinterst_description );
 
 			$img->parentNode->replaceChild( $replacement, $img );
-
 			$html = $doc->saveHTML();
 
 			if ( $added_xml_statement ) {
@@ -373,18 +372,18 @@ class SWP_Pro_Pinterest {
 
 		} else {
 			$alignment = $this::get_alignment_style( $alignment );
+			$pinterst_description = addslashes( $this->trim_pinterest_description( $description ) );
+
 			$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
-
 				$html .= '<img ';
-					$html .= ' src="' . $url . '"';
-					$html .= ' width="' . $width . '"';
-					$html .= ' height="' . $height . '"';
-					$html .= ' class="swp-pinterest-image"';
-					$html .= ' data-pin-description="' . addslashes( $description ) . '"';
-					$html .= ' title="' . $title . '"';
-					$html .= ' alt="' . $alt . '"';
+				$html .= ' src="' . $url . '"';
+				$html .= ' width="' . $width . '"';
+				$html .= ' height="' . $height . '"';
+				$html .= ' class="swp-pinterest-image"';
+				$html .= ' data-pin-description="' . $pinterest_description . '"';
+				$html .= ' title="' . $title . '"';
+				$html .= ' alt="' . $alt . '"';
 				$html .= "/>";
-
 			$html .= '</div>';
 		}
 
