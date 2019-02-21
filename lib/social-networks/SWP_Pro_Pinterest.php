@@ -466,6 +466,8 @@ class SWP_Pro_Pinterest {
 				$pinterest_description .= $read_more;
 			}
 
+			$pinterest_description = $this->trim_pinterest_description( $pinterst_description );
+
 			$replacement = $img->cloneNode();
 			$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
 			$img->parentNode->replaceChild( $replacement, $img );
@@ -554,7 +556,6 @@ class SWP_Pro_Pinterest {
 			$the_content = str_replace( $xml_statement, '', $the_content );
 		}
 
-
 		return $the_content;
 	}
 
@@ -583,7 +584,6 @@ class SWP_Pro_Pinterest {
 			$$var = isset( $atts[$var] ) ? sanitize_text_field( trim ( $atts[$var] ) ) : "";
 		}
 
-
 		/**
 		 * If an ID was not passed in as an argument, but we have a valid
 		 * $post object, we can use that to find the Pinterest image for
@@ -594,7 +594,6 @@ class SWP_Pro_Pinterest {
 			$id = get_post_meta( $post->ID, 'swp_pinterest_image', true);
 			$src = get_post_meta( $post->ID, 'swp_pinterest_image_url', true );
 		}
-
 
 		/**
 		 * If we were not able to find a specific Pinterest image for this
@@ -607,7 +606,6 @@ class SWP_Pro_Pinterest {
 			$id = get_post_thumbnail_id();
 			$src = wp_get_attachment_image_src( $id, 'full' )[0];
 		}
-
 
 		/**
 		 * No ID was provided by shortcode attribute OR by setting a
@@ -661,13 +659,9 @@ class SWP_Pro_Pinterest {
 
 
 	/**
-	 *
-	 * @credits
-	 *
-	 * These methods are taken from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
+	 * These methods are borrowed from https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
 	 *
 	 */
-
 
 	 /**
 	  * Get size information for a specific image size.
@@ -694,6 +688,7 @@ class SWP_Pro_Pinterest {
 	 * @global $_wp_additional_image_sizes
 	 * @uses   get_intermediate_image_sizes()
 	 * @return array $sizes Data for all currently-registered image sizes.
+	 *
 	 */
 	private function get_image_sizes() {
 		global $_wp_additional_image_sizes;
@@ -724,6 +719,7 @@ class SWP_Pro_Pinterest {
 	 * @uses   get_image_size()
 	 * @param  string $size The image size for which to retrieve data.
 	 * @return bool|string $size Width of an image size or false if the size doesn't exist.
+	 *
 	 */
 	private function get_image_width( $size ) {
 		if ( ! $size = $this->get_image_size( $size ) ) {
@@ -761,8 +757,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 * @since  2.1.4
 	 * @since  3.3.0 | 21 AUG 2018 | Moved from main file into SWP_Pro_Pinterest.
-	 * @access public
-	 *
 	 * @param  array $info An array of footer script information.
 	 * @return array $info A modified array of footer script information.
 	 *
@@ -843,7 +837,6 @@ class SWP_Pro_Pinterest {
 	 * Adds the Pinterest Description custom field when editing an image.
 	 *
 	 * @since  3.2.0 | 07 AUG 2018 | Creatd
-	 *
 	 * @param  object $post The WP Attachment object.
 	 * @param  array  $attachment $key => $value data about $post.
 	 * @return array $post The updated post object.
