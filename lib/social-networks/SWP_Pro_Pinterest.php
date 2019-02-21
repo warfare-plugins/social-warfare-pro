@@ -411,70 +411,70 @@ class SWP_Pro_Pinterest {
 		global $post;
 
 		if ( class_exists( 'DOMDocument' ) ) {
+			return $the_content;
+		}
 
-			//* DOMDocument works better with an XML delcaration.
-			if ( false === strpos( $the_content, '?xml version' ) ) {
-				$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-				$html = $xml_statement . $the_content;
-				$added_xml_statement = true;
-			} else {
-				$html = $the_content;
+		/**
+		 *  DOMDocument works better with an XML delcaration.
+		 *  We do not want to keep it though, so it is removed later.
+		 *
+		 */
+		if ( false === strpos( $the_content, '?xml version' ) ) {
+			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+			$html = $xml_statement . $the_content;
+			$added_xml_statement = true;
+		} else {
+			$html = $the_content;
+		}
+
+		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
+		$doc = new DOMDocument();
+		libxml_use_internal_errors( true );
+		$doc->loadHTML( $html );
+		libxml_use_internal_errors( false );
+		libxml_clear_errors();
+
+		$imgs = $doc->getElementsByTagName("img");
+
+		foreach( $imgs as $img ) {
+			if ( $img->hasAttribute( "data-pin-description" ) ) {
+				continue;
 			}
 
-			//* Prevent warnings for 'Invalid Tag' on HTML5 tags. ibxml_use_internal_errors( true );
-			$doc = new DOMDocument();
-			libxml_use_internal_errors( true );
-			$doc->loadHTML( $html );
-			libxml_use_internal_errors( false );
-			libxml_clear_errors();
-
-			$imgs = $doc->getElementsByTagName("img");
-
-			foreach( $imgs as $img ) {
-
-				if ( $img->hasAttribute( "data-pin-description" ) ) {
-					continue;
-				}
-
-				$replacement = $img->cloneNode();
-
-				// Check for alt text
-				$alt_attribute = $img->getAttribute( 'alt' );
-				if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) && !empty( $alt_attribute ) ) {
-					$pinterest_description = $alt_attribute;
-				}
+			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
+				$pinterest_description = $img->getAttribute( 'alt' );
+			}
+			else if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
-				else if ( !empty( get_post_meta( $post->ID, 'swp_pinterest_description', true ) ) ) {
-					$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-				}
+				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+			}
+			else if ( empty ( $pinterest_description ) )  {
 				// Use the post title and excerpt.
-				else {
+				$title = get_the_title();
+				$permalink = get_permalink();
 
-					$title = get_the_title();
-					$permalink = get_permalink();
-
-					if ( false === $permalink ) {
-						$permalink = '';
-					}
-
-					$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
-
-					if ( strlen( $pinterest_description ) > 500 ) {
-						$read_more = '... read more at ' . $permalink;
-						$pinterest_description = substr( $title . ': ' . the_excerpt(), 0, 500 - strlen( $read_more ) );
-						$pinterest_description .= $read_more;
-					}
+				if ( false === $permalink ) {
+					$permalink = '';
 				}
 
-				$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
-				$img->parentNode->replaceChild( $replacement, $img );
+				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
 			}
 
-			$the_content = $doc->saveHTML();
-
-			if ( $added_xml_statement ) {
-				$the_content = str_replace( $xml_statement, '', $the_content );
+			if ( strlen( $pinterest_description ) > 500 ) {
+				$read_more = '... read more at ' . $permalink;
+				$pinterest_description = substr( $title . ': ' . the_excerpt(), 0, 500 - strlen( $read_more ) );
+				$pinterest_description .= $read_more;
 			}
+
+			$replacement = $img->cloneNode();
+			$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
+			$img->parentNode->replaceChild( $replacement, $img );
+		}
+
+		$the_content = $doc->saveHTML();
+
+		if ( $added_xml_statement ) {
+			$the_content = str_replace( $xml_statement, '', $the_content );
 		}
 
 		return $the_content;
@@ -846,7 +846,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 * @param  object $post The WP Attachment object.
 	 * @param  array  $attachment $key => $value data about $post.
-	 *
 	 * @return array $post The updated post object.
 	 *
 	 */
@@ -860,5 +859,24 @@ class SWP_Pro_Pinterest {
 		}
 
 		return $post;
+	}
+
+
+	/**
+	 * Trims the text of a pinterest description down to the 500 character max.
+	 *
+	 * @since  3.5.0 | 21 FEB 2019 | Created.
+	 * @param  string $pinterst_description The target Pinterest description.
+	 * @return string The same pinterest description, capped at 500 characters.
+	 *
+	 */
+	public function trim_pinterest_description( $pinterest_description ) {
+		if ( strlen( $pinterest_description ) > 500 ) {
+			$read_more = '... read more at ' . $permalink;
+			$pinterest_description = substr( $title . ': ' . the_excerpt(), 0, 500 - strlen( $read_more ) );
+			$pinterest_description .= $read_more;
+		}
+
+		return $pinterst_description;
 	}
 }
