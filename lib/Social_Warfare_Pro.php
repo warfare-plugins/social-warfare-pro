@@ -203,18 +203,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * Graph tags, Twitter Card tags, and the dynamically generated
 		 * custom color CSS.
 		 *
-		 * Since this class extends a core class, it is wrapped in an
-		 * existence check before it is defined. So we also wrap the actual
-		 * call to instantiate in a check for existence.
-		 *
 		 */
-		if ( class_exists( 'SWP_Pro_Header_Output' ) ) {
-			new SWP_Pro_Header_Output();
-		}
+		new SWP_Pro_Header_Output();
 
 		if( true == is_admin() ) {
-
-
 			/**
 			 * Meta Box Loader
 			 *
