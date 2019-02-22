@@ -48,14 +48,15 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * registration status, etc.
 		 *
 		 */
-        $this->name          = 'Social Warfare - Pro';
-        $this->key           = 'pro';
-        $this->core_required = '3.3.0';
-        $this->product_id    = 63157;
-        $this->version       = SWPP_VERSION;
-        $this->filepath      = SWPP_PLUGIN_FILE;
+		$this->name          = 'Social Warfare - Pro';
+		$this->key           = 'pro';
+		$this->core_required = '3.3.0';
+		$this->product_id    = 63157;
+		$this->store_url     = 'https://warfareplugins.com';
+		$this->version       = SWPP_VERSION;
+		$this->filepath      = SWPP_PLUGIN_FILE;
 
-        parent::__construct();
+		parent::__construct();
 
 
 		/**
@@ -74,9 +75,9 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * will proceed to instantiate the classes that were loaded above.
 		 *
 		 */
-        if ( $this->is_registered && false == Social_Warfare::has_plugin_conflict() ) {
+		if ( $this->is_registered && false == Social_Warfare::has_plugin_conflict() ) {
 
-            $this->instantiate_classes();
+			$this->instantiate_classes();
 
 
 			/**
@@ -85,9 +86,9 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			 * which are not available until then.
 			 *
 			 */
-            add_action( 'wp_loaded', array( $this, 'instantiate_deferred_classes') , 20 );
+			add_action( 'wp_loaded', array( $this, 'instantiate_deferred_classes') , 20 );
 
-        }
+		}
 	}
 
 
@@ -110,7 +111,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * before loading them.
 		 *
 		 */
- 		if ( true === $this->is_registered ) {
+		 if ( true === $this->is_registered ) {
 			$social_networks = array(
 				'Buffer',
 				'Reddit',
@@ -183,7 +184,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	}
 
 
-    /**
+	/**
 	 * A Method to instantiate all the classes that were loaded above.
 	 *
 	 * @since  3.0.0 | 01 MAR 2018 | Created
@@ -207,9 +208,9 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * call to instantiate in a check for existence.
 		 *
 		 */
-        if ( class_exists( 'SWP_Pro_Header_Output' ) ) {
-    		new SWP_Pro_Header_Output();
-        }
+		if ( class_exists( 'SWP_Pro_Header_Output' ) ) {
+			new SWP_Pro_Header_Output();
+		}
 
 		if( true == is_admin() ) {
 
@@ -236,34 +237,34 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	}
 
 
-    /**
-     * Instantiates the addon's deferred classes.
-     *
-     * @since  3.0.0 | 01 MAR 2018 | Created
-     * @param  void
-     * @return void
-     *
-     */
+	/**
+	 * Instantiates the addon's deferred classes.
+	 *
+	 * @since  3.0.0 | 01 MAR 2018 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public function instantiate_deferred_classes() {
-        new SWP_Pro_Options_Page();
+		new SWP_Pro_Options_Page();
 		new SWP_Pro_Pinterest();
 	}
 
 
-    /**
-     * Loads an array of sibling files.
-     *
-     * @param  string   $path  The relative path to the files home.
-     * @param  array    $files The name of the files (classes), no vendor prefix.
-     * @return none     The files are loaded into memory.
-     *
-     */
-    private function load_files( $path, $files ) {
-        foreach( $files as $file ) {
+	/**
+	 * Loads an array of sibling files.
+	 *
+	 * @param  string   $path  The relative path to the files home.
+	 * @param  array    $files The name of the files (classes), no vendor prefix.
+	 * @return none     The files are loaded into memory.
+	 *
+	 */
+	private function load_files( $path, $files ) {
+		foreach( $files as $file ) {
 
-            //* Add our vendor prefix to the file name.
-            $file = "SWP_" . $file;
-            require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
-        }
-    }
+			//* Add our vendor prefix to the file name.
+			$file = "SWP_" . $file;
+			require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
+		}
+	}
 }
