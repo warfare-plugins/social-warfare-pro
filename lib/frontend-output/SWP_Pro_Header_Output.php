@@ -67,6 +67,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	public function render_meta_html( $meta_html ) {
+		if ( empty( $this->open_graph_data ) ) {
+			$this->establish_header_values();
+		}
 		$open_graph_html = $this->generate_meta_html( $this->open_graph_data );
 		$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
 		$meta_html .= $open_graph_html . $twitter_card_html;
