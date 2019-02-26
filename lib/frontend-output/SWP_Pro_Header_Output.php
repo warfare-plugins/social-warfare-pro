@@ -32,6 +32,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		add_action( 'wp', array ($this, 'establish_header_values' ) );
 		add_filter( 'swp_header_html', array( $this, 'render_meta_html' ) );
+		add_filter( 'swp_header_html', array( $this, 'output_custom_color' ) );
 	}
 
 	/**
@@ -415,7 +416,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			}
 			$meta .= '<meta property="' . $key . '" content="' . $content . '">';
 		}
-		
+
 		return $meta;
 	}
 
