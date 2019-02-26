@@ -30,7 +30,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$this->options = $swp_user_options;
 		$this->establish_custom_colors();
 
-		add_action( 'wp', array ($this, 'establish_header_values' ) );
 		add_filter( 'swp_header_html', array( $this, 'render_meta_html' ) );
 		add_filter( 'swp_header_html', array( $this, 'output_custom_color' ) );
 	}
@@ -67,9 +66,18 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	public function render_meta_html( $meta_html ) {
-		$open_graph_html = $this->generate_meta_html( $this->open_graph_data );
-		$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
-		$meta_html .= $open_graph_html . $twitter_card_html;
+		$this->establish_header_values();
+
+		if( !empty( $this->open_graph_data ) ) {
+			$open_graph_html = $this->generate_meta_html( $this->open_graph_data );
+			$meta_html .= $open_graph_html;
+		}
+
+		if ( !empty( $this->twitter_card_data) ) ) {
+			$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
+			$meta_html .= $twitter_card_html;
+		}
+
 		return $meta_html;
 	}
 
