@@ -73,7 +73,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$meta_html .= $open_graph_html;
 		}
 
-		if ( !empty( $this->twitter_card_data) ) ) {
+		if ( !empty( $this->twitter_card_data) ) {
 			$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
 			$meta_html .= $twitter_card_html;
 		}
