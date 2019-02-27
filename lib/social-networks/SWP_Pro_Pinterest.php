@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Hosts our Pro features for Pinterst.
+ * Hosts our Pro features for Pinterest.
  *
  * This class contains a host of methods that at some pretty cool Pinterest
  * related functionality to the plugin.
@@ -358,8 +358,8 @@ class SWP_Pro_Pinterest {
 			$img = $doc->getElementsByTagName( "img" )[0];
 
 			$replacement = $img->cloneNode();
-			$pinterst_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
-			$replacement->setAttribute( "data-pin-description", $pinterst_description );
+			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
+			$replacement->setAttribute( "data-pin-description", $pinterest_description );
 
 			$img->parentNode->replaceChild( $replacement, $img );
 			$html = $doc->saveHTML();
@@ -370,7 +370,7 @@ class SWP_Pro_Pinterest {
 
 		} else {
 			$alignment = $this::get_alignment_style( $alignment );
-			$pinterst_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
+			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
 
 			$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 				$html .= '<img ';
@@ -463,7 +463,7 @@ class SWP_Pro_Pinterest {
 				$pinterest_description .= $read_more;
 			}
 
-			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterst_description );
+			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 
 			$replacement = $img->cloneNode();
 			$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
