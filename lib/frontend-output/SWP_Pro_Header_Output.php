@@ -367,7 +367,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		foreach( $yoast_to_twitter as $yoast_key => $twitter_key ) {
 			$value = SWP_Utility::get_meta( $this->post->ID, $yoast_key );
 			if ( !empty( $value ) ) {
-				if ( function_exists (' wpseo_replace_vars' ) ) {
+				if ( function_exists ( 'wpseo_replace_vars' ) ) {
 					$maybe_value = wpseo_replace_vars( $value, $this->post );
 				}
 				$fields[$twitter_key] = $value;
