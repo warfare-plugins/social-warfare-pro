@@ -135,7 +135,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		$fields = array_map( 'htmlspecialchars', $fields );
-		$this->open_graph_data = array_merge( $known_fields, $fields );
+		$this->open_graph_data = array_merge( $fields, $known_fields );
 	}
 
 	/**
