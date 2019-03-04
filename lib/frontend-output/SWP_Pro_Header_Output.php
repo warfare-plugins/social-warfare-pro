@@ -134,7 +134,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$og_key] = $value;
 		}
 
-		// echo __METHOD__, die(var_dump($fields));
 		$fields = array_map( 'htmlspecialchars', $fields );
 		$this->open_graph_data = array_merge( $known_fields, $fields );
 	}
@@ -166,8 +165,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		foreach ($fields as $index => $key) {
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
-			// echo "<br>key: swp_$key";
-			// echo "<br>$maybe_value";
 			// Go from indexed array to associative, with possibly missing values.
 			unset($fields[$index]);
 			$fields[$key] = $maybe_value;
@@ -381,8 +378,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * Sets values for Open Graph meta tags from known Twitter values.
 	 *
 	 * @since  3.5.0 | 19 DEC 2018 | Created.
-	 * @param  [type] $fields [description]
-	 * @return [type]         [description]
+	 * @param  array $fields twitter_key => $maybe_value pairs.
+	 * @return array $fields Updated $fields, with gaps filled in by open_graph.
+	 *
 	 */
 	protected function apply_open_graph_to_twitter( $twitter_fields ) {
 		$shared_fields = array();
