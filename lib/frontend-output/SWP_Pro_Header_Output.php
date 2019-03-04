@@ -135,7 +135,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		$fields = array_map( 'htmlspecialchars', $fields );
-		$this->open_graph_data = array_merge( $known_fields, $fields );
+		$this->open_graph_data = array_merge( $fields, $known_fields );
 	}
 
 	/**
@@ -150,13 +150,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	protected function fetch_social_warfare_open_graph_fields() {
+		// echo __METHOD__;
 		$fields = array(
-			'og_title',         // These have a meta field.
+			// These have a meta field.
+			'og_title',
 			'og_description',
 			'og_image_url',
 			'og_image_width',
 			'og_image_height',
-			'og_url',           // These do not have a meta field.
+			// These do not have a meta field.
+			'og_url',
 			'og_site_name',
 		);
 
@@ -358,13 +361,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'_yoast_wpseo_twitter-image' => 'twitter_image'
 		);
 
-		foreach( $yoast_to_twitter as $yoast => $twitter ) {
-			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $yoast );
-			if ( !empty( $maybe_value ) ) {
-				if ( function_exists (' wpseo_replace_vars' ) ) {
-					$maybe_value = wpseo_replace_vars( $maybe_value, $this->post );
+		foreach( $yoast_to_twitter as $yoast_key => $twitter_key ) {
+			$value = SWP_Utility::get_meta( $this->post->ID, $yoast_key );
+			if ( !empty( $value ) ) {
+				if ( function_exists ( 'wpseo_replace_vars' ) ) {
+					$maybe_value = wpseo_replace_vars( $value, $this->post );
 				}
-				$fields[$twitter] = $maybe_value;
+				$fields[$twitter_key] = $value;
 			}
 		}
 
@@ -375,8 +378,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * Sets values for Open Graph meta tags from known Twitter values.
 	 *
 	 * @since  3.5.0 | 19 DEC 2018 | Created.
-	 * @param  [type] $fields [description]
-	 * @return [type]         [description]
+	 * @param  array $fields twitter_key => $maybe_value pairs.
+	 * @return array $fields Updated $fields, with gaps filled in by open_graph.
+	 *
 	 */
 	protected function apply_open_graph_to_twitter( $twitter_fields ) {
 		$shared_fields = array();
@@ -393,10 +397,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			}
 		}
 
-		if ( false !== SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
+		// Apply the OG data as a priority over twitter data
+		if ( true == SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' ) ) {
 			return array_merge($twitter_fields, $shared_fields);
 		}
 
+		// Apply Twitter data the prioritized data.
 		return array_merge( $shared_fields, $twitter_fields );
 	}
 
