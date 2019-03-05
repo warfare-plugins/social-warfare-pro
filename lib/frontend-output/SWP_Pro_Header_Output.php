@@ -74,7 +74,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		if ( !empty( $this->twitter_card_data) ) {
-			$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
+			$twitter_card_html = $this->generate_twitter_card_html( $this->twitter_card_data );
 			$meta_html .= $twitter_card_html;
 		}
 
@@ -407,15 +407,42 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 
-	 /**
-	  * Loops through open graph data to create <meta> tags for the <head>
-	  *
-	  * @since  3.5.0 | 19 DEC 2018 | Created.
-	  * @param  array $fields array('og_key' => $og_value)
-	  * @return string The HTML for meta tags.
-	  *
-	  */
-	public function generate_meta_html( $fields ) {
+	/**
+	 * Loops through open graph data to create <meta> tags for the <head>
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param  array $fields array('og_key' => $og_value)
+	 * @return string The HTML for meta tags.
+	 *
+	 */
+   public function generate_meta_html( $fields ) {
+	   $meta = '';
+
+	   if ( !is_array($fields)) {
+		   error_log(__METHOD__.' (caught) Parameter \$fields should be an array. I got ' . gettype($fields) . ' :'.var_export($fields, 1));
+		   return '';
+	   }
+
+	   foreach ( $fields as $key => $content ) {
+		   if ( $key == 'og:image_url' ) {
+			   $meta .= '<meta name="image" property="og:image" content="' . $content . '">';
+			   continue;
+		   }
+		   $meta .= '<meta property="' . $key . '" content="' . $content . '">';
+	   }
+
+	   return $meta;
+   }
+
+	/**
+	* Loops through open graph data to create <meta> tags for the <head>
+	*
+	* @since  3.5.2 | 05 MAR 2019 | Created.
+	* @param  array $fields array('twitter_key' => $twitter_value)
+	* @return string The HTML for meta tags.
+	*
+	*/
+	public function generate_twitter_card_html( $fields ) {
 		$meta = '';
 
 		if ( !is_array($fields)) {
@@ -424,11 +451,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		foreach ( $fields as $key => $content ) {
-			if ( $key == 'og:image_url' ) {
-				$meta .= '<meta name="image" property="og:image" content="' . $content . '">';
-				continue;
-			}
-			$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+			$key = str_replace('_', ':', $key);
+			$meta .= '<meta name="' . $key . '" content="' . $content . '">';
 		}
 
 		return $meta;
