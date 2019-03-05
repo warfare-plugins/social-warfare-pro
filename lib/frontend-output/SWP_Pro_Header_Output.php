@@ -155,7 +155,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			// These have a meta field.
 			'og_title',
 			'og_description',
-			'og_image_url',
+			'og_image',
 			'og_image_width',
 			'og_image_height',
 			// These do not have a meta field.
