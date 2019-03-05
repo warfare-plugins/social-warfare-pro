@@ -426,16 +426,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		foreach ( $fields as $key => $content ) {
 			switch( $key ) {
+				case 'og:image' :
+					$meta .= "<meta name='image' property='$key' content='$content'>";
+					break;
+
 				case 'og:image_url' :
-					$meta .= '<meta name="image" property="og:image" content="' . $content . '">';
-					break;
-
 				case 'og:image_width' :
-					$meta .= '<meta property="og:image:width" content="' . $content . '">';
-					break;
-
 				case 'og:image_height' :
-					$meta .= '<meta property="og:image:height" content="' . $content . '">';
+					$key = str_replace('_', ':', $key);
+					$meta .= "<meta property='$key' content='$content'>";
 					break;
 
 				case 'fb:app_id' :
@@ -730,16 +729,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$static = $this->get_css();
 		$floaters_on = SWP_Utility::get_option( 'floating_panel' );
 		$floating = $this->get_css( $floaters_on );
-
 		$css = $static . $floating;
 
 		if ( !empty( $css) ) :
 			$css = '<style type="text/css">' . $css . '</style>';
+			//* Replaces newlines and excessive whitespace with a single space.
+			$css = preg_replace( '/\s+/', ' ', $css );
+			$meta_html .= $css;
 		endif;
 
-		//* Replaces newlines and excessive whitespace with a single space.
-		$meta_html .= trim( preg_replace( '/\s+/', ' ', $css ) );
-		// $meta_html .= $css;
 		return $meta_html;
 	}
 
