@@ -239,14 +239,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		// Establish the relationship between swp_keys => _yoast_keys
 		$yoast_og_map = array(
-			'og_title' => '_yoast_wpseo_opengraph-title',
+			'og_title'       => '_yoast_wpseo_opengraph-title',
 			'og_description' => '_yoast_wpseo_opengraph-description',
-			'og_image'	=> '_yoast_wpseo_opengraph-image',
+			'og_image'       => '_yoast_wpseo_opengraph-image',
 		);
 
 		$yoast_social_map = array(
-			'og_title'	=> '_yoast_wpseo_title',
-			'og_description'	=> '_yoast_wpseo_metadesc'
+			'og_title'       => '_yoast_wpseo_title',
+			'og_description' => '_yoast_wpseo_metadesc'
 		);
 
 		// Fill in values based on priority.
@@ -262,7 +262,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					$yoast_og_value = SWP_Utility::get_meta( $this->post->ID, $yoast_og_key );
 
 					if ( !empty( $yoast_og_value ) ) {
-						if ( function_exists (' wpseo_replace_vars' ) ) {
+						if ( function_exists ( 'wpseo_replace_vars' ) ) {
 							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
 						}
 						$fields[$swp_meta_key] = $yoast_og_value;
@@ -277,7 +277,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					$yoast_social_value = SWP_Utility::get_meta( $this->post->ID, $yoast_social_key );
 
 					if ( !empty( $yoast_og_value ) ) {
-						if ( function_exists (' wpseo_replace_vars' ) ) {
+						if ( function_exists ( 'wpseo_replace_vars' ) ) {
 							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
 						}
 						$fields[$swp_meta_key] = $yoast_social_value;
