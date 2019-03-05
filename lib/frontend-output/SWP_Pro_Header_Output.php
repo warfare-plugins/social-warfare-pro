@@ -336,6 +336,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			// $wpseo_social['fbadminapp'];
 			$app_id = '529576650555031';
 		}
+		$defaults['fb:app_id'] = $app_id;
 
 		return array_merge( $defaults, $fields );
 	}
@@ -423,23 +424,28 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		   return '';
 	   }
 
-	   foreach ( $fields as $key => $content ) {
-		   if ( $key == 'og:image_url' ) {
-			   $meta .= '<meta name="image" property="og:image" content="' . $content . '">';
-			   continue;
-		   }
+		foreach ( $fields as $key => $content ) {
+			switch( $key ) {
+				case 'og:image_url' :
+					$meta .= '<meta name="image" property="og:image" content="' . $content . '">';
+					break;
 
-		   if ( $key == 'og:image_width' ) {
-			   $meta .= '<meta property="og:image:width" content="' . $content . '">';
-			   continue;
-		   }
+				case 'og:image_width' :
+					$meta .= '<meta property="og:image:width" content="' . $content . '">';
+					break;
 
-		   if ( $key == 'og:image_height' ) {
-			   $meta .= '<meta property="og:image:height" content="' . $content . '">';
-			   continue;
-		   }
-		   $meta .= '<meta property="' . $key . '" content="' . $content . '">';
-	   }
+				case 'og:image_height' :
+					$meta .= '<meta property="og:image:height" content="' . $content . '">';
+					break;
+
+				case 'fb:app_id' :
+					$meta .= '<meta property="fb:app_id" content="' . $content . '">';
+					break;
+
+				default :
+					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+			}
+		}
 
 	   return $meta;
    }
