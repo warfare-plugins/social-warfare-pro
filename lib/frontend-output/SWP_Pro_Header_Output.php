@@ -428,6 +428,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			   $meta .= '<meta name="image" property="og:image" content="' . $content . '">';
 			   continue;
 		   }
+
+		   if ( $key == 'og:image_width' ) {
+			   $meta .= '<meta property="og:image:width" content="' . $content . '">';
+			   continue;
+		   }
+
+		   if ( $key == 'og:image_height' ) {
+			   $meta .= '<meta property="og:image:height" content="' . $content . '">';
+			   continue;
+		   }
 		   $meta .= '<meta property="' . $key . '" content="' . $content . '">';
 	   }
 
