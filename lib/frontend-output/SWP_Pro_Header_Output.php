@@ -163,14 +163,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_site_name',
 		);
 
+		$values = array();
+
 		foreach ($fields as $index => $key) {
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
-			// Go from indexed array to associative, with possibly missing values.
-			unset($fields[$index]);
-			$fields[$key] = $maybe_value;
+			if ( !empty( $maybe_value ) ) {
+				$values[$key] = $maybe_value;
+			}
 		}
 
-		return $fields;
+		return $values;
 	}
 
 	/**
@@ -425,16 +427,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	   }
 
 		foreach ( $fields as $key => $content ) {
-		// $meta .= "<!-- key $key --> ";
 			switch( $key ) {
-				case 'article_author' :
-				case 'article_publisher' :
-					continue;
-
 				case 'og:image' :
 				case 'og:image_url' :
 					// only print image once duplicate values
-					if (strpos($meta, 'og:image') || empty($content)) {
+					if ( strpos($meta, 'og:image') || empty($content) ) {
 						continue;
 					}
 					$meta .= "<meta name='image' property='og:image' content='$content'>";
@@ -451,7 +448,11 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					break;
 
 				default :
+					if ( empty( $content ) ) {
+						continue;
+					}
 					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+					break;
 			}
 		}
 
