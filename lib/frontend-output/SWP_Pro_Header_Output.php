@@ -155,7 +155,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			// These have a meta field.
 			'og_title',
 			'og_description',
-			'og_image',
+			'og_image_url',
 			'og_image_width',
 			'og_image_height',
 			// These do not have a meta field.
@@ -426,11 +426,10 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		foreach ( $fields as $key => $content ) {
 			switch( $key ) {
-				case 'og:image' :
-					$meta .= "<meta name='image' property='$key' content='$content'>";
+				case 'og:image_url' :
+					$meta .= "<meta name='image' property='og:image' content='$content'>";
 					break;
 
-				case 'og:image_url' :
 				case 'og:image_width' :
 				case 'og:image_height' :
 					$key = str_replace('_', ':', $key);
