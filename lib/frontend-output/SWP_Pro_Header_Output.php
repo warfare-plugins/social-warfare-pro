@@ -327,7 +327,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		// Image.
 		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
 		if ( $thumbnail_url ) {
-			$defaults['og_image'] = $thumbnail_url;
+			$defaults['og_image_url'] = $thumbnail_url;
 		}
 
 		// Facebook App ID.
@@ -389,7 +389,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:title'	=> 'twitter_title',
 			'og:description' => 'twitter_description',
 			'og:author'	=> 'twitter_creator',
-			'og:image'	=> 'twitter_image'
+			'og:image_url'	=> 'twitter_image'
 		);
 
 		foreach ( $field_map as $og => $twitter ) {
@@ -425,8 +425,18 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	   }
 
 		foreach ( $fields as $key => $content ) {
+		// $meta .= "<!-- key $key --> ";
 			switch( $key ) {
+				case 'article_author' :
+				case 'article_publisher' :
+					continue;
+
+				case 'og:image' :
 				case 'og:image_url' :
+					// only print image once duplicate values
+					if (strpos($meta, 'og:image') || empty($content)) {
+						continue;
+					}
 					$meta .= "<meta name='image' property='og:image' content='$content'>";
 					break;
 
