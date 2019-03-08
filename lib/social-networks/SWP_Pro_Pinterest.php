@@ -548,7 +548,7 @@ class SWP_Pro_Pinterest {
 		$dom_images = $doc->getElementsByTagName("img");
 
 		// Replace existing nodes with updated 'no-pin' notes.
-		foreach( $dom_images as the_content ) {
+		foreach( $dom_images as $image ) {
 			$src = $image->getAttribute('src');
 
 			foreach( $opt_out_images as $i ) {
