@@ -30,10 +30,10 @@ class SWP_Pro_Pinterest {
 			return;
 		}
 
-		//* Admin hooks for editing pinterest-specific content.
+		// Admin hooks for editing pinterest-specific content.
 		$this->add_admin_actions();
 
-		//* Defer to a later hook so `global $post` is defined.
+		// Defer to a later hook so `global $post` is defined.
 		add_filter( 'template_redirect', array( $this, 'add_frontend_actions' ) );
 		add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
 	}
@@ -184,7 +184,7 @@ class SWP_Pro_Pinterest {
 
 		// Bail if this post doesn't have a specifically defined Pinterest image.
 		if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
-			//* Check to see if the image is set, even if the url is not.
+			// Check to see if the image is set, even if the url is not.
 			$pinterest_image_id = get_post_meta( $post_id, 'swp_pinterest_image', true );
 
 			if ( !$pinterest_image_id ) {
@@ -256,23 +256,23 @@ class SWP_Pro_Pinterest {
 	 */
 	public static function get_pin_description( $id ) {
 	   // die(__METHOD__);
-		//* (1) Prefer the user-defined Pin Description.
+		// (1) Prefer the user-defined Pin Description.
 		$description = get_post_meta( $id, 'swp_pinterest_description', true );
 
 		if ( empty( $description ) ) {
 			$image = get_post( $id );
-			//* The description as set in the Media Gallery.
+			// The description as set in the Media Gallery.
 			$description = $image->post_content;
 		}
 
-		//* Pinterest limits the description to 500 characters.
+		// Pinterest limits the description to 500 characters.
 		if ( empty( $description ) || strlen( $description ) > 500 ) {
 			$alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
 
 			if ( !empty( $alt ) ) {
 				$description = $alt;
 			} else {
-				//* Use the caption instead.
+				// Use the caption instead.
 				$description = $image->post_excerpt;
 			}
 		}
@@ -324,7 +324,7 @@ class SWP_Pro_Pinterest {
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $description ) ) {
-			//* We only permastore the pin description when they have specifically set one for this image.
+			// We only permastore the pin description when they have specifically set one for this image.
 			return $html;
 		}
 
@@ -339,14 +339,14 @@ class SWP_Pro_Pinterest {
 
 		if ( class_exists( 'DOMDocument' ) ) {
 
-			//* DOMDocument works better with an XML delcaration.
+			// DOMDocument works better with an XML delcaration.
 			if ( false === strpos( $html, '?xml version' ) ) {
 				$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
 				$html = $xml_statement . $html;
 				$added_xml_statement = true;
 			}
 
-			//* Prevent warnings for 'Invalid Tag' on HTML5 tags.
+			// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 			libxml_use_internal_errors( true );
 			$doc = new DOMDocument();
 			$doc->loadHTML( $html );
@@ -393,7 +393,7 @@ class SWP_Pro_Pinterest {
 
 		}
 
-		else { // No DOMDocument class. 
+		else { // No DOMDocument class.
 			$alignment = $this::get_alignment_style( $alignment );
 			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
 
@@ -520,12 +520,12 @@ class SWP_Pro_Pinterest {
 
 		$images = get_attached_media( 'image' );
 
-		//* Filter image array to only include those that opted out of Pin Hover
+		// Filter image array to only include those that opted out of Pin Hover
 		$opt_out_images = array_filter($images, function($image) {
 			return 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
 		});
 
-		//* All images use the pin on hover feature.
+		// All images use the pin on hover feature.
 		if ( 0 == count( $opt_out_images ) ) {
 			return $the_content;
 		}
@@ -534,7 +534,7 @@ class SWP_Pro_Pinterest {
 		 * Begin processing the DOM to add a no-pin class to targeted images.
 		 */
 
-		//* DOMDocument works better with an XML delcaration.
+		// DOMDocument works better with an XML delcaration.
 		if ( false === strpos( $the_content, '?xml version' ) ) {
 			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
 			$html = $xml_statement . $the_content;
@@ -551,7 +551,7 @@ class SWP_Pro_Pinterest {
 
 		$dom_images = $doc->getElementsByTagName("img");
 
-		//* Replace existing nodes with updated 'no-pin' notes.
+		// Replace existing nodes with updated 'no-pin' notes.
 		foreach( $dom_images as $image ) {
 			$src = $image->getAttribute('src');
 
@@ -643,7 +643,7 @@ class SWP_Pro_Pinterest {
 
 		$description = SWP_Pro_Pinterest::get_pin_description( $id );
 
-		//* If the user provided width & height attributes.
+		// If the user provided width & height attributes.
 		if ( !empty( $width ) && !empty( $height ) ) {
 			$dimensions = ' width="' . $width . '"';
 			$dimensions .= ' height="' . $height . '"';
@@ -651,17 +651,17 @@ class SWP_Pro_Pinterest {
 			$dimensions = "";
 		}
 
-		//* Instantiate a default class regardless of user input.
+		// Instantiate a default class regardless of user input.
 		if ( empty( $class ) ) {
 			$class = "swp-pinterest-image";
 		} else {
 			$class .= " swp-pinterest-image ";
 		}
 
-		//* Parse the alignment from user input to inline style declaration.
+		// Parse the alignment from user input to inline style declaration.
 		$alignment = SWP_Pro_Pinterest::get_alignment_style( $alignment );
 
-		//* Display a Pinterest 'Save' button on hover?
+		// Display a Pinterest 'Save' button on hover?
 		$pin_opt_out = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
 		if ( true == (bool) $pin_opt_out ) {
 			$class .= ' no-pin ';
@@ -699,7 +699,7 @@ class SWP_Pro_Pinterest {
 			 return $sizes[ $size ];
 		 }
 
-		 //* Return a dummy array of [$width, $height]
+		 // Return a dummy array of [$width, $height]
 		 return array("", "");
 	 }
 
