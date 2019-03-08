@@ -140,11 +140,12 @@ class SWP_Pro_Pinterest {
 
 
 	/**
-	 * A function to insert the Pinterest image for browser extensions
+	 * Corresponds to the post_meta->swp_pinterst_image,
+	 * The fallback in Advanced Pinterest Settings -> Pinterest Image Fallback,
+	 * and Advanced Pinterst Settings > Pinterest Image Location.
 	 *
-	 * This will add the user-defined, post-level Pinterest image directly into
-	 * the post content complete with the necessary data-pin-description and
-	 * other attributes. When Pinterest's official browser extension
+	 * The resulting image has all normal attributes in addition to a customized
+	 * `data-pin-description`. When Pinterest's official browser extension
 	 * and others like Tailwind scrape the page, they will pick up and see the
 	 * Pinterest optimized image along with the Pinterest optimized description.
 	 *
@@ -248,7 +249,7 @@ class SWP_Pro_Pinterest {
 
 
 	/**
-	 * Get the Pinterest description set by the Admin, or a fallback.
+	 * Get the Pinterest description from a post, or the selected fallback.
 	 *
 	 * @param  int $id The Post to check for a pinterest description.
 	 * @return string $html Our version of the markup.
@@ -312,7 +313,7 @@ class SWP_Pro_Pinterest {
 
 
 	/**
-	 *
+	 * Adds a data-pin-description from within the WP Editor.
 	 *
 	 * This filter callback receives many variables.
 	 * $html is the fully rendered HTML that WordPress created.
