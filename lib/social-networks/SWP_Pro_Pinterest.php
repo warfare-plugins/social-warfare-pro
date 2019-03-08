@@ -158,8 +158,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function maybe_insert_pinterest_image( $content ) {
-		error_log(__METHOD__);
-
 		global $post;
 		$post_id                = $post->ID;
 		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
@@ -257,32 +255,30 @@ class SWP_Pro_Pinterest {
 	 * @return string $html Our version of the markup.
 	 *
 	 */
-	public static function get_pin_description( $id ) {
-		error_log(__METHOD__);
-		error_log('Passed in id ' . $id);
-		// (1) Prefer the user-defined Pin Description.
-		$description = get_post_meta( $id, 'swp_pinterest_description', true );
+	public static function get_pin_description( $image_id ) {
+		$description = '';
+		$description_source = SWP_Utility::get_option( 'pinit_image_description' );
 
-		if ( empty( $description ) ) {
-			$image = get_post( $id );
-			// The description as set in the Media Gallery.
-			$description = $image->post_content;
+		if ( 'custom' == $description_source ) {
+			$description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 		}
 
-		// Pinterest limits the description to 500 characters.
-		if ( empty( $description ) || strlen( $description ) > 500 ) {
-			$alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
+		else if ( 'alt_text' == $description_source || true ) {
+			$description = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 
-			if ( !empty( $alt ) ) {
-				$description = $alt;
-			} else {
-				// Use the caption instead.
+			// Fallbacks: WP Description, Caption, then Title.
+			if ( empty( $description ) ) {
+				$image = get_post( $image_id );
+				$description = $image->post_content;
+			}
+
+			if (empty($description)) {
 				$description = $image->post_excerpt;
 			}
-		}
 
-		if ( empty( $description ) ) {
-			$description = $image->post_title;
+			if (empty ( $description) ) {
+				$description = $image->post_title;
+			}
 		}
 
 		return $description;
@@ -327,7 +323,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
-		error_log(__METHOD__);
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $pinterest_description ) ) {
@@ -437,7 +432,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function content_add_pin_description( $the_content ) {
-		error_log(__METHOD__);
 		global $post;
 
 		if ( !class_exists( 'DOMDocument' ) ) {
@@ -472,7 +466,6 @@ class SWP_Pro_Pinterest {
 			}
 
 			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
-				error_log('usin the alt_text 2');
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
 			else if ( empty( $pinterest_description ) ) {
@@ -481,7 +474,6 @@ class SWP_Pro_Pinterest {
 			}
 			else if ( empty ( $pinterest_description ) )  {
 				// Use the post title and excerpt.
-				error_log("Using the title on L484".__LINE__);
 				$title = get_the_title();
 				$permalink = get_permalink();
 
@@ -491,7 +483,6 @@ class SWP_Pro_Pinterest {
 
 				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
 			}
-
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 
@@ -517,7 +508,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function content_maybe_add_no_pin( $the_content ) {
-		error_log(__METHOD__);
 		global $post;
 
 		if ( !class_exists( 'DOMDocument') ) {
@@ -526,9 +516,9 @@ class SWP_Pro_Pinterest {
 
 		$images = get_attached_media( 'image' );
 
-		// Filter image array to only include those that opted out of Pin Hover
+		// Filter images to only include those that opted out of Pin Hover.
 		$opt_out_images = array_filter($images, function($image) {
-			return 1 == (bool) get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+			return true == get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
 		});
 
 		// All images use the pin on hover feature.
@@ -558,7 +548,7 @@ class SWP_Pro_Pinterest {
 		$dom_images = $doc->getElementsByTagName("img");
 
 		// Replace existing nodes with updated 'no-pin' notes.
-		foreach( $dom_images as $image ) {
+		foreach( $dom_images as the_content ) {
 			$src = $image->getAttribute('src');
 
 			foreach( $opt_out_images as $i ) {
@@ -596,10 +586,7 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function pinterest_image_shortcode( $atts ) {
-		error_log(__METHOD__);
-
 		global $post;
-
 
 		/**
 		 * This is a list of acceptable arguments that can be passed into
@@ -619,7 +606,7 @@ class SWP_Pro_Pinterest {
 		 * the post in which the shortcode is being used.
 		 *
 		 */
-		if ( empty( $id ) && is_object( $post )) {
+		if ( empty( $id ) && is_object( $post ) ) {
 			$id = get_post_meta( $post->ID, 'swp_pinterest_image', true);
 			$src = get_post_meta( $post->ID, 'swp_pinterest_image_url', true );
 		}
@@ -648,7 +635,6 @@ class SWP_Pro_Pinterest {
 
 		$image = get_post( $id );
 		$pinterest_description = SWP_Pro_Pinterest::get_pin_description( $id );
-
 		// If the user provided width & height attributes.
 		if ( !empty( $width ) && !empty( $height ) ) {
 			$dimensions = ' width="' . $width . '"';
@@ -656,8 +642,8 @@ class SWP_Pro_Pinterest {
 		} else {
 			$dimensions = "";
 		}
-
 		// Instantiate a default class regardless of user input.
+
 		if ( empty( $class ) ) {
 			$class = "swp-pinterest-image";
 		} else {
@@ -688,6 +674,7 @@ class SWP_Pro_Pinterest {
 			$html .= ' data-pin-description="' . $pinterest_description . '"';
 			$html .= ' />';
 		$html .= '</div>';
+
 
 		return $html;
 	}
@@ -841,8 +828,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function edit_media_custom_field( $form_fields, $post ) {
-		error_log(__METHOD__);
-
 		$form_fields['swp_pinterest_description'] = array(
 			'label' => 'Social Warfare Pin Description',
 			'input' => 'textarea',
@@ -880,8 +865,6 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function save_media_custom_field( $post, $attachment ) {
-		error_log(__METHOD__);
-
 		$pin_description = addslashes($attachment['swp_pinterest_description']);
 		update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
 
