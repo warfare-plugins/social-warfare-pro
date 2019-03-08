@@ -121,7 +121,7 @@ class SWP_Pro_Pinterest {
 		 *
 		 */
 		if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
-			add_filter( 'the_content' , array( $this, 'content_add_pin_description' ) );
+			add_filter( 'the_content' , array( $this, 'content_add_pin_description' ), 1 );
 		}
 
 
@@ -330,7 +330,7 @@ class SWP_Pro_Pinterest {
 		error_log(__METHOD__);
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
-		if ( empty( $description ) ) {
+		if ( empty( $pinterest_description ) ) {
 			// We only permastore the pin description when they have specifically set one for this image.
 			return $html;
 		}
@@ -403,7 +403,7 @@ class SWP_Pro_Pinterest {
 
 		else { // No DOMDocument class.
 			$alignment = $this::get_alignment_style( $alignment );
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
+			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 
 			$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 				$html .= '<img ';
@@ -441,7 +441,7 @@ class SWP_Pro_Pinterest {
 		error_log(__METHOD__);
 		global $post;
 
-		if ( class_exists( 'DOMDocument' ) ) {
+		if ( !class_exists( 'DOMDocument' ) ) {
 			return $the_content;
 		}
 
@@ -501,7 +501,7 @@ class SWP_Pro_Pinterest {
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 
 			$replacement = $img->cloneNode();
-			$replacement->setAttribute( "data-pin-description", add_slashes( $pinterest_description ) );
+			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
 			$img->parentNode->replaceChild( $replacement, $img );
 		}
 
@@ -652,8 +652,7 @@ class SWP_Pro_Pinterest {
 		}
 
 		$image = get_post( $id );
-
-		$description = SWP_Pro_Pinterest::get_pin_description( $id );
+		$pinterest_description = SWP_Pro_Pinterest::get_pin_description( $id );
 
 		// If the user provided width & height attributes.
 		if ( !empty( $width ) && !empty( $height ) ) {
@@ -675,16 +674,23 @@ class SWP_Pro_Pinterest {
 
 		// Display a Pinterest 'Save' button on hover?
 		$pin_opt_out = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+		$alt_text = get_post_meta( $image->ID, '_wp_attachment_image_alt', true );
+
+		if ( empty( $alt_text ) ) {
+			$alt_text = $pinterest_description;
+		}
+
 		if ( true == (bool) $pin_opt_out ) {
 			$class .= ' no-pin ';
 		}
 
 		$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 			$html .= '<img src="' . $src . '"';
+			$html .= ' alt="' . $alt_text . '"';
 			$html .= $alignment;
 			$html .= $dimensions;
 			$html .= ' class="' . $class . '"';
-			$html .= ' data-pin-description="' . $description . '"';
+			$html .= ' data-pin-description="' . $pinterest_description . '"';
 			$html .= ' />';
 		$html .= '</div>';
 
