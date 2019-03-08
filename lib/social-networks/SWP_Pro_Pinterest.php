@@ -369,7 +369,6 @@ class SWP_Pro_Pinterest {
 			 *
 			 */
 			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
-				error_log('Using the alt text 1');
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
 			else if ( empty( $pinterest_description ) ) {
@@ -482,6 +481,7 @@ class SWP_Pro_Pinterest {
 			}
 			else if ( empty ( $pinterest_description ) )  {
 				// Use the post title and excerpt.
+				error_log("Using the title on L484".__LINE__);
 				$title = get_the_title();
 				$permalink = get_permalink();
 
@@ -492,11 +492,6 @@ class SWP_Pro_Pinterest {
 				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
 			}
 
-			if ( strlen( $pinterest_description ) > 500 ) {
-				$read_more = '... read more at ' . $permalink;
-				$pinterest_description = substr( $title . ': ' . the_excerpt(), 0, 500 - strlen( $read_more ) );
-				$pinterest_description .= $read_more;
-			}
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 
