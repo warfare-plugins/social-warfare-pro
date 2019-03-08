@@ -158,6 +158,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function maybe_insert_pinterest_image( $content ) {
+		error_log(__METHOD__);
+
 		global $post;
 		$post_id                = $post->ID;
 		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
@@ -256,7 +258,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public static function get_pin_description( $id ) {
-	   // die(__METHOD__);
+		error_log(__METHOD__);
+		error_log('Passed in id ' . $id);
 		// (1) Prefer the user-defined Pin Description.
 		$description = get_post_meta( $id, 'swp_pinterest_description', true );
 
@@ -321,8 +324,10 @@ class SWP_Pro_Pinterest {
 	 *
 	 * @since 3.5.2 | 08 MAR 2019 | Copied the $pinterest_description logic. See comment.
 	 * @return $html Our version of the markup.
+	 *
 	 */
 	public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
+		error_log(__METHOD__);
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $description ) ) {
@@ -364,6 +369,7 @@ class SWP_Pro_Pinterest {
 			 *
 			 */
 			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
+				error_log('Using the alt text 1');
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
 			else if ( empty( $pinterest_description ) ) {
@@ -432,6 +438,7 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function content_add_pin_description( $the_content ) {
+		error_log(__METHOD__);
 		global $post;
 
 		if ( class_exists( 'DOMDocument' ) ) {
@@ -466,6 +473,7 @@ class SWP_Pro_Pinterest {
 			}
 
 			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
+				error_log('usin the alt_text 2');
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
 			else if ( empty( $pinterest_description ) ) {
@@ -514,6 +522,7 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function content_maybe_add_no_pin( $the_content ) {
+		error_log(__METHOD__);
 		global $post;
 
 		if ( !class_exists( 'DOMDocument') ) {
@@ -592,6 +601,7 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function pinterest_image_shortcode( $atts ) {
+		error_log(__METHOD__);
 
 		global $post;
 
@@ -830,6 +840,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function edit_media_custom_field( $form_fields, $post ) {
+		error_log(__METHOD__);
+
 		$form_fields['swp_pinterest_description'] = array(
 			'label' => 'Social Warfare Pin Description',
 			'input' => 'textarea',
@@ -867,6 +879,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function save_media_custom_field( $post, $attachment ) {
+		error_log(__METHOD__);
+
 		$pin_description = addslashes($attachment['swp_pinterest_description']);
 		update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
 
