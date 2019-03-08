@@ -321,7 +321,7 @@ class SWP_Pro_Pinterest {
 	 * @return $html Our version of the markup.
 	 */
 	public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
-		$description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $description ) ) {
 			//* We only permastore the pin description when they have specifically set one for this image.
@@ -354,11 +354,34 @@ class SWP_Pro_Pinterest {
 			libxml_use_internal_errors( false );
 			libxml_clear_errors();
 
-			//* There is only one image in the content passed in the filter.
 			$img = $doc->getElementsByTagName( "img" )[0];
 
+			/**
+			 * Copy Paste from below. Can consider making a method that takes
+			 * $img_object and $post_id as arguments and returns a pin description.
+			 *
+			 */
+			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
+				$pinterest_description = $img->getAttribute( 'alt' );
+			}
+			else if ( empty( $pinterest_description ) ) {
+				// Check for the post pinterest description
+				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+			}
+			else if ( empty ( $pinterest_description ) )  {
+				// Use the post title and excerpt.
+				$title = get_the_title();
+				$permalink = get_permalink();
+
+				if ( false === $permalink ) {
+					$permalink = '';
+				}
+
+				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
+			}
+
 			$replacement = $img->cloneNode();
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
+			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 			$replacement->setAttribute( "data-pin-description", $pinterest_description );
 
 			$img->parentNode->replaceChild( $replacement, $img );
@@ -368,7 +391,9 @@ class SWP_Pro_Pinterest {
 				$html = str_replace( $xml_statement, '', $html );
 			}
 
-		} else {
+		}
+
+		else { // No DOMDocument class. 
 			$alignment = $this::get_alignment_style( $alignment );
 			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $description ) );
 
