@@ -391,7 +391,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:title'	=> 'twitter_title',
 			'og:description' => 'twitter_description',
 			'og:author'	=> 'twitter_creator',
-			'og:image_url'	=> 'twitter_image'
+			'og:image'	=> 'twitter_image',
+			'og:image_url' => 'twitter_image' // legacy
 		);
 
 		foreach ( $field_map as $og => $twitter ) {
