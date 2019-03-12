@@ -418,12 +418,10 @@ class SWP_Pro_Pinterest {
 		 *  We do not want to keep it though, so it is removed later.
 		 *
 		 */
-		if ( false === strpos( $the_content, '?xml version' ) ) {
+		$html = $the_content;
+		if ( false === strpos( $html, '?xml version' ) ) {
 			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-			$html = $xml_statement . $the_content;
-			$added_xml_statement = true;
-		} else {
-			$html = $the_content;
+			$html = $xml_statement . $html;
 		}
 
 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
@@ -469,8 +467,7 @@ class SWP_Pro_Pinterest {
 		}
 
 		$the_content = $doc->saveHTML();
-
-		if ( $added_xml_statement ) {
+		if ( !empty( $xml_statement ) )  {
 			$the_content = str_replace( $xml_statement, '', $the_content );
 		}
 
