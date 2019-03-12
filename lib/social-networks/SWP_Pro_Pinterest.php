@@ -251,6 +251,7 @@ class SWP_Pro_Pinterest {
 	/**
 	 * Get the Pinterest description from a post, or the selected fallback.
 	 *
+	 * Priority of fallback goes to: Alt text,
 	 * @param  int $id The Post to check for a pinterest description.
 	 * @return string $html Our version of the markup.
 	 *
@@ -263,7 +264,8 @@ class SWP_Pro_Pinterest {
 			$description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 		}
 
-		else if ( 'alt_text' == $description_source || true ) {
+		else if ( 'alt_text' == $description_source ) {
+
 			$description = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 
 			// Fallbacks: WP Description, Caption, then Title.
@@ -330,17 +332,15 @@ class SWP_Pro_Pinterest {
 			return $html;
 		}
 
+		$width = '';
+		$height = '';
 		if ( is_string( $size ) ) {
 			$size = $this->get_image_size( $size );
 			$width = $size['width'];
 			$height = $size['height'];
-		} else {
-			$width = '';
-			$height = '';
 		}
 
 		if ( class_exists( 'DOMDocument' ) ) {
-
 			// DOMDocument works better with an XML delcaration.
 			if ( false === strpos( $html, '?xml version' ) ) {
 				$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -358,30 +358,6 @@ class SWP_Pro_Pinterest {
 
 			$img = $doc->getElementsByTagName( "img" )[0];
 
-			/**
-			 * Copy Paste from below. Can consider making a method that takes
-			 * $img_object and $post_id as arguments and returns a pin description.
-			 *
-			 */
-			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
-				$pinterest_description = $img->getAttribute( 'alt' );
-			}
-			else if ( empty( $pinterest_description ) ) {
-				// Check for the post pinterest description
-				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-			}
-			else if ( empty ( $pinterest_description ) )  {
-				// Use the post title and excerpt.
-				$title = get_the_title();
-				$permalink = get_permalink();
-
-				if ( false === $permalink ) {
-					$permalink = '';
-				}
-
-				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
-			}
-
 			$replacement = $img->cloneNode();
 			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 			$replacement->setAttribute( "data-pin-description", $pinterest_description );
@@ -392,7 +368,6 @@ class SWP_Pro_Pinterest {
 			if ( $added_xml_statement ) {
 				$html = str_replace( $xml_statement, '', $html );
 			}
-
 		}
 
 		else { // No DOMDocument class.
@@ -459,20 +434,23 @@ class SWP_Pro_Pinterest {
 		libxml_clear_errors();
 
 		$imgs = $doc->getElementsByTagName("img");
-
+		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
 		foreach( $imgs as $img ) {
-			if ( $img->hasAttribute( "data-pin-description" ) ) {
+
+			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
 				continue;
 			}
 
-			if ( 'alt_text' == SWP_Utility::get_option( 'pinit_image_description' ) ) {
+			if ( $use_alt_text ) {
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
-			else if ( empty( $pinterest_description ) ) {
+
+			if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
 				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 			}
-			else if ( empty ( $pinterest_description ) )  {
+
+			if ( empty ( $pinterest_description ) )  {
 				// Use the post title and excerpt.
 				$title = get_the_title();
 				$permalink = get_permalink();
@@ -481,11 +459,10 @@ class SWP_Pro_Pinterest {
 					$permalink = '';
 				}
 
-				$pinterest_description = $title . ': ' . the_excerpt() . ' ' . $permalink;
+				$pinterest_description = $title . ' ' . the_excerpt() . ' ' . $permalink;
 			}
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
-
 			$replacement = $img->cloneNode();
 			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
 			$img->parentNode->replaceChild( $replacement, $img );
