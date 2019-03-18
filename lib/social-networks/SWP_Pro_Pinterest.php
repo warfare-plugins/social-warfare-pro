@@ -273,6 +273,7 @@ class SWP_Pro_Pinterest {
 				$description = $image->post_content;
 			}
 
+			if ( empty( $description ) ) {
 				$description = $image->post_excerpt;
 			}
 
