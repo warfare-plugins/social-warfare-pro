@@ -766,6 +766,8 @@ class SWP_Pro_Pinterest {
 		);
 
 		if ( SWP_Utility::get_option( 'pinit_toggle' ) ) {
+			$pin_vars['image_source'] = '';
+			$pin_vars['image_description'] = '';
 			$pin_vars['enabled']   = true;
 			$pin_vars['hLocation'] = SWP_Utility::get_option( 'pinit_location_horizontal' );
 			$pin_vars['vLocation'] = SWP_Utility::get_option( 'pinit_location_vertical' );
@@ -781,6 +783,11 @@ class SWP_Pro_Pinterest {
 			// Set the description Source
 			if( 'custom' == SWP_Utility::get_option( 'pinit_image_description' ) && $custom_pin_description ) {
 				$pin_vars['image_description'] = $custom_pin_description;
+			}
+
+			global $post;
+			if ( is_singular() && is_object( $post ) ) {
+				$pin_vars['post_title'] = $post->post_title;
 			}
 		}
 
