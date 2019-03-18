@@ -408,6 +408,11 @@ class SWP_Pro_Pinterest {
 	public function content_add_pin_description( $the_content ) {
 		global $post;
 
+		/**
+		 * PHP Helper class for parsing strings into HTML, creating
+		 * arrays of "nodes", and accessing each node as an object.
+		 * 
+		 */
 		if ( !class_exists( 'DOMDocument' ) ) {
 			return $the_content;
 		}
@@ -765,8 +770,9 @@ class SWP_Pro_Pinterest {
 		);
 
 		if ( SWP_Utility::get_option( 'pinit_toggle' ) ) {
-			$pin_vars['image_source'] = '';
+			$pin_vars['post_title']= '';
 			$pin_vars['image_description'] = '';
+			$pin_vars['image_source'] = '';
 			$pin_vars['enabled']   = true;
 			$pin_vars['hLocation'] = SWP_Utility::get_option( 'pinit_location_horizontal' );
 			$pin_vars['vLocation'] = SWP_Utility::get_option( 'pinit_location_vertical' );
