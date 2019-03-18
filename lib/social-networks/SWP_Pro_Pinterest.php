@@ -265,7 +265,6 @@ class SWP_Pro_Pinterest {
 		}
 
 		else if ( 'alt_text' == $description_source ) {
-
 			$description = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 
 			// Fallbacks: WP Description, Caption, then Title.
@@ -274,11 +273,10 @@ class SWP_Pro_Pinterest {
 				$description = $image->post_content;
 			}
 
-			if (empty($description)) {
 				$description = $image->post_excerpt;
 			}
 
-			if (empty ( $description) ) {
+			if ( empty ( $description) ) {
 				$description = $image->post_title;
 			}
 		}
@@ -457,7 +455,7 @@ class SWP_Pro_Pinterest {
 					$permalink = '';
 				}
 
-				$pinterest_description = $title . ' ' . the_excerpt() . ' ' . $permalink;
+				$pinterest_description = $title . ' ' . $permalink;
 			}
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
