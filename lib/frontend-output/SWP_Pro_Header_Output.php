@@ -74,7 +74,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		if ( !empty( $this->twitter_card_data) ) {
-			$twitter_card_html = $this->generate_meta_html( $this->twitter_card_data );
+			$twitter_card_html = $this->generate_twitter_card_html( $this->twitter_card_data );
 			$meta_html .= $twitter_card_html;
 		}
 
@@ -163,14 +163,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og_site_name',
 		);
 
+		$values = array();
+
 		foreach ($fields as $index => $key) {
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, "swp_$key" );
-			// Go from indexed array to associative, with possibly missing values.
-			unset($fields[$index]);
-			$fields[$key] = $maybe_value;
+			if ( !empty( $maybe_value ) ) {
+				$values[$key] = $maybe_value;
+			}
 		}
 
-		return $fields;
+		return $values;
 	}
 
 	/**
@@ -239,14 +241,14 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		// Establish the relationship between swp_keys => _yoast_keys
 		$yoast_og_map = array(
-			'og_title' => '_yoast_wpseo_opengraph-title',
+			'og_title'       => '_yoast_wpseo_opengraph-title',
 			'og_description' => '_yoast_wpseo_opengraph-description',
-			'og_image'	=> '_yoast_wpseo_opengraph-image',
+			'og_image'       => '_yoast_wpseo_opengraph-image',
 		);
 
 		$yoast_social_map = array(
-			'og_title'	=> '_yoast_wpseo_title',
-			'og_description'	=> '_yoast_wpseo_metadesc'
+			'og_title'       => '_yoast_wpseo_title',
+			'og_description' => '_yoast_wpseo_metadesc'
 		);
 
 		// Fill in values based on priority.
@@ -262,7 +264,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					$yoast_og_value = SWP_Utility::get_meta( $this->post->ID, $yoast_og_key );
 
 					if ( !empty( $yoast_og_value ) ) {
-						if ( function_exists (' wpseo_replace_vars' ) ) {
+						if ( function_exists ( 'wpseo_replace_vars' ) ) {
 							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
 						}
 						$fields[$swp_meta_key] = $yoast_og_value;
@@ -277,7 +279,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					$yoast_social_value = SWP_Utility::get_meta( $this->post->ID, $yoast_social_key );
 
 					if ( !empty( $yoast_og_value ) ) {
-						if ( function_exists (' wpseo_replace_vars' ) ) {
+						if ( function_exists ( 'wpseo_replace_vars' ) ) {
 							$yoast_og_value = wpseo_replace_vars( $yoast_og_value, $this->post );
 						}
 						$fields[$swp_meta_key] = $yoast_social_value;
@@ -327,7 +329,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		// Image.
 		$thumbnail_url = wp_get_attachment_url( get_post_thumbnail_id( $this->post->ID ) );
 		if ( $thumbnail_url ) {
-			$defaults['og_image'] = $thumbnail_url;
+			$defaults['og_image_url'] = $thumbnail_url;
 		}
 
 		// Facebook App ID.
@@ -336,6 +338,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			// $wpseo_social['fbadminapp'];
 			$app_id = '529576650555031';
 		}
+		$defaults['fb:app_id'] = $app_id;
 
 		return array_merge( $defaults, $fields );
 	}
@@ -388,7 +391,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:title'	=> 'twitter_title',
 			'og:description' => 'twitter_description',
 			'og:author'	=> 'twitter_creator',
-			'og:image'	=> 'twitter_image'
+			'og:image'	=> 'twitter_image',
+			'og:image_url' => 'twitter_image' // legacy
 		);
 
 		foreach ( $field_map as $og => $twitter ) {
@@ -407,15 +411,64 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	}
 
 
-	 /**
-	  * Loops through open graph data to create <meta> tags for the <head>
-	  *
-	  * @since  3.5.0 | 19 DEC 2018 | Created.
-	  * @param  array $fields array('og_key' => $og_value)
-	  * @return string The HTML for meta tags.
-	  *
-	  */
-	public function generate_meta_html( $fields ) {
+	/**
+	 * Loops through open graph data to create <meta> tags for the <head>
+	 *
+	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @param  array $fields array('og_key' => $og_value)
+	 * @return string The HTML for meta tags.
+	 *
+	 */
+   public function generate_meta_html( $fields ) {
+	   $meta = '';
+
+	   if ( !is_array($fields)) {
+		   error_log(__METHOD__.' (caught) Parameter \$fields should be an array. I got ' . gettype($fields) . ' :'.var_export($fields, 1));
+		   return '';
+	   }
+
+		foreach ( $fields as $key => $content ) {
+			switch( $key ) {
+				case 'og:image' :
+				case 'og:image_url' :
+					// only print image once duplicate values
+					if ( strpos($meta, 'og:image') || empty($content) ) {
+						continue;
+					}
+					$meta .= "<meta name='image' property='og:image' content='$content'>";
+					break;
+
+				case 'og:image_width' :
+				case 'og:image_height' :
+					$key = str_replace('_', ':', $key);
+					$meta .= "<meta property='$key' content='$content'>";
+					break;
+
+				case 'fb:app_id' :
+					$meta .= '<meta property="fb:app_id" content="' . $content . '">';
+					break;
+
+				default :
+					if ( empty( $content ) ) {
+						continue;
+					}
+					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+					break;
+			}
+		}
+
+	   return $meta;
+   }
+
+	/**
+	* Loops through open graph data to create <meta> tags for the <head>
+	*
+	* @since  3.5.2 | 05 MAR 2019 | Created.
+	* @param  array $fields array('twitter_key' => $twitter_value)
+	* @return string The HTML for meta tags.
+	*
+	*/
+	public function generate_twitter_card_html( $fields ) {
 		$meta = '';
 
 		if ( !is_array($fields)) {
@@ -424,11 +477,8 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		foreach ( $fields as $key => $content ) {
-			if ( $key == 'og:image_url' ) {
-				$meta .= '<meta name="image" property="og:image" content="' . $content . '">';
-				continue;
-			}
-			$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+			$key = str_replace('_', ':', $key);
+			$meta .= '<meta name="' . $key . '" content="' . $content . '">';
 		}
 
 		return $meta;
@@ -690,16 +740,15 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$static = $this->get_css();
 		$floaters_on = SWP_Utility::get_option( 'floating_panel' );
 		$floating = $this->get_css( $floaters_on );
-
 		$css = $static . $floating;
 
 		if ( !empty( $css) ) :
 			$css = '<style type="text/css">' . $css . '</style>';
+			//* Replaces newlines and excessive whitespace with a single space.
+			$css = preg_replace( '/\s+/', ' ', $css );
+			$meta_html .= $css;
 		endif;
 
-		//* Replaces newlines and excessive whitespace with a single space.
-		$meta_html .= trim( preg_replace( '/\s+/', ' ', $css ) );
-		// $meta_html .= $css;
 		return $meta_html;
 	}
 
