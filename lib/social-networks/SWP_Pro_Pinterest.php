@@ -434,14 +434,14 @@ class SWP_Pro_Pinterest {
 		libxml_clear_errors();
 
 		$imgs = $doc->getElementsByTagName("img");
-		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+		$prefer_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
 		foreach( $imgs as $img ) {
 
-			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+			if ( !$prefer_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
 				continue;
 			}
 
-			if ( $use_alt_text ) {
+			if ( $prefer_alt_text ) {
 				$pinterest_description = $img->getAttribute( 'alt' );
 			}
 
