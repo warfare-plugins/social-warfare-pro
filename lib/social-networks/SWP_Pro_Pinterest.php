@@ -215,7 +215,7 @@ class SWP_Pro_Pinterest {
 						  '" data-pin-url="' . get_the_permalink() .
 						  '" data-pin-media="' . $pinterest_image_url .
 						  '" alt="' . $pinterest_description .
-						  '" data-pin-description="' . addslashes( $pinterest_description ) .
+						  '" data-pin-description="' . urlencode( $pinterest_description ) .
 						  '" />';
 
 			$content .= $image_html;
@@ -230,7 +230,7 @@ class SWP_Pro_Pinterest {
 							'" alt="' . $pinterest_description .
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
-							'" data-pin-description="' . addslashes( $pinterest_description ).
+							'" data-pin-description="' . urlencode( $pinterest_description ).
 							'" />
 						  </div>';
 
@@ -331,6 +331,7 @@ class SWP_Pro_Pinterest {
 			return $html;
 		}
 
+		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 		$width = '';
 		$height = '';
 		if ( is_string( $size ) ) {
@@ -358,9 +359,7 @@ class SWP_Pro_Pinterest {
 			$img = $doc->getElementsByTagName( "img" )[0];
 
 			$replacement = $img->cloneNode();
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
-			$replacement->setAttribute( "data-pin-description", $pinterest_description );
-
+			$replacement->setAttribute( "data-pin-description", urlencode( $pinterest_description ) );
 			$img->parentNode->replaceChild( $replacement, $img );
 			$html = $doc->saveHTML();
 
@@ -371,7 +370,6 @@ class SWP_Pro_Pinterest {
 
 		else { // No DOMDocument class.
 			$alignment = $this::get_alignment_style( $alignment );
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 
 			$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
 				$html .= '<img ';
@@ -379,7 +377,7 @@ class SWP_Pro_Pinterest {
 				$html .= ' width="' . $width . '"';
 				$html .= ' height="' . $height . '"';
 				$html .= ' class="swp-pinterest-image"';
-				$html .= ' data-pin-description="' . $pinterest_description . '"';
+				$html .= ' data-pin-description="' . urlencode( $pinterest_description ) . '"';
 				$html .= ' title="' . $title . '"';
 				$html .= ' alt="' . $alt . '"';
 				$html .= "/>";
@@ -411,7 +409,7 @@ class SWP_Pro_Pinterest {
 		/**
 		 * PHP Helper class for parsing strings into HTML, creating
 		 * arrays of "nodes", and accessing each node as an object.
-		 * 
+		 *
 		 */
 		if ( !class_exists( 'DOMDocument' ) ) {
 			return $the_content;
@@ -465,8 +463,9 @@ class SWP_Pro_Pinterest {
 			}
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+			$pinterest_description = urlencode( $pinterest_description );
 			$replacement = $img->cloneNode();
-			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
+			$replacement->setAttribute( "data-pin-description", $pinterest_description );
 			$img->parentNode->replaceChild( $replacement, $img );
 		}
 
@@ -649,7 +648,7 @@ class SWP_Pro_Pinterest {
 			$html .= $alignment;
 			$html .= $dimensions;
 			$html .= ' class="' . $class . '"';
-			$html .= ' data-pin-description="' . $pinterest_description . '"';
+			$html .= ' data-pin-description="' . urlencode( $pinterest_description ) . '"';
 			$html .= ' />';
 		$html .= '</div>';
 
