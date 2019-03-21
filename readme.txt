@@ -194,6 +194,9 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.5.3 = (21 MAR 2019) =
+* Immediate security updates.
+
 = 3.5.1 = (28 FEB 2019) =
 
 = 3.5.0 = (27 FEB 2019) =
