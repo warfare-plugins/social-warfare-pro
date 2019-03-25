@@ -316,7 +316,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				$author = get_the_author();
 			}
 		}
-		$defaults['article_author'] = $author;
+		$defaults['article_author'] = esc_attr( $author );
 
 		// Publisher.
 		$publisher = SWP_Utility::get_option('facebook_publisher_url');
