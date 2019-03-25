@@ -210,6 +210,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		$author_twitter_handle = get_the_author_meta( 'swp_twitter' );
 		if ( !empty( $author_twitter_handle ) ) {
+			$author_twitter_handle = esc_attr( $author_twitter_handle );
 			$twitter_fields['twitter_creator'] = '@' . str_replace( '@' , '' , trim ( $author_twitter_handle ) );
 		} else {
 			$twitter_fields['twitter_creator'] = $twitter_id;
@@ -315,7 +316,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				$author = get_the_author();
 			}
 		}
-		$defaults['article_author'] = $author;
+		$defaults['article_author'] = esc_attr( $author );
 
 		// Publisher.
 		$publisher = SWP_Utility::get_option('facebook_publisher_url');

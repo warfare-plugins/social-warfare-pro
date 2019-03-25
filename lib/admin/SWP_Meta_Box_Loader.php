@@ -298,6 +298,8 @@ class SWP_Meta_Box_Loader {
 			$twitter_handle = $fallback;
 		}
 
+		esc_attr( $twitter_handle );
+
 		return $twitter_handle;
 	}
 
