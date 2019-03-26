@@ -434,7 +434,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				case 'og:image_url' :
 					// only print image once duplicate values
 					if ( strpos($meta, 'og:image') || empty($content) ) {
-						continue;
+						break;
 					}
 					$meta .= "<meta name='image' property='og:image' content='$content'>";
 					break;
