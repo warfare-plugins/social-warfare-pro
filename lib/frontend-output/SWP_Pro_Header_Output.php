@@ -134,7 +134,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$og_key] = $value;
 		}
 
-		$fields = array_map( 'htmlspecialchars', $fields );
+		$fields = array_map( 'urlencode', $fields );
 		$this->open_graph_data = array_merge( $fields, $known_fields );
 	}
 
@@ -451,7 +451,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 				default :
 					if ( empty( $content ) ) {
-						continue;
+						break;
 					}
 					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
 					break;
