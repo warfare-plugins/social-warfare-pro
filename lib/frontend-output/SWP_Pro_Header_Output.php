@@ -197,6 +197,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$field = str_replace( 'twitter_', 'swp_twitter_card_', $key );
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $field );
 
+			// twitter_image value is stored as image ID, not as image URL. 
+			if ( $key == 'twitter_image' && $maybe_value ) {
+				$image_id = $maybe_value;
+				$maybe_value = wp_get_attachment_url( $image_id );
+			}
+
 			if ( !empty( $maybe_value ) ) {
 				$twitter_fields[$key] = $maybe_value;
 			}
