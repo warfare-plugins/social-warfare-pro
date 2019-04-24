@@ -447,8 +447,11 @@ class SWP_Pro_Pinterest {
 			$doc->appendChild($container->firstChild);
 		}
 
+		// Parse each image and apply a data-pin-description if it DNE yet.
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+
 		foreach( $imgs as $img ) {
 
 			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
