@@ -417,11 +417,6 @@ class SWP_Pro_Pinterest {
 			return $the_content;
 		}
 
-		/**
-		 *  DOMDocument works better with an XML delcaration.
-		 *  We do not want to keep it though, so it is removed later.
-		 *
-		 */
 		$html = $the_content;
 
 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
