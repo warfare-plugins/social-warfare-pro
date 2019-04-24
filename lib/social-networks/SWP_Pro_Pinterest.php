@@ -453,7 +453,6 @@ class SWP_Pro_Pinterest {
 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
 		foreach( $imgs as $img ) {
-
 			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
 				continue;
 			}
@@ -464,10 +463,10 @@ class SWP_Pro_Pinterest {
 
 			if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
-				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+				$pinterest_description = $post_pinterest_description;
 			}
 
-			if ( empty ( $pinterest_description ) )  {
+			if ( empty( $pinterest_description ) )  {
 				// Use the post title and excerpt.
 				$title = get_the_title();
 				$permalink = get_permalink();
