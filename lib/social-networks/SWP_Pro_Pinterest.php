@@ -427,7 +427,25 @@ class SWP_Pro_Pinterest {
 			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
 		}
 
-		$doc->loadHTML( $html );
+		/**
+		 * DOMDocument needs a known container for editing HTML.
+		 * We'll create an empty div just to load the html, then
+		 * make a new $doc that mirrors the original document.
+		 *
+		 */
+		$doc->loadHTML("<div>$html</div>");
+		$container = $doc->getElementsByTagName('div')->item(0);
+		$container = $container->parentNode->removeChild($container);
+
+		// Empty out the original, possibly malformed document.
+		while ($doc->firstChild) {
+			$doc->removeChild($doc->firstChild);
+		}
+
+		// Repopulate with clean nodes.
+		while ($container->firstChild ) {
+			$doc->appendChild($container->firstChild);
+		}
 
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
