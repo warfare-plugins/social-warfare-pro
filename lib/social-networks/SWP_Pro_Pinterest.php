@@ -411,7 +411,7 @@ class SWP_Pro_Pinterest {
 		/**
 		 * PHP Helper class for parsing strings into HTML, creating
 		 * arrays of "nodes", and accessing each node as an object.
-		 * 
+		 *
 		 */
 		if ( !class_exists( 'DOMDocument' ) ) {
 			return $the_content;
@@ -423,10 +423,6 @@ class SWP_Pro_Pinterest {
 		 *
 		 */
 		$html = $the_content;
-		if ( false === strpos( $html, '?xml version' ) ) {
-			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-			$html = $xml_statement . $html;
-		}
 
 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 		$doc = new DOMDocument();
@@ -471,9 +467,6 @@ class SWP_Pro_Pinterest {
 		}
 
 		$the_content = $doc->saveHTML();
-		if ( !empty( $xml_statement ) )  {
-			$the_content = str_replace( $xml_statement, '', $the_content );
-		}
 
 		return $the_content;
 	}
@@ -529,6 +522,7 @@ class SWP_Pro_Pinterest {
 		foreach( $dom_images as $image ) {
 			$src = $image->getAttribute('src');
 
+			// Look for matching images by comparing the image source.
 			foreach( $opt_out_images as $i ) {
 				$href = wp_get_attachment_url( $i->ID );
 				$guid = $i->guid;
