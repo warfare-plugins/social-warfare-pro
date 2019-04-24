@@ -422,6 +422,11 @@ class SWP_Pro_Pinterest {
 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 		libxml_use_internal_errors( true );
 
+		// Convert quotation marks and non-Western characters to UTF-8
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
+		}
+
 		$doc->loadHTML( $html );
 
 		$imgs = $doc->getElementsByTagName("img");
