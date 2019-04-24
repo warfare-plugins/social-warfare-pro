@@ -418,13 +418,11 @@ class SWP_Pro_Pinterest {
 		}
 
 		$html = $the_content;
-
-		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 		$doc = new DOMDocument();
+		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 		libxml_use_internal_errors( true );
+
 		$doc->loadHTML( $html );
-		libxml_use_internal_errors( false );
-		libxml_clear_errors();
 
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
@@ -462,6 +460,9 @@ class SWP_Pro_Pinterest {
 		}
 
 		$the_content = $doc->saveHTML();
+
+		libxml_use_internal_errors( false );
+		libxml_clear_errors();
 
 		return $the_content;
 	}
