@@ -411,34 +411,48 @@ class SWP_Pro_Pinterest {
 		/**
 		 * PHP Helper class for parsing strings into HTML, creating
 		 * arrays of "nodes", and accessing each node as an object.
-		 * 
+		 *
 		 */
 		if ( !class_exists( 'DOMDocument' ) ) {
 			return $the_content;
 		}
 
-		/**
-		 *  DOMDocument works better with an XML delcaration.
-		 *  We do not want to keep it though, so it is removed later.
-		 *
-		 */
 		$html = $the_content;
-		if ( false === strpos( $html, '?xml version' ) ) {
-			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-			$html = $xml_statement . $html;
+		$doc = new DOMDocument();
+		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
+		libxml_use_internal_errors( true );
+
+		// Convert quotation marks and non-Western characters to UTF-8
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
 		}
 
-		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
-		$doc = new DOMDocument();
-		libxml_use_internal_errors( true );
-		$doc->loadHTML( $html );
-		libxml_use_internal_errors( false );
-		libxml_clear_errors();
+		/**
+		 * DOMDocument needs a known container for editing HTML.
+		 * We'll create an empty div just to load the html, then
+		 * make a new $doc that mirrors the original document.
+		 *
+		 */
+		$doc->loadHTML("<div>$html</div>");
+		$container = $doc->getElementsByTagName('div')->item(0);
+		$container = $container->parentNode->removeChild($container);
 
+		// Empty out the original, possibly malformed document.
+		while ($doc->firstChild) {
+			$doc->removeChild($doc->firstChild);
+		}
+
+		// Repopulate with clean nodes.
+		while ($container->firstChild ) {
+			$doc->appendChild($container->firstChild);
+		}
+
+		// Parse each image and apply a data-pin-description if it DNE yet.
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
-		foreach( $imgs as $img ) {
+		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
+		foreach( $imgs as $img ) {
 			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
 				continue;
 			}
@@ -449,10 +463,10 @@ class SWP_Pro_Pinterest {
 
 			if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
-				$pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+				$pinterest_description = $post_pinterest_description;
 			}
 
-			if ( empty ( $pinterest_description ) )  {
+			if ( empty( $pinterest_description ) )  {
 				// Use the post title and excerpt.
 				$title = get_the_title();
 				$permalink = get_permalink();
@@ -471,9 +485,9 @@ class SWP_Pro_Pinterest {
 		}
 
 		$the_content = $doc->saveHTML();
-		if ( !empty( $xml_statement ) )  {
-			$the_content = str_replace( $xml_statement, '', $the_content );
-		}
+
+		libxml_use_internal_errors( false );
+		libxml_clear_errors();
 
 		return $the_content;
 	}
@@ -529,6 +543,7 @@ class SWP_Pro_Pinterest {
 		foreach( $dom_images as $image ) {
 			$src = $image->getAttribute('src');
 
+			// Look for matching images by comparing the image source.
 			foreach( $opt_out_images as $i ) {
 				$href = wp_get_attachment_url( $i->ID );
 				$guid = $i->guid;
