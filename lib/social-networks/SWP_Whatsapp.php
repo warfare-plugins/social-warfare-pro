@@ -46,7 +46,7 @@ class SWP_WhatsApp extends SWP_Social_Network {
 	}
 
 	public function contains_user_agent( $agent ) {
-		return strpos( $_SERVER['HTTP_USER_AGENT'], $agent );
+		return isset( $_SERVER['HTTP_USER_AGENT'] ) && false !== strpos( $_SERVER['HTTP_USER_AGENT'], $agent );
 	}
 
     /**
