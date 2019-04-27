@@ -50,22 +50,22 @@ class SWP_Pro_Pinterest {
 	 */
 	public function should_bail() {
 
-		// Bail if another plugin is causing a conflict with this one.
-		if ( Social_Warfare::has_plugin_conflict() ) {
-			return true;
-		}
+			// Bail if another plugin is causing a conflict with this one.
+			if ( Social_Warfare::has_plugin_conflict() ) {
+					return true;
+			}
 
-		// We don't want these Pinterest features on feeds and archives.
-		if( is_feed() || is_archive() ) {
-			return true;
-		}
+			// We don't want these Pinterest features on feeds and archives.
+			if( is_feed() || is_archive() ) {
+					return true;
+			}
 
-		// We don't need Pinterest images on pages delivered via AMP.
-		if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
-			return true;
-		}
+			// We don't need Pinterest images on pages delivered via AMP.
+			if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
+					return true;
+			}
 
-		return false;
+			return false;
 	}
 
 
@@ -78,13 +78,19 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function add_admin_actions() {
-		if ( false == is_admin() ) {
-			return;
-		}
+			if ( false == is_admin() ) {
+				return;
+			}
 
-		add_filter( 'image_send_to_editor', array( $this, 'editor_add_pin_description'), 10, 8 );
-		add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
-		add_filter( 'attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
+      // Gutenberg does not have the same editor hooks. 
+			if ( function_exists( 'register_block_type' ) ) {
+					add_filter( 'image_send_to_editor', array( $this, 'gutenberg_contentr_add_pin_description'), 10, 8 );
+			} else {
+					add_filter( 'image_send_to_editor', array( $this, 'classic_editor_add_pin_description'), 10, 8 );
+			}
+
+			add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
+			add_filter( 'attachment_fields_to_save', array( $this, 'save_media_custom_field'), 11, 2 );
 	}
 
 
@@ -212,11 +218,11 @@ class SWP_Pro_Pinterest {
 		if ( 'hidden' === $location ) {
 
 			$image_html = '<img class="no_pin swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
-						  '" data-pin-url="' . get_the_permalink() .
-						  '" data-pin-media="' . $pinterest_image_url .
-						  '" alt="' . $pinterest_description .
-						  '" data-pin-description="' . addslashes( $pinterest_description ) .
-						  '" />';
+							'" data-pin-url="' . get_the_permalink() .
+							'" data-pin-media="' . $pinterest_image_url .
+							'" alt="' . $pinterest_description .
+							'" data-pin-description="' . addslashes( $pinterest_description ) .
+							'" />';
 
 			$content .= $image_html;
 
@@ -226,13 +232,13 @@ class SWP_Pro_Pinterest {
 			$extra_class = 'swp-pinterest-image-' . $location;
 
 			$image_html = '<div class="swp-pinterest-image-wrapper ' . $extra_class . '">
-							  <img class="swp-pinterest-image " src="' . $pinterest_image_url .
+								<img class="swp-pinterest-image " src="' . $pinterest_image_url .
 							'" alt="' . $pinterest_description .
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
 							'" data-pin-description="' . addslashes( $pinterest_description ).
 							'" />
-						  </div>';
+							</div>';
 
 			if ('top' === $location) {
 				$content = $image_html . $content;
@@ -323,70 +329,70 @@ class SWP_Pro_Pinterest {
 	 * @return $html Our version of the markup.
 	 *
 	 */
-	public function editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
+	public function classic_editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $pinterest_description ) ) {
-			// We only permastore the pin description when they have specifically set one for this image.
-			return $html;
+				// We only permastore the pin description when they have specifically set one for this image.
+				return $html;
 		}
 
 		$width = '';
 		$height = '';
 		if ( is_string( $size ) ) {
-			$size = $this->get_image_size( $size );
-			$width = $size['width'];
-			$height = $size['height'];
+				$size = $this->get_image_size( $size );
+				$width = $size['width'];
+				$height = $size['height'];
 		}
 
 		if ( class_exists( 'DOMDocument' ) ) {
-			// DOMDocument works better with an XML delcaration.
-			if ( false === strpos( $html, '?xml version' ) ) {
-				$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-				$html = $xml_statement . $html;
-				$added_xml_statement = true;
-			}
+				// DOMDocument works better with an XML delcaration.
+				if ( false === strpos( $html, '?xml version' ) ) {
+					$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
+					$html = $xml_statement . $html;
+					$added_xml_statement = true;
+				}
 
-			// Prevent warnings for 'Invalid Tag' on HTML5 tags.
-			libxml_use_internal_errors( true );
-			$doc = new DOMDocument();
-			$doc->loadHTML( $html );
+				// Prevent warnings for 'Invalid Tag' on HTML5 tags.
+				libxml_use_internal_errors( true );
+				$doc = new DOMDocument();
+				$doc->loadHTML( $html );
 
-			libxml_use_internal_errors( false );
-			libxml_clear_errors();
+				libxml_use_internal_errors( false );
+				libxml_clear_errors();
 
-			$img = $doc->getElementsByTagName( "img" )[0];
+				$img = $doc->getElementsByTagName( "img" )[0];
 
-			$replacement = $img->cloneNode();
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
-			$replacement->setAttribute( "data-pin-description", $pinterest_description );
+				$replacement = $img->cloneNode();
+				$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
+				$replacement->setAttribute( "data-pin-description", $pinterest_description );
 
-			$img->parentNode->replaceChild( $replacement, $img );
-			$html = $doc->saveHTML();
+				$img->parentNode->replaceChild( $replacement, $img );
+				$html = $doc->saveHTML();
 
-			if ( $added_xml_statement ) {
-				$html = str_replace( $xml_statement, '', $html );
-			}
+				if ( $added_xml_statement ) {
+					$html = str_replace( $xml_statement, '', $html );
+				}
 		}
 
 		else { // No DOMDocument class.
-			$alignment = $this::get_alignment_style( $alignment );
-			$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
+				$alignment = $this::get_alignment_style( $alignment );
+				$pinterest_description = addslashes( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 
-			$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
-				$html .= '<img ';
-				$html .= ' src="' . $url . '"';
-				$html .= ' width="' . $width . '"';
-				$html .= ' height="' . $height . '"';
-				$html .= ' class="swp-pinterest-image"';
-				$html .= ' data-pin-description="' . $pinterest_description . '"';
-				$html .= ' title="' . $title . '"';
-				$html .= ' alt="' . $alt . '"';
-				$html .= "/>";
-			$html .= '</div>';
-		}
+				$html = '<div class="swp-pinterest-image-wrap" ' . $alignment . '>';
+					$html .= '<img ';
+					$html .= ' src="' . $url . '"';
+					$html .= ' width="' . $width . '"';
+					$html .= ' height="' . $height . '"';
+					$html .= ' class="swp-pinterest-image"';
+					$html .= ' data-pin-description="' . $pinterest_description . '"';
+					$html .= ' title="' . $title . '"';
+					$html .= ' alt="' . $alt . '"';
+					$html .= "/>";
+				$html .= '</div>';
+			}
 
-		return $html;
+			return $html;
 	}
 
 
@@ -679,12 +685,12 @@ class SWP_Pro_Pinterest {
 	 */
 
 	 /**
-	  * Get size information for a specific image size.
-	  *
-	  * @uses   get_image_sizes()
-	  * @param  string $size The image size for which to retrieve data.
-	  * @return bool|array $size Size data about an image size or false if the size doesn't exist.
-	  */
+		* Get size information for a specific image size.
+		*
+		* @uses   get_image_sizes()
+		* @param  string $size The image size for which to retrieve data.
+		* @return bool|array $size Size data about an image size or false if the size doesn't exist.
+		*/
 	 private function get_image_size( $size ) {
 		 $sizes = $this->get_image_sizes();
 
@@ -844,10 +850,10 @@ class SWP_Pro_Pinterest {
 				'label' => 'Hover Pin Opt Out',
 				'input' => 'html',
 				'html'  => '<input
-							   type="checkbox"
-							   id="attachments-' . $post->ID . '-swp_pin_button_opt_out"
-							   name="attachments[' . $post->ID . '][swp_pin_button_opt_out]"
-							   ' . $checked . '
+								 type="checkbox"
+								 id="attachments-' . $post->ID . '-swp_pin_button_opt_out"
+								 name="attachments[' . $post->ID . '][swp_pin_button_opt_out]"
+								 ' . $checked . '
 							 />',
 			);
 		}
