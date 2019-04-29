@@ -592,6 +592,8 @@ class SWP_Pro_Pinterest {
 			return $the_content;
 		}
 
+		// This will only return images that are "attached" (first published)
+		// to this $post.
 		$images = get_attached_media( 'image' );
 
 		// Filter images to only include those that opted out of Pin Hover.
@@ -599,30 +601,7 @@ class SWP_Pro_Pinterest {
 			return true == get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
 		});
 
-		// All images use the pin on hover feature.
-		if ( 0 == count( $opt_out_images ) ) {
-			return $the_content;
-		}
-
-		/**
-		 * Begin processing the DOM to add a no-pin class to targeted images.
-		 */
-
-		// DOMDocument works better with an XML delcaration.
-		if ( false === strpos( $the_content, '?xml version' ) ) {
-			$xml_statement = '<?xml version="1.0" encoding="UTF-8"?>';
-			$html = $xml_statement . $the_content;
-			$added_xml_statement = true;
-		} else {
-			$html = $the_content;
-		}
-
-		libxml_use_internal_errors( true );
-		$doc = new DOMDocument();
-		$doc->loadHTML( $html );
-		libxml_use_internal_errors( false );
-		libxml_clear_errors();
-
+		$doc = $this->prepare_content( $the_content );
 		$dom_images = $doc->getElementsByTagName("img");
 
 		// Replace existing nodes with updated 'no-pin' notes.
