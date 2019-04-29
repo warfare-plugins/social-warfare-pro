@@ -466,6 +466,7 @@ class SWP_Pro_Pinterest {
 		 $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
 		 foreach( $imgs as $img ) {
+
 			$classname = $img->getAttribute('class');
 
 			if ( false === strpos($classname, 'wp-image-' ) ) {
@@ -480,34 +481,7 @@ class SWP_Pro_Pinterest {
 				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
 			}
 
-			// Let images update their pinterest description.
-			if ( $img->hasAttribute("data-pin-description" ) ) {
-				$pinterest_description = $img->getAttribute( "data-pin-description" );
 
-				if ( $use_alt_text && $img->getAttribute( 'alt' ) != $pinterest_description ) {
-					$img->removeAttribute( "data-pin-description" );
-				}
-
-				if ( !$use_alt_text && $img->getAttribute( 'alt' ) == $pinterest_description ) {
-					$img->removeAttribute( "data-pin-description" );
-				}
-
-			   if ( $image_pinterest_description ) {
-				   // they may have added an image description since the post description.
-				   if ( $pinterest_description != $image_pinterest_description || $pinterest_description != $post_pinterest_description)  {
-					   $img->removeAttribute( 'data-pin-description' );
-				   }
-			   }
-
-
-				// The description it had was good, let it be.
-				if ( $img->hasAttribute("data-pin-description") ) {
-					continue;
-				}
-				else {
-					unset( $pinterest_description );
-				}
-			}
 
 			 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
 				 continue;
@@ -581,10 +555,47 @@ class SWP_Pro_Pinterest {
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-
 		foreach( $imgs as $img ) {
-			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
-				continue;
+			$image_pinterest_description = '';
+			$image_id = 0;
+			if ( false != strpos($img->getAttribute('class'), 'wp-image-' ) ) {
+				// Gutenberg images have their ID stored in CSS class `wp-image-$ID`
+				// Capture the digit portion with regex in the parenthesis.
+				preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
+				$image_id = $matches[1];
+
+				if ( $image_id ) {
+					$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
+				}
+			}
+
+			// Let images update their pinterest description.
+			if ( $img->hasAttribute("data-pin-description" ) ) {
+				$pinterest_description = $img->getAttribute( "data-pin-description" );
+
+				if ( $use_alt_text && $img->getAttribute( 'alt' ) != $pinterest_description ) {
+					$img->removeAttribute( "data-pin-description" );
+				}
+
+				if ( !$use_alt_text && $img->getAttribute( 'alt' ) == $pinterest_description ) {
+					$img->removeAttribute( "data-pin-description" );
+				}
+
+			   if ( $image_pinterest_description ) {
+				   // they may have added an image description since the post description.
+				   if ( $pinterest_description != $image_pinterest_description || $pinterest_description != $post_pinterest_description)  {
+					   $img->removeAttribute( 'data-pin-description' );
+				   }
+			   }
+
+
+				// The description it had was good, let it be.
+				if ( $img->hasAttribute("data-pin-description") ) {
+					continue;
+				}
+				else {
+					unset( $pinterest_description );
+				}
 			}
 
 			if ( $use_alt_text ) {
