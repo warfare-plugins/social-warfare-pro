@@ -213,7 +213,7 @@ class SWP_Pro_Pinterest {
 			$pinterest_description = get_the_title();
 		}
 
-		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+		$pinterest_description = addslashes ( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 
 		// Hide the image with a CSS class.
 		if ( 'hidden' === $pinterest_image_location ) {
@@ -221,28 +221,28 @@ class SWP_Pro_Pinterest {
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
 							'" alt="' . $pinterest_description .
-							'" data-pin-description="' . addslashes( $pinterest_description ) .
+							'" data-pin-description="' . $pinterest_description .
 							'" />';
 
 			$content = $content . $image_html;
 
 		// Give the image a SWP container for customers to use in selectors.
 		} else {
-			$class = "swp-pinterest-image-$location";
+			$class = "swp-pinterest-image-$pinterest_image_location";
 			$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
 								<img class="swp-pinterest-image " src="' . $pinterest_image_url .
 							'" alt="' . $pinterest_description .
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
-							'" data-pin-description="' . addslashes( $pinterest_description ).
+							'" data-pin-description="' . $pinterest_description .
 							'" />
 							</div>';
 
-			if ('top' === $location) {
+			if ('top' === $pinterest_image_location) {
 				$content = $image_html . $content;
 			}
 
-			if ('bottom' === $location) {
+			if ('bottom' === $pinterest_image_location) {
 				$content = $content . $image_html;
 			}
 
