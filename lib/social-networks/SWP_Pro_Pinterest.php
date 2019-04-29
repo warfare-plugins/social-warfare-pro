@@ -444,55 +444,6 @@ class SWP_Pro_Pinterest {
 
 
 	/**
-	 * Add data-pin-description to GB images that do not have one.
-	 * @since 3.6.0 | 24 APR 2019 | Created.
-	 * @param  string $the_content The content to parse.
-	 * @return string The modified content.
-	 *
-	 */
-	 public function gutenberg_content_add_pin_description( $the_content )  {
-		 global $post;
-		$doc = $this->prepare_content($the_content);
-
-		if ( false == $doc ) {
-			return $the_content;
-		}
-
-		 // Parse each image and apply a data-pin-description if it DNE yet.
-		 $imgs = $doc->getElementsByTagName("img");
-		 $use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
-		 $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
-
-		 foreach( $imgs as $img ) {
-
-			$classname = $img->getAttribute('class');
-
-			if ( false === strpos($classname, 'wp-image-' ) ) {
-				  // This image does not have a wp-image-id associated with it.
-				  continue;
-			}
-
-			preg_match( '/wp-image-(\d*)/', $classname, $matches);
-			$image_id = $matches[1];
-
-
-
-			 $pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
-			 $replacement = $img->cloneNode();
-			 $replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
-			 $img->parentNode->replaceChild( $replacement, $img );
-		 }
-
-		 $the_content = $doc->saveHTML();
-
-		 libxml_use_internal_errors( false );
-		 libxml_clear_errors();
-
-		 return $the_content;
-	 }
-
-
-	/**
 	 * Add data-pin-descriptions to all images that don't have one.
 	 *
 	 *
