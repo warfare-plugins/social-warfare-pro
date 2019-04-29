@@ -412,14 +412,13 @@ class SWP_Pro_Pinterest {
 	 			return false;
 	 		}
 
-	 		$html = $the_content;
-	 		$doc = new DOMDocument();
 	 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
 	 		libxml_use_internal_errors( true );
-
+			$html = $content;
+			$doc = new DOMDocument();
 	 		// Convert quotation marks and non-Western characters to UTF-8
 	 		if ( function_exists( 'mb_convert_encoding' ) ) {
-	 			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
+	 			$html = mb_convert_encoding( $content, 'HTML-ENTITIES', "UTF-8" );
 	 		}
 
 	 		/**
@@ -451,7 +450,7 @@ class SWP_Pro_Pinterest {
 	 * @return string The modified content.
 	 *
 	 */
-	 public function content_add_pin_description( $the_content )  {
+	 public function gutenberg_content_add_pin_description( $the_content )  {
  		global $post;
 
 		$doc = $this->prepare_content($the_content);
@@ -466,6 +465,15 @@ class SWP_Pro_Pinterest {
  		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
  		foreach( $imgs as $img ) {
+			$classname = $img->getAttribute('class');
+			if ( false === strpos($classname, 'wp-image-' ) ) {
+          // This image does not have a wp-image-id associated with it.
+				  continue;
+			}
+
+			preg_match( '/(wp-image-)(\d*) /', $classname, $matches);
+      $image_id = $matches[1];
+
  			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
  				continue;
  			}
@@ -474,10 +482,14 @@ class SWP_Pro_Pinterest {
  				$pinterest_description = $img->getAttribute( 'alt' );
  			}
 
- 			if ( empty( $pinterest_description ) ) {
- 				// Check for the post pinterest description
- 				$pinterest_description = $post_pinterest_description;
+			if ( empty( $pinterest_description ) ) {
+ 				$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
  			}
+
+			if ( empty( $pinterest_description ) ) {
+				// Check for the post pinterest description
+				$pinterest_description = $post_pinterest_description;
+			}
 
  			if ( empty( $pinterest_description ) )  {
  				// Use the post title and excerpt.
