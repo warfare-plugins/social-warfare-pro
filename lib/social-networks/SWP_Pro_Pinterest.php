@@ -215,9 +215,8 @@ class SWP_Pro_Pinterest {
 
 		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 
-		// If the image is hidden, give it the swp_hidden_pin_image class.
+		// Hide the image with a CSS class.
 		if ( 'hidden' === $pinterest_image_location ) {
-
 			$image_html = '<img class="no_pin swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
@@ -225,11 +224,10 @@ class SWP_Pro_Pinterest {
 							'" data-pin-description="' . addslashes( $pinterest_description ) .
 							'" />';
 
-			$content .= $image_html;
+			$content = $content . $image_html;
 
-		// Put the image in a container otherwise
+		// Give the image a SWP container for customers to use in selectors.
 		} else {
-
 			$class = "swp-pinterest-image-$location";
 			$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
 								<img class="swp-pinterest-image " src="' . $pinterest_image_url .
@@ -245,7 +243,7 @@ class SWP_Pro_Pinterest {
 			}
 
 			if ('bottom' === $location) {
-				$content .= $image_html;
+				$content = $content . $image_html;
 			}
 
 		}
