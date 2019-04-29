@@ -491,14 +491,10 @@ class SWP_Pro_Pinterest {
 	 * Checks the image's current description and updates it if it has chagned
 	 * based on settings or textfields.
 	 *
-	 * @param  object $img DOMDocumentNode for a wordpress Image.
-	 * @return object $img DOMDocumentNode for a wordpress Image.
+	 * @param  object $img DOMElement for a wordpress Image.
+	 * @return integer $id The image's ID, or false on failure.
 	 */
-	private function update_image_pin_description( $img, $default_description ) {
-		$image_pinterest_description = '';
-		$image_id = 0;
-		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
-
+	private function get_wp_image_id( $img ) {
 		if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
 			/**
 			 *  Gutenberg images have their ID stored in CSS class `wp-image-$ID`
@@ -506,12 +502,39 @@ class SWP_Pro_Pinterest {
 			 *
 			 */
 			preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
-			$image_id = $matches[1];
-
-			if ( $image_id ) {
-				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
+			if ( isset($matches[1] ) ) {
+				return $matches[1];
 			}
 		}
+
+		// Else try to get an classic Image from the src/guid.
+		$src = $img->getAttribute( 'src' );
+		$image_id = get_image_id_by_url( $src );
+		if ( is_numeric( $image_id ) ) {
+			return $image_id;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks the image's current description and updates it if it has chagned
+	 * based on settings or textfields.
+	 *
+	 * @param  object $img DOMElement for a wordpress Image.
+	 * @return object $img DOMElement for a wordpress Image.
+	 */
+	private function update_image_pin_description( $img, $default_description ) {
+		$image_pinterest_description = '';
+		$image_id = 0;
+		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+
+		$image_id = $this->get_wp_image_id( $img );
+
+		if ( $image_id ) {
+			$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
+		}
+
 
 		// Let images update their pinterest description.
 		if ( $img->hasAttribute("data-pin-description" ) ) {
@@ -602,7 +625,7 @@ class SWP_Pro_Pinterest {
 		});
 
 		$doc = $this->prepare_content( $the_content );
-		$dom_images = $doc->getElementsByTagName("img");
+		$dom_images = $doc->getElementsByTagName( "img" );
 
 		// Replace existing nodes with updated 'no-pin' notes.
 		foreach( $dom_images as $img ) {
@@ -627,10 +650,6 @@ class SWP_Pro_Pinterest {
 		}
 
 		$the_content = $doc->saveHTML();
-
-		if ( $added_xml_statement ) {
-			$the_content = str_replace( $xml_statement, '', $the_content );
-		}
 
 		return $the_content;
 	}
