@@ -165,7 +165,6 @@ class SWP_Pro_Pinterest {
 		global $post;
 		$post_id                = $post->ID;
 		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
-		$pin_browser_location   = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
 		$pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
 
 		/**
@@ -199,8 +198,11 @@ class SWP_Pro_Pinterest {
 			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
 		}
 
-		// This post is using some kind of Pinterest Image.
-		$location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
+		$pinterest_image_location = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
+		if ( 'default' == $pinterest_image_location ) {
+			$pinterest_image_location = SWP_Utility::get_option( 'pinterest_image_location' );
+		}
+
 
 		// Set up the Pinterest username, if it exists.
 		$id = SWP_Utility::get_option( 'pinterest_id' );
@@ -213,7 +215,7 @@ class SWP_Pro_Pinterest {
 		}
 
 		// If the image is hidden, give it the swp_hidden_pin_image class.
-		if ( 'hidden' === $location ) {
+		if ( 'hidden' === $pinterest_image_location ) {
 
 			$image_html = '<img class="no_pin swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
 							'" data-pin-url="' . get_the_permalink() .
