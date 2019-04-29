@@ -113,7 +113,7 @@ class SWP_Pro_Pinterest {
 		 *
 		 */
 		if ( false == is_singular() ) {
-			add_shortcode( 'pinterest_image' , '__return_false' );
+			add_shortcode( 'pinterest_image', '__return_false' );
 			return;
 		}
 
@@ -125,7 +125,7 @@ class SWP_Pro_Pinterest {
 		 *
 		 */
 		if ( true === SWP_Utility::get_option( 'pinterest_data_attribute' ) ) {
-			add_filter( 'the_content' , array( $this, 'content_add_pin_description' ), 1 );
+			add_filter( 'the_content', array( $this, 'content_add_pin_description' ), 1 );
 		}
 
 
@@ -135,7 +135,7 @@ class SWP_Pro_Pinterest {
 		 *
 		 */
 		if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
-			add_filter( 'the_content' , array( $this, 'content_maybe_add_no_pin' ) );
+			add_filter( 'the_content', array( $this, 'content_maybe_add_no_pin' ) );
 		}
 
 		add_shortcode( 'pinterest_image', array( $this, 'pinterest_image_shortcode' ) );
@@ -164,8 +164,8 @@ class SWP_Pro_Pinterest {
 	public function maybe_insert_pinterest_image( $content ) {
 		global $post;
 		$post_id                = $post->ID;
-		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension' , true );
-		$pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url' , true );
+		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension', true );
+		$pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url', true );
 
 		/**
 		 * If the option is turned off globally, and the post level option is
@@ -198,16 +198,15 @@ class SWP_Pro_Pinterest {
 			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
 		}
 
-		$pinterest_image_location = get_post_meta( $post_id, 'swp_pin_browser_extension_location' , true );
+		$pinterest_image_location = get_post_meta( $post_id, 'swp_pin_browser_extension_location', true );
 		if ( 'default' == $pinterest_image_location ) {
 			$pinterest_image_location = SWP_Utility::get_option( 'pinterest_image_location' );
 		}
 
-
 		// Set up the Pinterest username, if it exists.
 		$id = SWP_Utility::get_option( 'pinterest_id' );
-		$pinterest_username = $id ? ' via @' . str_replace( '@' , '' , $id ) : '';
-		$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
+		$pinterest_username = $id ? ' via @' . str_replace( '@', '', $id ) : '';
+		$pinterest_description = get_post_meta( $post_id, 'swp_pinterest_description', true );
 
 		// If there is no custom description, use the post Title
 		if ( false == $pinterest_description || empty( $pinterest_image_url ) ) {
@@ -229,9 +228,8 @@ class SWP_Pro_Pinterest {
 		// Put the image in a container otherwise
 		} else {
 
-			$extra_class = 'swp-pinterest-image-' . $location;
-
-			$image_html = '<div class="swp-pinterest-image-wrapper ' . $extra_class . '">
+			$class = "swp-pinterest-image-$location";
+			$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
 								<img class="swp-pinterest-image " src="' . $pinterest_image_url .
 							'" alt="' . $pinterest_description .
 							'" data-pin-url="' . get_the_permalink() .
@@ -889,8 +887,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function pinit_controls_output( $info ) {
-		$custom_pin_description = get_post_meta( get_the_ID() , 'swp_pinterest_description' , true );
-		$custom_pinterest_image = get_post_meta( get_the_ID() , 'swp_pinterest_image_url' , true );
+		$custom_pin_description = get_post_meta( get_the_ID(), 'swp_pinterest_description', true );
+		$custom_pinterest_image = get_post_meta( get_the_ID(), 'swp_pinterest_image_url', true );
 
 		$pin_vars = array(
 			'enabled' => false,
