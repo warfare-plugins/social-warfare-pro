@@ -540,39 +540,39 @@ class SWP_Pro_Pinterest {
 			}
 		}
 
-		if ( $image_id ) {
-			$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
+
+		// The description it already has is a keeper.
+		if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+			 return $img;
 		}
 
+		// Apply the Image's swp_pinterest_description.
+		if ( empty( $pinterest_description && !empty( $image_pinterest_description )) ) {
+			$pinterest_description = $image_pinterest_description;
+		}
 
-		 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
-			 return $img;
-		 }
+		// Apply the alt text.
+		if ( $use_alt_text ) {
+			$pinterest_description = $img->getAttribute( 'alt' );
+		}
 
-		 if ( $use_alt_text ) {
-			 $pinterest_description = $img->getAttribute( 'alt' );
-		 }
-
-		if ( empty( $pinterest_description ) ) {
-			 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
-		 }
-
-		if ( empty( $pinterest_description ) ) {
-			// Check for the post pinterest description
+		// Apply the Post's swp_pinterest_description.
+		if ( empty( $pinterest_description ) && !empty( $default_description ) ) {
 			$pinterest_description = $default_description;
 		}
 
-		 if ( empty( $pinterest_description ) )  {
-			 // Use the post title and excerpt.
-			 $title = get_the_title();
-			 $permalink = get_permalink();
+		// Generate a description from the post title and permalink.
+		if ( empty( $pinterest_description ) )  {
+			// Use the post title and excerpt.
+			$title = get_the_title();
+			$permalink = get_permalink();
 
-			 if ( false === $permalink ) {
+			if ( false === $permalink ) {
 				 $permalink = '';
-			 }
+			}
 
-			 $pinterest_description = $title . ' ' . $permalink;
-		 }
+			$pinterest_description = $title . ' ' . $permalink;
+		}
 
 		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 		$img->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
