@@ -82,9 +82,9 @@ class SWP_Pro_Pinterest {
 				return;
 			}
 
-      // Gutenberg does not have the same editor hooks. 
+      // Gutenberg does not have the same editor hooks.
 			if ( function_exists( 'register_block_type' ) ) {
-					add_filter( 'image_send_to_editor', array( $this, 'gutenberg_contentr_add_pin_description'), 10, 8 );
+					add_filter( 'image_send_to_editor', array( $this, 'gutenberg_content_add_pin_description'), 10, 8 );
 			} else {
 					add_filter( 'image_send_to_editor', array( $this, 'classic_editor_add_pin_description'), 10, 8 );
 			}
@@ -395,6 +395,116 @@ class SWP_Pro_Pinterest {
 			return $html;
 	}
 
+  /**
+	 * Set up the content and get a DOMDocument object.
+	 *
+	 * @param string $content The content to parse with DOMDocument.
+	 * @return object $doc The ready to use instance of DOMDocument, or false on failure.
+   *
+	 */
+	private function prepare_content($content) {
+			/**
+	 		 * PHP Helper class for parsing strings into HTML, creating
+	 		 * arrays of "nodes", and accessing each node as an object.
+	 		 *
+	 		 */
+	 		if ( !class_exists( 'DOMDocument' ) ) {
+	 			return false;
+	 		}
+
+	 		$html = $the_content;
+	 		$doc = new DOMDocument();
+	 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
+	 		libxml_use_internal_errors( true );
+
+	 		// Convert quotation marks and non-Western characters to UTF-8
+	 		if ( function_exists( 'mb_convert_encoding' ) ) {
+	 			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
+	 		}
+
+	 		/**
+	 		 * DOMDocument needs a known container for editing HTML.
+	 		 * We'll create an empty div just to load the html, then
+	 		 * make a new $doc that mirrors the original document.
+	 		 *
+	 		 */
+	 		$doc->loadHTML("<div>$html</div>");
+	 		$container = $doc->getElementsByTagName('div')->item(0);
+	 		$container = $container->parentNode->removeChild($container);
+
+	 		// Empty out the original, possibly malformed document.
+	 		while ($doc->firstChild) {
+	 			$doc->removeChild($doc->firstChild);
+	 		}
+
+	 		// Repopulate with clean nodes.
+	 		while ($container->firstChild ) {
+	 			$doc->appendChild($container->firstChild);
+	 		}
+	}
+
+
+	/**
+	 * Add data-pin-description to GB images that do not have one.
+	 * @since 3.6.0 | 24 APR 2019 | Created.
+	 * @param  string $the_content The content to parse.
+	 * @return string The modified content.
+	 *
+	 */
+	 public function content_add_pin_description( $the_content )  {
+ 		global $post;
+
+		$doc = $this->prepare_content($the_content);
+
+		if ( false == $doc ) {
+			  return $the_content;
+		}
+
+ 		// Parse each image and apply a data-pin-description if it DNE yet.
+ 		$imgs = $doc->getElementsByTagName("img");
+ 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+ 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+
+ 		foreach( $imgs as $img ) {
+ 			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+ 				continue;
+ 			}
+
+ 			if ( $use_alt_text ) {
+ 				$pinterest_description = $img->getAttribute( 'alt' );
+ 			}
+
+ 			if ( empty( $pinterest_description ) ) {
+ 				// Check for the post pinterest description
+ 				$pinterest_description = $post_pinterest_description;
+ 			}
+
+ 			if ( empty( $pinterest_description ) )  {
+ 				// Use the post title and excerpt.
+ 				$title = get_the_title();
+ 				$permalink = get_permalink();
+
+ 				if ( false === $permalink ) {
+ 					$permalink = '';
+ 				}
+
+ 				$pinterest_description = $title . ' ' . $permalink;
+ 			}
+
+ 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+ 			$replacement = $img->cloneNode();
+ 			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
+ 			$img->parentNode->replaceChild( $replacement, $img );
+ 		}
+
+ 		$the_content = $doc->saveHTML();
+
+ 		libxml_use_internal_errors( false );
+ 		libxml_clear_errors();
+
+ 		return $the_content;
+ 	}
+
 
 	/**
 	 * Add data-pin-descriptions to all images that don't have one.
@@ -414,43 +524,10 @@ class SWP_Pro_Pinterest {
 	public function content_add_pin_description( $the_content ) {
 		global $post;
 
-		/**
-		 * PHP Helper class for parsing strings into HTML, creating
-		 * arrays of "nodes", and accessing each node as an object.
-		 *
-		 */
-		if ( !class_exists( 'DOMDocument' ) ) {
-			return $the_content;
-		}
+		$doc = $this->prepare_content($the_content);
 
-		$html = $the_content;
-		$doc = new DOMDocument();
-		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
-		libxml_use_internal_errors( true );
-
-		// Convert quotation marks and non-Western characters to UTF-8
-		if ( function_exists( 'mb_convert_encoding' ) ) {
-			$html = mb_convert_encoding( $the_content, 'HTML-ENTITIES', "UTF-8" );
-		}
-
-		/**
-		 * DOMDocument needs a known container for editing HTML.
-		 * We'll create an empty div just to load the html, then
-		 * make a new $doc that mirrors the original document.
-		 *
-		 */
-		$doc->loadHTML("<div>$html</div>");
-		$container = $doc->getElementsByTagName('div')->item(0);
-		$container = $container->parentNode->removeChild($container);
-
-		// Empty out the original, possibly malformed document.
-		while ($doc->firstChild) {
-			$doc->removeChild($doc->firstChild);
-		}
-
-		// Repopulate with clean nodes.
-		while ($container->firstChild ) {
-			$doc->appendChild($container->firstChild);
+		if ( false == $doc ) {
+				return $the_content;
 		}
 
 		// Parse each image and apply a data-pin-description if it DNE yet.
