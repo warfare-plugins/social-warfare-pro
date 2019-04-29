@@ -33,6 +33,8 @@ class SWP_Pro_Pinterest {
 		// Admin hooks for editing pinterest-specific content.
 		$this->add_admin_actions();
 
+		add_filter( 'the_content', array( $this, 'gutenberg_content_add_pin_description'), 10, 8 );
+
 		// Defer to a later hook so `global $post` is defined.
 		add_filter( 'template_redirect', array( $this, 'add_frontend_actions' ) );
 		add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
@@ -82,11 +84,9 @@ class SWP_Pro_Pinterest {
 				return;
 			}
 
-      // Gutenberg does not have the same editor hooks.
-			if ( function_exists( 'register_block_type' ) ) {
-					add_filter( 'image_send_to_editor', array( $this, 'gutenberg_content_add_pin_description'), 10, 8 );
-			} else {
-					add_filter( 'image_send_to_editor', array( $this, 'classic_editor_add_pin_description'), 10, 8 );
+			// Gutenberg does not have the same editor hooks.
+			if ( !function_exists( 'is_gutenberg_page' ) ) {
+				add_filter( 'image_send_to_editor', array( $this, 'classic_editor_add_pin_description'), 10, 8 );
 			}
 
 			add_filter( 'attachment_fields_to_edit', array( $this, 'edit_media_custom_field'), 11, 2 );
@@ -276,15 +276,15 @@ class SWP_Pro_Pinterest {
 			// Fallbacks: WP Description, Caption, then Title.
 			if ( empty( $description ) ) {
 				$image = get_post( $image_id );
-				$description = $image->post_content;
+				$description = $img->post_content;
 			}
 
 			if ( empty( $description ) ) {
-				$description = $image->post_excerpt;
+				$description = $img->post_excerpt;
 			}
 
 			if ( empty ( $description) ) {
-				$description = $image->post_title;
+				$description = $img->post_title;
 			}
 		}
 
@@ -404,42 +404,44 @@ class SWP_Pro_Pinterest {
 	 */
 	private function prepare_content($content) {
 			/**
-	 		 * PHP Helper class for parsing strings into HTML, creating
-	 		 * arrays of "nodes", and accessing each node as an object.
-	 		 *
-	 		 */
-	 		if ( !class_exists( 'DOMDocument' ) ) {
-	 			return false;
-	 		}
+			  * PHP Helper class for parsing strings into HTML, creating
+			  * arrays of "nodes", and accessing each node as an object.
+			  *
+			  */
+			 if ( !class_exists( 'DOMDocument' ) ) {
+				 return false;
+			 }
 
-	 		// Prevent warnings for 'Invalid Tag' on HTML5 tags.
-	 		libxml_use_internal_errors( true );
+			 // Prevent warnings for 'Invalid Tag' on HTML5 tags.
+			 libxml_use_internal_errors( true );
 			$html = $content;
 			$doc = new DOMDocument();
-	 		// Convert quotation marks and non-Western characters to UTF-8
-	 		if ( function_exists( 'mb_convert_encoding' ) ) {
-	 			$html = mb_convert_encoding( $content, 'HTML-ENTITIES', "UTF-8" );
-	 		}
+			 // Convert quotation marks and non-Western characters to UTF-8
+			 if ( function_exists( 'mb_convert_encoding' ) ) {
+				 $html = mb_convert_encoding( $content, 'HTML-ENTITIES', "UTF-8" );
+			 }
 
-	 		/**
-	 		 * DOMDocument needs a known container for editing HTML.
-	 		 * We'll create an empty div just to load the html, then
-	 		 * make a new $doc that mirrors the original document.
-	 		 *
-	 		 */
-	 		$doc->loadHTML("<div>$html</div>");
-	 		$container = $doc->getElementsByTagName('div')->item(0);
-	 		$container = $container->parentNode->removeChild($container);
+			 /**
+			  * DOMDocument needs a known container for editing HTML.
+			  * We'll create an empty div just to load the html, then
+			  * make a new $doc that mirrors the original document.
+			  *
+			  */
+			 $doc->loadHTML("<div>$html</div>");
+			 $container = $doc->getElementsByTagName('div')->item(0);
+			 $container = $container->parentNode->removeChild($container);
 
-	 		// Empty out the original, possibly malformed document.
-	 		while ($doc->firstChild) {
-	 			$doc->removeChild($doc->firstChild);
-	 		}
+			 // Empty out the original, possibly malformed document.
+			 while ($doc->firstChild) {
+				 $doc->removeChild($doc->firstChild);
+			 }
 
-	 		// Repopulate with clean nodes.
-	 		while ($container->firstChild ) {
-	 			$doc->appendChild($container->firstChild);
-	 		}
+			 // Repopulate with clean nodes.
+			 while ($container->firstChild ) {
+				 $doc->appendChild($container->firstChild);
+			 }
+
+			 return $doc;
 	}
 
 
@@ -451,71 +453,104 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	 public function gutenberg_content_add_pin_description( $the_content )  {
- 		global $post;
-
+		 global $post;
 		$doc = $this->prepare_content($the_content);
 
 		if ( false == $doc ) {
-			  return $the_content;
+		  return $the_content;
 		}
 
- 		// Parse each image and apply a data-pin-description if it DNE yet.
- 		$imgs = $doc->getElementsByTagName("img");
- 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
- 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+		 // Parse each image and apply a data-pin-description if it DNE yet.
+		 $imgs = $doc->getElementsByTagName("img");
+		 $use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+		 $post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
- 		foreach( $imgs as $img ) {
+		 foreach( $imgs as $img ) {
 			$classname = $img->getAttribute('class');
+
 			if ( false === strpos($classname, 'wp-image-' ) ) {
-          // This image does not have a wp-image-id associated with it.
+				  // This image does not have a wp-image-id associated with it.
 				  continue;
 			}
 
-			preg_match( '/(wp-image-)(\d*) /', $classname, $matches);
-      $image_id = $matches[1];
+			preg_match( '/wp-image-(\d*)/', $classname, $matches);
+			$image_id = $matches[1];
 
- 			if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
- 				continue;
- 			}
+			if ( $image_id ) {
+				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
+			}
 
- 			if ( $use_alt_text ) {
- 				$pinterest_description = $img->getAttribute( 'alt' );
- 			}
+			// Let images update their pinterest description.
+			if ( $img->hasAttribute("data-pin-description" ) ) {
+				$pinterest_description = $img->getAttribute( "data-pin-description" );
+
+				if ( $use_alt_text && $img->getAttribute( 'alt' ) != $pinterest_description ) {
+					$img->removeAttribute( "data-pin-description" );
+				}
+
+				if ( !$use_alt_text && $img->getAttribute( 'alt' ) == $pinterest_description ) {
+					$img->removeAttribute( "data-pin-description" );
+				}
+
+			   if ( $image_pinterest_description ) {
+				   // they may have added an image description since the post description.
+				   if ( $pinterest_description != $image_pinterest_description || $pinterest_description != $post_pinterest_description)  {
+					   $img->removeAttribute( 'data-pin-description' );
+				   }
+			   }
+
+
+				// The description it had was good, let it be.
+				if ( $img->hasAttribute("data-pin-description") ) {
+					continue;
+				}
+				else {
+					unset( $pinterest_description );
+				}
+			}
+
+			 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+				 continue;
+			 }
+
+			 if ( $use_alt_text ) {
+				 $pinterest_description = $img->getAttribute( 'alt' );
+			 }
 
 			if ( empty( $pinterest_description ) ) {
- 				$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
- 			}
+				 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+			 }
 
 			if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
 				$pinterest_description = $post_pinterest_description;
 			}
 
- 			if ( empty( $pinterest_description ) )  {
- 				// Use the post title and excerpt.
- 				$title = get_the_title();
- 				$permalink = get_permalink();
+			 if ( empty( $pinterest_description ) )  {
+				 // Use the post title and excerpt.
+				 $title = get_the_title();
+				 $permalink = get_permalink();
 
- 				if ( false === $permalink ) {
- 					$permalink = '';
- 				}
+				 if ( false === $permalink ) {
+					 $permalink = '';
+				 }
 
- 				$pinterest_description = $title . ' ' . $permalink;
- 			}
+				 $pinterest_description = $title . ' ' . $permalink;
+			 }
 
- 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
- 			$replacement = $img->cloneNode();
- 			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
- 			$img->parentNode->replaceChild( $replacement, $img );
- 		}
+			 $pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+			 $replacement = $img->cloneNode();
+			 $replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
+			 $img->parentNode->replaceChild( $replacement, $img );
+		 }
 
- 		$the_content = $doc->saveHTML();
+		 $the_content = $doc->saveHTML();
 
- 		libxml_use_internal_errors( false );
- 		libxml_clear_errors();
+		 libxml_use_internal_errors( false );
+		 libxml_clear_errors();
 
- 		return $the_content;
- 	}
+		 return $the_content;
+	 }
 
 
 	/**
@@ -605,7 +640,7 @@ class SWP_Pro_Pinterest {
 
 		// Filter images to only include those that opted out of Pin Hover.
 		$opt_out_images = array_filter($images, function($image) {
-			return true == get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+			return true == get_post_meta( $img->ID, 'swp_pin_button_opt_out', true );
 		});
 
 		// All images use the pin on hover feature.
@@ -636,7 +671,7 @@ class SWP_Pro_Pinterest {
 
 		// Replace existing nodes with updated 'no-pin' notes.
 		foreach( $dom_images as $image ) {
-			$src = $image->getAttribute('src');
+			$src = $img->getAttribute('src');
 
 			// Look for matching images by comparing the image source.
 			foreach( $opt_out_images as $i ) {
@@ -644,14 +679,14 @@ class SWP_Pro_Pinterest {
 				$guid = $i->guid;
 
 				if ( $href == $src || $guid == $src ) {
-					$img = $image->cloneNode();
+					$img = $img->cloneNode();
 					$class = $img->getAttribute('class');
 
 					$class = $class ? $class . ' no-pin ' : 'no-pin';
 
 					$img->setAttribute('class', $class);
 
-					$image->parentNode->replaceChild($img, $image);
+					$img->parentNode->replaceChild($img, $image);
 				}
 			}
 		}
@@ -742,8 +777,8 @@ class SWP_Pro_Pinterest {
 		$alignment = SWP_Pro_Pinterest::get_alignment_style( $alignment );
 
 		// Display a Pinterest 'Save' button on hover?
-		$pin_opt_out = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
-		$alt_text = get_post_meta( $image->ID, '_wp_attachment_image_alt', true );
+		$pin_opt_out = get_post_meta( $img->ID, 'swp_pin_button_opt_out', true );
+		$alt_text = get_post_meta( $img->ID, '_wp_attachment_image_alt', true );
 
 		if ( empty( $alt_text ) ) {
 			$alt_text = $pinterest_description;
