@@ -33,8 +33,6 @@ class SWP_Pro_Pinterest {
 		// Admin hooks for editing pinterest-specific content.
 		$this->add_admin_actions();
 
-		add_filter( 'the_content', array( $this, 'gutenberg_content_add_pin_description'), 10, 8 );
-
 		// Defer to a later hook so `global $post` is defined.
 		add_filter( 'template_redirect', array( $this, 'add_frontend_actions' ) );
 		add_filter( 'swp_footer_scripts', array( $this, 'pinit_controls_output' ) );
@@ -457,7 +455,7 @@ class SWP_Pro_Pinterest {
 		$doc = $this->prepare_content($the_content);
 
 		if ( false == $doc ) {
-		  return $the_content;
+			return $the_content;
 		}
 
 		 // Parse each image and apply a data-pin-description if it DNE yet.
@@ -477,40 +475,7 @@ class SWP_Pro_Pinterest {
 			preg_match( '/wp-image-(\d*)/', $classname, $matches);
 			$image_id = $matches[1];
 
-			if ( $image_id ) {
-				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
-			}
 
-
-
-			 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
-				 continue;
-			 }
-
-			 if ( $use_alt_text ) {
-				 $pinterest_description = $img->getAttribute( 'alt' );
-			 }
-
-			if ( empty( $pinterest_description ) ) {
-				 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
-			 }
-
-			if ( empty( $pinterest_description ) ) {
-				// Check for the post pinterest description
-				$pinterest_description = $post_pinterest_description;
-			}
-
-			 if ( empty( $pinterest_description ) )  {
-				 // Use the post title and excerpt.
-				 $title = get_the_title();
-				 $permalink = get_permalink();
-
-				 if ( false === $permalink ) {
-					 $permalink = '';
-				 }
-
-				 $pinterest_description = $title . ' ' . $permalink;
-			 }
 
 			 $pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 			 $replacement = $img->cloneNode();
@@ -558,11 +523,13 @@ class SWP_Pro_Pinterest {
 		foreach( $imgs as $img ) {
 			$image_pinterest_description = '';
 			$image_id = 0;
-			if ( false != strpos($img->getAttribute('class'), 'wp-image-' ) ) {
+			if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
 				// Gutenberg images have their ID stored in CSS class `wp-image-$ID`
 				// Capture the digit portion with regex in the parenthesis.
 				preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
 				$image_id = $matches[1];
+
+				// die(var_dump($image_id));
 
 				if ( $image_id ) {
 					$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
@@ -598,26 +565,40 @@ class SWP_Pro_Pinterest {
 				}
 			}
 
-			if ( $use_alt_text ) {
-				$pinterest_description = $img->getAttribute( 'alt' );
+			if ( $image_id ) {
+				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
 			}
+
+
+
+			 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+				 continue;
+			 }
+
+			 if ( $use_alt_text ) {
+				 $pinterest_description = $img->getAttribute( 'alt' );
+			 }
+
+			if ( empty( $pinterest_description ) ) {
+				 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+			 }
 
 			if ( empty( $pinterest_description ) ) {
 				// Check for the post pinterest description
 				$pinterest_description = $post_pinterest_description;
 			}
 
-			if ( empty( $pinterest_description ) )  {
-				// Use the post title and excerpt.
-				$title = get_the_title();
-				$permalink = get_permalink();
+			 if ( empty( $pinterest_description ) )  {
+				 // Use the post title and excerpt.
+				 $title = get_the_title();
+				 $permalink = get_permalink();
 
-				if ( false === $permalink ) {
-					$permalink = '';
-				}
+				 if ( false === $permalink ) {
+					 $permalink = '';
+				 }
 
-				$pinterest_description = $title . ' ' . $permalink;
-			}
+				 $pinterest_description = $title . ' ' . $permalink;
+			 }
 
 			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
 			$replacement = $img->cloneNode();
