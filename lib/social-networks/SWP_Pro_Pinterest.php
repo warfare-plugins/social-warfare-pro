@@ -495,7 +495,7 @@ class SWP_Pro_Pinterest {
 	 * @return integer $id The image's ID, or false on failure.
 	 */
 	private function get_wp_image_id( $img ) {
-		if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
+		if ( false !== strpos( $img->getAttribute('class'), 'wp-image-' ) ) {
 			/**
 			 *  Gutenberg images have their ID stored in CSS class `wp-image-$ID`
 			 *  Capture the parenthesized portion of the string with regex.
@@ -630,22 +630,33 @@ class SWP_Pro_Pinterest {
 		// Replace existing nodes with updated 'no-pin' notes.
 		foreach( $dom_images as $img ) {
 			$src = $img->getAttribute('src');
+			$image_id = $this->get_wp_image_id( $img );
+			$class = '';
 
-			// Look for matching images by comparing the image source.
-			foreach( $opt_out_images as $i ) {
-				$href = wp_get_attachment_url( $i->ID );
-				$guid = $i->guid;
-
-				if ( $href == $src || $guid == $src ) {
-					$img = $img->cloneNode();
+			if ( $image_id ) {
+				// Gutenberg makes IDs easier to get.
+				$nopin = get_post_meta( $image_id, 'swp_pin_button_opt_out', true );
+				if ($nopin) {
 					$class = $img->getAttribute('class');
-
-					$class = $class ? $class . ' no-pin ' : 'no-pin';
-
-					$img->setAttribute('class', $class);
-
-					$img->parentNode->replaceChild($img, $image);
+					$class .= ' no-pin ';
 				}
+			}
+			else {
+				// Use the known opt out images as a blacklist.
+				foreach( $opt_out_images as $i ) {
+					$href = wp_get_attachment_url( $i->ID );
+					$guid = $i->guid;
+					if ( $href == $src || $guid == $src ) {
+						$class = $img->getAttribute('class');
+						$class .= ' no-pin ';
+					}
+				}
+			}
+
+			if ( false !== strpos( $class, 'no-pin' ) ) {
+				$img->setAttribute('class', $class );
+				$image = $img->cloneNode();
+				$img->parentNode->replaceChild( $image, $img );
 			}
 		}
 
