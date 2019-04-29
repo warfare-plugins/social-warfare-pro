@@ -498,6 +498,8 @@ class SWP_Pro_Pinterest {
 	 */
 	private function get_wp_image_id( $img ) {
 		if ( false !== strpos( $img->getAttribute('class'), 'wp-image-' ) ) {
+
+
 			/**
 			 *  Gutenberg images have their ID stored in CSS class `wp-image-$ID`
 			 *  Capture the parenthesized portion of the string with regex.
@@ -511,7 +513,20 @@ class SWP_Pro_Pinterest {
 
 		// Else try to get an classic Image from the src/guid.
 		$src = $img->getAttribute( 'src' );
-		$image_id = get_image_id_by_url( $src );
+
+
+		/**
+		 * This check is added for backwards compatibility purposes. Since this
+		 * function was only recently added to core, this will stop it from
+		 * throwing any errors if they are on an outdated version of core, and it
+		 * will instead gracefully fail by just not doing anything.
+		 *
+		 */
+		if( !method_exists( 'SWP_Utility', 'get_image_id_by_url' ) ) {
+			return false;
+		}
+
+		$image_id = SWP_Utility::get_image_id_by_url( $src );
 		if ( is_numeric( $image_id ) ) {
 			return $image_id;
 		}
