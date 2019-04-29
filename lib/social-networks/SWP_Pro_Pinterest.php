@@ -213,6 +213,8 @@ class SWP_Pro_Pinterest {
 			$pinterest_description = get_the_title();
 		}
 
+		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+
 		// If the image is hidden, give it the swp_hidden_pin_image class.
 		if ( 'hidden' === $pinterest_image_location ) {
 
