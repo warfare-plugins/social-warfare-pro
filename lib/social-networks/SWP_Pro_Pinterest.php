@@ -469,7 +469,6 @@ class SWP_Pro_Pinterest {
 
 		// Parse each image and apply a data-pin-description if it DNE yet.
 		$imgs = $doc->getElementsByTagName("img");
-		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
 
 		foreach( $imgs as $img ) {
@@ -498,11 +497,13 @@ class SWP_Pro_Pinterest {
 	private function update_image_pin_description( $img, $default_description ) {
 		$image_pinterest_description = '';
 		$image_id = 0;
+		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
+
 		if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
 			/**
 			 *  Gutenberg images have their ID stored in CSS class `wp-image-$ID`
 			 *  Capture the parenthesized portion of the string with regex.
-			 *  
+			 *
 			 */
 			preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
 			$image_id = $matches[1];
@@ -595,7 +596,7 @@ class SWP_Pro_Pinterest {
 
 		// Filter images to only include those that opted out of Pin Hover.
 		$opt_out_images = array_filter($images, function($image) {
-			return true == get_post_meta( $img->ID, 'swp_pin_button_opt_out', true );
+			return true == get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
 		});
 
 		// All images use the pin on hover feature.
@@ -625,7 +626,7 @@ class SWP_Pro_Pinterest {
 		$dom_images = $doc->getElementsByTagName("img");
 
 		// Replace existing nodes with updated 'no-pin' notes.
-		foreach( $dom_images as $image ) {
+		foreach( $dom_images as $img ) {
 			$src = $img->getAttribute('src');
 
 			// Look for matching images by comparing the image source.
