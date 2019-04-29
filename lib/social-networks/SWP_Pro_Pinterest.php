@@ -499,12 +499,13 @@ class SWP_Pro_Pinterest {
 		$image_pinterest_description = '';
 		$image_id = 0;
 		if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
-			// Gutenberg images have their ID stored in CSS class `wp-image-$ID`
-			// Capture the parenthesized portion of the string with regex.
+			/**
+			 *  Gutenberg images have their ID stored in CSS class `wp-image-$ID`
+			 *  Capture the parenthesized portion of the string with regex.
+			 *  
+			 */
 			preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
 			$image_id = $matches[1];
-
-			// die(var_dump($image_id));
 
 			if ( $image_id ) {
 				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
