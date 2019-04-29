@@ -520,90 +520,13 @@ class SWP_Pro_Pinterest {
 		$imgs = $doc->getElementsByTagName("img");
 		$use_alt_text = ('alt_text' == SWP_Utility::get_option( 'pinit_image_description' ));
 		$post_pinterest_description = get_post_meta( $post->ID, 'swp_pinterest_description', true );
+
 		foreach( $imgs as $img ) {
-			$image_pinterest_description = '';
-			$image_id = 0;
-			if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
-				// Gutenberg images have their ID stored in CSS class `wp-image-$ID`
-				// Capture the digit portion with regex in the parenthesis.
-				preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
-				$image_id = $matches[1];
+			$img = $this->update_image_pin_description( $img, $post_pinterest_description );
+			// $replacement = $img->cloneNode();
+			// $replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
 
-				// die(var_dump($image_id));
-
-				if ( $image_id ) {
-					$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
-				}
-			}
-
-			// Let images update their pinterest description.
-			if ( $img->hasAttribute("data-pin-description" ) ) {
-				$pinterest_description = $img->getAttribute( "data-pin-description" );
-
-				if ( $use_alt_text && $img->getAttribute( 'alt' ) != $pinterest_description ) {
-					$img->removeAttribute( "data-pin-description" );
-				}
-
-				if ( !$use_alt_text && $img->getAttribute( 'alt' ) == $pinterest_description ) {
-					$img->removeAttribute( "data-pin-description" );
-				}
-
-			   if ( $image_pinterest_description ) {
-				   // they may have added an image description since the post description.
-				   if ( $pinterest_description != $image_pinterest_description || $pinterest_description != $post_pinterest_description)  {
-					   $img->removeAttribute( 'data-pin-description' );
-				   }
-			   }
-
-
-				// The description it had was good, let it be.
-				if ( $img->hasAttribute("data-pin-description") ) {
-					continue;
-				}
-				else {
-					unset( $pinterest_description );
-				}
-			}
-
-			if ( $image_id ) {
-				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
-			}
-
-
-
-			 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
-				 continue;
-			 }
-
-			 if ( $use_alt_text ) {
-				 $pinterest_description = $img->getAttribute( 'alt' );
-			 }
-
-			if ( empty( $pinterest_description ) ) {
-				 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
-			 }
-
-			if ( empty( $pinterest_description ) ) {
-				// Check for the post pinterest description
-				$pinterest_description = $post_pinterest_description;
-			}
-
-			 if ( empty( $pinterest_description ) )  {
-				 // Use the post title and excerpt.
-				 $title = get_the_title();
-				 $permalink = get_permalink();
-
-				 if ( false === $permalink ) {
-					 $permalink = '';
-				 }
-
-				 $pinterest_description = $title . ' ' . $permalink;
-			 }
-
-			$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
-			$replacement = $img->cloneNode();
-			$replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
-			$img->parentNode->replaceChild( $replacement, $img );
+			$img->parentNode->replaceChild( $img->cloneNode(), $img );
 		}
 
 		$the_content = $doc->saveHTML();
@@ -612,6 +535,98 @@ class SWP_Pro_Pinterest {
 		libxml_clear_errors();
 
 		return $the_content;
+	}
+
+	/**
+	 * Checks the image's current description and updates it if it has chagned
+	 * based on settings or textfields.
+	 *
+	 * @param  object $img DOMDocumentNode for a wordpress Image.
+	 * @return object $img DOMDocumentNode for a wordpress Image.
+	 */
+	private function update_image_pin_description( $img, $default_description ) {
+		$image_pinterest_description = '';
+		$image_id = 0;
+		if ( false !== strpos($img->getAttribute('class'), 'wp-image-' ) ) {
+			// Gutenberg images have their ID stored in CSS class `wp-image-$ID`
+			// Capture the digit portion with regex in the parenthesis.
+			preg_match( '/wp-image-(\d*)/', $img->getAttribute('class'), $matches );
+			$image_id = $matches[1];
+
+			// die(var_dump($image_id));
+
+			if ( $image_id ) {
+				$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true ) ;
+			}
+		}
+
+		// Let images update their pinterest description.
+		if ( $img->hasAttribute("data-pin-description" ) ) {
+			$pinterest_description = $img->getAttribute( "data-pin-description" );
+
+			if ( $use_alt_text && $img->getAttribute( 'alt' ) != $pinterest_description ) {
+				$img->removeAttribute( "data-pin-description" );
+			}
+
+			if ( !$use_alt_text && $img->getAttribute( 'alt' ) == $pinterest_description ) {
+				$img->removeAttribute( "data-pin-description" );
+			}
+
+		   if ( $image_pinterest_description ) {
+			   // they may have added an image description since the post description.
+			   if ( $pinterest_description != $image_pinterest_description || $pinterest_description != $default_description )  {
+				   $img->removeAttribute( 'data-pin-description' );
+			   }
+		   }
+
+
+			// The description it had was good, let it be.
+			if ( $img->hasAttribute("data-pin-description") ) {
+				return $img;
+			}
+			else {
+				unset( $pinterest_description );
+			}
+		}
+
+		if ( $image_id ) {
+			$image_pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true) ;
+		}
+
+
+		 if ( !$use_alt_text && $img->hasAttribute( "data-pin-description" ) ) {
+			 return $img;
+		 }
+
+		 if ( $use_alt_text ) {
+			 $pinterest_description = $img->getAttribute( 'alt' );
+		 }
+
+		if ( empty( $pinterest_description ) ) {
+			 $pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
+		 }
+
+		if ( empty( $pinterest_description ) ) {
+			// Check for the post pinterest description
+			$pinterest_description = $default_description;
+		}
+
+		 if ( empty( $pinterest_description ) )  {
+			 // Use the post title and excerpt.
+			 $title = get_the_title();
+			 $permalink = get_permalink();
+
+			 if ( false === $permalink ) {
+				 $permalink = '';
+			 }
+
+			 $pinterest_description = $title . ' ' . $permalink;
+		 }
+
+		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
+		$img->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
+
+		return $img;
 	}
 
 	/**
