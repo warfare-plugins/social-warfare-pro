@@ -943,7 +943,6 @@ class SWP_Pro_Pinterest {
 		);
 
 		if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
-
 			$bool = get_post_meta( $post->ID, 'swp_pin_button_opt_out', true );
 			$checked = (int) $bool === 1 ? 'checked' : '';
 
