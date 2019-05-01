@@ -973,8 +973,8 @@ class SWP_Pro_Pinterest {
 	 *
 	 */
 	public function save_media_custom_field( $post, $attachment ) {
-		$pin_description = addslashes($attachment['swp_pinterest_description']);
-		update_post_meta( $post['ID'], 'swp_pinterest_description', $attachment['swp_pinterest_description'] );
+		$pin_description = str_replace( '"', "'", $attachment['swp_pinterest_description'] );
+		update_post_meta( $post['ID'], 'swp_pinterest_description', $pin_description );
 
 		if ( true === SWP_Utility::get_option( 'pinit_toggle' ) ) {
 			$checked = isset( $attachment['swp_pin_button_opt_out'] );
