@@ -205,8 +205,8 @@ class SWP_Pro_Pinterest {
 		$location = $pin_browser_location == 'default' ? SWP_Utility::get_option( 'pinterest_image_location' ) : $pin_browser_location;
 
 		// Set up the Pinterest username, if it exists.
-		$id = SWP_Utility::get_option( 'pinterest_id' );
-		$pinterest_username = $id ? ' via @' . str_replace( '@' , '' , $id ) : '';
+		$pinterest_username = SWP_Utility::get_option( 'pinterest_id' );
+		$pinterest_username = $pinterest_username ? ' via @' . str_replace( '@' , '' , $pinterest_username ) : '';
 		$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
 		// If there is no custom description, use the post Title
