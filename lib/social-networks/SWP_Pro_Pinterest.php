@@ -473,9 +473,6 @@ class SWP_Pro_Pinterest {
 
 		foreach( $imgs as $img ) {
 			$img = $this->update_image_pin_description( $img, $post_pinterest_description );
-			// $replacement = $img->cloneNode();
-			// $replacement->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
-
 			$img->parentNode->replaceChild( $img->cloneNode(), $img );
 		}
 
@@ -611,7 +608,7 @@ class SWP_Pro_Pinterest {
 		}
 
 		$pinterest_description = SWP_Pinterest::trim_pinterest_description( $pinterest_description );
-		$img->setAttribute( "data-pin-description", addslashes( $pinterest_description ) );
+		$img->setAttribute( "data-pin-description", ( $pinterest_description ) );
 
 		return $img;
 	}
