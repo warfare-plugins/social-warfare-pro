@@ -134,7 +134,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$og_key] = $value;
 		}
 
-		$fields = array_map( 'htmlspecialchars', $fields );
+		$fields = array_map( 'utf8_encode', $fields );
 		$this->open_graph_data = array_merge( $fields, $known_fields );
 	}
 
@@ -196,6 +196,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		foreach ($twitter_fields as $key => $value) {
 			$field = str_replace( 'twitter_', 'swp_twitter_card_', $key );
 			$maybe_value = SWP_Utility::get_meta( $this->post->ID, $field );
+
+			// twitter_image value is stored as image ID, not as image URL.
+			if ( $key == 'twitter_image' && $maybe_value ) {
+				$image_id = $maybe_value;
+				$maybe_value = wp_get_attachment_url( $image_id );
+			}
 
 			if ( !empty( $maybe_value ) ) {
 				$twitter_fields[$key] = $maybe_value;
@@ -434,7 +440,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				case 'og:image_url' :
 					// only print image once duplicate values
 					if ( strpos($meta, 'og:image') || empty($content) ) {
-						continue;
+						break;
 					}
 					$meta .= "<meta name='image' property='og:image' content='$content'>";
 					break;
@@ -451,7 +457,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 				default :
 					if ( empty( $content ) ) {
-						continue;
+						break;
 					}
 					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
 					break;
