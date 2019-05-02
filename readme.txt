@@ -194,6 +194,9 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 3.6.0 (2 MAY 2019) =
+* Update to 3.6.0. See Social Warfare (core) changelog for details. 
+
 = 3.5.4 (25 MAR 2019) =
 * Code security audit and updates.
 
