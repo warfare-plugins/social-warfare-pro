@@ -134,7 +134,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$og_key] = $value;
 		}
 
-		$this->open_graph_data = array_merge( $fields, $known_fields );
+		$final_fields = array_merge( $fields, $known_fields );
+
+		foreach( $final_fields as $key => $value ) {
+			$final_fields[$key] = str_replace( '"', "'", $value );
+		}
+
+		$this->open_graph_data = $final_fields;
 	}
 
 	/**
