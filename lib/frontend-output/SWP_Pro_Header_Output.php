@@ -134,7 +134,6 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			$fields[$og_key] = $value;
 		}
 
-		$fields = array_map( 'utf8_encode', $fields );
 		$this->open_graph_data = array_merge( $fields, $known_fields );
 	}
 
