@@ -586,8 +586,9 @@ class SWP_Pro_Pinterest {
 		}
 
 		// Apply the Image's alt text.
-		if ( $use_alt_text && !empty( $img->getAttribute( 'alt' ) ) ) {
-			$pinterest_description = $img->getAttribute( 'alt' );
+		$alt = $img->getAttribute( 'alt' );
+		if ( $use_alt_text && !empty( $alt ) ) {
+			$pinterest_description = $alt;
 		}
 
 		// Apply the Post's swp_pinterest_description.
