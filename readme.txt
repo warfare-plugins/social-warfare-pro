@@ -1,5 +1,5 @@
 === WordPress Social Sharing Plugin - Social Warfare ===
-Contributors: holas84, dustinwstout, webinator, warfareplugins, cdegraff1, ckmahoney
+Contributors: holas84, dustinwstout, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
 Tested up to: 5.2
@@ -193,6 +193,13 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 3.6.1 (3 JUN 2019) =
+* Updated Hover Save Pin functionality to work more globally.
+* Fixed conflcit with hover pin button in Thrive Architect page builder.
+* Removed the Google Plus network share button.
+* Fixed an "Uncaught Error" for $ in the JS on the widgets page.
+* Fixed a Twitter PHP notice.
 
 = 3.6.0 (2 MAY 2019) =
 * Update to 3.6.0. See Social Warfare (core) changelog for details.
