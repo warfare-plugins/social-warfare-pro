@@ -67,7 +67,6 @@ class SWP_Pro_Follow_Widget_Cache {
 		 */
 		$last_updated = (int) SWP_Pro_Follow_Widget_Utility::get_option( 'last_updated' );
 		$current_time =  (int) time() / DAY_IN_SECONDS;
-		self::debug();
 
 
 		/**
@@ -83,7 +82,7 @@ class SWP_Pro_Follow_Widget_Cache {
 	/**
 	 * Updates the follow counts in the database and the last_updated timestamp.
 	 *
-	 * @since  4.0.0 | 10 JUN 2019 | Created 
+	 * @since  4.0.0 | 10 JUN 2019 | Created
 	 * @param  array $counts Looks like: array('network_key' => (int) follow_count)
 	 * @return bool  True iff the counts were updated, else false.
 	 *
