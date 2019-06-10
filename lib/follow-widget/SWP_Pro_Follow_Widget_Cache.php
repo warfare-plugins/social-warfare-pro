@@ -29,19 +29,52 @@ class SWP_Pro_Follow_Widget_Cache {
 	/**
 	 * For this addon we will consider the age limit to be 24 hours.
 	 *
+	 * @since  4.0.0 | 10 JUN 2019 | Created & Merged into Pro
+	 * @param  void
 	 * @return boolean True if `last_updated` is less than 24 hours old.
 	 *
 	 */
 	public static function is_cache_fresh() {
 
+
+		/**
+		 * If we've already checked the freshness of the cache, it will be stored
+		 * in our local static variable $is_fresh, so we can just use that if
+		 * it's set.
+		 *
+		 */
 		if ( isset( self::$is_fresh ) ) {
 			return self::$is_fresh;
 		}
 
+
+		/**
+		 * If there the user is calling ?swp_cache=rebuild, then they are
+		 * manually, forcefully requesting that the cached numbers be updated
+		 * right now during this page load.
+		 *
+		 */
+		if ( isset( $_GET['swp_cache'] ) && 'rebuild' === $_GET['swp_cache'] ) {
+			SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', 0 );
+			self::$is_fresh = false;
+		}
+
+
+		/**
+		 * If all other checks pass, then we'll do the actual math and check if
+		 * it has been 24 hours since the last time we've updated the cache.
+		 *
+		 */
 		$last_updated = (int) SWP_Pro_Follow_Widget_Utility::get_option( 'last_updated' );
 		$current_time =  (int) time() / DAY_IN_SECONDS;
 		self::debug();
 
+
+		/**
+		 * Save the boolean results into a local, static variable so that we can
+		 * skip all checking on all future checks.
+		 *
+		 */
 		self::$is_fresh = $current_time - $last_updated < 24;
 		return self::$is_fresh;
 	}
@@ -50,6 +83,7 @@ class SWP_Pro_Follow_Widget_Cache {
 	/**
 	 * Updates the follow counts in the database and the last_updated timestamp.
 	 *
+	 * @since  4.0.0 | 10 JUN 2019 | Created 
 	 * @param  array $counts Looks like: array('network_key' => (int) follow_count)
 	 * @return bool  True iff the counts were updated, else false.
 	 *
@@ -58,19 +92,5 @@ class SWP_Pro_Follow_Widget_Cache {
 		$now = (int) time() / DAY_IN_SECONDS;
 
 		return SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', $now );
-	}
-
-	public function debug() {
-		$parameter = $_GET['swfw_debug'];
-		if ( empty( $parameter ) ) {
-			return;
-		}
-
-		switch( $parameter ) {
-			case 'force_api_requests' : {
-				SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', 0);
-				self::$is_fresh = false;
-			}
-		}
 	}
 }
