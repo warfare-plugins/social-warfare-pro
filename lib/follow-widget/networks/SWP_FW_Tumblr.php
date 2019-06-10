@@ -11,7 +11,7 @@
  * @since     1.0.0 | Created
  *
  */
-class SWFW_Tumblr extends SWFW_Follow_Network {
+class SWP_FW_Tumblr extends SWP_Pro_Follow_Network {
 
 
 	/**

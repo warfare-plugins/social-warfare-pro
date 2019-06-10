@@ -10,7 +10,7 @@
  * @since     1.0.0 | 15 DEC 2018 | Created.
  *
  */
-class SWFW_Facebook extends SWFW_Follow_Network {
+class SWP_FW_Facebook extends SWP_Pro_Follow_Network {
 
 
 	/**

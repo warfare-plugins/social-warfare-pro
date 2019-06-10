@@ -11,7 +11,7 @@
  * @since     1.0.0 | Created
  *
  */
-class SWFW_Instagram extends SWFW_Follow_Network {
+class SWP_FW_Instagram extends SWP_Pro_Follow_Network {
 
 
 	/**

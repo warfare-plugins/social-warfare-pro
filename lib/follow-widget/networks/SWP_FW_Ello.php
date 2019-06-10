@@ -11,7 +11,7 @@
  * @since     1.0.0 | Created
  *
  */
-class SWFW_Ello extends SWFW_Follow_Network {
+class SWP_FW_Ello extends SWP_Pro_Follow_Network {
 
 
 	/**

@@ -11,7 +11,7 @@
  * @since     1.0.0 | Created
  *
  */
-class SWFW_Vimeo extends SWFW_Follow_Network {
+class SWP_FW_Vimeo extends SWP_Pro_Follow_Network {
 
 
 	/**
