@@ -110,6 +110,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * them up. This is always why we are making sure this addon is registered
 		 * before loading them.
 		 *
+		 * @todo Extend this conditional to cover the follow widget files.
 		 */
 		 if ( true === $this->is_registered ) {
 			$social_networks = array(
@@ -126,6 +127,30 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			);
 			$this->load_files( '/lib/social-networks/', $social_networks);
 		}
+
+
+		/**
+		 * This will load up all of the available networks that are used for
+		 * building out the follow widget.
+		 *
+		 */
+		$follow_widget_networks = array(
+			'Facebook',
+			'Pinterest',
+			'Twitter',
+			'Tumblr',
+			'Instagram',
+			'Vimeo',
+			'Reddit',
+			'Linkedin',
+			'Flickr',
+			'Medium',
+			'Ello',
+			'Blogger',
+			'Snapchat',
+			'Periscope',
+		);
+		$this->load_files( '/lib/follow-widget/networks/', $follow_widget_networks );
 
 
 		/**
