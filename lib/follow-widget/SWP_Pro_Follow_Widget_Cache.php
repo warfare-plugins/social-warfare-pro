@@ -89,7 +89,6 @@ class SWP_Pro_Follow_Widget_Cache {
 	 */
 	public static function update_cache_timestamp() {
 		$now = (int) time() / DAY_IN_SECONDS;
-
 		return SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', $now );
 	}
 }
