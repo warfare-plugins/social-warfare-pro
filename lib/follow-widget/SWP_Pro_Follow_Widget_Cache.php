@@ -30,7 +30,7 @@ class SWFW_Cache {
 			return self::$is_fresh;
 		}
 
-		$last_updated = (int) SWFW_Utility::get_option( 'last_updated' );
+		$last_updated = (int) SWP_Pro_Follow_Widget_Utility::get_option( 'last_updated' );
 		$current_time =  (int) time() / DAY_IN_SECONDS;
 		self::debug();
 
@@ -49,7 +49,7 @@ class SWFW_Cache {
 	public static function update_cache_timestamp() {
 		$now = (int) time() / DAY_IN_SECONDS;
 
-		return SWFW_Utility::update_option( 'last_updated', $now );
+		return SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', $now );
 	}
 
 	public function debug() {
@@ -60,7 +60,7 @@ class SWFW_Cache {
 
 		switch( $parameter ) {
 			case 'force_api_requests' : {
-				SWFW_Utility::update_option( 'last_updated', 0);
+				SWP_Pro_Follow_Widget_Utility::update_option( 'last_updated', 0);
 				self::$is_fresh = false;
 			}
 		}

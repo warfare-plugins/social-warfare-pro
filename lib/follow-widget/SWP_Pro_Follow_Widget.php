@@ -262,7 +262,7 @@ FIELD;
 		}
 
 		if ( false == SWFW_Cache::is_cache_fresh() ) {
-			SWFW_Utility::save_follow_counts();
+			SWP_Pro_Follow_Widget_Utility::save_follow_counts();
 		}
 
 		$html .= $buttons;
@@ -297,12 +297,12 @@ FIELD;
 
 		switch( $key ) {
 			case 'get_count_data' :
-				$options = SWFW_Utility::get_options();
+				$options = SWP_Pro_Follow_Widget_Utility::get_options();
 				echo "<pre>".var_export($options, 1)."</pre>";
 				wp_die();
 
 			case 'get_all_data' :
-				$options = SWFW_Utility::get_options();
+				$options = SWP_Pro_Follow_Widget_Utility::get_options();
 				$options['usernames'] = $this->get_all_usernames();
 				echo "<pre>".var_export($options, 1)."</pre>";
 				wp_die();

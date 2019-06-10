@@ -213,7 +213,7 @@ abstract class SWP_Pro_Follow_Network {
 		}
 
 		$key = "{$this->key}_follow_count";
-		$follow_count = SWFW_Utility::get_option( $key );
+		$follow_count = SWP_Pro_Follow_Widget_Utility::get_option( $key );
 		$this->follow_count = SWP_Utility::kilomega( $follow_count );
 	}
 
@@ -232,7 +232,7 @@ abstract class SWP_Pro_Follow_Network {
 			$this->follow_count = 0;
 		}
 
-		SWFW_Utility::update_network_count( $this->key, $this->follow_count );
+		SWP_Pro_Follow_Widget_Utility::update_network_count( $this->key, $this->follow_count );
 	}
 
 
