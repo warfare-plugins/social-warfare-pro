@@ -128,6 +128,18 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			$this->load_files( '/lib/social-networks/', $social_networks);
 		}
 
+		global $swfw_networks;
+		$swfw_networks = array();
+		$files = array(
+			'Pro_Follow_Network',
+			'Pro_Follow_Widget',
+			'Pro_Follow_Widget_Cache',
+			'Pro_Follow_Widget_Utility',
+		);
+
+		$this->load_files( '/lib/follow-widget/', $files );
+		new SWP_Pro_Follow_Widget();
+
 
 		/**
 		 * This will load up all of the available networks that are used for

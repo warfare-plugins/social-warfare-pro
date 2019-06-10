@@ -11,7 +11,7 @@
  * @since     1.0.0 | Created
  *
  */
-class SWFW_Blogger extends SWFW_Follow_Network {
+class SWFW_Blogger extends SWP_Pro_Follow_Network {
 
 
 	/**

@@ -26,19 +26,7 @@ class SWP_Pro_Follow_Widget {
 	 *
 	 */
 	public function init() {
-		global $swfw_networks;
 
-		$swfw_networks = array();
-		$files = array(
-			'Follow_Network',
-			'Follow_Widget',
-			'Cache',
-			'Utility',
-
-		);
-
-		$this->load_files( '/lib/utilities/', $files );
-		new SWFW_Follow_Widget();
 	}
 
 

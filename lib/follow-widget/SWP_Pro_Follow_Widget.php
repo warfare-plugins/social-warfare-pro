@@ -13,7 +13,7 @@ if (!class_exists( 'SWP_Widget' ) ) {
  * @license   	GPL-3.0+
  * @since 		1.0.0 | 15 DEC 2018 | Created.
  */
-class SWFW_Follow_Widget extends SWP_Widget {
+class SWP_Pro_Follow_Widget extends SWP_Widget {
 
 
 	/**

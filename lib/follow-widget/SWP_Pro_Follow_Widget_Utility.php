@@ -3,7 +3,7 @@
  * Helper methods for getting, updating, and storing data.
  *
  */
-class SWFW_Utility {
+class SWP_Pro_Follow_Widget_Utility {
 
 	/**
 	 * The plugins data stored in wp_options.

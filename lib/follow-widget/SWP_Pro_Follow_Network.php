@@ -1,6 +1,7 @@
 <?php
+
 /**
- * SWP_Follow_Network
+ * SWP_Pro_Follow_Network
  *
  * This is the class that is used for adding new social networks to the
  * buttons which can be selected on the options page and rendered in the
@@ -9,10 +10,10 @@
  * @package   	SocialWarfareFollowWidget
  * @copyright 	Copyright (c) 2019, Warfare Plugins, LLC
  * @license  	GPL-3.0+
- * @since 		1.0.0 | 15 DEC 2018 | Created.
+ * @since 		4.0.0 | 15 DEC 2018 | Created.
  *
  */
-abstract class SWFW_Follow_Network {
+abstract class SWP_Pro_Follow_Network {
 
 
 	/**
