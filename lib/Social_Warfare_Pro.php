@@ -133,22 +133,25 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * This will load up all of the available networks that are used for
 		 * building out the follow widget.
 		 *
+		 * We've prefixed all of these with SWP_FW to keep them separate from
+		 * the main SWP networks that are used on the buttons panels for sharing.
+		 *
 		 */
 		$follow_widget_networks = array(
-			'Facebook',
-			'Pinterest',
-			'Twitter',
-			'Tumblr',
-			'Instagram',
-			'Vimeo',
-			'Reddit',
-			'Linkedin',
-			'Flickr',
-			'Medium',
-			'Ello',
-			'Blogger',
-			'Snapchat',
-			'Periscope',
+			'FW_Facebook',
+			'FW_Pinterest',
+			'FW_Twitter',
+			'FW_Tumblr',
+			'FW_Instagram',
+			'FW_Vimeo',
+			'FW_Reddit',
+			'FW_Linkedin',
+			'FW_Flickr',
+			'FW_Medium',
+			'FW_Ello',
+			'FW_Blogger',
+			'FW_Snapchat',
+			'FW_Periscope',
 		);
 		$this->load_files( '/lib/follow-widget/networks/', $follow_widget_networks );
 
