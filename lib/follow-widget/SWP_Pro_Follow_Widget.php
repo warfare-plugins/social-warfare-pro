@@ -261,7 +261,7 @@ FIELD;
 			$buttons .= $network->generate_frontend_HTML( $settings['shape'] );
 		}
 
-		if ( false == SWFW_Cache::is_cache_fresh() ) {
+		if ( false == SWP_Pro_Follow_Widget_Cache::is_cache_fresh() ) {
 			SWP_Pro_Follow_Widget_Utility::save_follow_counts();
 		}
 

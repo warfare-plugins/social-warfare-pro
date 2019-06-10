@@ -205,7 +205,7 @@ abstract class SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function establish_follow_count() {
-		if ( false == SWFW_Cache::is_cache_fresh() ) {
+		if ( false == SWP_Pro_Follow_Widget_Cache::is_cache_fresh() ) {
 			$this->do_api_request();
 			$this->parse_api_response();
 			$this->save_follow_count();

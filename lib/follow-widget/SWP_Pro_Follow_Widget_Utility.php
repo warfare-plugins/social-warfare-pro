@@ -55,7 +55,7 @@ class SWP_Pro_Follow_Widget_Utility {
 	 */
 	public static function save_follow_counts() {
 		$updated = update_option( 'swfw_options', self::$options, true );
-		SWFW_Cache::update_cache_timestamp();
+		SWP_Pro_Follow_Widget_Cache::update_cache_timestamp();
 
 		return $updated;
 	}

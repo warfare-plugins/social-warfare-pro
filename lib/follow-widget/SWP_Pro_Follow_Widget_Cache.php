@@ -3,7 +3,7 @@
  * Controls the frequency of API requests. Requests are made up to once/24 hours.
  *
  */
-class SWFW_Cache {
+class SWP_Pro_Follow_Widget_Cache {
 
 	use SWP_Debug_Trait;
 
