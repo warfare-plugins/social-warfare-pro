@@ -393,6 +393,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * Sets values for Open Graph meta tags from known Twitter values.
 	 *
 	 * @since  3.5.0 | 19 DEC 2018 | Created.
+	 * @since  3.6.2 | 11 JUN 2019 | Added check for empty $use_og_values.
 	 * @param  array $fields twitter_key => $maybe_value pairs.
 	 * @return array $fields Updated $fields, with gaps filled in by open_graph.
 	 *
@@ -526,6 +527,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	* Loops through open graph data to create <meta> tags for the <head>
 	*
 	* @since  3.5.2 | 05 MAR 2019 | Created.
+	* @since  3.6.2 | 11 JUN 2019 | Added empty($content) check.
 	* @param  array $fields array('twitter_key' => $twitter_value)
 	* @return string The HTML for meta tags.
 	*
