@@ -27,6 +27,7 @@ class SWP_Pro_Follow_Network_Loader {
 	 */
 	public function __construct() {
 
+
 		/**
 		 * This global will serve as an array to hold all of the network objects
 		 * for the follow widget as it gets loaded up below.
