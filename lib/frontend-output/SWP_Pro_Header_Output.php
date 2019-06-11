@@ -498,24 +498,24 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					if ( strpos($meta, 'og:image') || empty($content) ) {
 						break;
 					}
-					$meta .= "<meta name='image' property='og:image' content='$content'>";
+					$meta .= "<meta property='og:image' name='image' content='$content'>" . PHP_EOL;
 					break;
 
 				case 'og:image_width' :
 				case 'og:image_height' :
 					$key = str_replace('_', ':', $key);
-					$meta .= "<meta property='$key' content='$content'>";
+					$meta .= "<meta property='$key' content='$content'>" . PHP_EOL;
 					break;
 
 				case 'fb:app_id' :
-					$meta .= '<meta property="fb:app_id" content="' . $content . '">';
+					$meta .= '<meta property="fb:app_id" content="' . $content . '">' . PHP_EOL;
 					break;
 
 				default :
 					if ( empty( $content ) ) {
 						break;
 					}
-					$meta .= '<meta property="' . $key . '" content="' . $content . '">';
+					$meta .= '<meta property="' . $key . '" content="' . $content . '">' . PHP_EOL;
 					break;
 			}
 		}
@@ -546,7 +546,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 				continue;
 			}
 			$key = str_replace('_', ':', $key);
-			$meta .= '<meta name="' . $key . '" content="' . $content . '">';
+			$meta .= '<meta name="' . $key . '" content="' . $content . '">' . PHP_EOL;
 		}
 
 		return $meta;
