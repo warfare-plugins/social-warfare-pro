@@ -523,6 +523,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	   return $meta;
    }
 
+
 	/**
 	* Loops through open graph data to create <meta> tags for the <head>
 	*
