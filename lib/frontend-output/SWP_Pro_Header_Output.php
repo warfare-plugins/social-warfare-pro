@@ -467,7 +467,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * If the Open Graph values are turned OFF for Twitter Cards, then we'll
 		 * merge in the Open Graph values but not ovewrite any of the Twitter
 		 * card values in the array.
-		 *  
+		 *
 		 */
 		return array_merge( $shared_fields, $twitter_fields );
 	}
@@ -539,6 +539,9 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		}
 
 		foreach ( $fields as $key => $content ) {
+			if ( empty( $content ) ) {
+				break;
+			}
 			$key = str_replace('_', ':', $key);
 			$meta .= '<meta name="' . $key . '" content="' . $content . '">';
 		}
