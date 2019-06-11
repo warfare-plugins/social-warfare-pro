@@ -540,7 +540,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		foreach ( $fields as $key => $content ) {
 			if ( empty( $content ) ) {
-				break;
+				continue;
 			}
 			$key = str_replace('_', ':', $key);
 			$meta .= '<meta name="' . $key . '" content="' . $content . '">';
