@@ -407,6 +407,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
 		$shared_fields = array();
+
+
+		/**
+		 * This map allows us to know which Open Graph fields (left) are the
+		 * matching field for the Twitter Card fields (right).
+		 *
+		 */
 		$field_map = array(
 			'og:title'       => 'twitter_title',
 			'og:description' => 'twitter_description',
@@ -415,23 +422,53 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:image_url'   => 'twitter_image'
 		);
 
+
+		/**
+		 * Loop through the field map that we created above and use it to pull
+		 * in the Open Graph values into our $shared_fields array.
+		 *
+		 */
 		foreach ( $field_map as $og => $twitter ) {
 			if ( !empty( $this->open_graph_data[$og] ) ) {
 				$shared_fields[$twitter] = $this->open_graph_data[$og];
 			}
 		}
 
+
+		/**
+		 * This checks if the user has set this post to use the Open Graph values
+		 * in the Twitter Card fields. We check for an empty value because any
+		 * post that hasn't been updated since this field was introduced will
+		 * return as an empty string, and as such, we will default to true.
+		 *
+		 */
 		$use_og_values = SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' );
 		if( empty( $use_og_values ) ) {
 			$use_og_values = true;
 		}
 
-		// Apply the OG data as a priority over twitter data
+
+		/**
+		 * Return with OG values as the priority.
+		 *
+		 * If the Open Graph values are turned ON for Twitter Cards, then we'll
+		 * merge in the Open Graph values to overwrite anything in the Twitter
+		 * card values array.
+		 *
+		 */
 		if ( $use_og_values ) {
 			return array_merge($twitter_fields, $shared_fields);
 		}
-		var_dump($shared_fields);
-		// Apply Twitter data the prioritized data.
+
+
+		/**
+		 * Return with the Twitter values as the priority.
+		 *
+		 * If the Open Graph values are turned OFF for Twitter Cards, then we'll
+		 * merge in the Open Graph values but not ovewrite any of the Twitter
+		 * card values in the array.
+		 *  
+		 */
 		return array_merge( $shared_fields, $twitter_fields );
 	}
 
