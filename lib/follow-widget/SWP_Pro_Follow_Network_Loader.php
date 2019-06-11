@@ -1,13 +1,13 @@
 <?php
 
 /**
- * A class to load up all of this plugin's social networks.
+ * A class to load up all of the network objects for the follow widget.
  *
- * The purpose of this class is to create a global social networks array and
+ * The purpose of this class is to create a global follow networks array and
  * then to load up and instantiate each of the social networks as objects into
  * that array.
  *
- * @since 3.0.0 | Created | 05 APR 2018
+ * @since 4.0.0 | Created | 11 JUN 2019
  *
  */
 class SWP_Pro_Follow_Network_Loader {
@@ -16,14 +16,13 @@ class SWP_Pro_Follow_Network_Loader {
 	/**
 	 * The Magic __construct method.
 	 *
-	 * This method creates the global $swp_social_networks array and then queues
-	 * up the instantiation of all the networks to be run after all the plugin
-	 * including all addons have been loaded.
+	 * This method creates the global $swp_follow_widget_networks array and then
+	 * queues up the instantiation of all the networks to be run after all the
+	 * plugins including all addons have been loaded.
 	 *
-	 * @since  3.0.0 | Created | 06 APR 2018
-	 * @param  none
-	 * @return none
-	 * @access public
+	 * @since  4.0.0 | Created | 11 JUN 2019
+	 * @param  void
+	 * @return void
 	 *
 	 */
 	public function __construct() {
@@ -45,11 +44,11 @@ class SWP_Pro_Follow_Network_Loader {
 	 * Instantiate all the networks.
 	 *
 	 * This class loops through every single declared child class of the
-	 * primary SWP_Social_Network class and fires it up.
+	 * primary SWP_Follow_Network class and fires it up.
 	 *
-	 * @since  3.0.0 | Created | 06 APR 2018
-	 * @param  none
-	 * @return none
+	 * @since  4.0.0 | Created | 11 JUN 2019
+	 * @param  void
+	 * @return void
 	 * @access public
 	 *
 	 */
