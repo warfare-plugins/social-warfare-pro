@@ -130,15 +130,6 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 
 		/**
-		 * This global will serve as an array to hold all of the network objects
-		 * for the follow widget as it gets loaded up below.
-		 *
-		 */
-		global $swfw_networks;
-		$swfw_networks = array();
-
-
-		/**
 		 * This section will load all of the files needed to build out the
 		 * follow widget. It contains everything needed in both the backend
 		 * admin section and for the frontend display.
@@ -146,6 +137,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 */
 		$files = array(
 			'Pro_Follow_Network',
+			'Pro_Follow_Network_Loader',
 			'Pro_Follow_Widget',
 			'Pro_Follow_Widget_Cache',
 			'Pro_Follow_Widget_Utility',
@@ -267,6 +259,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 * files needed for the frontend display of the widget.
 		 *
 		 */
+		new SWP_Pro_Follow_Network_Loader();
 		new SWP_Pro_Follow_Widget();
 
 

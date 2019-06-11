@@ -167,7 +167,7 @@ INPUT;
 	 *
 	 */
 	function generate_form_HTML( $settings ) {
-		$networks = apply_filters( 'swfw_follow_networks', array() );
+		$networks = apply_filters( 'swp_follow_widget_networks', array() );
 		$defaults = array(
 			'title'	=> 'Follow me on social media',
 			'shape'	=> 'square',

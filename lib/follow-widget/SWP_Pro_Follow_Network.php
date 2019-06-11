@@ -122,7 +122,7 @@ abstract class SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function __construct( $args ) {
-		global $swfw_networks;
+		global $swp_follow_widget_networks;
 
 		/**
 		 * To verify that all of the $required keys are provided,
@@ -157,7 +157,7 @@ abstract class SWP_Pro_Follow_Network {
 		$this->establish_username();
 		$this->establish_auth_helper();
 
-		add_filter( 'swfw_follow_networks', array( $this, 'register_self' ) );
+		add_filter( 'swp_follow_widget_networks', array( $this, 'register_self' ) );
 	}
 
 
@@ -248,7 +248,7 @@ abstract class SWP_Pro_Follow_Network {
 	 *
 	 */
 	protected function establish_username() {
-		$widgets = SWFW_Follow_Widget::get_widgets();
+		$widgets = SWP_Pro_Follow_Widget::get_widgets();
 
 		foreach( $widgets as $key => $settings ) {
 			if ( !empty( $settings[$this->key . '_username'] ) ) {
