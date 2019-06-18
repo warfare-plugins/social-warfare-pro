@@ -117,7 +117,7 @@ abstract class SWP_Pro_Follow_Network {
 	 * Apply network arguments to create $this.
 	 *
 	 * @since 1.0.0 | 26 NOV 2018 | Created.
-	 * @hook filter `swfw_follow_networks` | Array of SWFW_Follow_Network objects | @see SWFW_Follow_Widget.php
+	 * @hook filter `swp_follow_widget_networks` | Array of SWFW_Follow_Network objects | @see SWFW_Follow_Widget.php
 	 * @return void
 	 *
 	 */
