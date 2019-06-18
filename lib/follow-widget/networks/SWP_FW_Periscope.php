@@ -24,13 +24,13 @@ class SWP_FW_Periscope extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'periscope',
-			'name' => 'Periscope',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#40a4c4',
-			'color_accent' => '#e94f3c',
-			'url'	=> 'https://www.periscope.tv/swfw_username/',
+			'key'                 => 'periscope',
+			'name'                => 'Periscope',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#40a4c4',
+			'color_accent'        => '#e94f3c',
+			'url'                 => 'https://www.periscope.tv/swfw_username/',
 			'needs_authorization' => false
 		);
 
