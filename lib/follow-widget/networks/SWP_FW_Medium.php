@@ -24,13 +24,13 @@ class SWP_FW_Medium extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'medium',
-			'name' => 'Medium',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#00ab6c',
-			'color_accent' => '#fff',
-			'url'	=> 'https://medium.com/swfw_username',
+			'key'                 => 'medium',
+			'name'                => 'Medium',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#00ab6c',
+			'color_accent'        => '#fff',
+			'url'                 => 'https://medium.com/swfw_username',
 			'needs_authorization' => false
 		);
 
