@@ -24,13 +24,13 @@ class SWP_FW_Ello extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'ello',
-			'name' => 'Ello',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#000000',
-			'color_accent' => '#fff',
-			'url'	=> 'https://ello.co/swfw_username',
+			'key'                 => 'ello',
+			'name'                => 'Ello',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#000000',
+			'color_accent'        => '#fff',
+			'url'                 => 'https://ello.co/swfw_username',
 			'needs_authorization' => false
 		);
 
