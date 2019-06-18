@@ -50,7 +50,7 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 	 *
 	 */
 	public static function get_widgets() {
-		$widgets = get_option( 'widget_swfw_follow_widget', array());
+		$widgets = get_option( 'widget_swp_pro_follow_widget', array());
 
 		if (empty($widgets)) {
 		   return array();
@@ -227,12 +227,13 @@ FIELD;
 	*
 	* @since  1.0.0 | 03 DEC 2018 | Created.
 	* @access public
-	* @hook   filter | swfw_follow_networks | Array of SWFW_Follow_Network objects.
+	* @hook   filter | swp_follow_widget_networks | Array of SWFW_Follow_Network objects.
 	* @param  array $settings The settings as input & saved in the backend.
 	* @return string $html Fully qualified HTML to display a Social Follow Widget.
 	*
 	*/
 	function generate_widget_HTML( $settings ) {
+
 		$container_shape = $settings['shape'];
 		$style_variations_block = array('block', 'pill', 'shift', 'leaf' );
 
@@ -245,7 +246,7 @@ FIELD;
 
 		$html = "<div class='swfw-follow-container $container_shape'>";
 
-		$networks = apply_filters( 'swfw_follow_networks', array() );
+		$networks = apply_filters( 'swp_follow_widget_networks', array() );
 		$buttons = '';
 
 		// Build the network follow button.
@@ -324,7 +325,7 @@ FIELD;
 
 	protected function get_all_usernames() {
 		$widgets = SWFW_Follow_Widget::get_widgets();
-		$networks = apply_filters( 'swfw_follow_networks', array() );
+		$networks = apply_filters( 'swp_follow_widget_networks', array() );
 		$usernames = array();
 
 		foreach ( $networks as $network ) {
