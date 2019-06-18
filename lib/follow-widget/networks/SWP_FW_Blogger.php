@@ -24,14 +24,14 @@ class SWP_FW_Blogger extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'blogger',
-			'name' => 'Blogger',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#f57d00',
-			'color_accent' => '#fff',
-			'url'	=> 'https://www.periscope.tv/swfw_username/',
-			'placeholder' => 'blogname.com',
+			'key'                 => 'blogger',
+			'name'                => 'Blogger',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#f57d00',
+			'color_accent'        => '#fff',
+			'url'                 => 'https://www.periscope.tv/swfw_username/',
+			'placeholder'         => 'blogname.com',
 			'needs_authorization' => false
 		);
 
