@@ -24,13 +24,13 @@ class SWP_FW_Linkedin extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'linkedin',
-			'name' => 'Linkedin',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#0077b5',
-			'color_accent' => '#000000',
-			'url'	=> 'https://www.linkedin.com/in/swfw_username',
+			'key'                 => 'linkedin',
+			'name'                => 'Linkedin',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#0077b5',
+			'color_accent'        => '#000000',
+			'url'                 => 'https://www.linkedin.com/in/swfw_username',
 			'needs_authorization' => false
 		);
 
