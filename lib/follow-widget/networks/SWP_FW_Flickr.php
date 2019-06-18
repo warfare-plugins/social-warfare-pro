@@ -24,13 +24,13 @@ class SWP_FW_Flickr extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'flickr',
-			'name' => 'Flickr',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#0063dc',
-			'color_accent' => '#ff0084',
-			'url'	=> 'https://www.flickr.com/people/swfw_username/',
+			'key'                 => 'flickr',
+			'name'                => 'Flickr',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#0063dc',
+			'color_accent'        => '#ff0084',
+			'url'                 => 'https://www.flickr.com/people/swfw_username/',
 			'needs_authorization' => false
 		);
 
