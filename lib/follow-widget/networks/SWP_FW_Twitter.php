@@ -24,13 +24,13 @@ class SWP_FW_Twitter extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'twitter',
-			'name' => 'Twitter',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#429BD5',
-			'color_accent' => '#3C87B2',
-			'url'	=> 'https://twitter.com/swfw_username',
+			'key'                 => 'twitter',
+			'name'                => 'Twitter',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#429BD5',
+			'color_accent'        => '#3C87B2',
+			'url'                 => 'https://twitter.com/swfw_username',
 			'needs_authorization' => true
 		);
 

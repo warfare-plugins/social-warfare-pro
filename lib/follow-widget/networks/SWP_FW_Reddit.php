@@ -24,13 +24,13 @@ class SWP_FW_Reddit extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'reddit',
-			'name' => 'Reddit',
-			'cta' => 'Follow',
+			'key'                => 'reddit',
+			'name'               => 'Reddit',
+			'cta'                => 'Follow',
 			'follow_description' => 'Followers',
-			'color_primary' => '#EF4A23',
-			'color_accent' => '#D33F27',
-			'url'	=> 'https://reddit.com/user/swfw_username'
+			'color_primary'      => '#EF4A23',
+			'color_accent'       => '#D33F27',
+			'url'                => 'https://reddit.com/user/swfw_username'
 		);
 
 		parent::__construct( $network );

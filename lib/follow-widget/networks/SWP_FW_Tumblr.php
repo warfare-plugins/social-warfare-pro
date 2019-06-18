@@ -25,13 +25,13 @@ class SWP_FW_Tumblr extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'tumblr',
-			'name' => 'Tumblr',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#39475D',
-			'color_accent' => '#27313F',
-			'url'	=> 'https://swfw_username.tumblr.com',
+			'key'                 => 'tumblr',
+			'name'                => 'Tumblr',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#39475D',
+			'color_accent'        => '#27313F',
+			'url'                 => 'https://swfw_username.tumblr.com',
 			'needs_authorization' => true
 		);
 

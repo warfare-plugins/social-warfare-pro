@@ -24,13 +24,13 @@ class SWP_FW_Vimeo extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'vimeo',
-			'name' => 'Vimeo',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#1ab7ea',
-			'color_accent' => '#069bd1',
-			'url'	=> 'https://vimeo.com/swfw_username',
+			'key'                 => 'vimeo',
+			'name'                => 'Vimeo',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#1ab7ea',
+			'color_accent'        => '#069bd1',
+			'url'                 => 'https://vimeo.com/swfw_username',
 			'needs_authorization' => true
 		);
 

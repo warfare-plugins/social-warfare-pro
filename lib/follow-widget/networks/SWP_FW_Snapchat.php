@@ -24,13 +24,13 @@ class SWP_FW_Snapchat extends SWP_Pro_Follow_Network {
 	 */
 	public function __construct() {
 		$network = array(
-			'key' => 'snapchat',
-			'name' => 'Snapchat',
-			'cta' => 'Follow',
-			'follow_description' => 'Followers',
-			'color_primary' => '#000',
-			'color_accent' => '#fffc00',
-			'url'	=> 'https://www.snapchat.com/add/swfw_username',
+			'key'                 => 'snapchat',
+			'name'                => 'Snapchat',
+			'cta'                 => 'Follow',
+			'follow_description'  => 'Followers',
+			'color_primary'       => '#000',
+			'color_accent'        => '#fffc00',
+			'url'                 => 'https://www.snapchat.com/add/swfw_username',
 			'needs_authorization' => false
 		);
 
