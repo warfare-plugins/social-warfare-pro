@@ -80,12 +80,12 @@ class SWP_FW_Twitter extends SWP_Pro_Follow_Network {
 				return false;
 			}
 
-			if ( is_array( $response->ids ) ) {
+			if ( isset( $response->ids ) && is_array( $response->ids ) ) {
 				// Followers are listed as an array of user ids. Count them.
 				$this->follow_count += count( $response->ids);
 			}
 
-		} while ( !empty( $next_cursor ) && $response->next_cursor != 0 );
+		} while ( !empty( $response->next_cursor ) && $response->next_cursor != 0 );
 
 	}
 
