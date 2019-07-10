@@ -13,30 +13,60 @@
  */
 class SWP_Pro_Shortcodes {
 
+
+	/**
+	 * The Magic Constructor. This will set up and register all of the
+	 * shortcodes that can be used with the plugin. It will add shortcodes for
+	 * each of the networks that the plugin (and any addons) supports.
+	 *
+	 * @since  4.0.0 | 10 JUL 2019
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public function __construct() {
 
-		add_filter( 'the_content', array( $this, 'add_shortcodes' ) );
+
+		/**
+		 * The $swp_social_networks global is an array of social network objects
+		 * that correspond to all the available networks available to be used
+		 * as share buttons in a buttons panel.
+		 *
+		 * We'll loop through this so that user's can access share counts via
+		 * these shortcodes for all available networks.
+		 *
+		 */
+		global $swp_social_networks;
+		foreach($swp_social_networks as $network_key => $network_object ) {
+			$network = $network_object->key;
+
+
+			/**
+			 * Use the magic __call method, we'll intercept these dynamically
+			 * named method calls and parse the name to come up with the correct
+			 * response in order to provide these share counts.
+			 *
+			 */
+			add_shortcode( "${network}_shares", array( $this, "display_${network}_share_counts" ) );
+			add_shortcode( "sitewide_${network}_shares", array( $this, "display_sitewide_${network}_share_counts" ) );
+		}
 	}
 
 
-	public function add_shortcodes() {
-		// return;
+	public function __call( $name, $arguments ) {
+
 		global $swp_social_networks;
-
 		foreach($swp_social_networks as $network_key => $network_object ) {
-			var_dump($network_object);
-			//* We can't pass an argument to the callback, so save it as an object property.
-			$this->network_key = "${$network}_shares";
-
-			add_shortcode( "${network}_shares", [ $this, 'display_post_shares' ] );
-			add_shortcode( "sitewide_${network}_shares", [ $this, 'display_sitewide_shares' ] );
+			if (strpos($name, $network_key) !== false) {
+				$key = $network_key;
+			}
 		}
 
-		//* Always clean up after yourself!
-		unset($this->network_key);
-	}
+		if ( strpos( $name, 'sitewide' ) !== false ) {
+			return swp_kilomega( $this->get_total_shares() );
+		}
 
-	public function __call( $name ) {
+		return $this->display_post_shares ( $key );
 
 	}
 
@@ -44,9 +74,9 @@ class SWP_Pro_Shortcodes {
 		return swp_kilomega( $this->get_total_shares() );
 	}
 
-	protected function display_post_shares() {
+	protected function display_post_shares( $network_key ) {
 		global $post;
-		get_post_meta( $post->ID, $this->network_key, true );
+		$shares = get_post_meta( $post->ID, $network_key . '_shares', true );
 
 		return $shares ? swp_kilomega( $shares ) : 0;
 	}
