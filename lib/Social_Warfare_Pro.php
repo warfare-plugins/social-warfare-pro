@@ -210,7 +210,8 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 *
 		 */
 		$frontend_output = array(
-			'Pro_Header_Output'
+			'Pro_Header_Output',
+			'Pro_Shortcodes'
 		);
 		$this->load_files( '/lib/frontend-output/', $frontend_output );
 
@@ -299,6 +300,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	public function instantiate_deferred_classes() {
 		new SWP_Pro_Options_Page();
 		new SWP_Pro_Pinterest();
+		new SWP_Pro_Shortcodes();
 	}
 
 
