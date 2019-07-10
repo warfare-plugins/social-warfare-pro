@@ -212,7 +212,7 @@ class SWP_Pro_Shortcodes {
 		 */
 		$network_shares = get_option( 'social_warfare_sitewide_totals' );
 		if( !is_array( $network_shares ) ) {
-			$network_shares              = array();
+			$network_shares = array();
 			$network_shares['timestamp'] = 0;
 		}
 
@@ -223,7 +223,7 @@ class SWP_Pro_Shortcodes {
 		 *
 		 */
 		if ( 24 * 60 * 60 > ( time() - $network_shares['timestamp'] ) ) {
-			// return;
+			return;
 		}
 
 
