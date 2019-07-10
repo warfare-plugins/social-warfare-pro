@@ -98,12 +98,43 @@ class SWP_Pro_Shortcodes {
 
 	}
 
+
+	/**
+	 * A method to fetch share counts for an individual post for a specific
+	 * social media network. These can be accessed via shortcode using the
+	 * following naming pattern:
+	 *
+	 * [network_name_shares]
+	 * [twitter_shares]
+	 * [facebook_shares]
+	 *
+	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @param  string $network_key The unique, snake_cased key for the network.
+	 * @return string The formatted string of the share counts.
+	 *
+	 */
 	protected function fetch_post_shares( $network_key ) {
 		global $post;
 		$shares = get_post_meta( $post->ID, $network_key . '_shares', true );
 		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
 	}
 
+
+	/**
+	 * A method to fetch the aggragate, site-wide shares for a particular
+	 * social media network. For example, this can fetch ALL Facebook activity
+	 * across all pages, posts and the home page across the entire site. It can
+	 * be accessed using the following shortcode formates.
+	 *
+	 * [sitewide_network_name_shares]
+	 * [sitewide_twitter_shares]
+	 * [sitewide_facebook_shares]
+	 *
+	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @param  string $network The unique, snake_cased key for the network.
+	 * @return string The formatted string of the share counts.
+	 * 
+	 */
 	protected function fetch_sitewide_shares( $network ) {
 		$this->update_sitewide_shares();
 		$network_shares = get_option( 'social_warfare_sitewide_totals' );
