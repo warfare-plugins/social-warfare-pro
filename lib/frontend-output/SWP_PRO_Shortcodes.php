@@ -70,6 +70,16 @@ class SWP_Pro_Shortcodes {
 
 
 		/**
+		 * Bail out if this isn't being called via a valid method name that we
+		 * created above. This will keep any bizarre requests at bay.
+		 *
+		 */
+		if( strpos( $method_name, 'display' ) === false && strpos( $method_name, 'share_counts' ) === false ) {
+			return;
+		}
+
+
+		/**
 		 * We'll loop through the available networks in the plugin and see if
 		 * the method name being called contains the unique, snake-cased key for
 		 * one of the networks. If so, then that is the network for which we
@@ -133,7 +143,7 @@ class SWP_Pro_Shortcodes {
 	 * @since  4.0.0 | 10 JUL 2019 | Created
 	 * @param  string $network The unique, snake_cased key for the network.
 	 * @return string The formatted string of the share counts.
-	 * 
+	 *
 	 */
 	protected function fetch_sitewide_shares( $network ) {
 		$this->update_sitewide_shares();
@@ -181,7 +191,7 @@ class SWP_Pro_Shortcodes {
 		 * and just keep the current share totals in place for continued use.
 		 *
 		 */
-		if ( 24 * 60 * 60 > ( $time() - $network_shares['timestamp'] ) ) {
+		if ( 24 * 60 * 60 > ( time() - $network_shares['timestamp'] ) ) {
 			return;
 		}
 
