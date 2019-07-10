@@ -5,8 +5,8 @@
  * shortcodes for use in posts and widgets (if a widget shortcode plugin is
  * active).
  *
- * @package   SocialWarfare\Frontend-Output
- * @copyright Copyright (c) 2018, Warfare Plugins, LLC
+ * @package   Social Warfare Pro\Frontend-Output
+ * @copyright Copyright (c) 2019, Warfare Plugins, LLC
  * @license   GPL-3.0+
  * @since     4.0.0 | 09 JUL 2019 | Created
  *
@@ -19,7 +19,7 @@ class SWP_Pro_Shortcodes {
 	 * shortcodes that can be used with the plugin. It will add shortcodes for
 	 * each of the networks that the plugin (and any addons) supports.
 	 *
-	 * @since  4.0.0 | 10 JUL 2019
+	 * @since  4.0.0 | 10 JUL 2019 | Created
 	 * @param  void
 	 * @return void
 	 *
@@ -53,20 +53,48 @@ class SWP_Pro_Shortcodes {
 	}
 
 
-	public function __call( $name, $arguments ) {
+	/**
+	 * The Magic Call Method
+	 *
+	 * This allows us to intercept calls to methods that don't actually exist.
+	 * We can then parse the $name string to find out which of our shortcodes
+	 * that we registered above in the constructor and return the proper response.
+	 *
+	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @param  string $name      The name of the class method being called.
+	 * @param  array  $arguments An array of arguments passed to that method.
+	 * @return mixed  String of share count if valid call is made. False if not.
+	 *
+	 */
+	public function __call( $method_name, $arguments ) {
 
+
+		/**
+		 * We'll loop through the available networks in the plugin and see if
+		 * the method name being called contains the unique, snake-cased key for
+		 * one of the networks. If so, then that is the network for which we
+		 * will fetch and display share counts.
+		 *
+		 */
 		global $swp_social_networks;
-		foreach($swp_social_networks as $network_key => $network_object ) {
-			if (strpos($name, $network_key) !== false) {
-				$key = $network_key;
+		foreach($swp_social_networks as $key => $network_object ) {
+			if( strpos( $method_name, $key ) !== false ) {
+				$network = $key;
 			}
 		}
 
-		if ( strpos( $name, 'sitewide' ) !== false ) {
+
+		/**
+		 * If the method name contains the string "sitewide" then the user is
+		 * requesting the aggragate sum of all shares for this network accross
+		 * their entire website. Otherwise, they are just requesting share counts
+		 * for this specific post.
+		 *
+		 */
+		if ( strpos( $method_name, 'sitewide' ) !== false ) {
 			return swp_kilomega( $this->get_total_shares() );
 		}
-
-		return $this->display_post_shares ( $key );
+		return $this->fetch_post_shares( $network );
 
 	}
 
@@ -74,7 +102,7 @@ class SWP_Pro_Shortcodes {
 		return swp_kilomega( $this->get_total_shares() );
 	}
 
-	protected function display_post_shares( $network_key ) {
+	protected function fetch_post_shares( $network_key ) {
 		global $post;
 		$shares = get_post_meta( $post->ID, $network_key . '_shares', true );
 
