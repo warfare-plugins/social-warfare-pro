@@ -109,25 +109,51 @@ class SWP_Pro_Shortcodes {
 		return $shares ? swp_kilomega( $shares ) : 0;
 	}
 
+
 	/**
-	 * Gets the total shares updated within the past 24 hours.
+	 * A method to update the sitewide aggragate share counts for each network.
 	 *
-	 * If the total shares exist for the requested network and are less than
-	 * a day old, the total is returned.
-	 * Otherwise, a new total count is created, then returned.
+	 * This method will check the timestamp and then loop through all of the
+	 * social networks and then update the sitewide totals so that they will be
+	 * cached and readily available for the next 24 hours.
 	 *
-	 * @return integer The total share counts for network.
+	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @param  void
+	 * @return void
+	 *
 	 */
-	protected function fetch_sitewide_shares() {
+	protected function update_sitewide_shares() {
+
+
+		/**
+		 * A WordPress option to allow us to store a timestamp and our aggragate
+		 * totals. We can check this field to see if they need updated. If not,
+		 * we'll just use the cached totals that are already in place.
+		 *
+		 * If it hasn't been created yet, it will return FALSE and as such, we'll
+		 * check if it's an array and declare it as one and declare an expired
+		 * timestamp so that it will still trigger the recount below.
+		 *
+		 */
 		$network_shares = get_option( 'social_warfare_sitewide_totals' );
+		if( !is_array( $network_shares ) ) {
+			$network_shares              = array();
+			$network_shares['timestamp'] = 0;
+		}
+
+
+		
+		$timestamp    = $network_shares['timestamp'];
+		$current_time = time();
+		if ( 24 * 60 * 60 < ( $current_time - $timestamp ) ) {
+			return;
+		}
+
+		global $swp_social_networks;
+		foreach($swp_social_networks as $key => $network_object ) {
 
 		if ( !empty( $network_shares[$this->network_key] ) ) {
-			$then = $network_shares[$this->network_key]['timestamp'];
-			$now = time();
 
-			if ( 24 * 60 * 60 < ($now - $then) ) {
-				return $network_shares[$this->network]['total_shares'];
-			}
 		}
 
 		//* The total count has not been updated in 24 hours.
