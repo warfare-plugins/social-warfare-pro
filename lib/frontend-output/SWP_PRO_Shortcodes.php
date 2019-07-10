@@ -20,7 +20,7 @@
  *    C. [total_shares] and [sitewide_total_shares]
  *       These two shortcodes will behave the same as above except that they
  *       will bring out the 'total shares' field instead of an individual
- *       social network. 
+ *       social network.
  *
  * @package   Social Warfare Pro\Frontend-Output
  * @copyright Copyright (c) 2019, Warfare Plugins, LLC
@@ -156,9 +156,9 @@ class SWP_Pro_Shortcodes {
 	 * @return string The formatted string of the share counts.
 	 *
 	 */
-	protected function fetch_post_shares( $network_key ) {
+	protected function fetch_post_shares( $network ) {
 		global $post;
-		$shares = get_post_meta( $post->ID, $network_key . '_shares', true );
+		$shares = get_post_meta( $post->ID, $network . '_shares', true );
 		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
 	}
 
