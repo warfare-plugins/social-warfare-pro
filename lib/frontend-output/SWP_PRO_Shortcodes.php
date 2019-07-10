@@ -91,23 +91,26 @@ class SWP_Pro_Shortcodes {
 		 * for this specific post.
 		 *
 		 */
-		if ( strpos( $method_name, 'sitewide' ) !== false ) {
-			return swp_kilomega( $this->get_total_shares() );
+		if ( strpos( $method_name, 'sitewide' ) === false ) {
+			return $this->fetch_post_shares( $network );
 		}
-		return $this->fetch_post_shares( $network );
+		return $this->fetch_sitewide_shares( $network );
 
-	}
-
-	public function display_sitewide_shares() {
-		return swp_kilomega( $this->get_total_shares() );
 	}
 
 	protected function fetch_post_shares( $network_key ) {
 		global $post;
 		$shares = get_post_meta( $post->ID, $network_key . '_shares', true );
-
-		return $shares ? swp_kilomega( $shares ) : 0;
+		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
 	}
+
+	protected function fetch_sitewide_shares( $network ) {
+		$this->update_sitewide_shares();
+		$network_shares = get_option( 'social_warfare_sitewide_totals' );
+		return SWP_Utility::kilomega( $network_shares[$network] );
+	}
+
+
 
 
 	/**
@@ -142,80 +145,47 @@ class SWP_Pro_Shortcodes {
 		}
 
 
-		
-		$timestamp    = $network_shares['timestamp'];
-		$current_time = time();
-		if ( 24 * 60 * 60 < ( $current_time - $timestamp ) ) {
+		/**
+		 * Check if the timestamp is older than 24 hours old. If not, bail out
+		 * and just keep the current share totals in place for continued use.
+		 *
+		 */
+		if ( 24 * 60 * 60 > ( $time() - $network_shares['timestamp'] ) ) {
 			return;
 		}
 
-		global $swp_social_networks;
-		foreach($swp_social_networks as $key => $network_object ) {
 
-		if ( !empty( $network_shares[$this->network_key] ) ) {
-
+		/**
+		 * If the timestamp is expired (older than 24 hours) then we'll proceed
+		 * by looping through each social network and updating their total,
+		 * site-wide share counts.
+		 *
+		 */
+		global $swp_social_networks, $wpdb;
+		foreach( $swp_social_networks as $network_key => $network_object ) {
+			if( $network_key = 'twitter') {
+				$meta_key = $network_key . '_shares';
+				$total = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT
+						SUM(meta_value)
+						AS total
+						FROM $wpdb->postmeta
+						WHERE meta_key = %s",
+						$meta_key
+					)
+				);
+			}
+			$network_shares[$network_key] = $total ? $total : 0;
 		}
 
-		//* The total count has not been updated in 24 hours.
-		$updated_total = $this->get_total_shares();
-		$network_shares[$this->network_key] = [
-			'timestamp'     => time(),
-			'total_shares'  => $updated_total
-		];
 
-		update_option( 'social_warfare_sitewide_totals', $network_shares );
-
-		return $updated_total;
-	}
-
-
-	/**
-	 * Fetches total share counts for all currently registred networks.
-	 *
-	 * If they add networks later, they will not be in here. Instead,
-	 * the shortcode will check to see if the network has data. If not
-	 * it will be created and saved at that time.
-	 *
-	 * @return bool True if successfully created, false otherwise.
-	 *
-	 */
-	protected function init_database() {
-		global $swp_social_networks;
-		$share_data = [];
-
-		foreach ($swp_social_networks as $network_key => $object) {
-			$total = $this->get_total_shares( $network );
-			$share_data[$this->network_key] = [
-				'timestamp'     => time(),
-				'total_shares'  => $this->get_total_shares( $network_key )
-			];
-		}
-
-		return add_option( 'social_warfare_enhanced_shortcode', $share_data );
-	}
-
-	/**
-	 * Counts the total share data aggregated across posts.
-	 *
-	 * This reads all post meta for a given network, sums it,
-	 * and returns it as an integer.
-	 *
-	 *
-	 * @return integer The total share counts for a given network.
-	 *
-	 */
-	protected function get_total_shares( $network_key = null ) {
-		if ( null === $network_key ) {
-			$network_key = $this->network_key;
-		}
-
-		$query = "SELECT
-				SUM(meta_values)
-				AS total
-				FROM $wpdb->postmeta
-				WHERE meta_key = $network_key";
-
-		$sum = $wpdb->get_results( $total );
-		return $sum[0]->total;
+		/**
+		 * Now we update the timestamp to the current time and stuff all of our
+		 * totals back into the database for easy retrieval.
+		 *
+		 */
+		$network_shares['timestamp'] = time();
+		update_option( 'social_warfare_sitewide_totals', $network_shares, true );
 	}
 }
