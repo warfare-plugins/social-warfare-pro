@@ -17,6 +17,11 @@
  *       for the entire website. This will add up share counts for all posts,
  *       pages, and custom post types and add them up into one cumalitive total.
  *
+ *    C. [total_shares] and [sitewide_total_shares]
+ *       These two shortcodes will behave the same as above except that they
+ *       will bring out the 'total shares' field instead of an individual
+ *       social network. 
+ *
  * @package   Social Warfare Pro\Frontend-Output
  * @copyright Copyright (c) 2019, Warfare Plugins, LLC
  * @license   GPL-3.0+
