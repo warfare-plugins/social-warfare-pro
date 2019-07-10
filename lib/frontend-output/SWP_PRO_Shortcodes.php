@@ -11,7 +11,7 @@
  *    A. [network_name_shares] such as [twitter_shares]
  *       This will display the share count, in this case Twitter share counts,
  *       for the current post.
- *       
+ *
  *    B. [sitewide_network_name_shares] such as [sitewide_twitter_shares]
  *       This will display the share counts, in this case Twitter share counts,
  *       for the entire website. This will add up share counts for all posts,
@@ -62,6 +62,9 @@ class SWP_Pro_Shortcodes {
 			add_shortcode( "${network}_shares", array( $this, "display_${network}_share_counts" ) );
 			add_shortcode( "sitewide_${network}_shares", array( $this, "display_sitewide_${network}_share_counts" ) );
 		}
+
+	   add_shortcode( "total_shares", array( $this, "display_total_share_counts" ) );
+	   add_shortcode( "sitewide_total_shares", array( $this, "display_sitewide_total_share_counts" ) );
 	}
 
 
@@ -100,10 +103,22 @@ class SWP_Pro_Shortcodes {
 		 *
 		 */
 		global $swp_social_networks;
-		foreach($swp_social_networks as $key => $network_object ) {
+		$networks = $swp_social_networks;
+		$networks['total'] = true;
+		foreach($networks as $key => $network_object ) {
 			if( strpos( $method_name, $key ) !== false ) {
 				$network = $key;
 			}
+		}
+
+
+		/**
+		 * If no network was matched to the name of the method being called,
+		 * then just bail out and move on.
+		 *
+		 */
+		if( empty( $network ) ) {
+			return;
 		}
 
 
@@ -203,7 +218,7 @@ class SWP_Pro_Shortcodes {
 		 *
 		 */
 		if ( 24 * 60 * 60 > ( time() - $network_shares['timestamp'] ) ) {
-			return;
+			// return;
 		}
 
 
@@ -214,20 +229,20 @@ class SWP_Pro_Shortcodes {
 		 *
 		 */
 		global $swp_social_networks, $wpdb;
-		foreach( $swp_social_networks as $network_key => $network_object ) {
-			if( $network_key = 'twitter') {
-				$meta_key = $network_key . '_shares';
-				$total = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT
-						SUM(meta_value)
-						AS total
-						FROM $wpdb->postmeta
-						WHERE meta_key = %s",
-						$meta_key
-					)
-				);
-			}
+		$networks = $swp_social_networks;
+		$networks['total'] = true;
+		foreach( $networks as $network_key => $network_object ) {
+			$meta_key = $network_key . '_shares';
+			$total = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT
+					SUM(meta_value)
+					AS total
+					FROM $wpdb->postmeta
+					WHERE meta_key = %s",
+					$meta_key
+				)
+			);
 			$network_shares[$network_key] = $total ? $total : 0;
 		}
 
