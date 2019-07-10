@@ -232,6 +232,12 @@ class SWP_Pro_Shortcodes {
 		 * by looping through each social network and updating their total,
 		 * site-wide share counts.
 		 *
+		 * We're going to use a query directly on the $wpdb object because that
+		 * will be much fast and lightweight than attempting to query posts and
+		 * do some sort of complex loop. Plus, since we'll only be doing this
+		 * once per day and then storing them in an autoloaded option set, this
+		 * should remain very high performance and not put any drag on the server.
+		 *
 		 */
 		global $swp_social_networks, $wpdb;
 		$networks = $swp_social_networks;
