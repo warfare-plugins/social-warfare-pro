@@ -5,6 +5,18 @@
  * shortcodes for use in posts and widgets (if a widget shortcode plugin is
  * active).
  *
+ * This class will loop through all social media networks and register two
+ * shortcodes per network for displaying share counts:
+ *
+ *    A. [network_name_shares] such as [twitter_shares]
+ *       This will display the share count, in this case Twitter share counts,
+ *       for the current post.
+ *       
+ *    B. [sitewide_network_name_shares] such as [sitewide_twitter_shares]
+ *       This will display the share counts, in this case Twitter share counts,
+ *       for the entire website. This will add up share counts for all posts,
+ *       pages, and custom post types and add them up into one cumalitive total.
+ *
  * @package   Social Warfare Pro\Frontend-Output
  * @copyright Copyright (c) 2019, Warfare Plugins, LLC
  * @license   GPL-3.0+
