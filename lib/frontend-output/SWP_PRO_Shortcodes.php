@@ -152,8 +152,6 @@ class SWP_Pro_Shortcodes {
 	}
 
 
-
-
 	/**
 	 * A method to update the sitewide aggragate share counts for each network.
 	 *
