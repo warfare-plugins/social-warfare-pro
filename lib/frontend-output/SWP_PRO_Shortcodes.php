@@ -74,7 +74,8 @@ class SWP_Pro_Shortcodes {
 		 * created above. This will keep any bizarre requests at bay.
 		 *
 		 */
-		if( strpos( $method_name, 'display' ) === false && strpos( $method_name, 'share_counts' ) === false ) {
+		if( strpos( $method_name, 'display' ) === false &&
+		    strpos( $method_name, 'share_counts' ) === false ) {
 			return;
 		}
 
