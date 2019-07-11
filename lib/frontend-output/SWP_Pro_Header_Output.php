@@ -547,6 +547,16 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	public function generate_twitter_card_html( $fields ) {
 		$meta = '';
 
+
+		/**
+		 * If Twitter Cards are disabled in the user's options, then don't
+		 * generate the meta tags. Just bail out.
+		 *
+		 */
+		if( false === SWP_Utility::get_option( 'twitter_cards' ) ) {
+			return;
+		}
+
 		if ( !is_array($fields)) {
 			error_log(__METHOD__.' (caught) Parameter \$fields should be an array. I got ' . gettype($fields) . ' :'.var_export($fields, 1));
 			return '';
