@@ -14,6 +14,8 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  * @since     3.0.8 | 23 MAY 2018 | Added compatibility for custom color/outline combos.
  * @since     3.1.0 | 05 JUL 2018 | Added global $post variable.
  * @since     3.5.0 | 18 DEC 2018 | Refactored for code optimization.
+ * @since     4.0.0 | 11 JUL 2019 | Added checks for OG and Twitter Card options
+ *                                  page toggle.
  *
  * Hook into the core header filter
  *
@@ -22,8 +24,30 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  * To view which meta values are processed,
  * see setup_open_graph() and setup_twitter_card().
  *
+ * This class is divided into two main sections:
+ *
+ *     1.  Setup the Meta Tag Values: The methods here will populate all of the
+ *         Open Graph and Twitter Card values into organized arrays of data.
+ *     2.  Create the Meta Tag HTML Markup: The methods here will take the
+ *         values created above and generate the actual HTML markup that is to
+ *         be printed to the screen.
+ *
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
+
+
+	/**
+	 * The Magic Constructor
+	 *
+	 * The constructor for this class will simply enqueue our methods to run on
+	 * the swp_header_html filter hook which is run/applied in the core/free
+	 * version of the plugin.
+	 *
+	 * @since  3.0.0 | 01 MAR 2019 | Created during class-based refactoring.
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public function __construct() {
 		global $post, $swp_user_options;
 
@@ -34,6 +58,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		add_filter( 'swp_header_html', array( $this, 'output_custom_color' ) );
 	}
 
+
 	/**
 	 * Parses user options and prepares data for header output.
 	 *
@@ -41,13 +66,22 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 * touched by the callbacks in this method body.
 	 *
 	 * @since  3.5.0 | 19 DEC 2018 | Created.
-	 * @param void
+	 * @param  void
 	 * @return void
+	 *
 	 */
 	public function establish_header_values() {
 		global $post;
 
-		if( false === is_singular() || !is_object( $post ) ) {
+
+		/**
+		 * We only create header meta tags on singlular posts and pages. We
+		 * don't create them on archives and categories. As such, if we are not
+		 * on a singular post or if we don't have a valid $post object, then
+		 * just bail out early.
+		 *
+		 */
+		if( false === is_singular() || false === is_object( $post ) ) {
 			return;
 		}
 
@@ -55,6 +89,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		$this->setup_open_graph();
 		$this->setup_twitter_card();
 	}
+
 
 	/**
 	 * Takes stored class data and returns meta tag HTML.
@@ -66,6 +101,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	public function render_meta_html( $meta_html ) {
+
+
+		/**
+		 * This is the method that will sift through the options and compile
+		 * the OG and TC values into an array of data.
+		 *
+		 */
 		$this->establish_header_values();
 
 		if( !empty( $this->open_graph_data ) ) {
