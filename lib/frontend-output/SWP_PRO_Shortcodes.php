@@ -228,6 +228,20 @@ class SWP_Pro_Shortcodes {
 
 
 		/**
+		 * Now that we've decided the cache is expired, we'll want to go ahead
+		 * and fetch new share count totals from across all the postmeta fields
+		 * on the site. We'll grab the global $swp_social_networks variable
+		 * which is an array of social network objects. We'll also add an item
+		 * to the array called 'total' to represent the total shares across all
+		 * social networks.
+		 *
+		 */
+		global $swp_social_networks, $wpdb;
+		$networks = $swp_social_networks;
+		$networks['total'] = true;
+
+
+		/**
 		 * If the timestamp is expired (older than 24 hours) then we'll proceed
 		 * by looping through each social network and updating their total,
 		 * site-wide share counts.
@@ -239,9 +253,6 @@ class SWP_Pro_Shortcodes {
 		 * should remain very high performance and not put any drag on the server.
 		 *
 		 */
-		global $swp_social_networks, $wpdb;
-		$networks = $swp_social_networks;
-		$networks['total'] = true;
 		foreach( $networks as $network_key => $network_object ) {
 			$meta_key = $network_key . '_shares';
 			$total = $wpdb->get_var(
