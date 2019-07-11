@@ -483,6 +483,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
    public function generate_meta_html( $fields ) {
+
+
+	   /**
+	    * If the Open Graph tags are turned off in the options, then don't
+	    * generate anything. Just bail out.
+	    *
+	    */
+	   if( false === SWP_Utility::get_option( 'og_tags' ) ) {
+		   return;
+	   }
+
 	   $meta = '';
 
 	   if ( !is_array($fields)) {
