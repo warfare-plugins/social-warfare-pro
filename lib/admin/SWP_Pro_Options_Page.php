@@ -278,11 +278,18 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 			//* minTotes => minimum_shares
 			$minimum_shares = new SWP_Option_Text( __( 'Minimum Shares', 'social-warfare' ), 'minimum_shares' );
 			$minimum_shares->set_default( 0 )
-				->set_priority( 40 )
+				->set_priority( 25 )
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+				->set_premium( 'pro' );
+
+			$delay_share_counts = new SWP_Option_Text( __( 'Delay in Hours', 'social-warfare' ), 'delay_share_counts' );
+			$delay_share_counts->set_default( 0 )
+				->set_priority( 26 )
 				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
 				->set_premium( 'pro' );
 
 		$display->sections->share_counts->add_option( $minimum_shares );
+		$display->sections->share_counts->add_option( $delay_share_counts );
 
 		$meta_tags = new SWP_Options_Page_Section( __( 'Social Meta Tags' , 'social-warfare'), 'meta_tags' );
 		$meta_tags->set_description( __( 'Activating Open Graph Tags and Twitter Cards will cause the plugin to output certain meta tags in the head section of your site\'s HTML. Twitter cards are pretty much exactly like Open Graph meta tags, except that there is only one network, Twitter, that looks at them.', 'social-warfare') )
