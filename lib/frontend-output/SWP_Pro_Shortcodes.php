@@ -158,7 +158,7 @@ class SWP_Pro_Shortcodes {
 	 */
 	protected function fetch_post_shares( $network ) {
 		global $post;
-		$shares = get_post_meta( $post->ID, $network . '_shares', true );
+		$shares = get_post_meta( $post->ID, '_' . $network . '_shares', true );
 		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
 	}
 
@@ -254,7 +254,7 @@ class SWP_Pro_Shortcodes {
 		 *
 		 */
 		foreach( $networks as $network_key => $network_object ) {
-			$meta_key = $network_key . '_shares';
+			$meta_key = '_' . $network_key . '_shares';
 			$total = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT
