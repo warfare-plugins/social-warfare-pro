@@ -275,6 +275,19 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
 		$display->sections->social_networks->add_option( $order_of_icons );
 
+			$emphasize_icon = new SWP_Option_Select( __( 'Emphasize Buttons','social-warfare' ), 'emphasized_icon' );
+			$emphasize_icon->set_choices(array(
+					'0' 	=> __( 'Don\'t Emphasize Any Buttons','social-warfare' ),
+					'1' 	=> __( 'Emphasize the First Button','social-warfare' ),
+					'2' 	=> __( 'Emphasize the First Two Buttons','social-warfare' )
+				))
+				->set_priority( 100 )
+				->set_size( 'sw-col-300' )
+				->set_default( '0' )
+				->set_premium( 'pro' );
+
+		$SWP_Options_Page->tabs->display->sections->social_networks->add_option( $emphasize_icon );
+
 			//* minTotes => minimum_shares
 			$minimum_shares = new SWP_Option_Text( __( 'Minimum Shares', 'social-warfare' ), 'minimum_shares' );
 			$minimum_shares->set_default( 0 )
