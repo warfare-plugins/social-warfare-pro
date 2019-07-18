@@ -28,7 +28,30 @@ class SWP_Pro_Bitly {
 	 */
 	public function __construct() {
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
+		add_filter( 'swp_register_link_shortners' , array( $this, 'register_self' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
+	}
+
+
+	/**
+	 * register_self()
+	 *
+	 * A function to register this link shortening integration with the
+	 * 'swp_register_link_shortners' filter so that it will show up and become
+	 * an option on the options page.
+	 *
+	 * @since  4.0.0 | 18 JUL 2019 | Created
+	 * @param  array $array An array of link shortening integrations.
+	 * @return array        The modified array with our integration added.
+	 *
+	 */
+	public function register_self( $array ) {
+		$array[] = array(
+			'key' => 'bitly',
+			'name' => 'Bitly',
+			'authentication_url' => '',
+		);
+		return $array;
 	}
 
 
