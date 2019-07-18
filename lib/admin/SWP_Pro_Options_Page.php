@@ -24,17 +24,19 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 
 		$advanced = $SWP_Options_Page->tabs->advanced;
 
-		$bitly = new SWP_Options_Page_Section( __( 'Bitly Link Shortening', 'social-warfare'), 'bitly' );
-		$bitly->set_description( __( 'If you like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
+		$link_shortening = new SWP_Options_Page_Section( __( 'Link Shortening', 'social-warfare'), 'bitly' );
+		$link_shortening->set_description( __( 'If you like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
 			->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/' )
 			->set_priority( 20 );
 
 			//* linkShortening => bitly_authentication
-			$bitly_authentication = new SWP_Option_Toggle( __('Bitly Link Shortening', 'social-warfare' ), 'bitly_authentication' );
+			$bitly_authentication = new SWP_Option_Toggle( __('Link Shortening', 'social-warfare' ), 'bitly_authentication' );
 			$bitly_authentication->set_size( 'sw-col-300' )
 				->set_priority( 10 )
 				->set_default( false )
 				->set_premium( 'pro' );
+
+
 
 			$bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ), 'bitly_connection' );
 			$bitly_connection->set_priority( 20 )
@@ -247,7 +249,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 			$recovery_permalink, $recovery_prefix, $recovery_subdomain, $recovery_protocol,
 			$cross_domain, $former_domain, $current_domain] );
 
-		$advanced->add_sections( [$bitly, $analytics_tracking, $advanced_pinterest, $share_recovery] );
+		$advanced->add_sections( array( $link_shortening, $analytics_tracking, $advanced_pinterest, $share_recovery) );
 
 		return $this;
 	}

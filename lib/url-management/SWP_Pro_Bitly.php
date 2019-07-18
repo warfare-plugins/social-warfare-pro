@@ -47,11 +47,76 @@ class SWP_Pro_Bitly {
 	 */
 	public function register_self( $array ) {
 		$array[] = array(
-			'key' => 'bitly',
-			'name' => 'Bitly',
-			'authentication_url' => '',
+			'key'    => 'bitly',
+			'name'   => 'Bitly',
+			'object' => $this,
 		);
 		return $array;
+	}
+
+
+	/**
+	 * generate_authentication_button_data()
+	 *
+	 * A method to generate an array of information that can be used to generate
+	 * the authentication button for this network on the options page.
+	 *
+	 * @since  4.0.0 | 18 JUL 2019 | Created
+	 * @param  void
+	 * @return array The array of button data including the text, color_css,
+	 *               target, and link.
+	 *
+	 */
+	public function populate_authentication_button_data() {
+
+
+		/**
+		 * If the integration has already been authenticated, then we'll need to
+		 * populate a button that says, "Connected" so it's easy for the user to
+		 * see.
+		 *
+		 */
+		if ( SWP_Utility::get_option('bitly_access_token') ) {
+
+			//* Display a confirmation button. On click takes them to bitly settings page.
+			$text = __( 'Connected', 'social-warfare' );
+			$text .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
+			$color = 'sw-green-button';
+			$link = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
+			$target = "_blank";
+
+
+		/**
+		 * If the integration has not been authenticated, then it needs to
+		 * contain the text and link that will allow the user to do so.
+		 *
+		 */
+		} else {
+
+			//* Display the button, which takes them to a Bitly auth page.
+			$text = __( 'Authenticate', 'social-warfare' );
+			$color = 'sw-navy-button';
+			$target = "";
+
+			//* The base URL for authorizing SW to work on a user's Bitly account.
+			$link = "https://bitly.com/oauth/authorize";
+
+			//* client_id: The SWP application id, assigned by Bitly.
+			$link .= "?client_id=96c9b292c5503211b68cf4ab53f6e2f4b6d0defb";
+
+			//* state: Optional state to include in the redirect URI.
+			$link .= "&state=" . admin_url( 'admin-ajax.php' );
+
+			//* redirect_uri: The page to which a user is redirected upon successfully authenticating.
+			$link .= "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
+		}
+
+		$components = array(
+			'text' => $text,
+			'color_css' => $color,
+			'target' => $target,
+			'link' => $link,
+		);
 	}
 
 
