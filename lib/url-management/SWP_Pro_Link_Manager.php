@@ -36,6 +36,6 @@ class SWP_Pro_Link_Manager {
 		 *
 		 */
 		new SWP_Pro_Bitly();
-		
+
 	}
 }
