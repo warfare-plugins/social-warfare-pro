@@ -129,6 +129,20 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 
 			/**
+			 * This section will load all of the files needed to process the
+			 * sharable URL's that will be used for the buttons. This includes
+			 * the link shortening processes and the UTM parameter processes.
+			 *
+			 */
+			$files = array(
+				'Pro_Bitly',
+				'Pro_Link_Manager',
+				'Pro_UTM_Tracking',
+			);
+			$this->load_files( '/lib/url-management/', $files );
+
+
+			/**
 			 * This section will load all of the files needed to build out the
 			 * follow widget. It contains everything needed in both the backend
 			 * admin section and for the frontend display.
@@ -261,7 +275,9 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 *
 		 */
 		new SWP_Pro_Follow_Network_Loader();
+
 		new SWP_Pro_Follow_Widget();
+		new SWP_Pro_Link_Manager();
 
 
 		if( true == is_admin() ) {
