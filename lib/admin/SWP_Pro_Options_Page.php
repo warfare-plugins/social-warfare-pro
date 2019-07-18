@@ -25,31 +25,47 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 		$advanced = $SWP_Options_Page->tabs->advanced;
 
 		$link_shortening = new SWP_Options_Page_Section( __( 'Link Shortening', 'social-warfare'), 'bitly' );
-		$link_shortening->set_description( __( 'If you like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
+		$link_shortening->set_description( __( 'If you\'d like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
 			->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/' )
 			->set_priority( 20 );
 
 			//* linkShortening => bitly_authentication
-			$bitly_authentication = new SWP_Option_Toggle( __('Link Shortening', 'social-warfare' ), 'bitly_authentication' );
-			$bitly_authentication->set_size( 'sw-col-300' )
+			$link_shortening_toggle = new SWP_Option_Toggle( __('Link Shortening', 'social-warfare' ), 'link_shortening_toggle' );
+			$link_shortening_toggle->set_size( 'sw-col-300' )
 				->set_priority( 10 )
 				->set_default( false )
 				->set_premium( 'pro' );
 
+				$services = array();
+				$authentications = array();
+				$services = apply_filters('swp_register_link_shorteners', $services );
+				foreach( $services as $service ) {
+					$available_services[$service['key']] = $service['name'];
 
+					$authentications[$service['key']] = new SWP_Option_Button( 'Authenticate', 'bitly', 'button sw-navy-button swp-revoke-button', 'http://google.com' );
+					$authentications[$service['key']]->set_size( 'sw-col-300' )
+						->set_priority( 20 )
+						->set_dependency('link_shortening_service', $service['key']);
+				}
 
-			$bitly_connection = new SWP_Section_HTML( __('Connect Your Bitly Account', 'social-warfare' ), 'bitly_connection' );
-			$bitly_connection->set_priority( 20 )
-				->set_premium( 'pro' )
-				->do_bitly_authentication_button();
+				//* advanced_pinterest_image_location => pinterest_image_location
+				$link_shortening_service = new SWP_Option_Select( __( 'Link Shortening Service', 'social-warfare' ), 'link_shortening_service' );
+				$link_shortening_service->set_choices( $available_services )
+					->set_default( 'hidden ')
+					->set_size( 'sw-col-300' )
+					->set_dependency( 'link_shortening_toggle', true )
+					->set_premium( 'pro' )
+					->set_priority( 15 );
 
-			$bitly_start_date = new SWP_Section_HTML( __('When should we start making Bitly links? This can be in the past.', 'social-warfare'), 'bitly_start_date' );
-			$bitly_start_date->set_priority( 30 )
-				->set_premium( 'pro' )
-				->set_dependency( 'bitly_authentication', array( true ) )
-				->do_bitly_start_date();
+			$link_shortening_start_date = new SWP_Option_Text( __( 'Minimum Publish Date', 'social-warfare' ), 'link_shortening_start_date' );
+			$link_shortening_start_date->set_default( date('Y-m-d') )
+				->set_priority( 30 )
+				->set_size( 'sw-col-300' )
+				->set_dependency( 'link_shortening_toggle', true )
+				->set_premium( 'pro');
 
-			$bitly->add_options( [$bitly_authentication, $bitly_connection, $bitly_start_date] );
+			$link_shortening->add_options( array( $link_shortening_toggle, $link_shortening_service, $link_shortening_start_date ) );
+			$link_shortening->add_options( $authentications );
 
 
 		$analytics_tracking = new SWP_Options_Page_Section( __('Analytics Tracking', 'social-warfare' ), 'analytics_tracking' );

@@ -28,7 +28,7 @@ class SWP_Pro_Bitly {
 	 */
 	public function __construct() {
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
-		add_filter( 'swp_register_link_shortners' , array( $this, 'register_self' ) );
+		add_filter( 'swp_register_link_shorteners' , array( $this, 'register_self' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
 	}
 
@@ -46,7 +46,7 @@ class SWP_Pro_Bitly {
 	 *
 	 */
 	public function register_self( $array ) {
-		$array[] = array(
+		$array['bitly'] = array(
 			'key'    => 'bitly',
 			'name'   => 'Bitly',
 			'object' => $this,
