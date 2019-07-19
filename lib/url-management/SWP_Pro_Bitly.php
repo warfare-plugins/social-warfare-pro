@@ -147,7 +147,7 @@ class SWP_Pro_Bitly {
 		$post_id           = $array['post_id'];
 		$google_analytics  = SWP_Utility::get_option('google_analytics');
 		$access_token      = SWP_Utility::get_option( 'bitly_access_token' );
-		$start_date        = SWP_Utility::get_option( 'bitly_start_date' );
+		$start_date        = SWP_Utility::get_option( 'link_shortening_start_date' );
 		$cached_bitly_link = $this->fetch_local_link( $post_id, $array['network'] );
 
 
