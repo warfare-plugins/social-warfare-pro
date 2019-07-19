@@ -65,60 +65,126 @@ class SWP_Pro_Link_Manager {
 	 * @since  4.0.0 | 18 JUL 2019 | Created
 	 * @param  void
 	 * @return void
-	 * 
+	 *
 	 */
 	public function add_settings_page_options() {
 
+
+		/**
+		 * If there are no link shortening services regsitered via this hook,
+		 * then just bail out and don't create of the link shortening section or
+		 * options for the advanced tab. Just don't output anything.
+		 *
+		 */
+		$services = array();
+		$services = apply_filters('swp_link_shorteners', $services );
+		if( true === empty( $services ) ) {
+			return;
+		}
+
+
+		/**
+		 * The Link Shortening Section
+		 *
+		 * This creates a new options page section. This section will house all
+		 * of the link shortening options that are available to the user.
+		 *
+		 */
 		$link_shortening = new SWP_Options_Page_Section( __( 'Link Shortening', 'social-warfare'), 'bitly' );
 		$link_shortening->set_description( __( 'If you\'d like to have all of your links automatically shortened, turn this on.', 'social-warfare') )
 			->set_information_link( 'https://warfareplugins.com/support/options-page-advanced-tab-bitly-link-shortening/' )
 			->set_priority( 20 );
 
-			//* linkShortening => bitly_authentication
-			$link_shortening_toggle = new SWP_Option_Toggle( __('Link Shortening', 'social-warfare' ), 'link_shortening_toggle' );
-			$link_shortening_toggle->set_size( 'sw-col-300' )
-				->set_priority( 10 )
-				->set_default( false )
-				->set_premium( 'pro' );
+
+		/**
+		 * The Link Shortening On/Off Toggle
+		 *
+		 * This creates the on/off toggle. All other options in this section
+		 * will be dependant on this one and will on be visible when this
+		 * is turned on.
+		 *
+		 */
+		$link_shortening_toggle = new SWP_Option_Toggle( __('Link Shortening', 'social-warfare' ), 'link_shortening_toggle' );
+		$link_shortening_toggle->set_size( 'sw-col-300' )
+			->set_priority( 10 )
+			->set_default( false )
+			->set_premium( 'pro' );
 
 
+		/**
+		 * This section will access our swp_link_shorteners filter
+		 * to see which link shortening services have been registered for
+		 * use with the plugin. We will then loop through them and add them
+		 * to our dropdown select and an authentication button.
+		 *
+		 */
+		$authentications = array();
+		foreach( $services as $service ) {
 
-				$services = array();
-				$authentications = array();
-				$services = apply_filters('swp_register_link_shorteners', $services );
-				foreach( $services as $service ) {
-					$available_services[$service['key']] = $service['name'];
+			// Add the key and name to an array for use in the dropdown option.
+			$available_services[$service['key']] = $service['name'];
 
-					$authentications[$service['key']] = new SWP_Option_Button( 'Authenticate', 'bitly', 'button sw-navy-button swp-revoke-button', 'http://google.com' );
-					$authentications[$service['key']]->set_size( 'sw-col-300' )
-						->set_priority( 20 )
-						->set_dependency('link_shortening_service', $service['key']);
-				}
+			// Create the authentication button option.
+			$authentications[$service['key']] = new SWP_Option_Button(
+				'Authenticate',
+				'bitly',
+				'button sw-navy-button swp-revoke-button',
+				'http://google.com'
+			);
 
-
-
-				//* advanced_pinterest_image_location => pinterest_image_location
-				$link_shortening_service = new SWP_Option_Select( __( 'Link Shortening Service', 'social-warfare' ), 'link_shortening_service' );
-				$link_shortening_service->set_choices( $available_services )
-					->set_default( 'hidden ')
-					->set_size( 'sw-col-300' )
-					->set_dependency( 'link_shortening_toggle', true )
-					->set_premium( 'pro' )
-					->set_priority( 15 );
-
-			$link_shortening_start_date = new SWP_Option_Text( __( 'Minimum Publish Date', 'social-warfare' ), 'link_shortening_start_date' );
-			$link_shortening_start_date->set_default( date('Y-m-d') )
-				->set_priority( 30 )
+			// Add the size, priority, and dependency to the option.
+			$authentications[$service['key']]
 				->set_size( 'sw-col-300' )
-				->set_dependency( 'link_shortening_toggle', true )
-				->set_premium( 'pro');
+				->set_priority( 20 )
+				->set_dependency('link_shortening_service', $service['key']);
+		}
 
-			$link_shortening->add_options( array( $link_shortening_toggle, $link_shortening_service, $link_shortening_start_date ) );
-			$link_shortening->add_options( $authentications );
 
-			global $SWP_Options_Page;
-			$advanced_tab = $SWP_Options_Page->tabs->advanced;
-			$advanced_tab->add_sections( array( $link_shortening ) );
+		/**
+		 * This will add the select dropdown box wherein the user can select
+		 * which of the available link shortening services they want to use.
+		 *
+		 */
+		$link_shortening_service = new SWP_Option_Select( __( 'Link Shortening Service', 'social-warfare' ), 'link_shortening_service' );
+		$link_shortening_service->set_choices( $available_services )
+			->set_default( 'bitly')
+			->set_size( 'sw-col-300' )
+			->set_dependency( 'link_shortening_toggle', true )
+			->set_premium( 'pro' )
+			->set_priority( 15 );
+
+
+		/**
+		 * This will add the option for a minimum publish date. Any post
+		 * published prior to the date in this field will not get shortened
+		 * links for the share buttons.
+		 *
+		 */
+		$link_shortening_start_date = new SWP_Option_Text( __( 'Minimum Publish Date', 'social-warfare' ), 'link_shortening_start_date' );
+		$link_shortening_start_date->set_default( date('Y-m-d') )
+			->set_priority( 30 )
+			->set_size( 'sw-col-300' )
+			->set_dependency( 'link_shortening_toggle', true )
+			->set_premium( 'pro');
+
+
+		/**
+		 * After all of the option objects have been created, this will add them
+		 * to the link shortening section of the page.
+		 *
+		 */
+		$link_shortening->add_options( array( $link_shortening_toggle, $link_shortening_service, $link_shortening_start_date ) );
+		$link_shortening->add_options( $authentications );
+
+
+		/**
+		 * This will access the global $SWP_Options_Page object, find the
+		 * advanced tab, and add our link shortening section to it.
+		 *
+		 */
+		global $SWP_Options_Page;
+		$advanced_tab = $SWP_Options_Page->tabs->advanced;
+		$advanced_tab->add_sections( array( $link_shortening ) );
 
 	}
 }
