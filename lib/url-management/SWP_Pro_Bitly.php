@@ -157,7 +157,7 @@ class SWP_Pro_Bitly {
 		 * the array without modification.
 		 *
 		 */
-		if ( false == $access_token || false == SWP_Utility::get_option( 'bitly_authentication' ) ) {
+		if ( false == $access_token || false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
 			return $array;
 		}
 
