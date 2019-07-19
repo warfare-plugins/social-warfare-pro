@@ -27,6 +27,12 @@ class SWP_Pro_Bitly {
 	 *
 	 */
 	public function __construct() {
+
+		$this->key = 'bitly';
+		$this->name = 'Bitly';
+
+		$this->establish_button_properties();
+
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
 		add_filter( 'swp_available_link_shorteners' , array( $this, 'register_self' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
@@ -46,11 +52,7 @@ class SWP_Pro_Bitly {
 	 *
 	 */
 	public function register_self( $array ) {
-		$array['bitly'] = array(
-			'key'    => 'bitly',
-			'name'   => 'Bitly',
-			'object' => $this,
-		);
+		$array[$this->key] = $this;
 		return $array;
 	}
 
@@ -67,7 +69,7 @@ class SWP_Pro_Bitly {
 	 *               target, and link.
 	 *
 	 */
-	public function get_button_properties() {
+	public function establish_button_properties() {
 
 
 		/**
@@ -111,15 +113,10 @@ class SWP_Pro_Bitly {
 			$link .= "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
 		}
 
-		$components = array(
-			'key' => 'bitly',
-			'text' => $text,
-			'class' => $class,
-			'target' => $target,
-			'link' => $link,
-		);
-
-		return $components;
+		$this->button_text   = $text;
+		$this->button_class  = $class;
+		$this->button_target = $target;
+		$this->button_link   = $link;
 	}
 
 
