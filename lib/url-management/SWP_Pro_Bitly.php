@@ -15,6 +15,9 @@
 class SWP_Pro_Bitly {
 
 
+	use SWP_Debug_Trait;
+
+
 	/**
 	 * The Magic Constructor Method
 	 *
@@ -28,14 +31,16 @@ class SWP_Pro_Bitly {
 	 */
 	public function __construct() {
 
-		$this->key = 'bitly';
-		$this->name = 'Bitly';
+		$this->key      = 'bitly';
+		$this->name     = 'Bitly';
+		$this->statuses = array();
 
 		$this->establish_button_properties();
 
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
 		add_filter( 'swp_available_link_shorteners' , array( $this, 'register_self' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
+		add_action( 'wp_footer', array( $this, 'debug' ) );
 	}
 
 
@@ -152,7 +157,9 @@ class SWP_Pro_Bitly {
 		 * Bail if link shortening is turned off.
 		 *
 		 */
+		$this->statuses['link_shortening_toggle'] = 'Green at line ' . __LINE__;
 		if( false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
+			$this->statuses['link_shortening_toggle'] = 'Red at line ' . __LINE__;
 			return $array;
 		}
 
@@ -161,7 +168,9 @@ class SWP_Pro_Bitly {
 		 * Bail if Bitly is not the selected Link shortener.
 		 *
 		 */
-		if( 'bitly' !== SWP_Utility::get_option( 'link_shortening_service' ) ) {
+		$this->statuses['link_shortening_service'] = 'Green at line ' . __LINE__;
+		if( $this->key !== SWP_Utility::get_option( 'link_shortening_service' ) ) {
+			$this->statuses['link_shortening_service'] = 'Red at line ' . __LINE__;
 			return $array;
 		}
 
@@ -170,7 +179,9 @@ class SWP_Pro_Bitly {
 		 * Bail if we don't have a valid Bitly token.
 		 *
 		 */
+		$this->statuses['bitly_access_token'] = 'Green at line ' . __LINE__;
 		if ( false == $access_token ) {
+			$this->statuses['bitly_access_token'] = 'Red at line ' . __LINE__;
 			return $array;
 		}
 
@@ -183,8 +194,10 @@ class SWP_Pro_Bitly {
 		 *       setting migrates into the new one.
 		 *
 		 */
+		$this->statuses['post_type_toggle'] = 'Green for '.$post->post_type.' at line ' . __LINE__;
 		$links_enabled = SWP_Utility::get_option( "short_link_toggle_{$post->post_type}" );
 		if ( false == $links_enabled || 'off' == $links_enabled ) {
+			$this->statuses['post_type_toggle'] = 'Red for '.$post->post_type.' at line ' . __LINE__;
 			return $array;
 		}
 
@@ -197,7 +210,9 @@ class SWP_Pro_Bitly {
 		 * return the unmodified array.
 		 *
 		 */
+		$this->statuses['fresh_cache'] = 'Green - Expired/Proceed at line ' . __LINE__;
 		if ( true == $array['fresh_cache'] ) {
+	   		$this->statuses['fresh_cache'] = 'Red - Fresh/Halt at line ' . __LINE__;
 			if( false !== $cached_bitly_link ) {
 				$array['url'] = $cached_bitly_link;
 			}
@@ -224,6 +239,7 @@ class SWP_Pro_Bitly {
 		 * of an article and ensures that the article is eligible for links.
 		 *
 		 */
+		$this->statuses['publication_date'] = 'Green on line ' . __LINE__;
 		if ( $start_date ) {
 
 			// Bail if we don't have a valid post object or post_date.
@@ -236,6 +252,7 @@ class SWP_Pro_Bitly {
 
 			//* The post is older than the minimum publication date.
 			if ( $start_date > $post_date ) {
+				$this->statuses['publication_date'] = 'Red on line ' . __LINE__;
 				return $array;
 			}
 		}
