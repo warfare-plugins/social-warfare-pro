@@ -234,7 +234,7 @@ class SWP_Pro_Bitly {
 			$start_date = DateTime::createFromFormat( 'Y-m-d', $start_date );
 			$post_date  = new DateTime( $post->post_date );
 
-			//* The post is too new for $start_date.
+			//* The post is older than the minimum publication date.
 			if ( $start_date > $post_date ) {
 				return $array;
 			}
@@ -271,6 +271,8 @@ class SWP_Pro_Bitly {
 
 		return $array;
 	}
+
+	
 	/**
 	 * Fetch the bitly link that is cached in the local database.
 	 *
