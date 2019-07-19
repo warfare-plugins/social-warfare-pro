@@ -183,10 +183,10 @@ class SWP_Pro_Bitly {
 		 *       setting migrates into the new one.
 		 *
 		 */
-		$links_enabled = SWP_Utility::get_option( "bitly_links_{$post->post_type}" );
-		if ( false == $links_enabled || 'off' == $links_enabled ) :
+		$links_enabled = SWP_Utility::get_option( "short_link_toggle_{$post->post_type}" );
+		if ( false == $links_enabled || 'off' == $links_enabled ) {
 			return $array;
-		endif;
+		}
 
 
 		/**
@@ -272,7 +272,7 @@ class SWP_Pro_Bitly {
 		return $array;
 	}
 
-	
+
 	/**
 	 * Fetch the bitly link that is cached in the local database.
 	 *
