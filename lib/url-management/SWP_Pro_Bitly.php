@@ -67,7 +67,7 @@ class SWP_Pro_Bitly {
 	 *               target, and link.
 	 *
 	 */
-	public function populate_authentication_button_data() {
+	public function get_button_properties() {
 
 
 		/**
@@ -81,9 +81,9 @@ class SWP_Pro_Bitly {
 			//* Display a confirmation button. On click takes them to bitly settings page.
 			$text = __( 'Connected', 'social-warfare' );
 			$text .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
-			$color = 'sw-green-button';
+			$class = 'button sw-green-button swp-revoke-button';
 			$link = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
-			$target = "_blank";
+			$target = '_blank';
 
 
 		/**
@@ -95,8 +95,8 @@ class SWP_Pro_Bitly {
 
 			//* Display the button, which takes them to a Bitly auth page.
 			$text = __( 'Authenticate', 'social-warfare' );
-			$color = 'sw-navy-button';
-			$target = "";
+			$class = 'button sw-navy-button swp-revoke-button';
+			$target = '';
 
 			//* The base URL for authorizing SW to work on a user's Bitly account.
 			$link = "https://bitly.com/oauth/authorize";
@@ -112,11 +112,14 @@ class SWP_Pro_Bitly {
 		}
 
 		$components = array(
+			'key' => 'bitly',
 			'text' => $text,
-			'color_css' => $color,
+			'class' => $class,
 			'target' => $target,
 			'link' => $link,
 		);
+
+		return $components;
 	}
 
 
