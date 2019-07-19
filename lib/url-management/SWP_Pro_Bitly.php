@@ -152,12 +152,28 @@ class SWP_Pro_Bitly {
 
 
 		/**
-		 * If we don't have an access token or if Bitly links are implicitly
-		 * turned off on the options page, then let's just bail early and return
-		 * the array without modification.
+		 * Bail if link shortening is turned off.
 		 *
 		 */
-		if ( false == $access_token || false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
+		if( false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
+			return $array;
+		}
+
+
+		/**
+		 * Bail if Bitly is not the selected Link shortener.
+		 *
+		 */
+		if( 'bitly' !== SWP_Utility::get_option( 'link_shortening_service' ) ) {
+			return $array;
+		}
+
+
+		/**
+		 * Bail if we don't have a valid Bitly token.
+		 *
+		 */
+		if ( false == $access_token ) {
 			return $array;
 		}
 
