@@ -18,6 +18,9 @@ if( false === class_exists( 'SWP_Link_Shortener' ) ) {
 
 class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
+	public $key      = 'bitly';
+	public $name     = 'Bitly';
+	public $deactivation_hook = 'remove_bitly_authorization';
 
 	/**
 	 * The Magic Constructor Method
@@ -34,14 +37,11 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 		parent::__construct();
 
-		$this->key      = 'bitly';
-		$this->name     = 'Bitly';
-
 		$this->establish_button_properties();
 
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
-		add_action( 'wp_footer', array( $this, 'debug' ) );
+		add_action( 'wp_ajax_swp_' .$this->deactivation_hook, array( $this, $this->deactivation_hook ) );
 	}
 
 
@@ -69,11 +69,11 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		if ( SWP_Utility::get_option('bitly_access_token') ) {
 
 			//* Display a confirmation button. On click takes them to bitly settings page.
-			$text = __( 'Connected', 'social-warfare' );
-			$text .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
+			$text    = __( 'Connected', 'social-warfare' );
+			$text   .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
 			$classes = 'button sw-green-button swp-revoke-button';
-			$link = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
-			$target = '_blank';
+			$link    = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
+			$new_tab = true;
 
 
 		/**
@@ -84,9 +84,9 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		} else {
 
 			//* Display the button, which takes them to a Bitly auth page.
-			$text = __( 'Authenticate', 'social-warfare' );
+			$text    = __( 'Authenticate', 'social-warfare' );
 			$classes = 'button sw-navy-button swp-revoke-button';
-			$target = '';
+			$new_tab = false;
 
 			//* The base URL for authorizing SW to work on a user's Bitly account.
 			$link = "https://bitly.com/oauth/authorize";
@@ -103,7 +103,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 		$this->button_properties['text']    = $text;
 		$this->button_properties['classes'] = $classes;
-		$this->button_properties['target']  = $target;
+		$this->button_properties['new_tab']  = $new_tab;
 		$this->button_properties['link']    = $link;
 	}
 
@@ -426,5 +426,12 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 *
 		 */
 		echo admin_url( 'admin.php?page=social-warfare' );
+	}
+
+	public function remove_bitly_authorization() {
+		SWP_Utility::update_option( 'bitly_access_token', '' );
+		SWP_Utility::update_option( 'bitly_access_login', '' );
+		echo 'success';
+		wp_die();
 	}
 }
