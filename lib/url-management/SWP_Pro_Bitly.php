@@ -157,7 +157,7 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		if( false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
-			$this->record_status( 'link_shortening_toggle' );
+			$this->record_exit_status( 'link_shortening_toggle' );
 			return $array;
 		}
 
@@ -167,7 +167,7 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		if( $this->key !== SWP_Utility::get_option( 'link_shortening_service' ) ) {
-			$this->record_status( 'link_shortening_service' );
+			$this->record_exit_status( 'link_shortening_service' );
 			return $array;
 		}
 
@@ -177,7 +177,7 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		if ( false == $access_token ) {
-			$this->record_status( 'access_token' );
+			$this->record_exit_status( 'access_token' );
 			return $array;
 		}
 
@@ -192,7 +192,7 @@ class SWP_Pro_Bitly {
 		 */
 		$post_type_toggle = SWP_Utility::get_option( 'short_link_toggle_' . $post->post_type );
 		if ( false === $post_type_toggle ) {
-			$this->record_status( 'post_type_toggle' );
+			$this->record_exit_status( 'short_link_toggle_' . $post->post_type );
 			return $array;
 		}
 
@@ -206,7 +206,7 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		if ( true == $array['fresh_cache'] ) {
-			$this->record_status( 'fresh_cache' );
+			$this->record_exit_status( 'fresh_cache' );
 			if( false !== $cached_bitly_link ) {
 				$array['url'] = $cached_bitly_link;
 			}
@@ -245,7 +245,7 @@ class SWP_Pro_Bitly {
 
 			//* The post is older than the minimum publication date.
 			if ( $start_date > $post_date ) {
-				$this->record_status( 'publication_date' );
+				$this->record_exit_status( 'publication_date' );
 				return $array;
 			}
 		}
@@ -442,9 +442,5 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		echo admin_url( 'admin.php?page=social-warfare' );
-	}
-
-	protected function record_status( $name ) {
-		$this->status = 'Shortlink processing halted while checking for ' . $name;
 	}
 }
