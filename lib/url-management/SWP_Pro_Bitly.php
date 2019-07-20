@@ -195,9 +195,9 @@ class SWP_Pro_Bitly {
 		 *
 		 */
 		$this->statuses['post_type_toggle'] = 'Green for '.$post->post_type.' at line ' . __LINE__;
-		$links_enabled = SWP_Utility::get_option( "short_link_toggle_{$post->post_type}" );
-		if ( false == $links_enabled || 'off' == $links_enabled ) {
-			$this->statuses['post_type_toggle'] = 'Red for '.$post->post_type.' at line ' . __LINE__;
+		$post_type_toggle = SWP_Utility::get_option( 'short_link_toggle_' . $post->post_type );
+		if ( false === $post_type_toggle ) {
+			$this->statuses['post_type_toggle'] = 'Red for ' . $post->post_type . ' at line ' . __LINE__;
 			return $array;
 		}
 
