@@ -35,7 +35,9 @@ class SWP_Pro_Link_Manager {
 		 * applying the swp_link_shortening filter.
 		 *
 		 */
-		new SWP_Pro_Bitly();
+		if( class_exists( 'SWP_Pro_Bitly' ) ) {
+			new SWP_Pro_Bitly();
+		}
 		
 	}
 }
