@@ -243,7 +243,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 */
 		$network       = $array['network'];
 		$url           = urldecode( $array['url'] );
-		$new_bitly_url = SWP_Link_Manager::make_bitly_url( $url, $access_token );
+		$new_bitly_url = $this->make_bitly_url( $url, $access_token );
 
 
 		/**
