@@ -18,9 +18,16 @@ if( false === class_exists( 'SWP_Link_Shortener' ) ) {
 
 class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
-	public $key      = 'bitly';
-	public $name     = 'Bitly';
+
+	/**
+	 * Class properties that will be used to display and process this particular
+	 * link shortener.
+	 *
+	 */
+	public $key               = 'bitly';
+	public $name              = 'Bitly';
 	public $deactivation_hook = 'remove_bitly_authorization';
+
 
 	/**
 	 * The Magic Constructor Method
