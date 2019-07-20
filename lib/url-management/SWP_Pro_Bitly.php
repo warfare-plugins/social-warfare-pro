@@ -20,16 +20,6 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 
 	/**
-	 * This trait gives us access to the following debugging methods:
-	 *
-	 * $this->debug()  Outputs all class properties to the screen.
-	 * $this->record_exit_status()  Stores bail conditions in a local property.
-	 *
-	 */
-	use SWP_Debug_Trait;
-
-
-	/**
 	 * The Magic Constructor Method
 	 *
 	 * This method will simply queue up the Bitly processing methods to run on
