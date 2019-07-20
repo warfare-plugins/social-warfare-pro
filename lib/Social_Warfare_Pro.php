@@ -100,6 +100,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	 *
 	 */
 	public function instantiate_classes() {
+		new SWP_Pro_Networks_Loader();
 		new SWP_Pro_Header_Output();
 		new SWP_Pro_Follow_Network_Loader();
 		new SWP_Pro_Follow_Widget();
@@ -130,19 +131,35 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	/**
 	 * Loads an array of sibling files.
 	 *
+	 * @since  3.0.0 | 01 MAR 2018 | Created
+	 * @since  4.0.0 | 20 JUL 2019 | Implemented autoloading. 
 	 * @param  string   $path  The relative path to the files home.
 	 * @param  array    $files The name of the files (classes), no vendor prefix.
 	 * @return none     The files are loaded into memory.
 	 *
 	 */
-	private function load_files( $path, $files ) {
-		foreach( $files as $file ) {
+	 private function load_files( $path, $files ) {
 
-			//* Add our vendor prefix to the file name.
-			$file = "SWP_" . $file;
-			require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
-		}
-	}
+ 		// Use Autoload to loadup out files and classes.
+ 		spl_autoload_register( function( $class_name ) use ($path) {
+ 			if( file_exists( SWPP_PLUGIN_DIR.$path.$class_name.'.php' ) ) {
+ 				include SWPP_PLUGIN_DIR.$path.$class_name.'.php';
+ 			}
+ 		});
+
+ 		// If autoloading fails, we'll loop and manually add all the files.
+ 		foreach( $files as $file ) {
+
+ 			// If the class exists, then autoloading is functional so bail out.
+ 			if( class_exists( 'SWP_' . $file ) ) {
+ 				return;
+ 			}
+
+ 			// Add our vendor prefix to the file name.
+ 			$file = 'SWP_' . $file;
+ 			require_once SWPP_PLUGIN_DIR . $path . $file . '.php';
+ 		}
+ 	}
 
 
 	/**
@@ -176,7 +193,8 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'Tumblr',
 				'Whatsapp',
 				'Yummly',
-				'Pro_Pinterest'
+				'Pro_Pinterest',
+				'Pro_Networks_Loader'
 			);
 			$this->load_files( '/lib/social-networks/', $social_networks);
 
