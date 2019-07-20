@@ -12,9 +12,20 @@
  * @since 4.0.0 | 17 JUL 2019 | Created
  *
  */
-class SWP_Pro_Bitly {
+if( false === class_exists( 'SWP_Link_Shortener' ) ) {
+	return;
+}
+
+class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 
+	/**
+	 * This trait gives us access to the following debugging methods:
+	 *
+	 * $this->debug()  Outputs all class properties to the screen.
+	 * $this->record_exit_status()  Stores bail conditions in a local property.
+	 *
+	 */
 	use SWP_Debug_Trait;
 
 
@@ -31,33 +42,16 @@ class SWP_Pro_Bitly {
 	 */
 	public function __construct() {
 
+		parent::__construct();
+
 		$this->key      = 'bitly';
 		$this->name     = 'Bitly';
 
 		$this->establish_button_properties();
 
 		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
-		add_filter( 'swp_available_link_shorteners' , array( $this, 'register_self' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
 		add_action( 'wp_footer', array( $this, 'debug' ) );
-	}
-
-
-	/**
-	 * register_self()
-	 *
-	 * A function to register this link shortening integration with the
-	 * 'swp_register_link_shortners' filter so that it will show up and become
-	 * an option on the options page.
-	 *
-	 * @since  4.0.0 | 18 JUL 2019 | Created
-	 * @param  array $array An array of link shortening integrations.
-	 * @return array        The modified array with our integration added.
-	 *
-	 */
-	public function register_self( $array ) {
-		$array[$this->key] = $this;
-		return $array;
 	}
 
 
@@ -87,7 +81,7 @@ class SWP_Pro_Bitly {
 			//* Display a confirmation button. On click takes them to bitly settings page.
 			$text = __( 'Connected', 'social-warfare' );
 			$text .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
-			$class = 'button sw-green-button swp-revoke-button';
+			$classes = 'button sw-green-button swp-revoke-button';
 			$link = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
 			$target = '_blank';
 
@@ -101,7 +95,7 @@ class SWP_Pro_Bitly {
 
 			//* Display the button, which takes them to a Bitly auth page.
 			$text = __( 'Authenticate', 'social-warfare' );
-			$class = 'button sw-navy-button swp-revoke-button';
+			$classes = 'button sw-navy-button swp-revoke-button';
 			$target = '';
 
 			//* The base URL for authorizing SW to work on a user's Bitly account.
@@ -117,10 +111,10 @@ class SWP_Pro_Bitly {
 			$link .= "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
 		}
 
-		$this->button_text   = $text;
-		$this->button_class  = $class;
-		$this->button_target = $target;
-		$this->button_link   = $link;
+		$this->button_properties['text']    = $text;
+		$this->button_properties['classes'] = $classes;
+		$this->button_properties['target']  = $target;
+		$this->button_properties['link']    = $link;
 	}
 
 
