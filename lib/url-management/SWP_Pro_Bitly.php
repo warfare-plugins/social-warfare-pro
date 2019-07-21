@@ -76,11 +76,12 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		if ( SWP_Utility::get_option('bitly_access_token') ) {
 
 			//* Display a confirmation button. On click takes them to bitly settings page.
-			$text    = __( 'Connected', 'social-warfare' );
-			$text   .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
-			$classes = 'button sw-green-button swp-revoke-button';
-			$link    = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
-			$new_tab = true;
+			$text         = __( 'Connected', 'social-warfare' );
+			$text        .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
+			$classes      = 'button sw-green-button';
+			$link         = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
+			$deactivation = $this->deactivation_hook;
+			$new_tab      = true;
 
 
 		/**
@@ -91,9 +92,10 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		} else {
 
 			//* Display the button, which takes them to a Bitly auth page.
-			$text    = __( 'Authenticate', 'social-warfare' );
-			$classes = 'button sw-navy-button swp-revoke-button';
-			$new_tab = false;
+			$text         = __( 'Authenticate', 'social-warfare' );
+			$classes      = '';
+			$new_tab      = false;
+			$deactivation = 'remove_bitly_authorization';
 
 			//* The base URL for authorizing SW to work on a user's Bitly account.
 			$link = "https://bitly.com/oauth/authorize";
@@ -108,10 +110,11 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 			$link .= "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
 		}
 
-		$this->button_properties['text']    = $text;
-		$this->button_properties['classes'] = $classes;
-		$this->button_properties['new_tab']  = $new_tab;
-		$this->button_properties['link']    = $link;
+		$this->button_properties['text']              = $text;
+		$this->button_properties['classes']           = $classes;
+		$this->button_properties['new_tab']           = $new_tab;
+		$this->button_properties['link']              = $link;
+		$this->button_properties['deactivation_hook'] = $deactivation;
 	}
 
 
