@@ -54,11 +54,20 @@ class SWP_Pro_Follow_Network_Loader {
 	 *
 	 */
 	public function instantiate_networks() {
-		foreach( get_declared_classes() as $class ){
-			if( is_subclass_of( $class, 'SWP_Pro_Follow_Network' ) ) {
-				new $class;
-			}
-		}
+		new SWP_FW_Blogger();
+		new SWP_FW_Ello();
+		new SWP_FW_Facebook();
+		new SWP_FW_Flickr();
+		new SWP_FW_Instagram();
+		new SWP_FW_Linkedin();
+		new SWP_FW_Medium();
+		new SWP_FW_Periscope();
+		new SWP_FW_Pinterest();
+		new SWP_FW_Reddit();
+		new SWP_FW_Snapchat();
+		new SWP_FW_Tumblr();
+		new SWP_FW_Twitter();
+		new SWP_FW_Vimeo();
 	}
 
 }
