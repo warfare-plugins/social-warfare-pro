@@ -141,27 +141,12 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		global $post;
 		$network           = $array['network'];
 		$post_id           = $array['post_id'];
+		$fresh_cache       = $array['fresh_cache'];
 		$google_analytics  = SWP_Utility::get_option('google_analytics');
 		$access_token      = SWP_Utility::get_option( 'bitly_access_token' );
-		$cached_bitly_link = $this->fetch_cached_shortlink( $post_id, $network );
 
 
-		/**
-		 * Bail if link shortening is turned off.
-		 *
-		 */
-		if( false == SWP_Utility::get_option( 'link_shortening_toggle' ) ) {
-			$this->record_exit_status( 'link_shortening_toggle' );
-			return $array;
-		}
-
-
-		/**
-		 * Bail if Bitly is not the selected Link shortener.
-		 *
-		 */
-		if( $this->key !== SWP_Utility::get_option( 'link_shortening_service' ) ) {
-			$this->record_exit_status( 'link_shortening_service' );
+		if( false === $this->should_link_be_shortened( $network ) ) {
 			return $array;
 		}
 
@@ -170,23 +155,8 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * Bail if we don't have a valid Bitly token.
 		 *
 		 */
-		if ( false == $access_token ) {
+		if ( false == SWP_Utility::get_option( 'bitly_access_token' ) ) {
 			$this->record_exit_status( 'access_token' );
-			return $array;
-		}
-
-
-		/**
-		 * Bitly links can now be turned on or off at the post_type level on the
-		 * options page. So if the bitly links are turned off for our current
-		 * post type, let's bail and return the unmodified array.
-		 * @todo Update this option in the DB to be more generic. Ensure current
-		 *       setting migrates into the new one.
-		 *
-		 */
-		$post_type_toggle = SWP_Utility::get_option( 'short_link_toggle_' . $post->post_type );
-		if ( false === $post_type_toggle ) {
-			$this->record_exit_status( 'short_link_toggle_' . $post->post_type );
 			return $array;
 		}
 
@@ -196,32 +166,15 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * database, then let's use our cached link.
 		 *
 		 * If the cache is fresh and we don't have a valid bitly link, we just
-		 * return the unmodified array.
+		 * return the unmodified array. This will prevent it from running non-stop
+		 * API requests if one failed.
 		 *
 		 */
-		if ( true == $array['fresh_cache'] ) {
+		if ( true == $fresh_cache ) {
 			$this->record_exit_status( 'fresh_cache' );
-			if( false !== $cached_bitly_link ) {
-				$array['url'] = $cached_bitly_link;
+			if( $this->fetch_cached_shortlink( $post_id, $network ) ) {
+				$array['url'] = $this->fetch_cached_shortlink( $post_id, $network );
 			}
-			return $array;
-		}
-
-
-		/**
-		 * We don't want bitly links generated for the total shares buttons
-		 * (since they don't have any links at all), and Pinterest doesn't allow
-		 * shortlinks on their network.
-		 *
-		 */
-		if ( 'total_shares' == $network || 'pinterest' == $network ) {
-			return $array;
-		}
-
-
-		// The post is older than the minimum publication date.
-		if ( false == $this->check_publication_date() ) {
-			$this->record_exit_status( 'publication_date' );
 			return $array;
 		}
 
