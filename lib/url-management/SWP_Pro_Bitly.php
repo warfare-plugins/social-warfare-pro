@@ -46,7 +46,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 		$this->establish_button_properties();
 
-		add_filter( 'swp_link_shortening', array( $this, 'shorten_link' ) );
+		add_filter( 'swp_link_shortening', array( $this, 'provide_shortlink' ) );
 		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
 		add_action( 'wp_ajax_swp_' .$this->deactivation_hook, array( $this, $this->deactivation_hook ) );
 	}
@@ -131,7 +131,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * @return array $array The modified array.
 	 *
 	 */
-	public function shorten_link( $array ) {
+	public function provide_shortlink( $array ) {
 
 
 		/**
