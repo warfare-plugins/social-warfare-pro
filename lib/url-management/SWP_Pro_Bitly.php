@@ -42,6 +42,8 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 */
 	public function __construct() {
 
+		$this->access_token = SWP_Utility::get_option( 'bitly_access_token' );
+
 		parent::__construct();
 
 		$this->establish_button_properties();
@@ -73,7 +75,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * see.
 		 *
 		 */
-		if ( SWP_Utility::get_option('bitly_access_token') ) {
+		if ( $this->access_token ) {
 
 			//* Display a confirmation button. On click takes them to bitly settings page.
 			$text         = __( 'Connected', 'social-warfare' );
@@ -119,98 +121,6 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 
 	/**
-	 * The Bitly Link Shortener Method
-	 *
-	 * This is the function used to manage shortened links via the Bitly link
-	 * shortening service.
-	 *
-	 * @since  3.0.0 | 04 APR 2018 | Created
-	 * @since  3.4.0 | 16 OCT 2018 | Modified order of conditionals, docblocked.
-	 * @since  4.0.0 | 17 JUL 2019 | Migrated into this standalone Bitly class.
-	 * @param  array $array An array of arguments and information.
-	 * @return array $array The modified array.
-	 *
-	 */
-	public function provide_shortlink( $array ) {
-
-
-		/**
-		 * Pull together the information that we'll need to generate bitly links.
-		 *
-		 */
-		global $post;
-		$network           = $array['network'];
-		$post_id           = $array['post_id'];
-		$fresh_cache       = $array['fresh_cache'];
-		$google_analytics  = SWP_Utility::get_option('google_analytics');
-		$access_token      = SWP_Utility::get_option( 'bitly_access_token' );
-
-
-		if( false === $this->should_link_be_shortened( $network ) ) {
-			return $array;
-		}
-
-
-		/**
-		 * Bail if we don't have a valid Bitly token.
-		 *
-		 */
-		if ( false == SWP_Utility::get_option( 'bitly_access_token' ) ) {
-			$this->record_exit_status( 'access_token' );
-			return $array;
-		}
-
-
-		/**
-		 * If the chache is fresh and we have a valid bitly link stored in the
-		 * database, then let's use our cached link.
-		 *
-		 * If the cache is fresh and we don't have a valid bitly link, we just
-		 * return the unmodified array. This will prevent it from running non-stop
-		 * API requests if one failed.
-		 *
-		 */
-		if ( true == $fresh_cache ) {
-			$this->record_exit_status( 'fresh_cache' );
-			if( $this->fetch_cached_shortlink( $post_id, $network ) ) {
-				$array['url'] = $this->fetch_cached_shortlink( $post_id, $network );
-			}
-			return $array;
-		}
-
-
-		/**
-		 * If all checks have passed, let's generate a new bitly URL. If an
-		 * existing link exists for the link passed to the API, it won't generate
-		 * a new one, but will instead return the existing one.
-		 *
-		 */
-		$url           = urldecode( $array['url'] );
-		$new_bitly_url = $this->make_bitly_url( $url, $access_token );
-
-
-		/**
-		 * If a link was successfully created, let's store it in the database,
-		 * let's store it in the url indice of the array, and then let's wrap up.
-		 *
-		 */
-		if ( $new_bitly_url ) {
-			$meta_key = 'bitly_link';
-
-			if ( $google_analytics ) {
-				$meta_key .= "_$network";
-			}
-
-			delete_post_meta( $post_id, $meta_key );
-			update_post_meta( $post_id, $meta_key, $new_bitly_url );
-			$array['url'] = $new_bitly_url;
-		}
-
-		return $array;
-	}
-
-
-	/**
 	 * Create a new Bitly short URL
 	 *
 	 * This is the method used to interface with the Bitly API with regard to creating
@@ -224,7 +134,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * @return string               The shortened URL.
 	 *
 	 */
-	public static function make_bitly_url( $url, $access_token ) {
+	public static function generate_new_shortlink( $url ) {
 
 
 		/**
@@ -233,7 +143,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 *
 		 */
 		$api_request_url = 'https://api-ssl.bitly.com/v3/shorten';
-		$api_request_url .= "?access_token=$access_token";
+		$api_request_url .= "?access_token=$this->access_token";
 		$api_request_url .= "&longUrl=" . urlencode( $url );
 		$api_request_url .= "&format=json";
 
@@ -323,6 +233,16 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		echo admin_url( 'admin.php?page=social-warfare' );
 	}
 
+
+	/**
+	 * An Admin-Ajax callback function for removing this link shorteners
+	 * authorization token and login credentials.
+	 *
+	 * @since  4.0.0 | 23 JUL 2019 | Created
+	 * @parm   void
+	 * @return void 
+	 *
+	 */
 	public function remove_bitly_authorization() {
 		SWP_Utility::update_option( 'bitly_access_token', '' );
 		SWP_Utility::update_option( 'bitly_access_login', '' );
