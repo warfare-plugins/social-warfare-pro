@@ -134,7 +134,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * @return string               The shortened URL.
 	 *
 	 */
-	public static function generate_new_shortlink( $url ) {
+	public function generate_new_shortlink( $url ) {
 
 
 		/**
@@ -240,7 +240,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 *
 	 * @since  4.0.0 | 23 JUL 2019 | Created
 	 * @parm   void
-	 * @return void 
+	 * @return void
 	 *
 	 */
 	public function remove_bitly_authorization() {
