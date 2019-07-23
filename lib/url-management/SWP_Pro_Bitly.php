@@ -27,6 +27,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	public $key               = 'bitly';
 	public $name              = 'Bitly';
 	public $deactivation_hook = 'remove_bitly_authorization';
+	public $activation_hook   = 'bitly_oauth';
 
 
 	/**
@@ -42,51 +43,16 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 */
 	public function __construct() {
 
-		$this->access_token = SWP_Utility::get_option( 'bitly_access_token' );
-
-		parent::__construct();
-
-		$this->establish_button_properties();
-
-		add_filter( 'swp_link_shortening', array( $this, 'provide_shortlink' ) );
-		add_action( 'wp_ajax_nopriv_swp_bitly_oauth', array( $this , 'bitly_oauth_callback' ) );
-		add_action( 'wp_ajax_swp_' .$this->deactivation_hook, array( $this, $this->deactivation_hook ) );
-	}
-
-
-	/**
-	 * generate_authentication_button_data()
-	 *
-	 * A method to generate an array of information that can be used to generate
-	 * the authentication button for this network on the options page.
-	 *
-	 * @since  4.0.0 | 18 JUL 2019 | Created
-	 * @param  void
-	 * @return array The array of button data including the text, color_css,
-	 *               target, and link.
-	 *
-	 */
-	public function establish_button_properties() {
-
-		if ( $this->access_token ) {
-
-			//* Display a confirmation button. On click takes them to bitly settings page.
-			$this->button_properties['text']              = __( 'Connected', 'social-warfare' );
-			$this->button_properties['text']             .= " for:<br/>" . SWP_Utility::get_option( 'bitly_access_login' );
-			$this->button_properties['classes']           = 'button sw-green-button';
-			$this->button_properties['new_tab']           = true;
-			$this->button_properties['link']              = 'https://app.bitly.com/bitlinks/?actions=accountMain&actions=settings&actions=security';
-			$this->button_properties['deactivation_hook'] = $this->deactivation_hook;
-
-		} else {
-
-			$this->button_properties['text']              = __( 'Authenticate', 'social-warfare' );
-			$this->button_properties['classes']           = 'button sw-navy-button';
-			$this->button_properties['new_tab']           = false;
-			$this->button_properties['link']              = "https://bitly.com/oauth/authorize?client_id=96c9b292c5503211b68cf4ab53f6e2f4b6d0defb&state=" . admin_url( 'admin-ajax.php') . "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
-			$this->button_properties['deactivation_hook'] = '';
+		// Check if we have an access token which means this has been authenticated.
+		if( SWP_Utility::get_option( 'bitly_access_token' ) ) {
+			$this->access_token;
+			$this->active = true;
 		}
 
+		// The link for the authentication button.
+		$this->authorization_link = "https://bitly.com/oauth/authorize?client_id=96c9b292c5503211b68cf4ab53f6e2f4b6d0defb&state=" . admin_url( 'admin-ajax.php') . "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
+
+		parent::__construct();
 	}
 
 
@@ -162,7 +128,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * @access public
 	 *
 	 */
-	public function bitly_oauth_callback() {
+	public function bitly_oauth() {
 
 
 		/**
