@@ -93,9 +93,9 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 			//* Display the button, which takes them to a Bitly auth page.
 			$text         = __( 'Authenticate', 'social-warfare' );
-			$classes      = '';
+			$classes      = 'button sw-navy-button';
 			$new_tab      = false;
-			$deactivation = 'remove_bitly_authorization';
+			$deactivation = '';
 
 			//* The base URL for authorizing SW to work on a user's Bitly account.
 			$link = "https://bitly.com/oauth/authorize";
