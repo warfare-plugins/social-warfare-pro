@@ -139,10 +139,11 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 *
 		 */
 		global $post;
+		$network           = $array['network'];
 		$post_id           = $array['post_id'];
 		$google_analytics  = SWP_Utility::get_option('google_analytics');
 		$access_token      = SWP_Utility::get_option( 'bitly_access_token' );
-		$cached_bitly_link = $this->fetch_cached_shortlink( $post_id, $array['network'] );
+		$cached_bitly_link = $this->fetch_cached_shortlink( $post_id, $network );
 
 
 		/**
@@ -213,7 +214,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * shortlinks on their network.
 		 *
 		 */
-		if ( $array['network'] == 'total_shares' || $array['network'] == 'pinterest' ) {
+		if ( 'total_shares' == $network || 'pinterest' == $network ) {
 			return $array;
 		}
 
@@ -231,7 +232,6 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * a new one, but will instead return the existing one.
 		 *
 		 */
-		$network       = $array['network'];
 		$url           = urldecode( $array['url'] );
 		$new_bitly_url = $this->make_bitly_url( $url, $access_token );
 
