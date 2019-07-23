@@ -142,8 +142,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		$post_id           = $array['post_id'];
 		$google_analytics  = SWP_Utility::get_option('google_analytics');
 		$access_token      = SWP_Utility::get_option( 'bitly_access_token' );
-		$start_date        = SWP_Utility::get_option( 'link_shortening_start_date' );
-		$cached_bitly_link = $this->fetch_local_link( $post_id, $array['network'] );
+		$cached_bitly_link = $this->fetch_cached_shortlink( $post_id, $array['network'] );
 
 
 		/**
@@ -219,29 +218,10 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		}
 
 
-		/**
-		 * Users can select a date prior to which articles will not get short
-		 * links. This is to prevent the case where some users get their quotas
-		 * filled up as soon as the option is turned on because it is generating
-		 * links for older articles. So this conditional checks the publish date
-		 * of an article and ensures that the article is eligible for links.
-		 *
-		 */
-		if ( $start_date ) {
-
-			// Bail if we don't have a valid post object or post_date.
-			if ( !is_object( $post ) || empty( $post->post_date ) ) {
-				return $array;
-			}
-
-			$start_date = DateTime::createFromFormat( 'Y-m-d', $start_date );
-			$post_date  = new DateTime( $post->post_date );
-
-			//* The post is older than the minimum publication date.
-			if ( $start_date > $post_date ) {
-				$this->record_exit_status( 'publication_date' );
-				return $array;
-			}
+		// The post is older than the minimum publication date.
+		if ( false == $this->check_publication_date() ) {
+			$this->record_exit_status( 'publication_date' );
+			return $array;
 		}
 
 
@@ -274,54 +254,6 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		}
 
 		return $array;
-	}
-
-
-	/**
-	 * Fetch the bitly link that is cached in the local database.
-	 *
-	 * When the cache is fresh, we just pull the existing bitly link from the
-	 * database rather than making an API call on every single page load.
-	 *
-	 * @since  3.3.2 | 12 SEP 2018 | Created
-	 * @since  3.4.0 | 16 OCT 2018 | Refactored, Simplified, Docblocked.
-	 * @param  int $post_id The post ID
-	 * @param  string $network The key for the current social network
-	 * @return mixed           string: The short url; false on failure.
-	 *
-	 */
-	public static function fetch_local_link( $post_id, $network ) {
-
-
-		/**
-		 * Fetch the local bitly link. We'll use this one if Google Analytics is
-		 * not enabled. Otherwise we'll switch it out below.
-		 *
-		 */
-		$short_url = get_post_meta( $post_id, 'bitly_link', true );
-
-
-		/**
-		 * If Google analytics are enabled, we'll need to fetch a different
-		 * shortlink for each social network. If they are disabled, we just use
-		 * the same shortlink for all of them.
-		 *
-		 */
-		if ( true == SWP_Utility::get_option('google_analytics') ) {
-			$short_url = get_post_meta( $post_id, 'bitly_link_' . $network, true);
-		}
-
-
-		/**
-		 * We need to make sure that the $short_url returned from get_post_meta()
-		 * is not false or an empty string. If so, we'll return false.
-		 *
-		 */
-		if ( !empty( $short_url ) ) {
-			return $short_url;
-		}
-
-		return false;
 	}
 
 
