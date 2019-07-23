@@ -108,7 +108,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 		if( true == is_admin() ) {
 			new SWP_Meta_Box_Loader();
-			new SWP_Pro_Settings_link();
+			new SWP_Pro_Settings_Link();
 		}
 	}
 
@@ -132,7 +132,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	 * Loads an array of sibling files.
 	 *
 	 * @since  3.0.0 | 01 MAR 2018 | Created
-	 * @since  4.0.0 | 20 JUL 2019 | Implemented autoloading. 
+	 * @since  4.0.0 | 20 JUL 2019 | Implemented autoloading.
 	 * @param  string   $path  The relative path to the files home.
 	 * @param  array    $files The name of the files (classes), no vendor prefix.
 	 * @return none     The files are loaded into memory.
