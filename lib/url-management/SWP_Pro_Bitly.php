@@ -94,8 +94,8 @@ if( class_exists( 'SWP_Link_Shortener' ) ) {
 				SWP_Utility::delete_option( 'bitly_access_token' );
 				SWP_Utility::delete_option( 'bitly_access_login' );
 
-				//* Turn Bitly link shortening off for the user.
-				SWP_Utility::update_option( 'bitly_authentication', false );
+				//* Turn link shortening off for the user.
+				SWP_Utility::update_option( 'link_shortening_toggle', false );
 			}
 
 
