@@ -30,7 +30,7 @@ class SWP_FW_Medium extends SWP_Pro_Follow_Network {
 			'follow_description'  => 'Followers',
 			'color_primary'       => '#00ab6c',
 			'color_accent'        => '#fff',
-			'url'                 => 'https://medium.com/swfw_username',
+			'url'                 => 'https://medium.com/@swfw_username',
 			'needs_authorization' => false
 		);
 
