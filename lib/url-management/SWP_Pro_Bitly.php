@@ -44,7 +44,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 		// Check if we have an access token which means this has been authenticated.
 		if( SWP_Utility::get_option( 'bitly_access_token' ) ) {
-			$this->access_token;
+			$this->access_token = SWP_Utility::get_option( 'bitly_access_token' );
 			$this->active = true;
 		}
 
