@@ -59,9 +59,8 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	}
 
 
-	public function generate_new_shortlink( $url, $post_id ) {
+	public function generate_new_shortlink( $url, $post_id, $network = false ) {
 
-//		delete_post_meta( $post_id, 'rebrandly_data' );
 		if( $this->get_existing_link( $url, $post_id ) ) {
 			return $this->get_existing_link( $url, $post_id );
 		}
@@ -70,6 +69,11 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 		$domain_data['fullName']  = $this->domain;
 		$post_data['domain']      = $domain_data;
 		$post_data['destination'] = $url;
+		$post_data['title'] = get_the_title( $post_id );
+
+		if( false !== $network && SWP_Utility::get_option('google_analytics') ) {
+			$post_data['title'] .= ' (via '. $network .')';
+		}
 
 		// Setup and run a cURL request.
 		$ch = curl_init("https://api.rebrandly.com/v1/links");
@@ -86,7 +90,6 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 
 		// Process the response.
 		$response = json_decode($result, true);
-
 		$response['shortUrl'] = $this->add_prefix( $response['shortUrl'] );
 
 		if( isset( $response['shortUrl'] ) ) {
