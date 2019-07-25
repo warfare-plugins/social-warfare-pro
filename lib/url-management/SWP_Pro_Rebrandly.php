@@ -20,12 +20,35 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	private $shortlinks = array();
 	private $domain = 'rebrand.ly';
 
+
+	/**
+	 * The Magic Constructor. Instantiates our Bitly class and sets up any class
+	 * properties that weren't set up above.
+	 *
+	 * @since  4.0.0 | 25 JUL 2019 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public function __construct() {
+
+
+		/**
+		 * We'll check for an API key and use this to determine whether or not
+		 * this link shortening service should be considered active or not.
+		 *
+		 */
 		if( SWP_Utility::get_option('rebrandly_api_key') ) {
 			$this->api_key = SWP_Utility::get_option('rebrandly_api_key');
 			$this->active  = true;
 		}
 
+
+		/**
+		 * This will set up the user's selected link shortening domain while
+		 * defaulting it the rebrand.ly short domain.
+		 *
+		 */
 		$domain = SWP_Utility::get_option('rebrandly_domain');
 		if( !empty( $domain ) ) {
 			$this->domain = $domain;
