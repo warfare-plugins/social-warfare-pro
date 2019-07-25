@@ -71,7 +71,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * @return string               The shortened URL.
 	 *
 	 */
-	public function generate_new_shortlink( $url ) {
+	public function generate_new_shortlink( $url, $post_id ) {
 
 
 		/**

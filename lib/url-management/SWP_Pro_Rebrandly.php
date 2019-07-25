@@ -17,6 +17,7 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	public $name               = 'Rebrandly';
 	public $deactivation_hook  = '';
 	public $authorization_link = '';
+	private $shortlinks = array();
 
 	public function __construct() {
 		if( SWP_Utility::get_option('rebrandly_api_key') ) {
@@ -24,6 +25,141 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 			$this->active  = true;
 		}
 		parent::__construct();
+		add_action( 'wp_loaded', array( $this, 'add_options') , 25 );
 	}
 
+
+	public function generate_new_shortlink( $url, $post_id ) {
+
+//		delete_post_meta( $post_id, 'rebrandly_data' );
+		if( $this->get_existing_link( $url, $post_id ) ) {
+			return $this->get_existing_link( $url, $post_id );
+		}
+
+		// Variables we'll pass to the API.
+		$api_key                  = SWP_Utility::get_option('rebrandly_api_key');
+		$domain_data['fullName']  = 'rebrand.ly';
+		$post_data['domain']      = $domain_data;
+		$post_data['destination'] = $url;
+
+		// Setup and run a cURL request.
+		$ch = curl_init("https://api.rebrandly.com/v1/links");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			"apikey: {$api_key}",
+	        "Content-Type: application/json"
+		));
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		// Process the response.
+		$response = json_decode($result, true);
+
+		$response['shortUrl'] = $this->add_prefix( $response['shortUrl'] );
+
+		if( isset( $response['shortUrl'] ) ) {
+			$this->update_link_data( $url, $post_id, $response );
+			return $response['shortUrl'];
+		}
+		return $url;
+	}
+
+	public function update_link_data( $url, $post_id, $response ) {
+		$rebrandly_data = get_post_meta( $post_id, 'rebrandly_data', true );
+		if( false == $rebrandly_data ) {
+			$rebrandly_data = array();
+		}
+		$rebrandly_data[$url] = array(
+			'id' => $response['id'],
+			'shortlink' => $response['shortUrl']
+		);
+		delete_post_meta( $post_id, 'rebrandly_data' );
+		update_post_meta( $post_id, 'rebrandly_data', $rebrandly_data );
+	}
+
+	public function get_existing_link( $url, $post_id ) {
+		$rebrandly_data = get_post_meta( $post_id, 'rebrandly_data', true );
+
+		if( !empty( $this->shortlinks[$url] ) ) {
+			return $this->shortlinks[$url]['shortlink'];
+		}
+
+		echo 'Boom';
+
+		if( false == $rebrandly_data ) {
+			return false;
+		}
+
+		if( empty( $rebrandly_data[$url] ) ) {
+			return false;
+		}
+
+
+
+		// Setup and run a cURL request.
+		$post_data['destination'] = $url;
+		$api_key = SWP_Utility::get_option('rebrandly_api_key');
+		$ch = curl_init('https://api.rebrandly.com/v1/links/' . $rebrandly_data[$url]['id'] );
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			"apikey: {$api_key}",
+			"Content-Type: application/json"
+		));
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false );
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+ 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		// Process the response.
+		$response = json_decode($result, true);
+
+		if( !empty( $response['status'] ) && $response['status'] == 'active' ) {
+			$this->shortlinks[$url] = $rebrandly_data[$url];
+			return $this->add_prefix( $response['shortUrl'] );
+		}
+
+		return false;
+	}
+
+
+	private function add_prefix( $shortlink ) {
+		if( false === strpos( $shortlink, 'https' )) {
+			return 'https://' . $shortlink;
+		}
+	}
+
+	/**
+	 * A method for adding our options to the options page. This adds the API
+	 * Key field and the Domain Name field.
+	 *
+	 * @since  4.0.0 | 24 JUL 2019 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+	public function add_options() {
+
+		// The input for the API key.
+		$api_key = new SWP_Option_Text('Rebrandly API Key', 'rebrandly_api_key');
+		$api_key->set_size( 'sw-col-300' )
+			->set_priority( 30 )
+			->set_default( '' )
+			->set_dependency('link_shortening_service', $this->key);
+
+		// The input for the domain name.
+		$domain = new SWP_Option_Text('Rebrandly Domain', 'rebrandly_domain');
+		$domain->set_size( 'sw-col-300' )
+			->set_priority( 30 )
+			->set_default( '' )
+			->set_dependency('link_shortening_service', $this->key);
+
+		// Add our new options to the $SWP_Options_Page object.
+		global $SWP_Options_Page;
+		$link_shortening = $SWP_Options_Page->tabs->advanced->sections->link_shortening;
+		$link_shortening->add_options( array( $api_key, $domain ) );
+	}
 }
