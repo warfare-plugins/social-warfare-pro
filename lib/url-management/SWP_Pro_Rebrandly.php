@@ -18,12 +18,19 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	public $deactivation_hook  = '';
 	public $authorization_link = '';
 	private $shortlinks = array();
+	private $domain = 'rebrand.ly';
 
 	public function __construct() {
 		if( SWP_Utility::get_option('rebrandly_api_key') ) {
 			$this->api_key = SWP_Utility::get_option('rebrandly_api_key');
 			$this->active  = true;
 		}
+
+		$domain = SWP_Utility::get_option('rebrandly_domain');
+		if( !empty( $domain ) ) {
+			$this->domain = $domain;
+		}
+
 		parent::__construct();
 		add_action( 'wp_loaded', array( $this, 'add_options') , 25 );
 	}
@@ -37,15 +44,14 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 		}
 
 		// Variables we'll pass to the API.
-		$api_key                  = SWP_Utility::get_option('rebrandly_api_key');
-		$domain_data['fullName']  = 'rebrand.ly';
+		$domain_data['fullName']  = $this->domain;
 		$post_data['domain']      = $domain_data;
 		$post_data['destination'] = $url;
 
 		// Setup and run a cURL request.
 		$ch = curl_init("https://api.rebrandly.com/v1/links");
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-			"apikey: {$api_key}",
+			"apikey: {$this->api_key}",
 	        "Content-Type: application/json"
 		));
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -87,8 +93,6 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 			return $this->shortlinks[$url]['shortlink'];
 		}
 
-		echo 'Boom';
-
 		if( false == $rebrandly_data ) {
 			return false;
 		}
@@ -101,10 +105,9 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 
 		// Setup and run a cURL request.
 		$post_data['destination'] = $url;
-		$api_key = SWP_Utility::get_option('rebrandly_api_key');
 		$ch = curl_init('https://api.rebrandly.com/v1/links/' . $rebrandly_data[$url]['id'] );
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-			"apikey: {$api_key}",
+			"apikey: {$this->api_key}",
 			"Content-Type: application/json"
 		));
 		curl_setopt($ch, CURLOPT_POST, 1);
