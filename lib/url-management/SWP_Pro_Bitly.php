@@ -52,6 +52,8 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		$this->authorization_link = "https://bitly.com/oauth/authorize?client_id=96c9b292c5503211b68cf4ab53f6e2f4b6d0defb&state=" . admin_url( 'admin-ajax.php') . "&redirect_uri=https://warfareplugins.com/bitly_oauth.php";
 
 		parent::__construct();
+
+		add_action( 'wp_loaded', array( $this, 'add_options') , 25 );
 	}
 
 
@@ -112,6 +114,39 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		return false;
 	}
 
+
+	/**
+	 * A method used to add the options that are specific to this link
+	 * shortening API. In this case, it adds the Bitly Authentication button.
+	 *
+	 * @since  4.0.0 | 24 JUL 2019 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+	public function add_options() {
+
+		// Create the authentication button option.
+		$authentication_button = new SWP_Option_Button(
+			$this->button_properties['text'],
+			'authenticate_' . $this->key,
+			$this->button_properties['classes'],
+			$this->button_properties['link'],
+			$this->button_properties['new_tab'],
+			$this->button_properties['deactivation_hook']
+		);
+
+		// Add the size, priority, and dependency to the option.
+		$authentication_button
+			->set_size( 'sw-col-300' )
+			->set_priority( 30 )
+			->set_dependency('link_shortening_service', $this->key);
+
+		// Add our new options to the $SWP_Options_Page object.
+		global $SWP_Options_Page;
+		$link_shortening = $SWP_Options_Page->tabs->advanced->sections->link_shortening;
+		$link_shortening->add_option( $authentication_button );
+	}
 
 	/**
 	 * The Bitly OAuth Callback Function

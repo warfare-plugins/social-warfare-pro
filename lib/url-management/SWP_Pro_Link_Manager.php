@@ -38,6 +38,10 @@ class SWP_Pro_Link_Manager {
 		if( class_exists( 'SWP_Pro_Bitly' ) ) {
 			new SWP_Pro_Bitly();
 		}
-		
+
+		//if( class_exists( 'SWP_Pro_Rebrandly' ) ) {
+			new SWP_Pro_Rebrandly();
+		//}
+
 	}
 }

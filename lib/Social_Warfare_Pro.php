@@ -207,6 +207,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			 */
 			$files = array(
 				'Pro_Bitly',
+				'Pro_Rebrandly',
 				'Pro_Link_Manager',
 				'Pro_UTM_Tracking',
 			);
