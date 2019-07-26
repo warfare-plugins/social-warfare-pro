@@ -687,7 +687,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 			if ( true === $this->options['float_style_source'] ) :
 				//* Inherit the static button style.
-				$this->float_custom_color = $this->custom_color;
+				$this->float_custom_color = $this->parse_hex_color( $this->custom_color );
 			else :
 				$this->float_custom_color = $this->parse_hex_color( $this->options['float_custom_color'] );
 			endif;
@@ -710,7 +710,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			if ( true === $this->options['float_style_source'] ) :
 
 				//* Inherit the static button style.
-				$this->float_custom_color_outlines = $this->custom_color_outlines;
+				$this->float_custom_color_outlines = $this->parse_hex_color( $this->custom_color_outlines );
 			else:
 				$this->float_custom_color_outlines = $this->parse_hex_color( $this->options['float_custom_color_outlines'] );
 			endif;

@@ -55,7 +55,7 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 		}
 
 		parent::__construct();
-		add_action( 'wp_loaded', array( $this, 'add_options') , 25 );
+		add_action( 'wp_loaded', array( $this, 'add_options_page_options') , 25 );
 	}
 
 
@@ -69,7 +69,7 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 		$domain_data['fullName']  = $this->domain;
 		$post_data['domain']      = $domain_data;
 		$post_data['destination'] = $url;
-		$post_data['title'] = get_the_title( $post_id );
+		$post_data['title']       = get_the_title( $post_id );
 
 		if( false !== $network && SWP_Utility::get_option('google_analytics') ) {
 			$post_data['title'] .= ' (via '. $network .')';
@@ -170,7 +170,7 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	 * @return void
 	 *
 	 */
-	public function add_options() {
+	public function add_options_page_options() {
 
 		// The input for the API key.
 		$api_key = new SWP_Option_Text('Rebrandly API Key', 'rebrandly_api_key');
@@ -190,5 +190,9 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 		global $SWP_Options_Page;
 		$link_shortening = $SWP_Options_Page->tabs->advanced->sections->link_shortening;
 		$link_shortening->add_options( array( $api_key, $domain ) );
+	}
+
+	public function add_postmeta_options() {
+
 	}
 }
