@@ -217,7 +217,7 @@ class SWP_Pro_Pinterest {
 
 		// Hide the image with a CSS class.
 		if ( 'hidden' === $pinterest_image_location ) {
-			$image_html = '<img class="no_pin swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
+			$image_html = '<img class="swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
 							'" data-pin-url="' . get_the_permalink() .
 							'" data-pin-media="' . $pinterest_image_url .
 							'" alt="' . $pinterest_description .
