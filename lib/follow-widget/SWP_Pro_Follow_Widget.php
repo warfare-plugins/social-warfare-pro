@@ -135,7 +135,7 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 	 * Creates an input[type=text] which corresponds to count display settings .
 	 *
 	 * @since  4.0.0 | 03 DEC 2018 | Created.
-	 * @since  4.0.0 | 20 NOV 2019 | Use modern PHP return formatting. 
+	 * @since  4.0.0 | 20 NOV 2019 | Use modern PHP return formatting.
 	 * @param  string $title The display title for the widget.
 	 * @return string Fully qualified HTML to render the input.
 	 *
@@ -150,33 +150,49 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 		return "<div class='swfw-input-field'><label for='$wp_id'>Minimum Count</label><input type='text' id='$wp_id' name='$wp_name' value='$minimum_count' /></div>";
 	}
 
+
 	/**
-	 * Generates the backend display <form>.
+	 * The generate_form_HTML() method will generate the entirety of the html
+	 * needed for the Appearance->Widgets form to be usable in the WordPress
+	 * dashboard. This will loop through the available networks as well as call
+	 * a number of helper functions in order to call everything together.
 	 *
 	 * @since 1.0.0 | 03 DEC 2018 | Created.
+	 * @since 4.0.0 | 20 NOV 2019 | Various updates and documentation.
 	 * @param array $settings The settings as previously saved.
 	 * @return string Fully qualified HTML to render the form.
 	 *
 	 */
 	function generate_form_HTML( $settings ) {
+
+		// Fetch the available networks for this widget.
 		$networks = apply_filters( 'swp_follow_widget_networks', array() );
+
+		// Establish the defaults for each available option.
 		$defaults = array(
-			'title'	=> 'Follow me on social media',
-			'shape'	=> 'square',
+			'title'         => 'Follow me on social media',
+			'shape'         => 'block',
 			'minimum_count' => 15
 		);
 
-
+		// Loop through the defaults and apply them if an option has not been selected.
 		foreach($defaults as $key => $default) {
 			if ( !isset( $settings[$key] ) ) {
 				$settings[$key] = $default;
 			}
 		}
 
+		// Call the helper functions for the individual options.
 		$html = $this->generate_title_input( $settings['title'] );
 		$html .= $this->generate_shape_select( $settings['shape'] );
 		$html .= $this->generate_minimum_count_input( $settings['minimum_count'] );
 
+
+		/**
+		 * This will loop through the available networks and create the option
+		 * necessary for each social network.
+		 *
+		 */
 		foreach( $networks as $network ) {
 			$key         = $network->key . '_username';
 			$wp_id       = $this->get_field_id( $key );
@@ -184,15 +200,8 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 			$username    = isset( $settings[$key]) ? $settings[$key] : '';
 			$class       = !empty($username) ? 'swfw-active ' : 'swfw-inactive';
 			$placeholder = isset( $network->placeholder ) ? $network->placeholder : 'Username';
-			$field       =
-<<<FIELD
-<div class="swfw-follow-field $class">
-	<div class="swfw-follow-field-icon swp-$network->key" target="_blank"><i class="sw swp_{$network->key}_icon"></i></div>
-	<label for="$wp_id">$network->name</label>
-	<input id="$wp_id" name="$wp_name" type="text" placeholder="$placeholder" value="$username"/>
-</div>
-FIELD;
-			 $html .= $field;
+			$field       = "<div class='swfw-follow-field $class'><div class='swfw-follow-field-icon swp-$network->key' target='_blank'><i class='sw swp_{$network->key}_icon'></i></div><label for='$wp_id'>$network->name</label><input id='$wp_id' name='$wp_name' type='text' placeholder='$placeholder' value='$username' /></div>";
+			$html .= $field;
 		}
 
 		return $html;
