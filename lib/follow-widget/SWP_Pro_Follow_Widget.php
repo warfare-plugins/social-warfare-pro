@@ -134,22 +134,20 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 	/**
 	 * Creates an input[type=text] which corresponds to count display settings .
 	 *
-	 * @since 1.0.0 | 03 DEC 2018 | Created.
-	 * @param string $title The display title for the widget.
+	 * @since  4.0.0 | 03 DEC 2018 | Created.
+	 * @since  4.0.0 | 20 NOV 2019 | Use modern PHP return formatting. 
+	 * @param  string $title The display title for the widget.
 	 * @return string Fully qualified HTML to render the input.
 	 *
 	 */
 	function generate_minimum_count_input( $minimum_count ) {
+
+		// Fetch the field ID and field name.
 		$wp_id   = $this->get_field_id( 'minimum_count' );
 		$wp_name = $this->get_field_name( 'minimum_count' );
 
-		return
-<<<INPUT
-<div class="swfw-input-field">
-	<label for={$wp_id}>Minimum Count</label>
-	<input type="text" id="$wp_id" name="$wp_name" value="$minimum_count" />
-</div>
-INPUT;
+		// Return the compiled html for this option.
+		return "<div class='swfw-input-field'><label for='$wp_id'>Minimum Count</label><input type='text' id='$wp_id' name='$wp_name' value='$minimum_count' /></div>";
 	}
 
 	/**
