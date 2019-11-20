@@ -78,62 +78,56 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 	/**
 	 * Creates an input[type=text] which corresponds to the widget's display title.
 	 *
-	 * @since 1.0.0 | 03 DEC 2018 | Created.
-	 * @param string $title The display title for the widget.
+	 * @since  4.0.0 | 03 DEC 2018 | Created.
+	 * @since  4.0.0 | 20 NOV 2019 | Switched to traditional PHP return format.
+	 * @param  string $title The display title for the widget.
 	 * @return string Fully qualified HTML to render the input.
 	 *
 	 */
 	function generate_title_input( $title ) {
-		$wp_id = $this->get_field_id( 'title' );
+		$wp_id   = $this->get_field_id( 'title' );
 		$wp_name = $this->get_field_name( 'title');
 
-		return
-<<<TITLE
-<div class="swfw-input-field">
-	<label for={$wp_id}>Widget Title</label>
-	<input type="text" id="$wp_id" name="$wp_name" value="$title" placeholder="$title" />
-</div>
-TITLE;
+		return "<div class='swfw-input-field'><label for='$wp_id'>Widget Title</label><input type='text' id='$wp_id' name='$wp_name' value='$title' placeholder='$title' /></div>";
 	}
 
 
 	/**
 	 * Creates an input[type=select] which corresponds to the button shape.
 	 *
-	 * @since 1.0.0 | 03 DEC 2018 | Created.
+	 * @since 4.0.0 | 03 DEC 2018 | Created.
+	 * @since 4.0.0 | 20 NOV 2019 | Switched to 'block' as default option.
 	 * @param string $selection The currently selected button shape.
 	 *                          One of ['square', 'block', 'buttons']
 	 * @return string Fully qualified HTML to render the select.
 	 *
 	 */
 	function generate_shape_select($selection) {
+
+		// Fetch the field ID and field name.
 		$wp_id   = $this->get_field_id( 'shape' );
 		$wp_name = $this->get_field_name( 'shape' );
 
+		// Establish an array of available options.
 		$opts = array(
-			'square'  => 'Square',
 			'block'   => 'Block',
+			'square'  => 'Square',
 			'buttons' => 'Buttons',
 			'leaf'    => 'Leaf in the wind',
 			'shift'   => 'Shift',
-			'pill'   => 'Pills'
+			'pill'    => 'Pills'
 		);
 
+		// Loop and create the html selection options from the above array.
 		$options_html = '';
 		foreach($opts as $key => $name) {
 			$selected      = selected($selection, $key, false);
 			$options_html .= "<option value='$key' $selected>$name</option>";
 		}
 
-		return
-<<<SELECT
-<div class="swfw-input-field">
-	<label for={$wp_id}>Button Shape</label>
-	<select id="$wp_id" name="$wp_name" value="$selection">
-		$options_html
-	</select>
-</div>
-SELECT;
+		// Return the compiled html for this option.
+		return "<div class='swfw-input-field'><label for='$wp_id'>Button Shape</label><select id='$wp_id' name='$wp_name' value='$selection'>$options_html</select></div>";
+
 	}
 
 
