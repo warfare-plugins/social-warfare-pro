@@ -157,9 +157,9 @@ class SWP_Pro_Follow_Widget extends SWP_Widget {
 	 * dashboard. This will loop through the available networks as well as call
 	 * a number of helper functions in order to call everything together.
 	 *
-	 * @since 1.0.0 | 03 DEC 2018 | Created.
-	 * @since 4.0.0 | 20 NOV 2019 | Various updates and documentation.
-	 * @param array $settings The settings as previously saved.
+	 * @since  1.0.0 | 03 DEC 2018 | Created.
+	 * @since  4.0.0 | 20 NOV 2019 | Various updates and documentation.
+	 * @param  array $settings The settings as previously saved.
 	 * @return string Fully qualified HTML to render the form.
 	 *
 	 */
