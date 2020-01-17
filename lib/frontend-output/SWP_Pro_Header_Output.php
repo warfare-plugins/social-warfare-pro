@@ -159,6 +159,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 			'og:updated_time' => get_post_modified_time( 'c' )
 		);
 
+
 		/**
 		 * We prioritize the source of a value in this order:
 		 * 1 Post meta
@@ -184,6 +185,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		$this->open_graph_data = $final_fields;
 	}
+
 
 	/**
 	 * Grabs OG data based on Social Warfare settings.
@@ -290,6 +292,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 		global $wpseo_og;
 		if ( has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) ) ) {
+
+			// Don't  disable Yoast if our OG tags are disabled. 
+			if ( false === SWP_Utility::get_option( 'og_tags' ) ) {
+				return;
+			}
+
 			remove_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ), 30 );
 		}
 
