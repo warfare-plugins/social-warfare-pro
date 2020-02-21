@@ -39,6 +39,7 @@ class SWP_Pro_UTM_Tracking {
 	 * @since  3.0.0 | 04 APR 2018 | Created
 	 * @since  3.4.0 | 16 OCT 2018 | Refactored, Simplified, Docblocked.
 	 * @since  4.0.0 | 17 JUL 2019 | Moved to SWP_Google_Analytics class.
+	 * @since  4.0.0 | 21 FEB 2019 | Added replacement of spaces from UTM parameters.
 	 * @param  array $args An array of arguments and data used in processing the URL.
 	 *         $args['url']         = $url;              String (e.g. 'http://google.com')
 	 *         $args['network']     = $network;          String (e.g. 'twitter')
@@ -86,7 +87,7 @@ class SWP_Pro_UTM_Tracking {
 		 * they can actually appear in the link.
 		 *
 		 */
-		$analytics_medium = str_replace(' ', '_', SWP_Utility::get_option( 'analytics_medium' ) );
+		$analytics_medium   = str_replace(' ', '_', SWP_Utility::get_option( 'analytics_medium' ) );
 		$analytics_campaign = str_replace(' ', '_', SWP_Utility::get_option( 'analytics_campaign' ) );
 
 
