@@ -69,7 +69,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph image.
 		$open_graph_image = array(
 			'name'  => __( 'Open Graph Image','social-warfare' ),
-			'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
+			'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
 			'id'    => $prefix . 'og_image',
 			'type'  => 'image_advanced',
 			'class' => 'open-graph swpmb-left',
