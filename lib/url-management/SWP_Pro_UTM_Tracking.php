@@ -81,13 +81,23 @@ class SWP_Pro_UTM_Tracking {
 
 
 		/**
+		 * URL parameters cannot contain spaces in them. If the user adds spaces
+		 * in their input, we will replace them with underscores to ensure that
+		 * they can actually appear in the link.
+		 *
+		 */
+		$analytics_medium = str_replace(' ', '_', SWP_Utility::get_option( 'analytics_medium' ) );
+		$analytics_campaign = str_replace(' ', '_', SWP_Utility::get_option( 'analytics_campaign' ) );
+
+
+		/**
 		 * If all of our checks are passed, then compile the UTM string, attach
 		 * it to the end of the URL, and return the modified array.
 		 *
 		 */
 		$args['url']  = add_query_arg( 'utm_source', $args['network'], $args['url'] );
-		$args['url']  = add_query_arg( 'utm_medium', SWP_Utility::get_option( 'analytics_medium' ), $args['url'] );
-		$args['url']  = add_query_arg( 'utm_campaign', SWP_Utility::get_option( 'analytics_campaign' ), $args['url'] );
+		$args['url']  = add_query_arg( 'utm_medium', $analytics_medium, $args['url'] );
+		$args['url']  = add_query_arg( 'utm_campaign', $analytics_campaign, $args['url'] );
 
 		return $args;
 	}
