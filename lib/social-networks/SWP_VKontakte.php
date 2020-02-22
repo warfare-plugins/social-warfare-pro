@@ -54,18 +54,14 @@ class SWP_VKontakte extends SWP_Social_Network {
 		 *
 		 */
 		public function get_api_link( $url ) {
-			$api_url = 'http://vkontakte.ru/share.php?act=count&index=1&url='. $url .'&format=json&callback=?';
-			return $api_url;
+			return 'https://vk.com/share.php?act=count&url='. $url;
 		}
 
 
 		/**
 		 * Parse the response to get the share count
 		 *
-		 * @since  1.0.0 | 06 APR 2018 | Created
-		 * @since  3.6.0 | 22 APR 2019 | Updated to parse API v.3.2.
-		 * @since  4.0.0 | 03 DEC 2019 | Updated to parse API v.3.2 without token.
-		 * @access public
+		 * @since  4.0.0 | 21 FEB 2020 | Created
 		 * @param  string  $response The raw response returned from the API request
 		 * @return integer The number of shares reported from the API
 		 *
@@ -73,11 +69,15 @@ class SWP_VKontakte extends SWP_Social_Network {
 		public function parse_api_response( $response ) {
 
 			// Parse the response into a generic PHP object.
-			$response = json_decode( $response );
+			$match_count = preg_match_all("/[0-9]\d*/", $response, $counts_array );
 
-			// Parse the response to get integers.
-			if( !empty( $response->og_object ) && !empty( $response->og_object->engagement ) ) {
-				return $response->og_object->engagement->count;
+			if( $match_count > 0 ) {
+				$share_count = 0;
+				foreach( $counts_array[0] as $current_count ) {
+					$share_count = $share_count + $current_count;
+				}
+
+				return $share_count;
 			}
 
 			// Return 0 if no valid counts were able to be extracted.
