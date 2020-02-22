@@ -68,9 +68,10 @@ class SWP_VKontakte extends SWP_Social_Network {
 		 */
 		public function parse_api_response( $response ) {
 
-			// Parse the response into a generic PHP object.
+			// Fetch the numerals from the API response.
 			$match_count = preg_match_all("/[0-9]\d*/", $response, $counts_array );
 
+			// If we had a valid REGEX match...
 			if( $match_count > 0 ) {
 				$share_count = 0;
 				foreach( $counts_array[0] as $current_count ) {
