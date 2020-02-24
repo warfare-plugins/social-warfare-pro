@@ -443,23 +443,22 @@ abstract class SWP_Pro_Follow_Network {
 	 */
 	private function generate_square_HTML() {
 		$follow_count_HTML = $this->get_count_html( 'square' );
-			// Not enough space for a name.
-			$this->name = '';
-		return
-<<<BUTTON
-<a target="_blank" href="{$this->href}">
-	<div class="swfw-follow-button swfw_square_button swp-$this->key">
-		<div class='swfw-network-icon'>
-			{$this->icon}
-		</div>
 
-		<div class="swfw-text">
-			{$follow_count_HTML}
-			<span class='swfw-cta'>$this->cta</span>
-		</div>
-	</div>
-</a>
-BUTTON;
+			$html = '';
+			$this->name = '';
+			$html .= '<a target="_blank" href="'. $this->href .'">';
+			$html .= '<div class="swfw-follow-button swfw_square_button swp-'. $this->key .'">';
+			$html .= '<div class="swfw-network-icon">';
+			$html .= $this->icon;
+			$html .= '</div>';
+			$html .= '<div class="swfw-text">';
+			$html .= $follow_count_HTML;
+			$html .= '<span class="swfw-cta">'. $this->cta .'</span>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</a>';
+
+			return $html;
 	}
 
 
@@ -499,16 +498,18 @@ BUTTON;
 		}
 
 		// They have no followers or follow data for this network.
+		$count = true;
 		if ( (int) $this->follow_count < 1 || $this->follow_count < $this->minimum_count ) {
 			$this->follow_count = $this->name;
 			$this->follow_description = '';
+			$count = false;
 		}
 
 		if ( 'square' == $shape || 'block' == $shape ) {
-			return "<span class='swfw-count'>$this->follow_count</span>";
+			return '<span class="swfw-count" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count.'</span>';
 		}
 
-		return "<p class='swfw-count' style='margin: 0'>$this->follow_count $this->follow_description</p>";
+		return '<p class="swfw-count" style="margin: 0" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count . $this->follow_description.'</p>';
 	}
 
 
@@ -520,8 +521,8 @@ BUTTON;
 	 * @return string Fully qualified HTML for an Buttons follow button.
 	 *
 	 */
-	public function generate_buttons_HTML( ) {
-		$follow_count_HTML = $this->get_count_html( $shape );
+	public function generate_buttons_HTML() {
+		$follow_count_HTML = $this->get_count_html( 'buttons' );
 		return
 <<<BUTTON
 <a target="_blank" href="{$this->href}">
