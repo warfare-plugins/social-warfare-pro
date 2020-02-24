@@ -398,6 +398,9 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 	/**
 	* Adds a few more options and sections to the Social Identity tab.
 	*
+	* @since  UNKNOWN | UNKNOWN | Created
+	* @since  4.0.0 | 25 FEB 2020 | Added OpenShareCount as a twitter count source.
+	* @param  void
 	* @return SWP_Pro_Options_Page $this The calling instance, for method chaining.
 	*/
 	public function update_social_tab() {
