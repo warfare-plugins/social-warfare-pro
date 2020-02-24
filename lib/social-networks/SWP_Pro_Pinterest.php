@@ -274,15 +274,15 @@ class SWP_Pro_Pinterest {
 			// Fallbacks: WP Description, Caption, then Title.
 			if ( empty( $description ) ) {
 				$image = get_post( $image_id );
-				$description = $img->post_content;
+				$description = $image->post_content;
 			}
 
 			if ( empty( $description ) ) {
-				$description = $img->post_excerpt;
+				$description = $image->post_excerpt;
 			}
 
 			if ( empty ( $description) ) {
-				$description = $img->post_title;
+				$description = $image->post_title;
 			}
 		}
 
@@ -756,8 +756,8 @@ class SWP_Pro_Pinterest {
 		$alignment = SWP_Pro_Pinterest::get_alignment_style( $alignment );
 
 		// Display a Pinterest 'Save' button on hover?
-		$pin_opt_out = get_post_meta( $img->ID, 'swp_pin_button_opt_out', true );
-		$alt_text = get_post_meta( $img->ID, '_wp_attachment_image_alt', true );
+		$pin_opt_out = get_post_meta( $image->ID, 'swp_pin_button_opt_out', true );
+		$alt_text = get_post_meta( $image->ID, '_wp_attachment_image_alt', true );
 
 		if ( empty( $alt_text ) ) {
 			$alt_text = $pinterest_description;
