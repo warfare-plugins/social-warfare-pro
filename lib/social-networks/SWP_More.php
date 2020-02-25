@@ -6,9 +6,9 @@ if( false === class_exists( 'SWP_Social_Network' ) ) {
 }
 
 /**
- * Print Button
+ * More Button
  *
- * Class to add a Print button to the available buttons
+ * Class to add a More button to the available buttons
  *
  * @package   SocialWarfare\Functions\Social-Networks
  * @copyright Copyright (c) 2020, Warfare Plugins, LLC
@@ -16,7 +16,7 @@ if( false === class_exists( 'SWP_Social_Network' ) ) {
  * @since     4.0.0 | 24 FEB 2020 | CREATED
  *
  */
-class SWP_Print extends SWP_Social_Network {
+class SWP_More extends SWP_Social_Network {
 
 
 	/**
@@ -28,18 +28,17 @@ class SWP_Print extends SWP_Social_Network {
 	 * state (does the user have this button turned on?) so that it can be accessed directly
 	 * within the object.
 	 *
-	 * @since  4.0.0 | 24 FEB 2020 | Created
+	 * @since  4.0.0 | 24 APR 2020 | Created
 	 * @param  none
 	 * @return none
-	 * @access public
 	 *
 	 */
 	public function __construct() {
 
 		// Update the class properties for this network
-		$this->name           = __( 'Print','social-warfare' );
-		$this->cta            = __( 'Print','social-warfare' );
-		$this->key            = 'print';
+		$this->name           = __( 'More','social-warfare' );
+		$this->cta            = __( 'More','social-warfare' );
+		$this->key            = 'more';
 		$this->default        = 'false';
         $this->premium        = 'pro';
 
@@ -52,7 +51,8 @@ class SWP_Print extends SWP_Social_Network {
      *
      * Since this button will not use a share link, we'll populate it with the
      * pound sign, and then hijack the click via a click event listener in the
-     * javascript file. This will, in turn, trigger the Window.print() method.
+     * javascript file. This will, in turn, trigger the more share options
+     * lightbox popup options.
      *
      * @since  4.0.0 | 24 FEB 2020 | Created
      * @param  array $array The array of information passed in from the buttons panel.
