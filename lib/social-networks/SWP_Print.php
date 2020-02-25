@@ -1,0 +1,65 @@
+<?php
+
+// Bail out if we don't have access to the class we need to extend.
+if( false === class_exists( 'SWP_Social_Network' ) ) {
+   return;
+}
+
+/**
+ * Print Button
+ *
+ * Class to add a Print button to the available buttons
+ *
+ * @package   SocialWarfare\Functions\Social-Networks
+ * @copyright Copyright (c) 2020, Warfare Plugins, LLC
+ * @license   GPL-3.0+
+ * @since     4.0.0 | 24 FEB 2020 | CREATED
+ *
+ */
+class SWP_Print extends SWP_Social_Network {
+
+
+	/**
+	 * The Magic __construct Method
+	 *
+	 * This method is used to instantiate the social network object. It does three things.
+	 * First it sets the object properties for each network. Then it adds this object to
+	 * the globally accessible swp_social_networks array. Finally, it fetches the active
+	 * state (does the user have this button turned on?) so that it can be accessed directly
+	 * within the object.
+	 *
+	 * @since  3.0.0 | 06 APR 2018 | Created
+	 * @param  none
+	 * @return none
+	 * @access public
+	 *
+	 */
+	public function __construct() {
+
+		// Update the class properties for this network
+		$this->name           = __( 'Print','social-warfare' );
+		$this->cta            = __( 'Print','social-warfare' );
+		$this->key            = 'print';
+		$this->default        = 'false';
+        $this->premium        = 'pro';
+
+		$this->init_social_network();
+	}
+
+
+    /**
+     * Generate the share link
+     *
+     * Since this button will not use a share link, we'll populate it with the
+     * pound sign, and then hijack the click via a click event listener in the
+     * javascript file. This will, in turn, trigger the Window.print() method.
+     *
+     * @since  4.0.0 | 24 FEB 2020 | Created
+     * @param  array $array The array of information passed in from the buttons panel.
+     * @return string The generated link (in this case a pound sign)
+     *
+     */
+    public function generate_share_link( $post_data ) {
+		return '#';
+    }
+}

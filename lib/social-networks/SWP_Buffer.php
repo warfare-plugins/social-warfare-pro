@@ -1,5 +1,10 @@
 <?php
-if ( class_exists( 'SWP_Social_Network' ) ) :
+
+// Bail out if we don't have access to the class we need to extend.
+if( false === class_exists( 'SWP_Social_Network' ) ) {
+	return;
+}
+
 /**
  * Buffer
  *

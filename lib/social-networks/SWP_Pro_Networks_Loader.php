@@ -51,6 +51,7 @@ class SWP_Pro_Networks_Loader {
 	public function instantiate_networks() {
 			new SWP_Buffer();
 			new SWP_Email();
+			new SWP_Print();
 			new SWP_Flipboard();
 			new SWP_Hackernews();
 			new SWP_Pocket();
