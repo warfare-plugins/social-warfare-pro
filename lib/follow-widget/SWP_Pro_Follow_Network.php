@@ -509,7 +509,7 @@ BUTTON;
 			return '<span class="swfw-count" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count.'</span>';
 		}
 
-		return '<p class="swfw-count" style="margin: 0" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count . $this->follow_description.'</p>';
+		return '<p class="swfw-count" style="margin: 0" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count . ' ' . $this->follow_description.'</p>';
 	}
 
 
