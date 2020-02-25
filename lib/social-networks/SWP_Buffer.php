@@ -103,5 +103,3 @@ class SWP_Buffer extends SWP_Social_Network {
         return $share_link;
     }
 }
-
-endif;
