@@ -79,10 +79,15 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * Bitly API.
 		 *
 		 */
-		$api_request_url = 'https://api-ssl.bitly.com/v3/shorten';
-		$api_request_url .= "?access_token=$this->access_token";
-		$api_request_url .= "&longUrl=" . urlencode( $url );
-		$api_request_url .= "&format=json";
+		$api_request_url = 'https://api-ssl.bitly.com/v4/shorten';
+		$api_request_fields = array(
+			'long_url' => $url
+		);
+		$api_request_header = array(
+			'Authorization: Bearer ' . $this->access_token,
+			'Content-Type: application/json',
+			'Accept: application/json',
+		);
 
 
 		/**
@@ -90,8 +95,9 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * an array that we can use.
 		 *
 		 */
-		$response = SWP_CURL::file_get_contents_curl( $api_request_url );
+		$response = SWP_CURL::post_json( $api_request_url, $api_request_fields, $api_request_header );
 		$result   = json_decode( $response , true );
+		var_dump($result);
 
 		//* The user no longer uses Bitly for link shortening.
 		if ( isset( $result['status_txt'] ) && 'INVALID_ARG_ACCESS_TOKEN' == $result['status_txt'] )   {
@@ -107,8 +113,8 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 * If we have a valid link, we'll use that. If not, we'll return false.
 		 *
 		 */
-		if ( isset( $result['data']['url'] ) ) {
-			return $result['data']['url'];
+		if ( isset( $result['link'] ) ) {
+			return $result['link'];
 		}
 
 		return false;
