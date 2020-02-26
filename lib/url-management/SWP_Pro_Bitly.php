@@ -65,9 +65,10 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 *
 	 * @since  3.0.0 | 04 APR 2018 | Created
 	 * @since  4.0.0 | 17 JUL 2019 | Migrated into this standalone Bitly class.
+	 * @since  4.0.0 | 26 FEB 2020 | Migrated from Bitly v3 to v4.
 	 * @param  string $url          The URL to be shortened
-	 * @param  string $network      The social network on which this URL is being shared.
-	 * @param  string $access_token The user's Bitly access token.
+	 * @param  string $post_id      The ID of the post this link belongs to.
+	 * @param  string $network      The social network this link will be used on.
 	 * @return string               The shortened URL.
 	 *
 	 */
@@ -80,9 +81,25 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 *
 		 */
 		$api_request_url = 'https://api-ssl.bitly.com/v4/shorten';
+
+
+		/**
+		 * The fields added to the array here will be passed through our
+		 * CURL::post_json() method. This method will convert the array into
+		 * one single JSON encoded field to be sent to the Bitly API.
+		 *
+		 */
 		$api_request_fields = array(
 			'long_url' => $url
 		);
+
+
+		/**
+		 * These headers will be sent through the CURL::post_json() method.
+		 * These headers are needed by Bitly to ensure proper formatting of our
+		 * request.
+		 *
+		 */
 		$api_request_header = array(
 			'Authorization: Bearer ' . $this->access_token,
 			'Content-Type: application/json',
@@ -97,7 +114,6 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 		 */
 		$response = SWP_CURL::post_json( $api_request_url, $api_request_fields, $api_request_header );
 		$result   = json_decode( $response , true );
-		var_dump($result);
 
 		//* The user no longer uses Bitly for link shortening.
 		if ( isset( $result['status_txt'] ) && 'INVALID_ARG_ACCESS_TOKEN' == $result['status_txt'] )   {
