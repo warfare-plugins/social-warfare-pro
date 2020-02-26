@@ -60,6 +60,7 @@ class SWP_Pro_Networks_Loader {
 			new SWP_Pocket();
 			new SWP_Reddit();
 			new SWP_Tumblr();
+			new SWP_Viber();
 			new SWP_VKontakte();
 			new SWP_Whatsapp();
 			new SWP_Xing();

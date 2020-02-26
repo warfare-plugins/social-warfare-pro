@@ -6,18 +6,17 @@ if( false === class_exists( 'SWP_Social_Network' ) ) {
 }
 
 /**
- * Blogger
+ * VKontakte
  *
- * Class to add a Blogger share button to the available buttons
+ * Class to add a VKontakte share button to the available buttons
  *
  * @package   SocialWarfare\Functions\Social-Networks
  * @copyright Copyright (c) 2020, Warfare Plugins, LLC
  * @license   GPL-3.0+
- * @since     4.0.0 | 25 FEB 2020 | CREATED
+ * @since     4.0.0 | 26 FEB 2020 | CREATED
  *
  */
-class SWP_Blogger extends SWP_Social_Network {
-
+class SWP_Viber extends SWP_Social_Network {
 
 	/**
 	 * The Magic __construct Method
@@ -28,7 +27,7 @@ class SWP_Blogger extends SWP_Social_Network {
 	 * state (does the user have this button turned on?) so that it can be accessed directly
 	 * within the object.
 	 *
-	 * @since  4.0.0 | 25 APR 2020 | Created
+	 * @since  4.0.0 | 26 FEB 2020 | Created
 	 * @param  void
 	 * @return void
 	 *
@@ -36,13 +35,13 @@ class SWP_Blogger extends SWP_Social_Network {
 	public function __construct() {
 
 		// Update the class properties for this network
-		$this->name           = __( 'Blogger','social-warfare' );
-		$this->cta            = __( 'Blog','social-warfare' );
-		$this->key            = 'blogger';
+		$this->name           = __( 'Viber','social-warfare' );
+		$this->cta            = __( 'Vibe','social-warfare' );
+		$this->key            = 'viber';
 		$this->default        = 'false';
 
 		// This is the link that is clicked on to share an article to their network.
-		$this->base_share_url = 'https://www.blogger.com/blog-this.g?u=';
+		$this->base_share_url = 'viber://forward?text=';
 
 		$this->init_social_network();
 	}
