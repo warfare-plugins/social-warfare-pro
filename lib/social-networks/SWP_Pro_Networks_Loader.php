@@ -49,6 +49,7 @@ class SWP_Pro_Networks_Loader {
 	 *
 	 */
 	public function instantiate_networks() {
+			new SWP_Blogger();
 			new SWP_Buffer();
 			new SWP_Email();
 			new SWP_Print();
