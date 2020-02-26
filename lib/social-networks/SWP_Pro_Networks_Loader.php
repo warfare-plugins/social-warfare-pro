@@ -60,6 +60,7 @@ class SWP_Pro_Networks_Loader {
 			new SWP_Tumblr();
 			new SWP_VKontakte();
 			new SWP_Whatsapp();
+			new SWP_Xing();
 			new SWP_Yummly();
 	}
 
