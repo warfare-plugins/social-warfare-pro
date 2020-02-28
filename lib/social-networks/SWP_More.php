@@ -29,8 +29,8 @@ class SWP_More extends SWP_Social_Network {
 	 * within the object.
 	 *
 	 * @since  4.0.0 | 24 APR 2020 | Created
-	 * @param  none
-	 * @return none
+	 * @param  void
+	 * @return void
 	 *
 	 */
 	public function __construct() {

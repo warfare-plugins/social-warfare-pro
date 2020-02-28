@@ -152,7 +152,7 @@ class SWP_Meta_Box_Loader {
 			'id'    => $prefix . 'pinterest_image',
 			'class' => $prefix . 'large_image pinterest swpmb-left',
 			'type'  => 'image_advanced',
-			'max_file_uploads' => 1,
+			'max_file_uploads' => 99,
 		);
 
 		$pinterest_description = array(
