@@ -144,6 +144,11 @@ class SWP_Pro_Pinterest {
 
 
 	/**
+	 * This method will setup the Pinterest images that get inserted into the
+	 * content. These may appear at the top or bottom of the post and may be set
+	 * to be visible to the user or hidden and only visible to the Pinterest
+	 * scrapers.
+	 *
 	 * Corresponds to the post_meta->swp_pinterst_image,
 	 * The fallback in Advanced Pinterest Settings -> Pinterest Image Fallback,
 	 * and Advanced Pinterst Settings > Pinterest Image Location.
@@ -157,6 +162,7 @@ class SWP_Pro_Pinterest {
 	 * @since  3.3.0 | 20 AUG 2018 | Refactored the method.
 	 * @since  3.3.2 | 13 SEP 2018 | Added check for is_singular()
 	 * @since  3.4.0 | 01 NOV 2018 | Added check for global on/off status.
+	 * @since  4.0.0 | 01 MAR 2020 | Setup support for multiple Pinterest images.
 	 * @param  string $content The post content to filter
 	 * @return string $content The filtered content
 	 *
@@ -231,7 +237,7 @@ class SWP_Pro_Pinterest {
 			// Fetch the URL of the current Pinterest image.
 			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
 
-			// Hide the image with a CSS class.
+			// If the image is set to be hidden...
 			if ( 'hidden' === $pinterest_image_location ) {
 				$image_html = '<img class="swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
 								'" data-pin-url="' . get_the_permalink() .
@@ -242,8 +248,10 @@ class SWP_Pro_Pinterest {
 
 				$content = $content . $image_html;
 
-			// Give the image a SWP container for customers to use in selectors.
+			// If the image is not set to be hidden...
 			} else {
+
+				// Give the image a SWP container for customers to use in selectors.
 				$class = "swp-pinterest-image-$pinterest_image_location";
 				$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
 									<img class="swp-pinterest-image " src="' . $pinterest_image_url .
@@ -254,10 +262,12 @@ class SWP_Pro_Pinterest {
 								'" />
 								</div>';
 
+				// If it's set to appear at the top of the post.
 				if ('top' === $pinterest_image_location) {
 					$content = $image_html . $content;
 				}
 
+				// If it's set to appear at the bottom of the post.
 				if ('bottom' === $pinterest_image_location) {
 					$content = $content . $image_html;
 				}
