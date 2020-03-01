@@ -163,9 +163,11 @@ class SWP_Pro_Pinterest {
 	 */
 	public function maybe_insert_pinterest_image( $content ) {
 		global $post;
-		$post_id                = $post->ID;
+		$post_id = $post->ID;
+
+		// Whether or not the Pinterest image is turned on or off for this post.
 		$meta_browser_extension = get_post_meta( $post_id, 'swp_pin_browser_extension', true );
-		$pinterest_image_url    = get_post_meta( $post_id, 'swp_pinterest_image_url', true );
+
 
 		/**
 		 * If the option is turned off globally, and the post level option is
@@ -186,18 +188,16 @@ class SWP_Pro_Pinterest {
 			return $content;
 		}
 
-		// Bail if this post doesn't have a specifically defined Pinterest image.
-		if ( empty( $pinterest_image_url ) || false === $pinterest_image_url ) {
-			// Check to see if the image is set, even if the url is not.
-			$pinterest_image_id = get_post_meta( $post_id, 'swp_pinterest_image', true );
 
-			if ( !$pinterest_image_id ) {
-				return $content;
-			}
+		// Check to see if the image is set, even if the url is not.
+		$pinterest_images = get_post_meta( $post_id, 'swp_pinterest_image', false );
 
-			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
+		// Bail if we have no Pinterest images assigned.
+		if ( false === $pinterest_images ) {
+			return $content;
 		}
 
+		// Determine the location where the Pinterest image should be output.
 		$pinterest_image_location = get_post_meta( $post_id, 'swp_pin_browser_extension_location', true );
 		if ( 'default' == $pinterest_image_location ) {
 			$pinterest_image_location = SWP_Utility::get_option( 'pinterest_image_location' );
@@ -206,6 +206,15 @@ class SWP_Pro_Pinterest {
 		// Set up the Pinterest username, if it exists.
 		$pinterest_username = SWP_Utility::get_option( 'pinterest_id' );
 		$pinterest_username = $pinterest_username ? ' via @' . str_replace( '@' , '' , $pinterest_username ) : '';
+
+		/**
+		 * Now we'll set up the description as it should appear when the image
+		 * is pinned to a user's board. If the user has set one, we'll use that,
+		 * if not, we'll use some fallbacks to set one up.
+		 *
+		 */
+
+		// Check if the user has set up a Pinterest description.
 		$pinterest_description = get_post_meta( $post_id , 'swp_pinterest_description' , true );
 
 		// If there is no custom description, use the post Title
@@ -213,37 +222,46 @@ class SWP_Pro_Pinterest {
 			$pinterest_description = get_the_title();
 		}
 
+		// Clean and filter the Pinterest description.
 		$pinterest_description = addslashes ( SWP_Pinterest::trim_pinterest_description( $pinterest_description ) );
 
-		// Hide the image with a CSS class.
-		if ( 'hidden' === $pinterest_image_location ) {
-			$image_html = '<img class="swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
-							'" data-pin-url="' . get_the_permalink() .
-							'" data-pin-media="' . $pinterest_image_url .
-							'" alt="' . $pinterest_description .
-							'" data-pin-description="' . $pinterest_description .
-							'" />';
+		// Loop through each of the assigned Pinterest images to build the output.
+		foreach( $pinterest_images as $pinterest_image_id ) {
 
-			$content = $content . $image_html;
+			// Fetch the URL of the current Pinterest image.
+			$pinterest_image_url = wp_get_attachment_url( $pinterest_image_id, 'full' );
 
-		// Give the image a SWP container for customers to use in selectors.
-		} else {
-			$class = "swp-pinterest-image-$pinterest_image_location";
-			$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
-								<img class="swp-pinterest-image " src="' . $pinterest_image_url .
-							'" alt="' . $pinterest_description .
-							'" data-pin-url="' . get_the_permalink() .
-							'" data-pin-media="' . $pinterest_image_url .
-							'" data-pin-description="' . $pinterest_description .
-							'" />
-							</div>';
+			// Hide the image with a CSS class.
+			if ( 'hidden' === $pinterest_image_location ) {
+				$image_html = '<img class="swp_hidden_pin_image swp-pinterest-image" src="' . $pinterest_image_url .
+								'" data-pin-url="' . get_the_permalink() .
+								'" data-pin-media="' . $pinterest_image_url .
+								'" alt="' . $pinterest_description .
+								'" data-pin-description="' . $pinterest_description .
+								'" />';
 
-			if ('top' === $pinterest_image_location) {
-				$content = $image_html . $content;
-			}
-
-			if ('bottom' === $pinterest_image_location) {
 				$content = $content . $image_html;
+
+			// Give the image a SWP container for customers to use in selectors.
+			} else {
+				$class = "swp-pinterest-image-$pinterest_image_location";
+				$image_html = '<div class="swp-pinterest-image-wrapper ' . $class . '">
+									<img class="swp-pinterest-image " src="' . $pinterest_image_url .
+								'" alt="' . $pinterest_description .
+								'" data-pin-url="' . get_the_permalink() .
+								'" data-pin-media="' . $pinterest_image_url .
+								'" data-pin-description="' . $pinterest_description .
+								'" />
+								</div>';
+
+				if ('top' === $pinterest_image_location) {
+					$content = $image_html . $content;
+				}
+
+				if ('bottom' === $pinterest_image_location) {
+					$content = $content . $image_html;
+				}
+
 			}
 
 		}
