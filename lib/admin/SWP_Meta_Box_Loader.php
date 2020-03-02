@@ -148,7 +148,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the pinterest optimized image.
 		$pinterest_image = array(
 			'name'  => __( 'Pinterest Image','social-warfare' ),
-			'desc'  => __( 'Add an image that is optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 1000 x 1500.','social-warfare' ),
+			'desc'  => __( 'Add one or more images that are optimized for maximum exposure on Pinterest. We recommend using an image that is formatted in a 2:3 aspect ratio like 1000 x 1500. <br /><br /> <b>Pro Tip:</b> You can now upload as many Pinterest images as you\'d like. These images will be presented to the user when they click on the Pinterest button. They will also be added to the post content (top, bottom or hidden) so they appear for people using browser extensions, but only if you have this option turned on in the Social Warfare options page.','social-warfare' ),
 			'id'    => $prefix . 'pinterest_image',
 			'class' => $prefix . 'large_image pinterest swpmb-left',
 			'type'  => 'image_advanced',
