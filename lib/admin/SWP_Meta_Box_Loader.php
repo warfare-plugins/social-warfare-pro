@@ -62,7 +62,7 @@ class SWP_Meta_Box_Loader {
 			'id'    => 'swp_meta_box_heading',
 			'type'  => 'heading',
 			'class' => 'heading  swpmb-full-width',
-			'desc'  => 'Make sure your content is shared exactly the way you want it to be shared by customizing the fields below.',
+			'desc'  => 'Make sure your content is shared exactly the way you want it to be shared by customizing the fields below. Let\'s face it. Nobody else is going to take the time to carefully craft titles and descriptions for your content when they share it to their timelines on social media. With Social Warfare, that doesn\'t matter. If you take a moment to carefully craft your post\'s images, titles and descriptions here, then these will be pre-filled for your visitors when they share your posts online. ',
 		);
 
 
@@ -79,7 +79,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph title.
 		$open_graph_title = array(
 			'name'  => __( 'Open Graph Title','social-warfare' ),
-			'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+			'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
 			'id'    => $prefix . 'og_title',
 			'type'  => 'textarea',
 			'class' => 'open-graph swpmb-right',
@@ -89,7 +89,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph description.
 		$open_graph_description = array(
 			'name'  => __( 'Open Graph Description','social-warfare' ),
-			'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
+			'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others.','social-warfare' ),
 			'id'    => $prefix . 'og_description',
 			'class' => 'open-graph swpmb-right',
 			'type'  => 'textarea',
@@ -98,7 +98,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph image.
 		$twitter_image = array(
 			'name'  => __( 'Twitter Card Image','social-warfare' ),
-			'desc'  => __( 'Add an image that is optimized for maximum exposure on Facebook, Google+ and LinkedIn. We recommend 1,200px by 628px.','social-warfare' ),
+			'desc'  => __( 'Add an image that is optimized for maximum exposure on your Twitter card. We recommend 1,200px by 628px.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_image',
 			'type'  => 'image_advanced',
 			'class' => 'twitter swpmb-left',
@@ -108,7 +108,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Twitter Card title.
 		$twitter_title = array(
 			'name'  => __( 'Twitter Card Title','social-warfare' ),
-			'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google+. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+			'placeholder'  => __( 'Add a title that will populate the Twitter Card meta tag which will be used when users share your content onto Twitter. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_title',
 			'type'  => 'textarea',
 			'class' => $prefix . 'twitter_card_title twitter swpmb-right',
@@ -118,7 +118,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Twitter Card Description description.
 		$twitter_description = array(
 			'name'  => __( 'Twitter Card Description','social-warfare' ),
-			'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and Google Plus.','social-warfare' ),
+			'placeholder'  => __( 'Add a description that will populate the Twitter Card description meta tag which will be used when users share your content onto Twitter.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_description',
 			'class' => $prefix . 'twitter_card_description twitter swpmb-right',
 			'type'  => 'textarea',
