@@ -79,9 +79,10 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph title.
 		$open_graph_title = array(
 			'name'  => __( 'Open Graph Title','social-warfare' ),
-			'placeholder'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+			'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+			'placeholder' => 'Write your awesome title here...',
 			'id'    => $prefix . 'og_title',
-			'type'  => 'textarea',
+			'type'  => 'text',
 			'class' => 'open-graph swpmb-right',
 			'rows'	=> 1,
 		);
@@ -110,7 +111,7 @@ class SWP_Meta_Box_Loader {
 			'name'  => __( 'Twitter Card Title','social-warfare' ),
 			'placeholder'  => __( 'Add a title that will populate the Twitter Card meta tag which will be used when users share your content onto Twitter. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_title',
-			'type'  => 'textarea',
+			'type'  => 'text',
 			'class' => $prefix . 'twitter_card_title twitter swpmb-right',
 			'rows'	=> 1,
 		);
