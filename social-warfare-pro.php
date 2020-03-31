@@ -3,7 +3,7 @@
  * Plugin Name: Social Warfare - Pro
  * Plugin URI:  https://warfareplugins.com
  * Description: A plugin to maximize social shares and drive more traffic using the fastest and most intelligent share buttons on the market, calls to action via in-post click-to-tweets, popular posts widgets based on share popularity, link-shortening, Google Analytics and much, much more!
- * Version:     3.6.1
+ * Version:     4.0.0
  * Author:      Warfare Plugins
  * Author URI:  https://warfareplugins.com
  * Text Domain: social-warfare
@@ -18,7 +18,7 @@ defined( 'WPINC' ) || die;
  * @since 2.3.5 | 18 DEC 2017 | Added a constant to activate the registration tab built into core
  *
  */
-define( 'SWPP_VERSION', '3.6.1' );
+define( 'SWPP_VERSION', '4.0.0' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -95,9 +95,19 @@ function initialize_social_warfare_pro() {
 	 * If core is available, and it's on 3.3.0 or higher, we'll go ahead and
 	 * load and instantiate the Social Warfare Pro class to fire up the plugin.
 	 *
+	 * Each subsequent version will be made to be compatable with all versions
+	 * within the same major version subset. For example:
+	 *
+	 * 3.3.0 with 3.4.1 = Compatible
+	 * 4.1.0 with 4.0.0 = Compatible
+	 * 4.1.0 with 3.4.1 = Not Compatible
+	 *
+	 * Failure to find a compatible version of the core plugin will cause the
+	 * pro plugin to gracefully remain unloaded and will alert the user to the
+	 * mismatch via a WordPress admin notification.
+	 *
 	 */
-
-	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '3.2.90' ) >= 0 ) {
+	if( class_exists( 'Social_Warfare_Addon' ) && version_compare( SWP_VERSION , '4.0.0' ) >= 0 ) {
 		$pro_class_path = SWPP_PLUGIN_DIR . '/lib/Social_Warfare_Pro.php';
 		if( file_exists( $pro_class_path ) ) {
 			require_once $pro_class_path;
