@@ -31,7 +31,7 @@ class SWP_FW_Instagram extends SWP_Pro_Follow_Network {
 			'color_primary'       => '#e4405f',
 			'color_accent'        => '#da3075',
 			'url'                 => 'https://instagram.com/swfw_username',
-			'needs_authorization' => true
+			'needs_authorization' => false
 		);
 		parent::__construct( $network );
 	}

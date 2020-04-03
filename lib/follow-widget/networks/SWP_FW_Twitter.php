@@ -31,7 +31,7 @@ class SWP_FW_Twitter extends SWP_Pro_Follow_Network {
 			'color_primary'       => '#429BD5',
 			'color_accent'        => '#3C87B2',
 			'url'                 => 'https://twitter.com/swfw_username',
-			'needs_authorization' => true
+			'needs_authorization' => false
 		);
 
 		parent::__construct( $network );

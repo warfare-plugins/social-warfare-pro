@@ -33,7 +33,7 @@ class SWP_FW_Pinterest extends SWP_Pro_Follow_Network {
 			'color_accent'        => '#AB1F25',
 			'url'                 => 'https://pinterest.com/swfw_username',
 			'placeholder'         => 'username',
-			'needs_authorization' => true
+			'needs_authorization' => false
 		);
 
 		parent::__construct( $network );

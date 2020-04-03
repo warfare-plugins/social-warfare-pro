@@ -32,7 +32,7 @@ class SWP_FW_Tumblr extends SWP_Pro_Follow_Network {
 			'color_primary'       => '#39475D',
 			'color_accent'        => '#27313F',
 			'url'                 => 'https://swfw_username.tumblr.com',
-			'needs_authorization' => true
+			'needs_authorization' => false
 		);
 
 		parent::__construct( $network );
