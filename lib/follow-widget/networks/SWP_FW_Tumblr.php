@@ -48,6 +48,10 @@ class SWP_FW_Tumblr extends SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function do_api_request() {
+		if( empty( $this->auth_helper ) ) {
+			return $this->response = false;
+		}
+		
 		require_once __DIR__ . '/../vendor/Tumblr/vendor/autoload.php';
 		$access_token = $this->auth_helper->get_access_token();
 		$access_secret = $this->auth_helper->get_access_secret();

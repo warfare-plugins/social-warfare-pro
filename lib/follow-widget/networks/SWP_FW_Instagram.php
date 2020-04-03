@@ -46,6 +46,10 @@ class SWP_FW_Instagram extends SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function do_api_request() {
+		if( empty( $this->auth_helper ) ) {
+			return $this->response = false;
+		}
+
 		$access_token = $this->auth_helper->get_access_token();
 
 		if ( false == $access_token ) {

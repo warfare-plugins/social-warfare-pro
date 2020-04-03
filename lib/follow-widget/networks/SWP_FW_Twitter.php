@@ -51,6 +51,10 @@ class SWP_FW_Twitter extends SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function do_api_request() {
+		if( empty( $this->auth_helper ) ) {
+			return $this->response = false;
+		}
+		
 		require_once __DIR__ . '/../vendor/Twitter/autoload.php';
 
 		$swp_api_key = 'MQGiE1PFoRKEjhR0xVGC0bT0R';
