@@ -95,9 +95,10 @@ class SWP_FW_Facebook extends SWP_Pro_Follow_Network {
 
 	protected function establish_client() {
 		require_once __DIR__ . '/../vendor/Facebook/autoload.php';
-		if (session_status() == PHP_SESSION_NONE) {
-			session_start(['read_and_close' => true,]);
-		}
+
+//		if ( session_status() == PHP_SESSION_NONE ) {
+//			session_start(['read_and_close' => true,]);
+//		}
 
 		$this->client = new Facebook\Facebook(array(
 			'app_id'     => '529576650555031',
