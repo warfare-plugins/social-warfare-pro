@@ -293,7 +293,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		global $wpseo_og;
 		if ( has_action( 'wpseo_head', array( $wpseo_og, 'opengraph' ) ) ) {
 
-			// Don't  disable Yoast if our OG tags are disabled. 
+			// Don't  disable Yoast if our OG tags are disabled.
 			if ( false === SWP_Utility::get_option( 'og_tags' ) ) {
 				return;
 			}
@@ -364,6 +364,12 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	protected function apply_default_open_graph_fields( $fields ) {
+
+		// Fix the fields array if something has gone awry up to this point.
+		if( false === is_array( $fields ) || empty( $fields ) ) {
+			$fields = array();
+		}
+
 		$defaults = array(
 			'og_description' => html_entity_decode( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( SWP_Utility::get_the_excerpt( $this->post->ID ) ) ) ),
 			'og_title' => trim( SWP_Utility::convert_smart_quotes( htmlspecialchars_decode( get_the_title() ) ) )

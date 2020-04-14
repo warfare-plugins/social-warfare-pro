@@ -95,13 +95,14 @@ class SWP_FW_Facebook extends SWP_Pro_Follow_Network {
 
 	protected function establish_client() {
 		require_once __DIR__ . '/../vendor/Facebook/autoload.php';
-		if (session_status() == PHP_SESSION_NONE) {
-			session_start(['read_and_close' => true,]);
-		}
+
+//		if ( session_status() == PHP_SESSION_NONE ) {
+//			session_start(['read_and_close' => true,]);
+//		}
 
 		$this->client = new Facebook\Facebook(array(
-			'app_id'     => '2194481457470892',
-			'app_secret' => '8d3ffda53c0fca343a4d0932eb006037',
+			'app_id'     => '529576650555031',
+			'app_secret' => '6d266e4f8d11e24abfed10ab5fcc8888',
 		));
 
 		return $this->client;

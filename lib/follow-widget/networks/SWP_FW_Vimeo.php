@@ -31,7 +31,7 @@ class SWP_FW_Vimeo extends SWP_Pro_Follow_Network {
 			'color_primary'       => '#1ab7ea',
 			'color_accent'        => '#069bd1',
 			'url'                 => 'https://vimeo.com/swfw_username',
-			'needs_authorization' => true
+			'needs_authorization' => false
 		);
 
 		parent::__construct( $network );
@@ -51,6 +51,10 @@ class SWP_FW_Vimeo extends SWP_Pro_Follow_Network {
 	 *
 	 */
 	public function do_api_request() {
+		if( empty( $this->auth_helper ) ) {
+			return $this->response = false;
+		}
+		
 		$access_token = $this->auth_helper->get_access_token();
 
 		if ( empty ( $this->username ) ) {
