@@ -225,7 +225,7 @@ class SWP_Pro_Pinterest {
 
 		// If there is no custom description, use the post Title
 		if ( false == $pinterest_description || empty( $pinterest_image_url ) ) {
-			$pinterest_description = get_the_title();
+			$pinterest_description = $post->post_title;
 		}
 
 		// Clean and filter the Pinterest description.
