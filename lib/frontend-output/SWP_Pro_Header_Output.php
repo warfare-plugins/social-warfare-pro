@@ -565,13 +565,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					if ( strpos($meta, 'og:image') || empty($content) ) {
 						break;
 					}
-					$meta .= "<meta property='og:image' name='image' content='$content'>" . PHP_EOL;
+					$meta .= '<meta property="og:image" content="' . $content. '">' . PHP_EOL;
 					break;
 
 				case 'og:image_width' :
 				case 'og:image_height' :
 					$key = str_replace('_', ':', $key);
-					$meta .= "<meta property='$key' content='$content'>" . PHP_EOL;
+					$meta .= '<meta property="' . $key . '" content="' . $content . '">' . PHP_EOL;
 					break;
 
 				case 'fb:app_id' :
