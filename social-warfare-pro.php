@@ -19,6 +19,7 @@ defined( 'WPINC' ) || die;
  *
  */
 define( 'SWPP_VERSION', '4.0.1' );
+define( 'SWPP_DEV_VERSION', '2020.04.23' );
 define( 'SWPP_PLUGIN_FILE', __FILE__ );
 define( 'SWPP_PLUGIN_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SWPP_PLUGIN_DIR', dirname( __FILE__ ) );

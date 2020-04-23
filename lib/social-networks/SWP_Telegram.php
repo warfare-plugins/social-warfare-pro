@@ -24,9 +24,9 @@ class SWP_Telegram extends SWP_Social_Network {
 	 * state (does the user have this button turned on?) so that it can be accessed directly
 	 * within the object.
 	 *
-	 * @since  3.0.0 | 06 APR 2018 | Created
-	 * @param  none
-	 * @return none
+	 * @since  4.1.0 | 17 APR 2020 | Created
+	 * @param  void
+	 * @return void
 	 * @access public
 	 *
 	 */
@@ -53,7 +53,7 @@ class SWP_Telegram extends SWP_Social_Network {
 	 * those networks will have to overwrite this method with their own custom method
 	 * in their respective child classes.
 	 *
-	 * @since  3.0.0 | 08 APR 2018 | Created
+	 * @since  4.1.0 | 17 APR 2020 | Created
 	 * @param  array $array The array of information passed in from the buttons panel.
 	 * @return string The generated link
 	 * @access public
