@@ -88,7 +88,7 @@ class SWP_HackerNews extends SWP_Social_Network {
      *
      */
     public function generate_share_link( $post_data ) {
-        $title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+        $title = isset( $post_data['post_title'] ) ? rawurlencode( $post_data['post_title'] ) : '';
         $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&t=' . $title;
         return $share_link;
     }
