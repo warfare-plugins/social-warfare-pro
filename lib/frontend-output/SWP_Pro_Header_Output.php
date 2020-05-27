@@ -161,6 +161,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 
 		/**
+		 * This will check to see if the user has set a custom og_type for this
+		 * post type. If so, we will use that instead of the "article" type that
+		 * has been set above.
+		 *
+		 */
+		if( $og_type = SWP_Utility::get_option( 'og_' . get_post_type() ) ) {
+			$known_fields['og:type'] = str_replace('og_', '' , $og_type );
+		}
+
+
+		/**
 		 * We prioritize the source of a value in this order:
 		 * 1 Post meta
 		 * 2 Yoast (OG)
