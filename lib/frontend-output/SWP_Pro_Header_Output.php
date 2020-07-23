@@ -675,14 +675,21 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	private function parse_hex_color( $hex ) {
-		if ( !isset( $hex ) ) :
-			//* Default to a dark grey.
-			return  "#333333";
-		endif;
 
-		if ( strpos( $hex, "#" !== 0 ) ) :
-			$hex = "#" . $hex;
-		endif;
+		// Default to a dark grey if it hasn't been set by the user.
+		if ( empty( $hex ) ) {
+			return  "#333333";
+		}
+
+
+		/**
+		 * These two lines ensure that whether or not the user adds the hex
+		 * symbol to the beginning or not, it will always be there and it will
+		 * always only have one symbol.
+		 *
+		 */
+		$hex = str_replace( '#', '', $hex );
+		$hex = '#' . $hex;
 
 		return $hex;
 	}
