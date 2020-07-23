@@ -61,8 +61,8 @@ class SWP_Pro_Pinterest {
 			}
 
 			// We don't need Pinterest images on pages delivered via AMP.
-			if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
-					return true;
+			if ( class_exists( 'SWP_AMP' ) && SWP_AMP::is_amp() ) {
+				return true;
 			}
 
 			return false;
