@@ -36,11 +36,12 @@ class SWP_More extends SWP_Social_Network {
 	public function __construct() {
 
 		// Update the class properties for this network
-		$this->name           = __( 'More','social-warfare' );
-		$this->cta            = __( 'More','social-warfare' );
-		$this->key            = 'more';
-		$this->default        = 'false';
-        $this->premium        = 'pro';
+		$this->name            = __( 'More','social-warfare' );
+		$this->cta             = __( 'More','social-warfare' );
+		$this->key             = 'more';
+		$this->default         = 'false';
+        $this->premium         = 'pro';
+		$this->visible_on_amp = false;
 
 		$this->init_social_network();
 	}
@@ -62,4 +63,5 @@ class SWP_More extends SWP_Social_Network {
     public function generate_share_link( $post_data ) {
 		return '#';
     }
+
 }

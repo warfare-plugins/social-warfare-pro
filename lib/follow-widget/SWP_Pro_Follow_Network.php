@@ -505,11 +505,12 @@ BUTTON;
 			$count = false;
 		}
 
+		$count_attribute = SWP_AMP::hide_if_amp('count="'.( $count ? 'true' : 'false' ).'"');
 		if ( 'square' == $shape || 'block' == $shape ) {
-			return '<span class="swfw-count" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count.'</span>';
+			return '<span class="swfw-count" '.$count_attribute.'>'.$this->follow_count.'</span>';
 		}
 
-		return '<p class="swfw-count" style="margin: 0" count="'.( $count ? 'true' : 'false' ).'">'.$this->follow_count . ' ' . $this->follow_description.'</p>';
+		return '<p class="swfw-count" style="margin: 0" '.$count_attribute.'>'.$this->follow_count . ' ' . $this->follow_description.'</p>';
 	}
 
 

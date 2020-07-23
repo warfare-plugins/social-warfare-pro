@@ -767,6 +767,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				'style4' => 'Don\'t Stop Believin\'',
 				'style5' => 'Thunderstruck',
 				'style6' => 'Livin\' On A Prayer',
+				'style7' => 'You\'re The Inspiration',
 				'none' => __( 'None - Create Your Own CSS In Your Theme', 'social-warfare')
 			])
 				->set_size( 'sw-col-300' )
