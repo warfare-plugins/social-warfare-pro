@@ -361,6 +361,22 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_dependency( 'pinit_toggle', [true] )
 				->set_premium( 'pro' );
 
+			$pinit_button_size = new SWP_Option_Select( __( 'Button Size', 'social-warfare' ), 'pinit_button_size' );
+			$pinit_button_size->set_priority( 70 )
+				->set_choices( [
+					'0.9' => __( '90%' , 'social-warfare' ),
+					'1'   => __( '100%' , 'social-warfare' ),
+					'1.1'   => __( '110%' , 'social-warfare' ),
+					'1.2'   => __( '120%' , 'social-warfare' ),
+					'1.3'   => __( '130%' , 'social-warfare' ),
+					'1.4'   => __( '140%' , 'social-warfare' ),
+					'1.5'   => __( '150%' , 'social-warfare' )
+				])
+				->set_size( 'sw-col-460', 'sw-col-460 sw-fit' )
+				->set_default( '1' )
+				->set_dependency( 'pinit_toggle', [true] )
+				->set_premium( 'pro' );
+
 
 
 			$pinit_hide_on_anchors = new SWP_Option_Toggle( __( 'Hide on Anchors (links)', 'social-warfare'), 'pinit_hide_on_anchors' );
@@ -376,6 +392,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 			$pinit_image_source,
 			$pinit_min_width,
 			$pinit_min_height,
+			$pinit_button_size,
 			$pinit_hide_on_anchors
 		] );
 
@@ -750,6 +767,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				'style4' => 'Don\'t Stop Believin\'',
 				'style5' => 'Thunderstruck',
 				'style6' => 'Livin\' On A Prayer',
+				'style7' => 'You\'re The Inspiration',
 				'none' => __( 'None - Create Your Own CSS In Your Theme', 'social-warfare')
 			])
 				->set_size( 'sw-col-300' )

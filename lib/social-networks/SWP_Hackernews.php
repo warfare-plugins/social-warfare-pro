@@ -82,13 +82,16 @@ class SWP_HackerNews extends SWP_Social_Network {
      * in their respective child classes.
      *
      * @since  3.0.0 | 08 APR 2018 | Created
+     * @since  4.1.0 | 14 MAY 2020 | Switched to rawurlencode() from urlencode()
      * @param  array $array The array of information passed in from the buttons panel.
      * @return string The generated link
      * @access public
      *
      */
     public function generate_share_link( $post_data ) {
-        $title = isset( $post_data['post_title'] ) ? urlencode( $post_data['post_title'] ) : '';
+
+		// Rawurlencode() uses %20 instead of + signs for spaces.
+        $title = isset( $post_data['post_title'] ) ? rawurlencode( $post_data['post_title'] ) : '';
         $share_link = $this->base_share_url . $this->get_shareable_permalink( $post_data ) . '&t=' . $title;
         return $share_link;
     }

@@ -59,6 +59,7 @@ class SWP_Pro_Networks_Loader {
 			new SWP_Hackernews();
 			new SWP_Pocket();
 			new SWP_Reddit();
+			new SWP_Telegram();
 			new SWP_Tumblr();
 			new SWP_Viber();
 			new SWP_VKontakte();

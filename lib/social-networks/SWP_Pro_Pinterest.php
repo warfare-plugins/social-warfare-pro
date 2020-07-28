@@ -61,8 +61,8 @@ class SWP_Pro_Pinterest {
 			}
 
 			// We don't need Pinterest images on pages delivered via AMP.
-			if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
-					return true;
+			if ( class_exists( 'SWP_AMP' ) && SWP_AMP::is_amp() ) {
+				return true;
 			}
 
 			return false;
@@ -225,7 +225,7 @@ class SWP_Pro_Pinterest {
 
 		// If there is no custom description, use the post Title
 		if ( false == $pinterest_description || empty( $pinterest_image_url ) ) {
-			$pinterest_description = get_the_title();
+			$pinterest_description = $post->post_title;
 		}
 
 		// Clean and filter the Pinterest description.
@@ -931,6 +931,12 @@ class SWP_Pro_Pinterest {
 			$pin_vars['minWidth']  = str_replace( 'px', '', SWP_Utility::get_option( 'pinit_min_width' ) );
 			$pin_vars['minHeight'] = str_replace( 'px', '', SWP_Utility::get_option( 'pinit_min_height' ) );
 			$pin_vars['disableOnAnchors'] = SWP_Utility::get_option( 'pinit_hide_on_anchors' );
+
+			$pinit_button_size = SWP_Utility::get_option('pinit_button_size');
+			if( $pinit_button_size === false ) {
+				$pinit_button_size = '1';
+			}
+			$pin_vars['button_size'] = $pinit_button_size;
 
 			// Set the image source
 			if ( 'custom' == SWP_Utility::get_option( 'pinit_image_source' ) && $custom_pinterest_image ) {

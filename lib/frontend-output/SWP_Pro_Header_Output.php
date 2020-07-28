@@ -161,6 +161,17 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 
 		/**
+		 * This will check to see if the user has set a custom og_type for this
+		 * post type. If so, we will use that instead of the "article" type that
+		 * has been set above.
+		 *
+		 */
+		if( $og_type = SWP_Utility::get_option( 'og_' . get_post_type() ) ) {
+			$known_fields['og:type'] = str_replace('og_', '' , $og_type );
+		}
+
+
+		/**
 		 * We prioritize the source of a value in this order:
 		 * 1 Post meta
 		 * 2 Yoast (OG)
@@ -565,13 +576,13 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 					if ( strpos($meta, 'og:image') || empty($content) ) {
 						break;
 					}
-					$meta .= "<meta property='og:image' name='image' content='$content'>" . PHP_EOL;
+					$meta .= '<meta property="og:image" content="' . $content. '">' . PHP_EOL;
 					break;
 
 				case 'og:image_width' :
 				case 'og:image_height' :
 					$key = str_replace('_', ':', $key);
-					$meta .= "<meta property='$key' content='$content'>" . PHP_EOL;
+					$meta .= '<meta property="' . $key . '" content="' . $content . '">' . PHP_EOL;
 					break;
 
 				case 'fb:app_id' :
@@ -664,14 +675,21 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 	 *
 	 */
 	private function parse_hex_color( $hex ) {
-		if ( !isset( $hex ) ) :
-			//* Default to a dark grey.
-			return  "#333333";
-		endif;
 
-		if ( strpos( $hex, "#" !== 0 ) ) :
-			$hex = "#" . $hex;
-		endif;
+		// Default to a dark grey if it hasn't been set by the user.
+		if ( empty( $hex ) ) {
+			return  "#333333";
+		}
+
+
+		/**
+		 * These two lines ensure that whether or not the user adds the hex
+		 * symbol to the beginning or not, it will always be there and it will
+		 * always only have one symbol.
+		 *
+		 */
+		$hex = str_replace( '#', '', $hex );
+		$hex = '#' . $hex;
 
 		return $hex;
 	}
