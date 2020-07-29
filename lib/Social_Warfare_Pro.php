@@ -105,6 +105,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		new SWP_Pro_Follow_Network_Loader();
 		new SWP_Pro_Follow_Widget();
 		new SWP_Pro_Link_Manager();
+		new SWP_Pro_Analytics();
 
 		if( true == is_admin() ) {
 			new SWP_Meta_Box_Loader();
@@ -174,15 +175,16 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 	public function load_classes() {
 
 
-		/**
-		 * Load up the social networks. The social networks are auto-instantiated
-		 * so while they are loaded here, core itself will see them and fire
-		 * them up. This is always why we are making sure this addon is registered
-		 * before loading them.
-		 *
-		 * @todo Extend this conditional to cover the follow widget files.
-		 */
-		 if ( true === $this->is_registered ) {
+		if ( true === $this->is_registered ) {
+
+			/**
+			 * Load up the social networks. The social networks are auto-instantiated
+			 * so while they are loaded here, core itself will see them and fire
+			 * them up. This is always why we are making sure this addon is registered
+			 * before loading them.
+			 *
+			 * @todo Extend this conditional to cover the follow widget files.
+			 */
 			$social_networks = array(
 				'Buffer',
 				'Reddit',
@@ -197,6 +199,19 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'Pro_Networks_Loader'
 			);
 			$this->load_files( '/lib/social-networks/', $social_networks);
+
+
+			/**
+			 * This will load up the files for our in-house suite of social
+			 * analytics tools that will give the user insights into how their
+			 * content is being shared on social media.
+			 *
+			 */
+			$analytics = array(
+				'Pro_Analytics',
+				'Pro_Analytics_Database'
+			);
+			$this->load_files( '/lib/analytics/', $analytics);
 
 
 			/**
