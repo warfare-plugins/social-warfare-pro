@@ -107,6 +107,11 @@ class SWP_Pro_Analytics_Database {
 		$this->setup_database();
 
 
+		if( 0 !== $post_id ) {
+			$this->update_sitewide_shares();
+		}
+
+
 		/**
 		 * A column/value associative array is used by many of the $wpdb methods
 		 * for updating and inserting data into a table. As such, we'll use this
@@ -176,6 +181,53 @@ class SWP_Pro_Analytics_Database {
 
 		// Otherwise we'll insert a new set of share count data.
 		$wpdb->insert( $table_name, $data );
+	}
+
+
+	/**
+	 * The update_sitewide_shares() method will, well, update the sitewide totals
+	 * for each network including the total shares. This will allow us to use
+	 * the data for charts and graphs.
+	 *
+	 * @since  4.1.0 | 03 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+	private function update_sitewide_shares() {
+
+		// Since we'll be querying the database for sums.
+		global $wpdb;
+
+		// Get a list of the networks that we'll be providing analytics for.
+		$networks = $this->get_valid_networks();
+		$networks[] = 'total';
+
+		/**
+		 * In this section we'll loop through each of the valid networks, and
+		 * we'll reach into the postmeta database and get the sum of all of the
+		 * share count data for each network.
+		 *
+		 */
+		foreach( $networks as $network_key ) {
+			$meta_key = '_' . $network_key . '_shares';
+			$total = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT
+					SUM(meta_value)
+					AS total
+					FROM $wpdb->postmeta
+					WHERE meta_key = %s",
+					$meta_key
+				)
+			);
+			$network_shares[$network_key] = $total ? $total : 0;
+		}
+
+		$network_shares['total_shares'] = $network_shares['total'];
+		unset($network_shares['total']);
+
+		$this->record_share_counts( 0, $network_shares );
 	}
 
 
