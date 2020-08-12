@@ -1194,10 +1194,10 @@ class SocialOptimizer {
 			swp_pinterest_image: {
 				name: 'Pinterest Image',
 				type: 'image',
-				width: 1000,
-				height: 1500,
-				min_width:200,
-				min_height:200,
+				width: 735,
+				height: 1102,
+				min_width:238,
+				min_height:356,
 				numerator: '2',
 				denominator: '3',
 				max_score: this.get_max_scores('swp_pinterest_image')
