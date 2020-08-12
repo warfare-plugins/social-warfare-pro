@@ -1291,6 +1291,11 @@ class SocialOptimizer {
 	initialize_sidebar() {
 		var self = this;
 
+		// Bail out if we don't have the Gutenberg objects we need.
+		if('undefined' === typeof wp.plugins ) {
+			return;
+		}
+
 		// this.rax_generate_sidebar();
 		this.plugin = wp.plugins.registerPlugin( 'social-warfare-pro-sidebar', {
 		    render: function() {
