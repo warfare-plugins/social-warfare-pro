@@ -127,9 +127,9 @@ class SocialOptimizer {
 			console.log('bazinga');
 		});
 
-		jQuery('#social_warfare').on('change', 'input, textarea', function() {
+		jQuery('#social_warfare').on('input', 'input, textarea', function() {
 			self.update_scores();
-			console.log('image bazinga');
+			console.log('bazinga');
 		});
 
 
@@ -157,8 +157,7 @@ class SocialOptimizer {
 		// Generate a list of image fields that we'll be looping through to check.
 		var image_fields_keys = [
 			'swp_og_image',
-			'swp_pinterest_image',
-			'swp_twitter_card_image'
+			'swp_pinterest_image'
 		];
 
 		for(const field of image_fields_keys ) {
@@ -217,7 +216,7 @@ class SocialOptimizer {
 		}
 
 		// Just round the score to the next highest whole number.
-		this.scores['total'] = Math.ceil( this.scores['total'] );
+		this.scores['total'] = Math.round( this.scores['total'] );
 
 		// Update the visual UI's that the user can see.
 		this.update_total_score_badge();
@@ -414,8 +413,8 @@ class SocialOptimizer {
 		let words_score      = this.calculate_subscores( words_percent, factors, scores.max_score );
 
 		// Update the scores object with our newly calculated values.
-		scores.current_score = Math.ceil( +length_score + +max_length_score + +words_score );
-		scores.percent       = Math.ceil( scores.current_score / scores.max_score * 100 );
+		scores.current_score = Math.round( +length_score + +max_length_score + +words_score );
+		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
 		scores.messages      = this.sort_messages(scores.messages);
 
 		// Return the fully realized scored object.
@@ -661,8 +660,8 @@ class SocialOptimizer {
 		let hashtag_score    = this.calculate_subscores( hashtag_percent, factors, scores.max_score );
 
 		// Update the scores object with our newly calculated values.
-		scores.current_score = Math.ceil( +length_score + +hashtag_score + +max_length_score );
-		scores.percent       = Math.ceil( scores.current_score / scores.max_score * 100 );
+		scores.current_score = Math.round( +length_score + +hashtag_score + +max_length_score );
+		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
 		scores.messages      = this.sort_messages(scores.messages);
 
 		// Return the fully realized scored object.
@@ -706,7 +705,7 @@ class SocialOptimizer {
 		 */
 		if( input_length < 100 ) {
 			var length_percent = input_length / 100;
-		} else if (input_length < 200 ) {
+		} else if (input_length > 200 ) {
 			var length_percent = 200 / input_length;
 		} else {
 			var length_percent = 1;
@@ -1040,8 +1039,8 @@ class SocialOptimizer {
 		 *
 		 */
 		if( 1 === min_size ) {
-			scores.current_score = Math.ceil( +ratio_score + +size_score );
-			scores.percent       = Math.ceil( scores.current_score / scores.max_score * 100 );
+			scores.current_score = Math.round( +ratio_score + +size_score );
+			scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
 		} else {
 			scores.current_score = scores.percent = 0;
 		}
@@ -1281,14 +1280,7 @@ class SocialOptimizer {
 
 	initialize_sidebar() {
 		var self = this;
-
-		// var plugin = wp.plugins.getPlugin('social-warfare-pro-sidebar');
-		if( 'undefined' !== typeof this.sidebar ) {
-			// wp.plugins.unregisterPlugin('social-warfare-pro-sidebar');
-			// this.sidebar('hello world');
-			return;
-		}
-
+		console.log(this.scores);
 		// this.rax_generate_sidebar();
 		this.plugin = wp.plugins.registerPlugin( 'social-warfare-pro-sidebar', {
 		    render: function() {
