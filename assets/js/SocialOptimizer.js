@@ -415,6 +415,118 @@ class SocialOptimizer {
 
 
 	/**
+	 * The get_og_description_score() method will calculate the score for the Open
+	 * Graph description field on the page. It will use the following ranking factors:
+	 *
+	 * 1. The ideal number of characters is 60 or fewer.
+	 * 2. The maximum number of characters is 200 or fewer.
+	 *
+	 * @since  4.1.0 | 11 AUG 2020 | Created
+	 * @param  void
+	 * @return {object} The scores object.
+	 *
+	 */
+	get_og_description_score() {
+
+
+		/**
+		 * This will setup the default scores object with some filler data. This
+		 * data will be updated as we move throughout this method and then it
+		 * will eventually be returned at the end.
+		 *
+		 * @type object
+		 */
+		var scores = {
+			percent: 0,
+			current_score: 0,
+			max_score: this.field_data['swp_custom_tweet']['max_score'],
+			messages: []
+		}
+
+		// These variables will be gathered from the field and will be used below.
+		let key          = 'swp_og_description';
+		var input_text   = jQuery('#'+key).val();
+		var input_length = input_text.length;
+		var max_length   = this.field_data[key]['max_length'];
+		var ideal_length = this.field_data[key]['length'];
+
+
+		/**
+		 * This section will check the length of the field and compare it to the
+		 * ideal. If it is below 70 characters, we'll divide to length by that
+		 * number to come up with a percentage. For example, the user might be
+		 * 95% of the way there. If they are over 100, we'll divide the input
+		 * length into 100. So for example, if they have 105, they are 5% over.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < input_length && input_length < ideal_length ) {
+			var length_percent = 1;
+		} else {
+			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 2));
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(length_percent * 100),
+			priority: 1,
+			label: 'The recommended length of the Open Graph description is '+ideal_length+' characters or fewer. Yours is ' + input_length + '.'
+		});
+
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 200
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < input_length && input_length < max_length ) {
+			var max_length_percent = 1;
+		} else if (input_length > max_length ) {
+			var max_length_percent = 0;
+		} else {
+			var max_length_percent = 0;
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(max_length_percent * 100),
+			priority: 10,
+			label: 'The maximum absolute length for this field is '+max_length+' characters. Your title is ' + input_length + ' characters.'
+		})
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		let factors          = 2;
+		let max_length_score = this.calculate_subscores( max_length_percent, factors, scores.max_score );
+		let length_score     = this.calculate_subscores( length_percent, factors, scores.max_score );
+		console.log(max_length_score);
+		console.log(length_score);
+		console.log(scores.max_score);
+		// Update the scores object with our newly calculated values.
+		scores.current_score = Math.round( +length_score + +max_length_score );
+		console.log(scores.current_score);
+		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
+		scores.messages      = this.sort_messages(scores.messages);
+
+		// Return the fully realized scored object.
+		return scores;
+	}
+
+
+	/**
 	 * The get_custom_tweet_score() will calculate the score for the custom
 	 * tweet input box. This will use a few factors to obtain this score:
 	 *
@@ -551,24 +663,98 @@ class SocialOptimizer {
 		return scores;
 	}
 
-	get_input_score(field) {
+	get_input_score(key) {
+
+
+		/**
+		 * This will setup the default scores object with some filler data. This
+		 * data will be updated as we move throughout this method and then it
+		 * will eventually be returned at the end.
+		 *
+		 * @type object
+		 */
 		var scores = {
 			percent: 0,
-			current_score: 0
+			current_score: 0,
+			max_score: this.field_data[key]['max_score'],
+			messages: []
 		}
-		scores['max_score'] = this.field_data[field]['max_score'];
-		var input_length = jQuery('#'+field).val().length;
-		var max_length = this.field_data[field]['max_length'];
-		var ideal_length = this.field_data[field]['length'];
 
-		if( input_length < ideal_length ) {
-			scores['percent'] = Math.round((input_length / ideal_length) * 100);
+		// These variables will be gathered from the field and will be used below.
+		var input_text   = jQuery('#'+key).val();
+		var input_length = input_text.length;
+		var max_length   = this.field_data[key]['max_length'];
+		var ideal_length = this.field_data[key]['length'];
+		var name = this.field_data[key]['name'];
+
+		/**
+		 * This section will check the length of the field and compare it to the
+		 * ideal. If it is below 70 characters, we'll divide to length by that
+		 * number to come up with a percentage. For example, the user might be
+		 * 95% of the way there. If they are over 100, we'll divide the input
+		 * length into 100. So for example, if they have 105, they are 5% over.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < input_length && input_length < ideal_length ) {
+			var length_percent = input_length / ideal_length;
 		} else {
-			scores['percent'] = Math.round((ideal_length / input_length) * 100);
+			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 2));
 		}
 
-		scores['current_score'] = Math.ceil( scores['percent'] / 100 * scores['max_score'] );
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(length_percent * 100),
+			priority: 1,
+			label: 'The recommended length of the '+name+' is '+ideal_length+' characters or fewer. Yours is ' + input_length + '.'
+		});
 
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 200
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < input_length && input_length < max_length ) {
+			var max_length_percent = 1;
+		} else if (input_length > max_length ) {
+			var max_length_percent = 0;
+		} else {
+			var max_length_percent = 0;
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(max_length_percent * 100),
+			priority: 10,
+			label: 'The maximum absolute length for this field is '+max_length+' characters. Yours is ' + input_length + ' characters.'
+		})
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		let factors          = 2;
+		let max_length_score = this.calculate_subscores( max_length_percent, factors, scores.max_score );
+		let length_score     = this.calculate_subscores( length_percent, factors, scores.max_score );
+
+		// Update the scores object with our newly calculated values.
+		scores.current_score = Math.round( +length_score + +max_length_score );
+		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
+		scores.messages      = this.sort_messages(scores.messages);
+
+		// Return the fully realized scored object.
 		return scores;
 	}
 
@@ -845,23 +1031,23 @@ class SocialOptimizer {
 			swp_og_description: {
 				name: 'Open Graph Description',
 				type: 'input',
-				length: 55,
-				max_length: 150,
-				max_score: this.get_max_scores('swp_og_title')
+				length: 60,
+				max_length: 200,
+				max_score: this.get_max_scores('swp_og_description')
 			},
 			swp_twitter_card_title: {
 				name: 'Twitter Card Title',
 				type: 'input',
 				length: 55,
 				max_length: 95,
-				max_score: this.get_max_scores('swp_og_title')
+				max_score: this.get_max_scores('swp_twitter_card_title')
 			},
 			swp_twitter_card_description: {
 				name: 'Twitter Card Description',
 				type: 'input',
 				length: 55,
 				max_length: 150,
-				max_score: this.get_max_scores('swp_og_title')
+				max_score: this.get_max_scores('swp_twitter_card_description')
 			},
 			swp_twitter_card_image: {
 				name: 'Twitter Card Image',
@@ -1114,15 +1300,31 @@ class SWPSidebarSection extends React.Component {
 		this.props.visible = 'hidden';
 		this.setState({visible:'hidden'});
 		this.toggle = this.toggle.bind(this);
-		this.draw_focus = this.draw_focus.bind(this);
+		this.adjust_focus = this.adjust_focus.bind(this);
 
-		let input = document.getElementById(this.props.field_key);
-		if( null !== input ) {
-			input.onfocus = this.draw_focus;
+		jQuery(document).on(
+			'focus',
+			'#social_warfare textarea, #social_warfare input',
+			this.adjust_focus
+		);
+	}
+
+	adjust_focus( event ) {
+		console.log(this.props.field_key);
+		console.log(jQuery(event.target).is('#'+this.props.field_key));
+
+		if(jQuery(event.target).is('#'+this.props.field_key)) {
+			this.props.visible = 'visible';
+			this.setState({visible:this.props.visible});
+		} else {
+			this.props.visible = 'hidden';
+			this.setState({visible:this.props.visible});
 		}
+
 	}
 
 	draw_focus() {
+		console.log('fired');
 		this.props.visible = 'visible';
 		this.setState({visible:this.props.visible});
 	}
@@ -1137,7 +1339,6 @@ class SWPSidebarSection extends React.Component {
 	}
 
 	render() {
-
 		if( 'undefined' === typeof this.props.visible ) {
 			this.props.visible = 'hidden';
 		}
