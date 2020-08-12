@@ -512,12 +512,9 @@ class SocialOptimizer {
 		let factors          = 2;
 		let max_length_score = this.calculate_subscores( max_length_percent, factors, scores.max_score );
 		let length_score     = this.calculate_subscores( length_percent, factors, scores.max_score );
-		console.log(max_length_score);
-		console.log(length_score);
-		console.log(scores.max_score);
+
 		// Update the scores object with our newly calculated values.
 		scores.current_score = Math.round( +length_score + +max_length_score );
-		console.log(scores.current_score);
 		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
 		scores.messages      = this.sort_messages(scores.messages);
 
@@ -1310,8 +1307,6 @@ class SWPSidebarSection extends React.Component {
 	}
 
 	adjust_focus( event ) {
-		console.log(this.props.field_key);
-		console.log(jQuery(event.target).is('#'+this.props.field_key));
 
 		if(jQuery(event.target).is('#'+this.props.field_key)) {
 			this.props.visible = 'visible';
@@ -1321,12 +1316,6 @@ class SWPSidebarSection extends React.Component {
 			this.setState({visible:this.props.visible});
 		}
 
-	}
-
-	draw_focus() {
-		console.log('fired');
-		this.props.visible = 'visible';
-		this.setState({visible:this.props.visible});
 	}
 
 	toggle() {
