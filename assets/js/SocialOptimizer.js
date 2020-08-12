@@ -122,9 +122,14 @@ class SocialOptimizer {
 	 */
 	activate_listeners() {
 		self = this;
-		jQuery('#social_warfare').on('input, change', 'input, textarea', function() {
+		jQuery('#social_warfare').on('input', 'input, textarea', function() {
 			self.update_scores();
 			console.log('bazinga');
+		});
+
+		jQuery('#social_warfare').on('change', 'input, textarea', function() {
+			self.update_scores();
+			console.log('image bazinga');
 		});
 
 
@@ -1428,17 +1433,8 @@ class SWPSidebarSection extends React.Component {
 		this.toggle = this.toggle.bind(this);
 		this.adjust_focus = this.adjust_focus.bind(this);
 
-		jQuery(document).on(
-			'focus',
-			'#social_warfare textarea, #social_warfare input',
-			this.adjust_focus
-		);
-
-		jQuery(document).on(
-			'change',
-			'#social_warfare textarea, #social_warfare input',
-			this.adjust_focus
-		);
+		jQuery(document).on('focus', '#social_warfare textarea, #social_warfare input', this.adjust_focus);
+		jQuery(document).on('change', '#social_warfare textarea, #social_warfare input', this.adjust_focus );
 	}
 
 	adjust_focus( event ) {
