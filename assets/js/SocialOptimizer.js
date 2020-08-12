@@ -124,12 +124,10 @@ class SocialOptimizer {
 		self = this;
 		jQuery('#social_warfare').on('input', 'input, textarea', function() {
 			self.update_scores();
-			console.log('bazinga');
 		});
 
-		jQuery('#social_warfare').on('input', 'input, textarea', function() {
+		jQuery('#social_warfare').on('change', 'input, textarea', function() {
 			self.update_scores();
-			console.log('bazinga');
 		});
 
 
@@ -1280,7 +1278,7 @@ class SocialOptimizer {
 
 	initialize_sidebar() {
 		var self = this;
-		console.log(this.scores);
+
 		// this.rax_generate_sidebar();
 		this.plugin = wp.plugins.registerPlugin( 'social-warfare-pro-sidebar', {
 		    render: function() {
