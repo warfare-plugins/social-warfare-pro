@@ -122,8 +122,9 @@ class SocialOptimizer {
 	 */
 	activate_listeners() {
 		self = this;
-		jQuery('#social_warfare').on('input', 'input, textarea', function() {
+		jQuery('#social_warfare').on('input, change', 'input, textarea', function() {
 			self.update_scores();
+			console.log('bazinga');
 		});
 
 
@@ -1403,6 +1404,7 @@ class SWPSidebar extends React.Component {
 	}
 
 	update_sidebar() {
+		SocialOptimizer.update_scores();
 		this.forceUpdate();
 	}
 
@@ -1427,7 +1429,7 @@ class SWPSidebarSection extends React.Component {
 		this.adjust_focus = this.adjust_focus.bind(this);
 
 		jQuery(document).on(
-			'focus',
+			'focus, change',
 			'#social_warfare textarea, #social_warfare input',
 			this.adjust_focus
 		);
@@ -1435,7 +1437,7 @@ class SWPSidebarSection extends React.Component {
 
 	adjust_focus( event ) {
 
-		if(jQuery(event.target).is('#'+this.props.field_key)) {
+		if(jQuery(event.target).is('#'+this.props.field_key) || jQuery(event.target).is('[name="'+this.props.field_key+'"]')) {
 			this.props.visible = 'visible';
 			this.setState({visible:this.props.visible});
 		} else {
