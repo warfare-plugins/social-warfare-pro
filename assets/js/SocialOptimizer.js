@@ -1429,7 +1429,13 @@ class SWPSidebarSection extends React.Component {
 		this.adjust_focus = this.adjust_focus.bind(this);
 
 		jQuery(document).on(
-			'focus, change',
+			'focus',
+			'#social_warfare textarea, #social_warfare input',
+			this.adjust_focus
+		);
+
+		jQuery(document).on(
+			'change',
 			'#social_warfare textarea, #social_warfare input',
 			this.adjust_focus
 		);
