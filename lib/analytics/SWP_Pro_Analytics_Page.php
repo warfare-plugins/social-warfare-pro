@@ -34,5 +34,6 @@ class SWP_Pro_Analytics_Page {
 
 	public function render_page_html() {
 		echo 'hello world';
+		echo '<div class="analytics_container" style="width:47.5%;height:400px;margin-right:5%;"><canvas id="analytics_chart" style="width:50%; height:400px"></canvas></div>';
 	}
 }

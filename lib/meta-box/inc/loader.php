@@ -3,85 +3,59 @@
  * Load plugin's files with check for installing it as a standalone plugin or
  * a module of a theme / plugin. If standalone plugin is already installed, it
  * will take higher priority.
+ *
  * @package Meta Box
  */
 
 /**
  * Plugin loader class.
+ *
  * @package Meta Box
  */
-class SWPMB_Loader
-{
-	/**
-	 * Class constructor.
-	 */
-	public function __construct()
-	{
-		$this->constants();
-
-		/**
-		 * Register autoloader for plugin classes.
-		 * In PHP 5.3, SPL extension cannot be disabled and it's safe to use autoload.
-		 * However, hosting providers can disable it in PHP 5.2. In that case, we provide a fallback for autoload.
-		 * @link http://php.net/manual/en/spl.installation.php
-		 * @link https://github.com/rilwis/meta-box/issues/810
-		 */
-		spl_autoload_register( array( $this, 'autoload' ) );
-		if ( ! class_exists( 'SWPMB_Core' ) )
-		{
-			$this->autoload_fallback();
-		}
-
-		$this->init();
-	}
-
+class SWPMB_Loader {
 	/**
 	 * Define plugin constants.
 	 */
-	public function constants()
-	{
-		// Script version, used to add version for scripts and styles
-		define( 'SWPMB_VER', '4.8.5' );
+	protected function constants() {
+		// Script version, used to add version for scripts and styles.
+		define( 'SWPMB_VER', '5.3.3' );
 
-		list( $path, $url ) = self::get_path();
+		list( $path, $url ) = self::get_path( dirname( dirname( __FILE__ ) ) );
 
-		// Plugin URLs, for fast enqueuing scripts and styles
+		// Plugin URLs, for fast enqueuing scripts and styles.
 		define( 'SWPMB_URL', $url );
 		define( 'SWPMB_JS_URL', trailingslashit( SWPMB_URL . 'js' ) );
 		define( 'SWPMB_CSS_URL', trailingslashit( SWPMB_URL . 'css' ) );
 
-		// Plugin paths, for including files
+		// Plugin paths, for including files.
 		define( 'SWPMB_DIR', $path );
 		define( 'SWPMB_INC_DIR', trailingslashit( SWPMB_DIR . 'inc' ) );
-		define( 'SWPMB_FIELDS_DIR', trailingslashit( SWPMB_INC_DIR . 'fields' ) );
 	}
 
 	/**
 	 * Get plugin base path and URL.
 	 * The method is static and can be used in extensions.
+	 *
 	 * @link http://www.deluxeblogtips.com/2013/07/get-url-of-php-file-in-wordpress.html
-	 * @param string $base Base folder path
+	 * @param string $path Base folder path.
 	 * @return array Path and URL.
 	 */
-	public static function get_path( $base = '' )
-	{
-		// Plugin base path
-		$path        = $base ? $base : dirname( dirname( __FILE__ ) );
-		$path        = wp_normalize_path( untrailingslashit( $path ) );
-		$content_dir = wp_normalize_path( untrailingslashit( WP_CONTENT_DIR ) );
+	public static function get_path( $path = '' ) {
+		// Plugin base path.
+		$path       = wp_normalize_path( untrailingslashit( $path ) );
+		$themes_dir = wp_normalize_path( untrailingslashit( dirname( get_stylesheet_directory() ) ) );
 
-		// Default URL
+		// Default URL.
 		$url = plugins_url( '', $path . '/' . basename( $path ) . '.php' );
 
-		// Included into themes
+		// Included into themes.
 		if (
 			0 !== strpos( $path, wp_normalize_path( WP_PLUGIN_DIR ) )
 			&& 0 !== strpos( $path, wp_normalize_path( WPMU_PLUGIN_DIR ) )
-			&& 0 === strpos( $path, $content_dir )
-		)
-		{
-			$content_url = untrailingslashit( dirname( dirname( get_stylesheet_directory_uri() ) ) );
-			$url         = str_replace( $content_dir, $content_url, $path );
+			&& 0 === strpos( $path, $themes_dir )
+		) {
+			$themes_url = untrailingslashit( dirname( get_stylesheet_directory_uri() ) );
+			$url        = str_replace( $themes_dir, $themes_url, $path );
 		}
 
 		$path = trailingslashit( $path );
@@ -91,170 +65,57 @@ class SWPMB_Loader
 	}
 
 	/**
-	 * Autoload fields' classes.
-	 * @param string $class Class name
+	 * Bootstrap the plugin.
 	 */
-	public function autoload( $class )
-	{
-		// Only load plugin's classes
-		if ( 'SWP_Meta_Box' != $class && 0 !== strpos( $class, 'SWPMB_' ) )
-		{
-			return;
+	public function init() {
+		$this->constants();
+
+		// Register autoload for classes.
+		require_once SWPMB_INC_DIR . 'autoloader.php';
+		$autoloader = new SWPMB_Autoloader();
+		$autoloader->add( SWPMB_INC_DIR, 'SWPMB_' );
+		$autoloader->add( SWPMB_INC_DIR, 'SWPMB_' );
+		$autoloader->add( SWPMB_INC_DIR . 'about', 'SWPMB_' );
+		$autoloader->add( SWPMB_INC_DIR . 'fields', 'SWPMB_', '_Field' );
+		$autoloader->add( SWPMB_INC_DIR . 'walkers', 'SWPMB_Walker_' );
+		$autoloader->add( SWPMB_INC_DIR . 'interfaces', 'SWPMB_', '_Interface' );
+		$autoloader->add( SWPMB_INC_DIR . 'storages', 'SWPMB_', '_Storage' );
+		$autoloader->add( SWPMB_INC_DIR . 'helpers', 'SWPMB_Helpers_' );
+		$autoloader->add( SWPMB_INC_DIR . 'update', 'SWPMB_Update_' );
+		$autoloader->register();
+
+		// Plugin core.
+		$core = new SWPMB_Core();
+		$core->init();
+
+		// Validation module.
+		new SWPMB_Validation();
+
+		$sanitizer = new SWPMB_Sanitizer();
+		$sanitizer->init();
+
+		$media_modal = new SWPMB_Media_Modal();
+		$media_modal->init();
+
+		// WPML Compatibility.
+		$wpml = new SWPMB_WPML();
+		$wpml->init();
+
+		// Update.
+		$update_option  = new SWPMB_Update_Option();
+		$update_checker = new SWPMB_Update_Checker( $update_option );
+		$update_checker->init();
+		$update_settings = new SWPMB_Update_Settings( $update_checker, $update_option );
+		$update_settings->init();
+		$update_notification = new SWPMB_Update_Notification( $update_checker, $update_option );
+		$update_notification->init();
+
+		if ( is_admin() ) {
+			$about = new SWPMB_About( $update_checker );
+			$about->init();
 		}
 
-		// Get file name
-		$file = 'meta-box';
-		if ( 'SWP_Meta_Box' != $class )
-		{
-			// Remove prefix 'SWPMB_'
-			$file = substr( $class, 5 );
-
-			// Optional '_Field'
-			$file = preg_replace( '/_Field$/', '', $file );
-		}
-
-		$file = strtolower( str_replace( '_', '-', $file ) ) . '.php';
-
-		$dirs = array( SWPMB_INC_DIR, SWPMB_FIELDS_DIR, trailingslashit( SWPMB_INC_DIR . 'walkers' ) );
-		foreach ( $dirs as $dir )
-		{
-			if ( file_exists( $dir . $file ) )
-			{
-				require $dir . $file;
-				return;
-			}
-		}
-	}
-
-	/**
-	 * Fallback for autoload in PHP 5.2.
-	 */
-	public function autoload_fallback()
-	{
-		$files = array(
-			// Core
-			'core',
-			'helper',
-			'meta-box',
-			'validation',
-
-			// Walkers
-			'walkers/walker',
-			'walkers/select-walker',
-			'walkers/select-tree-walker',
-			'walkers/input-list-walker',
-
-			// Fields
-			'field',
-
-			// 'fields/multiple-values',
-			// 'fields/autocomplete',
-			// 'fields/text-list',
-            //
-			// 'fields/choice',
-            //
-			// 'fields/select',
-			// 'fields/select-advanced',
-			// 'fields/select-tree',
-            //
-			// 'fields/input-list',
-			// 'fields/radio',
-			// 'fields/checkbox-list',
-            //
-			// 'fields/object-choice',
-			// 'fields/post',
-			// 'fields/taxonomy',
-			// 'fields/taxonomy-advanced',
-			// 'fields/user',
-            //
-			// 'fields/input',
-            //
-			// 'fields/checkbox',
-			// 'fields/hidden',
-			// 'fields/number',
-			// 'fields/range',
-            //
-			// 'fields/text',
-			// 'fields/color',
-			// 'fields/datetime',
-			// 'fields/date',
-			// 'fields/time',
-			// 'fields/email',
-			// 'fields/fieldset-text',
-			// 'fields/key-value',
-			// 'fields/url',
-			// 'fields/oembed',
-			// 'fields/password',
-            //
-			// 'fields/media',
-			// 'fields/file-advanced',
-			// 'fields/file-upload',
-			// 'fields/image-advanced',
-			// 'fields/image-upload',
-			// 'fields/plupload-image',
-            //
-			// 'fields/file-input',
-			// 'fields/file',
-			// 'fields/image',
-			// 'fields/image-select',
-			// 'fields/thickbox-image',
-            //
-			// 'fields/button',
-			// 'fields/custom-html',
-			// 'fields/divider',
-			// 'fields/heading',
-			// 'fields/map',
-			// 'fields/slider',
-			// 'fields/textarea',
-			// 'fields/wysiwyg',
-		);
-
-        $swp_fields = array(
-            'fields/choice',
-
-            'fields/select',
-
-            'fields/input',
-            'fields/hidden',
-
-            'fields/text',
-
-
-            'fields/media',
-            'fields/image-advanced',
-
-            'fields/divider',
-            'fields/heading',
-            'fields/display-text',
-            'fields/toggle',
-            'fields/textarea',
-        );
-        foreach ( $files as $file )
-		{
-			require SWPMB_INC_DIR . "$file.php";
-		}
-
-        foreach ( $swp_fields as $file )
-		{
-			require SWPMB_INC_DIR . "$file.php";
-		}
-	}
-
-	/**
-	 * Initialize plugin.
-	 */
-	public function init()
-	{
-		// Plugin core
-		new SWPMB_Core;
-
-		if ( is_admin() )
-		{
-			// Validation module
-			new SWPMB_Validation;
-		}
-
-		// Public functions
-		require SWPMB_INC_DIR . 'functions.php';
+		// Public functions.
+		require_once SWPMB_INC_DIR . 'functions.php';
 	}
 }

@@ -57,12 +57,13 @@ class SWP_Meta_Box_Loader {
 		// )
 		//
 
+
 		$heading = array(
-			'name'  => 'Share Customization',
+			'name'  => 'Optimize for Social',
 			'id'    => 'swp_meta_box_heading',
 			'type'  => 'heading',
 			'class' => 'heading  swpmb-full-width',
-			'desc'  => 'Make sure your content is shared exactly the way you want it to be shared by customizing the fields below. Let\'s face it. Nobody else is going to take the time to carefully craft titles and descriptions for your content when they share it to their timelines on social media. With Social Warfare, that doesn\'t matter. If you take a moment to carefully craft your post\'s images, titles and descriptions here, then these will be pre-filled for your visitors when they share your posts online. ',
+			'desc'  => $this->generate_score_html() . '<p class="social_optimize_description">Make sure your content is shared exactly the way you want it to be shared by customizing the fields below. Let\'s face it. Nobody else is going to take the time to carefully craft titles and descriptions for your content when they share it to their timelines on social media. With Social Warfare, that doesn\'t matter. If you take a moment to carefully craft your post\'s images, titles and descriptions here, then these will be pre-filled for your visitors when they share your posts online.</p> ',
 		);
 
 
@@ -74,6 +75,7 @@ class SWP_Meta_Box_Loader {
 			'type'  => 'image_advanced',
 			'class' => 'open-graph swpmb-left',
 			'max_file_uploads' => 1,
+			'image_size' => 'full'
 		);
 
 		// Setup the Open Graph title.
@@ -104,6 +106,7 @@ class SWP_Meta_Box_Loader {
 			'type'  => 'image_advanced',
 			'class' => 'twitter swpmb-left',
 			'max_file_uploads' => 1,
+			'image_size' => 'full'
 		);
 
 		// Setup the Twitter Card title.
@@ -139,11 +142,13 @@ class SWP_Meta_Box_Loader {
 
 		$open_graph_toggle = array(
 			'id'    => 'swp_twitter_use_open_graph',
-			'type'  => 'toggle',
+			'type'  => 'switch',
 			'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
 			'value'=> '',
 			'class' => 'twitter_og_toggle swpmb-left',
+			'on_label' => 'On',
+			'off_label' => 'Off'
 		);
 
 		// Setup the pinterest optimized image.
@@ -154,6 +159,7 @@ class SWP_Meta_Box_Loader {
 			'class' => $prefix . 'large_image pinterest swpmb-left',
 			'type'  => 'image_advanced',
 			'max_file_uploads' => 99,
+			'image_size' => 'full'
 		);
 
 		$pinterest_description = array(
@@ -358,4 +364,10 @@ class SWP_Meta_Box_Loader {
 	public function after_meta_boxes( $meta_box ) {
 		return $meta_box;
 	}
+
+	public function generate_score_html() {
+		$html = '<div class="social_score_wrapper"><div class="score_title">Optimize for Social</div><div class="score_rating"><div class="score_rating_top">0</div><div class="score_rating_bottom">100</div></div><div class="swp_clearfix"></div></div>';
+		return $html;
+	}
+
 }

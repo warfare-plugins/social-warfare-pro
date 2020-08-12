@@ -1,0 +1,23 @@
+.swpmb-toggle-all-wrapper {
+	margin-top: 0;
+}
+.swpmb-input-list {
+	margin: 0;
+	line-height: 1.8;
+}
+.swpmb-input-list .swpmb-input-list {
+	margin-left: 20px;
+}
+.swpmb-input-list li {
+	list-style: none;
+	margin-bottom: 0;
+}
+.swpmb-input-list.swpmb-inline {
+	line-height: inherit;
+}
+.swpmb-input-list.swpmb-inline li {
+	display: inline-block;
+}
+.swpmb-input-list.swpmb-inline li:not(:last-child) {
+	margin-right: 20px;
+}

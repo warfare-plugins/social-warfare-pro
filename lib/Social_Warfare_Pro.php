@@ -105,7 +105,8 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		new SWP_Pro_Follow_Network_Loader();
 		new SWP_Pro_Follow_Widget();
 		new SWP_Pro_Link_Manager();
-		new SWP_Pro_Analytics();
+		// new SWP_Pro_Analytics();
+		new SWP_Pro_Script();
 
 		if( true == is_admin() ) {
 			new SWP_Meta_Box_Loader();
@@ -313,6 +314,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		 */
 		$frontend_output = array(
 			'Pro_Header_Output',
+			'Pro_Script',
 			'Pro_Shortcodes'
 		);
 		$this->load_files( '/lib/frontend-output/', $frontend_output );

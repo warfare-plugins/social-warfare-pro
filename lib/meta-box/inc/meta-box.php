@@ -1,5 +1,4 @@
 <?php
-
 /**
  * A class to rapid develop meta boxes for custom & built in content types
  * Piggybacks on WordPress
@@ -8,186 +7,223 @@
  * @license GNU GPL2+
  * @package Meta Box
  */
-class SWP_Meta_Box
-{
+
+/**
+ * The main meta box class.
+ *
+ * @property string $id             Meta Box ID.
+ * @property string $title          Meta Box title.
+ * @property array  $fields         List of fields.
+ * @property array  $post_types     List of post types that the meta box is created for.
+ * @property string $style          Meta Box style.
+ * @property bool   $closed         Whether to collapse the meta box when page loads.
+ * @property string $priority       The meta box priority.
+ * @property string $context        Where the meta box is displayed.
+ * @property bool   $default_hidden Whether the meta box is hidden by default.
+ * @property bool   $autosave       Whether the meta box auto saves.
+ * @property bool   $media_modal    Add custom fields to media modal when viewing/editing an attachment.
+ *
+ * @package Meta Box
+ */
+class SWPMB_Meta_Box {
 	/**
-	 * @var array Meta box information
+	 * Meta box parameters.
+	 *
+	 * @var array
 	 */
 	public $meta_box;
 
 	/**
-	 * @var array Fields information
-	 */
-	public $fields;
-
-	/**
-	 * @var array Contains all field types of current meta box
-	 */
-	public $types;
-
-	/**
-	 * @var bool Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 * Detect whether the meta box is saved at least once.
+	 * Used to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 *
+	 * @var bool
 	 */
 	public $saved = false;
 
 	/**
-	 * Create meta box based on given data
-	 * @param array $meta_box Meta box definition
+	 * The object ID.
+	 *
+	 * @var int
 	 */
-	function __construct( $meta_box )
-	{
-		// Run script only in admin area
-		if ( ! is_admin() )
-			return;
+	public $object_id = null;
 
-		$meta_box           = self::normalize( $meta_box );
-		$meta_box['fields'] = self::normalize_fields( $meta_box['fields'] );
+	/**
+	 * The object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'post';
 
+	/**
+	 * Create meta box based on given data.
+	 *
+	 * @param array $meta_box Meta box definition.
+	 */
+	public function __construct( $meta_box ) {
+		$meta_box       = static::normalize( $meta_box );
 		$this->meta_box = $meta_box;
-		$this->fields   = &$this->meta_box['fields'];
 
-		// Allow users to show/hide meta box
-		// 1st action applies to all meta boxes
-		// 2nd action applies to only current meta box
-		$show = true;
-		$show = apply_filters( 'swpmb_show', $show, $this->meta_box );
-		$show = apply_filters( "swpmb_show_{$this->meta_box['id']}", $show, $this->meta_box );
-		if ( ! $show )
-			return;
+		$this->meta_box['fields'] = static::normalize_fields( $meta_box['fields'], $this->get_storage() );
 
-		// Enqueue common styles and scripts
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		$this->meta_box = apply_filters( 'swpmb_meta_box_settings', $this->meta_box );
 
-		// Add additional actions for fields
-		$fields = self::get_fields( $this->fields );
-		foreach ( $fields as $field )
-		{
-			call_user_func( array( self::get_class_name( $field ), 'add_actions' ) );
+		if ( $this->is_shown() ) {
+			$this->global_hooks();
+			$this->object_hooks();
 		}
+	}
 
-		// Add meta box
+	/**
+	 * Add fields to field registry.
+	 */
+	public function register_fields() {
+		$field_registry = swpmb_get_registry( 'field' );
+
+		foreach ( $this->post_types as $post_type ) {
+			foreach ( $this->fields as $field ) {
+				$field_registry->add( $field, $post_type );
+			}
+		}
+	}
+
+	/**
+	 * Conditional check for whether initializing meta box.
+	 *
+	 * - 1st filter applies to all meta boxes.
+	 * - 2nd filter applies to only current meta box.
+	 *
+	 * @return bool
+	 */
+	public function is_shown() {
+		$show = apply_filters( 'swpmb_show', true, $this->meta_box );
+
+		return apply_filters( "swpmb_show_{$this->id}", $show, $this->meta_box );
+	}
+
+	/**
+	 * Add global hooks.
+	 */
+	protected function global_hooks() {
+		// Enqueue common styles and scripts.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+
+		// Add additional actions for fields.
+		foreach ( $this->fields as $field ) {
+			SWPMB_Field::call( $field, 'add_actions' );
+		}
+	}
+
+	/**
+	 * Specific hooks for meta box object. Default is 'post'.
+	 * This should be extended in sub-classes to support meta fields for terms, user, settings pages, etc.
+	 */
+	protected function object_hooks() {
+		// Add meta box.
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
-		// Hide meta box if it's set 'default_hidden'
+		// Hide meta box if it's set 'default_hidden'.
 		add_filter( 'default_hidden_meta_boxes', array( $this, 'hide' ), 10, 2 );
 
-		// Save post meta
-		foreach ( $this->meta_box['post_types'] as $post_type )
-		{
-			if ( 'attachment' === $post_type )
-			{
-				// Attachment uses other hooks
-				// @see wp_update_post(), wp_insert_attachment()
+		// Save post meta.
+		foreach ( $this->post_types as $post_type ) {
+			if ( 'attachment' === $post_type ) {
+				// Attachment uses other hooks.
+				// @see wp_update_post(), wp_insert_attachment().
 				add_action( 'edit_attachment', array( $this, 'save_post' ) );
 				add_action( 'add_attachment', array( $this, 'save_post' ) );
-			}
-			else
-			{
+			} else {
 				add_action( "save_post_{$post_type}", array( $this, 'save_post' ) );
 			}
 		}
 	}
 
 	/**
-	 * Enqueue common styles
-	 *
-	 * @return void
+	 * Enqueue common scripts and styles.
 	 */
-	function admin_enqueue_scripts()
-	{
-		if ( ! $this->is_edit_screen() )
+	public function enqueue() {
+		if ( is_admin() && ! $this->is_edit_screen() ) {
 			return;
+		}
 
-		// wp_enqueue_style( 'swpmb', SWPMB_CSS_URL . 'style.css', array(), SWP_VERSION );
-		if( is_rtl() )
-			wp_enqueue_style( 'swpmb-rtl', SWPMB_CSS_URL . 'style-rtl.css', array(), SWP_VERSION );
+		wp_enqueue_style( 'rwmb', SWPMB_CSS_URL . 'style.css', array(), SWPMB_VER );
+		if ( is_rtl() ) {
+			wp_enqueue_style( 'swpmb-rtl', SWPMB_CSS_URL . 'style-rtl.css', array(), SWPMB_VER );
+		}
 
-		// Load clone script conditionally
-		$fields = self::get_fields( $this->fields );
-		foreach ( $fields as $field )
-		{
-			if ( $field['clone'] )
-			{
-				wp_enqueue_script( 'swpmb-clone', SWPMB_JS_URL . 'clone.js', array( 'jquery-ui-sortable' ), SWP_VERSION, true );
+		wp_enqueue_script( 'rwmb', SWPMB_JS_URL . 'script.js', array( 'jquery' ), SWPMB_VER, true );
+
+		// Load clone script conditionally.
+		foreach ( $this->fields as $field ) {
+			if ( $field['clone'] ) {
+				wp_enqueue_script( 'swpmb-clone', SWPMB_JS_URL . 'clone.js', array( 'jquery-ui-sortable' ), SWPMB_VER, true );
 				break;
 			}
 		}
 
-		// Enqueue scripts and styles for fields
-		foreach ( $fields as $field )
-		{
-			call_user_func( array( self::get_class_name( $field ), 'admin_enqueue_scripts' ) );
+		// Enqueue scripts and styles for fields.
+		foreach ( $this->fields as $field ) {
+			SWPMB_Field::call( $field, 'admin_enqueue_scripts' );
 		}
 
-		// Auto save
-		if ( $this->meta_box['autosave'] )
-			wp_enqueue_script( 'swpmb-autosave', SWPMB_JS_URL . 'autosave.js', array( 'jquery' ), SWP_VERSION, true );
+		// Auto save.
+		if ( $this->autosave ) {
+			wp_enqueue_script( 'swpmb-autosave', SWPMB_JS_URL . 'autosave.js', array( 'jquery' ), SWPMB_VER, true );
+		}
 
 		/**
 		 * Allow developers to enqueue more scripts and styles
 		 *
-		 * @param SWP_Meta_Box $object Meta Box object
+		 * @param SWPMB_Meta_Box $object Meta Box object
 		 */
 		do_action( 'swpmb_enqueue_scripts', $this );
 	}
 
 	/**
-	 * Get all fields of a meta box, recursively
-	 *
-	 * @param array $fields
-	 *
-	 * @return array
-	 */
-	static function get_fields( $fields )
-	{
-		$all_fields = array();
-		foreach ( $fields as $field )
-		{
-			$all_fields[] = $field;
-			if ( isset( $field['fields'] ) )
-				$all_fields = array_merge( $all_fields, self::get_fields( $field['fields'] ) );
-		}
-
-		return $all_fields;
-	}
-
-	/**************************************************
-	 * SHOW META BOX
-	 **************************************************/
-
-	/**
 	 * Add meta box for multiple post types
-	 *
-	 * @return void
 	 */
-	function add_meta_boxes()
-	{
-		foreach ( $this->meta_box['post_types'] as $post_type )
-		{
+	public function add_meta_boxes() {
+		$screen = get_current_screen();
+		add_filter( "postbox_classes_{$screen->id}_{$this->id}", array( $this, 'postbox_classes' ) );
+
+		foreach ( $this->post_types as $post_type ) {
 			add_meta_box(
-				$this->meta_box['id'],
-				$this->meta_box['title'],
+				$this->id,
+				$this->title,
 				array( $this, 'show' ),
 				$post_type,
-				$this->meta_box['context'],
-				$this->meta_box['priority']
+				$this->context,
+				$this->priority
 			);
 		}
 	}
 
 	/**
+	 * Modify meta box postbox classes.
+	 *
+	 * @param  array $classes Array of classes.
+	 * @return array
+	 */
+	public function postbox_classes( $classes ) {
+		if ( $this->closed ) {
+			$classes[] = 'closed';
+		}
+		$classes[] = "swpmb-{$this->style}";
+
+		return $classes;
+	}
+
+	/**
 	 * Hide meta box if it's set 'default_hidden'
 	 *
-	 * @param array  $hidden Array of default hidden meta boxes
-	 * @param object $screen Current screen information
+	 * @param array  $hidden Array of default hidden meta boxes.
+	 * @param object $screen Current screen information.
 	 *
 	 * @return array
 	 */
-	function hide( $hidden, $screen )
-	{
-		if ( $this->is_edit_screen( $screen ) && $this->meta_box['default_hidden'] )
-		{
-			$hidden[] = $this->meta_box['id'];
+	public function hide( $hidden, $screen ) {
+		if ( $this->is_edit_screen( $screen ) && $this->default_hidden ) {
+			$hidden[] = $this->id;
 		}
 
 		return $hidden;
@@ -195,136 +231,141 @@ class SWP_Meta_Box
 
 	/**
 	 * Callback function to show fields in meta box
-	 *
-	 * @return void
 	 */
-	function show()
-	{
+	public function show() {
+		if ( null === $this->object_id ) {
+			$this->object_id = $this->get_current_object_id();
+		}
 		$saved = $this->is_saved();
 
-		// Container
+		// Container.
 		printf(
-			'<div class="swpmb-meta-box" data-autosave="%s">',
-			$this->meta_box['autosave'] ? 'true' : 'false'
+			'<div class="%s" data-autosave="%s" data-object-type="%s" data-object-id="%s">',
+			esc_attr( trim( "swpmb-meta-box {$this->class}" ) ),
+			esc_attr( $this->autosave ? 'true' : 'false' ),
+			esc_attr( $this->object_type ),
+			esc_attr( $this->object_id )
 		);
 
-		wp_nonce_field( "swpmb-save-{$this->meta_box['id']}", "nonce_{$this->meta_box['id']}" );
+		wp_nonce_field( "swpmb-save-{$this->id}", "nonce_{$this->id}" );
 
-		// Allow users to add custom code before meta box content
-		// 1st action applies to all meta boxes
-		// 2nd action applies to only current meta box
+		// Allow users to add custom code before meta box content.
+		// 1st action applies to all meta boxes.
+		// 2nd action applies to only current meta box.
 		do_action( 'swpmb_before', $this );
-		do_action( "swpmb_before_{$this->meta_box['id']}", $this );
+		do_action( "swpmb_before_{$this->id}", $this );
 
-		foreach ( $this->fields as $field )
-		{
-			call_user_func( array( self::get_class_name( $field ), 'show' ), $field, $saved );
+		foreach ( $this->fields as $field ) {
+			SWPMB_Field::call( 'show', $field, $saved, $this->object_id );
 		}
 
-		// Allow users to add custom code after meta box content
-		// 1st action applies to all meta boxes
-		// 2nd action applies to only current meta box
+		// Allow users to add custom code after meta box content.
+		// 1st action applies to all meta boxes.
+		// 2nd action applies to only current meta box.
 		do_action( 'swpmb_after', $this );
-		do_action( "swpmb_after_{$this->meta_box['id']}", $this );
+		do_action( "swpmb_after_{$this->id}", $this );
 
-		// End container
+		// End container.
 		echo '</div>';
 	}
-
-	/**************************************************
-	 * SAVE META BOX
-	 **************************************************/
 
 	/**
 	 * Save data from meta box
 	 *
-	 * @param int $post_id Post ID
+	 * @param int $object_id Object ID.
 	 */
-	function save_post( $post_id )
-	{
-		// Check if this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
-		if ( true === $this->saved )
+	public function save_post( $object_id ) {
+		if ( ! $this->validate() ) {
 			return;
+		}
 		$this->saved = true;
 
-		// Check whether form is submitted properly
-		$nonce = (string) filter_input( INPUT_POST, "nonce_{$this->meta_box['id']}" );
-		if ( ! wp_verify_nonce( $nonce, "swpmb-save-{$this->meta_box['id']}" ) )
-			return;
+		$object_id       = $this->get_real_object_id( $object_id );
+		$this->object_id = $object_id;
 
-		// Autosave
-		if ( defined( 'DOING_AUTOSAVE' ) && ! $this->meta_box['autosave'] )
-			return;
+		// Before save action.
+		do_action( 'swpmb_before_save_post', $object_id );
+		do_action( "swpmb_{$this->id}_before_save_post", $object_id );
 
-		// Make sure meta is added to the post, not a revision
-		if ( $the_post = wp_is_post_revision( $post_id ) )
-			$post_id = $the_post;
+		array_map( array( $this, 'save_field' ), $this->fields );
 
-		// Before save action
-		do_action( 'swpmb_before_save_post', $post_id );
-		do_action( "swpmb_{$this->meta_box['id']}_before_save_post", $post_id );
-
-		foreach ( $this->fields as $field )
-		{
-			$name   = $field['id'];
-			$single = $field['clone'] || ! $field['multiple'];
-			$old    = get_post_meta( $post_id, $name, $single );
-			$new    = isset( $_POST[$name] ) ? $_POST[$name] : ( $single ? '' : array() );
-
-			// Allow field class change the value
-			$new = call_user_func( array( self::get_class_name( $field ), 'value' ), $new, $old, $post_id, $field );
-			$new = SWPMB_Core::filter( 'value', $new, $field, $old );
-
-			// Call defined method to save meta value, if there's no methods, call common one
-			call_user_func( array( self::get_class_name( $field ), 'save' ), $new, $old, $post_id, $field );
-		}
-
-		// After save action
-		do_action( 'swpmb_after_save_post', $post_id );
-		do_action( "swpmb_{$this->meta_box['id']}_after_save_post", $post_id );
+		// After save action.
+		do_action( 'swpmb_after_save_post', $object_id );
+		do_action( "swpmb_{$this->id}_after_save_post", $object_id );
 	}
 
-	/**************************************************
-	 * HELPER FUNCTIONS
-	 **************************************************/
+	/**
+	 * Save field.
+	 *
+	 * @param array $field Field settings.
+	 */
+	public function save_field( $field ) {
+		$single  = $field['clone'] || ! $field['multiple'];
+		$default = $single ? '' : array();
+		$old     = SWPMB_Field::call( $field, 'raw_meta', $this->object_id );
+		$new     = swpmb_request()->post( $field['id'], $default );
+		$new     = SWPMB_Field::process_value( $new, $this->object_id, $field );
+
+		// Filter to allow the field to be modified.
+		$field = SWPMB_Field::filter( 'field', $field, $field, $new, $old );
+
+		// Call defined method to save meta value, if there's no methods, call common one.
+		SWPMB_Field::call( $field, 'save', $new, $old, $this->object_id );
+
+		SWPMB_Field::filter( 'after_save_field', null, $field, $new, $old, $this->object_id );
+	}
+
+	/**
+	 * Validate form when submit. Check:
+	 * - If this function is called to prevent duplicated calls like revisions, manual hook to wp_insert_post, etc.
+	 * - Autosave
+	 * - If form is submitted properly
+	 *
+	 * @return bool
+	 */
+	public function validate() {
+		$nonce = swpmb_request()->filter_post( "nonce_{$this->id}", FILTER_SANITIZE_STRING );
+
+		return ! $this->saved
+			&& ( ! defined( 'DOING_AUTOSAVE' ) || $this->autosave )
+			&& wp_verify_nonce( $nonce, "swpmb-save-{$this->id}" );
+	}
 
 	/**
 	 * Normalize parameters for meta box
 	 *
-	 * @param array $meta_box Meta box definition
+	 * @param array $meta_box Meta box definition.
 	 *
-	 * @return array $meta_box Normalized meta box
+	 * @return array $meta_box Normalized meta box.
 	 */
-	static function normalize( $meta_box )
-	{
-		// Set default values for meta box
-		$meta_box = wp_parse_args( $meta_box, array(
-			'id'             => sanitize_title( $meta_box['title'] ),
-			'context'        => 'normal',
-			'priority'       => 'high',
-			'post_types'     => 'post',
-			'autosave'       => false,
-			'default_hidden' => false,
-		) );
+	public static function normalize( $meta_box ) {
+		$default_title = __( 'Meta Box Title', 'meta-box' );
+		// Set default values for meta box.
+		$meta_box = wp_parse_args(
+			$meta_box,
+			array(
+				'title'          => $default_title,
+				'id'             => ! empty( $meta_box['title'] ) ? sanitize_title( $meta_box['title'] ) : sanitize_title( $default_title ),
+				'context'        => 'normal',
+				'priority'       => 'high',
+				'post_types'     => 'post',
+				'autosave'       => false,
+				'default_hidden' => false,
+				'style'          => 'default',
+				'class'          => '',
+				'fields'         => array(),
+			)
+		);
 
 		/**
-		 * Use 'post_types' for better understanding and fallback to 'pages' for previous versions
+		 * Use 'post_types' for better understanding and fallback to 'pages' for previous versions.
+		 *
 		 * @since 4.4.1
 		 */
-		if ( ! empty( $meta_box['pages'] ) )
-		{
-			$meta_box['post_types'] = $meta_box['pages'];
-		}
+		SWPMB_Helpers_Array::change_key( $meta_box, 'pages', 'post_types' );
 
-		// Allow to set 'post_types' param by string
-		if ( is_string( $meta_box['post_types'] ) )
-		{
-			$meta_box['post_types'] = array( $meta_box['post_types'] );
-		}
-
-		// Allow to add default values for meta box
-		$meta_box = apply_filters( 'swpmb_normalize_meta_box', $meta_box );
-		$meta_box = apply_filters( "swpmb_normalize_{$meta_box['id']}_meta_box", $meta_box );
+		// Make sure the post type is an array and is sanitized.
+		$meta_box['post_types'] = array_map( 'sanitize_key', SWPMB_Helpers_Array::from_csv( $meta_box['post_types'] ) );
 
 		return $meta_box;
 	}
@@ -332,76 +373,48 @@ class SWP_Meta_Box
 	/**
 	 * Normalize an array of fields
 	 *
-	 * @param array $fields Array of fields
+	 * @param array                  $fields Array of fields.
+	 * @param SWPMB_Storage_Interface $storage Storage object. Optional.
 	 *
-	 * @return array $fields Normalized fields
+	 * @return array $fields Normalized fields.
 	 */
-	static function normalize_fields( $fields )
-	{
-		foreach ( $fields as $k => $field )
-		{
-			$class = self::get_class_name( $field );
+	public static function normalize_fields( $fields, $storage = null ) {
+		foreach ( $fields as $k => $field ) {
+			$field = SWPMB_Field::call( 'normalize', $field );
 
-			// Make sure field has correct 'type', ignore warning error when users forget to set field type or set incorrect one
-			if ( false === $class )
-			{
-				unset( $fields[$k] );
-				continue;
-			}
-
-			// Allow field class add/change default field values
-			$field = call_user_func( array( $class, 'normalize' ), $field );
-
-			if ( isset( $field['fields'] ) )
-				$field['fields'] = self::normalize_fields( $field['fields'] );
-
-			// Allow to add default values for fields
+			// Allow to add default values for fields.
 			$field = apply_filters( 'swpmb_normalize_field', $field );
 			$field = apply_filters( "swpmb_normalize_{$field['type']}_field", $field );
 			$field = apply_filters( "swpmb_normalize_{$field['id']}_field", $field );
 
-			$fields[$k] = $field;
+			$field['storage'] = $storage;
+
+			$fields[ $k ] = $field;
 		}
 
 		return $fields;
 	}
 
 	/**
-	 * Get field class name
-	 *
-	 * @param array $field Field array
-	 * @return string Field class name
-	 */
-	static function get_class_name( $field )
-	{
-		$type  = str_replace( array( '-', '_' ), ' ', $field['type'] );
-		$class = 'SWPMB_' . ucwords( $type ) . '_Field';
-		$class = str_replace( ' ', '_', $class );
-		return $class;
-	}
-
-	/**
 	 * Check if meta box is saved before.
-	 * This helps saving empty value in meta fields (for text box, check box, etc.) and set the correct default values.
+	 * This helps saving empty value in meta fields (text, check box, etc.) and set the correct default values.
 	 *
 	 * @return bool
 	 */
-	public function is_saved()
-	{
-		$post = get_post();
-
-		foreach ( $this->fields as $field )
-		{
-			if ( empty( $field['id'] ) )
-			{
+	public function is_saved() {
+		foreach ( $this->fields as $field ) {
+			if ( empty( $field['id'] ) ) {
 				continue;
 			}
-			$value = get_post_meta( $post->ID, $field['id'], ! $field['multiple'] );
+
+			$value = SWPMB_Field::call( $field, 'raw_meta', $this->object_id );
+			if ( false === $value ) {
+				continue;
+			}
 			if (
 				( ! $field['multiple'] && '' !== $value )
-				|| ( $field['multiple'] && array() !== $value )
-			)
-			{
+				|| ( $field['multiple'] && is_array( $value ) && array() !== $value )
+			) {
 				return true;
 			}
 		}
@@ -416,12 +429,74 @@ class SWP_Meta_Box
 	 *
 	 * @return bool
 	 */
-	function is_edit_screen( $screen = null )
-	{
-		if ( ! ( $screen instanceof WP_Screen ) )
-		{
+	public function is_edit_screen( $screen = null ) {
+		if ( ! ( $screen instanceof WP_Screen ) ) {
 			$screen = get_current_screen();
 		}
-		return 'post' == $screen->base && in_array( $screen->post_type, $this->meta_box['post_types'] );
+
+		return 'post' === $screen->base && in_array( $screen->post_type, $this->post_types, true );
+	}
+
+	/**
+	 * Magic function to get meta box property.
+	 *
+	 * @param string $key Meta box property name.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+		return isset( $this->meta_box[ $key ] ) ? $this->meta_box[ $key ] : false;
+	}
+
+	/**
+	 * Set the object ID.
+	 *
+	 * @param mixed $id Object ID.
+	 */
+	public function set_object_id( $id = null ) {
+		$this->object_id = $id;
+	}
+
+	/**
+	 * Get object type.
+	 *
+	 * @return string
+	 */
+	public function get_object_type() {
+		return $this->object_type;
+	}
+
+	/**
+	 * Get storage object.
+	 *
+	 * @return SWPMB_Storage_Interface
+	 */
+	public function get_storage() {
+		return swpmb_get_storage( $this->object_type, $this );
+	}
+
+	/**
+	 * Get current object id.
+	 *
+	 * @return int
+	 */
+	protected function get_current_object_id() {
+		return get_the_ID();
+	}
+
+	/**
+	 * Get real object ID when submitting.
+	 *
+	 * @param int $object_id Object ID.
+	 * @return int
+	 */
+	protected function get_real_object_id( $object_id ) {
+		// Make sure meta is added to the post, not a revision.
+		if ( 'post' !== $this->object_type ) {
+			return $object_id;
+		}
+		$parent = wp_is_post_revision( $object_id );
+
+		return $parent ? $parent : $object_id;
 	}
 }

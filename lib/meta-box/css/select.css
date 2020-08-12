@@ -1,8 +1,11 @@
 .swpmb-select {
 	min-width: 160px;
 }
+.swpmb-select.swpmb-select[multiple] {
+	padding: 0;
+}
 .swpmb-select option {
-    padding: .5rem 1rem;
+	padding: 4px 8px;
 }
 .swpmb-select-all-none {
 	display: block;

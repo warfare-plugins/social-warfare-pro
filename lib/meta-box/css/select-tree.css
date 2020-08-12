@@ -1,0 +1,7 @@
+.swpmb-select-tree {
+	display: inline-block;
+}
+
+.swpmb-select-tree.hidden {
+	display: none;
+}

@@ -1,90 +1,95 @@
 <?php
 /**
- * Image advanced field class which users WordPress media popup to upload and select images.
+ * The advanced image upload field which uses WordPress media popup to upload and select images.
+ *
+ * @package Meta Box
  */
-class SWPMB_Image_Advanced_Field extends SWPMB_Media_Field
-{
+
+/**
+ * Image advanced field class.
+ */
+class SWPMB_Image_Advanced_Field extends SWPMB_Media_Field {
 	/**
-	 * Enqueue scripts and styles
-	 *
-	 * @return void
+	 * Enqueue scripts and styles.
 	 */
-	static function admin_enqueue_scripts()
-	{
+	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'swpmb-image-advanced', SWPMB_CSS_URL . 'image-advanced.css', array( 'swpmb-media' ), SWP_VERSION );
-		wp_enqueue_script( 'swpmb-image-advanced', SWPMB_JS_URL . 'image-advanced.js', array( 'swpmb-media' ), SWP_VERSION, true );
+		SWPMB_Image_Field::admin_enqueue_scripts();
+		wp_enqueue_script( 'swpmb-image-advanced', SWPMB_JS_URL . 'image-advanced.js', array( 'swpmb-media' ), SWPMB_VER, true );
 	}
 
 	/**
-	 * Add actions
+	 * Normalize parameters for field.
 	 *
-	 * @return void
-	 */
-	static function add_actions()
-	{
-		parent::add_actions();
-		// Print attachment templates
-		add_action( 'print_media_templates', array( __CLASS__, 'print_templates' ) );
-	}
-
-	/**
-	 * Normalize parameters for field
-	 *
-	 * @param array $field
+	 * @param array $field Field parameters.
 	 *
 	 * @return array
 	 */
-	static function normalize( $field )
-	{
-		$field              = parent::normalize( $field );
+	public static function normalize( $field ) {
 		$field['mime_type'] = 'image';
+		$field              = wp_parse_args(
+			$field,
+			array(
+				'image_size' => 'thumbnail',
+			)
+		);
+
+		$field = parent::normalize( $field );
+
+		$field['js_options'] = wp_parse_args(
+			$field['js_options'],
+			array(
+				'imageSize' => $field['image_size'],
+			)
+		);
 
 		return $field;
 	}
 
 	/**
 	 * Get the field value.
-	 * @param array $field
-	 * @param array $args
-	 * @param null  $post_id
+	 *
+	 * @param array $field   Field parameters.
+	 * @param array $args    Additional arguments.
+	 * @param null  $post_id Post ID.
 	 * @return mixed
 	 */
-	static function get_value( $field, $args = array(), $post_id = null )
-	{
+	public static function get_value( $field, $args = array(), $post_id = null ) {
 		return SWPMB_Image_Field::get_value( $field, $args, $post_id );
-	}
-
-	/**
-	 * Output the field value.
-	 * @param array $field
-	 * @param array $args
-	 * @param null  $post_id
-	 * @return mixed
-	 */
-	static function the_value( $field, $args = array(), $post_id = null )
-	{
-		return SWPMB_Image_Field::the_value( $field, $args, $post_id );
 	}
 
 	/**
 	 * Get uploaded file information.
 	 *
-	 * @param int   $file_id Attachment image ID (post ID). Required.
-	 * @param array $args    Array of arguments (for size).
-	 * @return array|bool False if file not found. Array of image info on success
+	 * @param int   $file  Attachment image ID (post ID). Required.
+	 * @param array $args  Array of arguments (for size).
+	 * @param array $field Field settings.
+	 *
+	 * @return array|bool False if file not found. Array of image info on success.
 	 */
-	static function file_info( $file_id, $args = array() )
-	{
-		return SWPMB_Image_Field::file_info( $file_id, $args );
+	public static function file_info( $file, $args = array(), $field = array() ) {
+		return SWPMB_Image_Field::file_info( $file, $args, $field );
 	}
 
 	/**
-	 * Template for media item
-	 * @return void
+	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
+	 *
+	 * @param array    $field   Field parameters.
+	 * @param string   $value   The value.
+	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
+	 *
+	 * @return string
 	 */
-	static function print_templates()
-	{
-		require_once( SWPMB_INC_DIR . 'templates/image-advanced.php' );
+	public static function format_single_value( $field, $value, $args, $post_id ) {
+		return SWPMB_Image_Field::format_single_value( $field, $value, $args, $post_id );
+	}
+
+	/**
+	 * Template for media item.
+	 */
+	public static function print_templates() {
+		parent::print_templates();
+		require_once SWPMB_INC_DIR . 'templates/image-advanced.php';
 	}
 }
