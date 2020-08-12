@@ -958,7 +958,7 @@ class SocialOptimizer {
 			scores['messages'].push({
 				code: this.get_alert_color(ratio_percent * 100),
 				priority: 1,
-				label: 'The ideal aspect ratio is '+numerator+':'+denominator+'. Your image ratio is ' + (ar*denominator).toFixed(1) + ':'+denominator+'.'
+				label: 'The ideal aspect ratio is '+numerator+':'+denominator+'. Your image ratio is ' + parseFloat((ar*denominator).toFixed(1)) + ':'+denominator+'.'
 			});
 
 
