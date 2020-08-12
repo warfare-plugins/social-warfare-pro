@@ -53,6 +53,23 @@
 	box-shadow: 0 0 1px #71C069;
 }
 
+#social_warfare .swpmb-select-wrapper .swpmb-label label {
+	line-height: 45px;
+}
+
+#social_warfare .swpmb-select-wrapper .swpmb-input {
+	width: 40%;
+}
+
+#social_warfare .swpmb-select-wrapper .swpmb-input select {
+	width: 100%;
+	padding: 10px 30px 10px 15px;
+	max-width: 100%;
+	margin-bottom: 30px;
+	font-size: 15px;
+	border-radius: 0;
+}
+
 #social_warfare .swpmb-heading-wrapper h4 {
 	display: none;
 }
@@ -79,6 +96,12 @@
 	padding: 10px;
 	margin-bottom: 25px;
 	cursor: pointer;
+	transition: all 0.2s linear;
+}
+
+.social_score_wrapper:hover {
+	background: #e5e7e9;
+	transition: all 0.2s linear;
 }
 
 .social_score_wrapper .score_title {
@@ -210,6 +233,7 @@
 	margin-right: 15px;
 	margin-top: 0px;
 	line-height: 25px;
+	font-weight: normal;
 }
 
 .social-warfare-sidebar .sidebar_section_wrapper .section-title-wrapper .score_title.swp_og_image:before {

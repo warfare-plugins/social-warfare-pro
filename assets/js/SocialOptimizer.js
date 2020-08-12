@@ -218,6 +218,7 @@ class SocialOptimizer {
 
 		// Update the visual UI's that the user can see.
 		this.update_total_score_badge();
+		console.log(this.scores);
 	}
 
 
@@ -336,6 +337,8 @@ class SocialOptimizer {
 		 */
 		if( 0 < input_length && input_length < ideal_length ) {
 			var length_percent = 1;
+		} else if ( input_length === 0 ) {
+			var length_percent = 0;
 		} else {
 			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 3));
 		}
@@ -357,7 +360,7 @@ class SocialOptimizer {
 		 * the factors to come up with our total score for this field.
 		 *
 		 */
-		var word_count = input_text.split(" ").length;
+		var word_count = input_text.split(" ").length - 1;
 		if( word_count < 5 ) {
 			var words_percent = word_count / 5;
 		} else {
@@ -470,6 +473,8 @@ class SocialOptimizer {
 		 */
 		if( 0 < input_length && input_length < ideal_length ) {
 			var length_percent = 1;
+		} else if( 0 === input_length ) {
+			var length_percent = 0;
 		} else {
 			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 2));
 		}
@@ -578,12 +583,14 @@ class SocialOptimizer {
 		 * the factors to come up with our total score for this field.
 		 *
 		 */
-		if( 70 < input_length < 100 ) {
+		if( 70 < input_length && input_length < 100 ) {
 			var length_percent = 1;
-		} else if ( input_length < 70 ) {
+		} else if (0 < input_length && input_length < 70 ) {
 			var length_percent = input_length / 70;
 		} else if ( input_length > 70 ) {
 			var length_percent = 100 / input_length;
+		} else {
+			var length_percent = 0;
 		}
 
 		// Generate the message associated with this ranking factor.
@@ -827,6 +834,8 @@ class SocialOptimizer {
 		 */
 		if( 0 < input_length && input_length < ideal_length ) {
 			var length_percent = input_length / ideal_length;
+		} else if( 0 === input_length ) {
+			var length_percent = 0;
 		} else {
 			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 2));
 		}

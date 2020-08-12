@@ -146,7 +146,7 @@ class SWP_Meta_Box_Loader {
 			'type'  => 'switch',
 			'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
-			'value'=> '',
+			'std'=> 1,
 			'class' => 'twitter_og_toggle swpmb-left',
 			'on_label' => 'On',
 			'off_label' => 'Off',
