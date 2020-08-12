@@ -511,7 +511,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 *
 		 */
 		$use_og_values = SWP_Utility::get_meta( $this->post->ID, 'swp_twitter_use_open_graph' );
-		if( empty( $use_og_values ) ) {
+		if( empty( $use_og_values ) && $use_og_values !== '0') {
 			$use_og_values = true;
 		}
 
@@ -524,7 +524,7 @@ class SWP_Pro_Header_Output extends SWP_Header_Output {
 		 * card values array.
 		 *
 		 */
-		if ( $use_og_values ) {
+		if ( true == $use_og_values ) {
 			return array_merge($twitter_fields, $shared_fields);
 		}
 

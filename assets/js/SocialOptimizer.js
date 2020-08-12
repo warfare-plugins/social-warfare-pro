@@ -274,6 +274,9 @@ class SocialOptimizer {
 			case 'swp_og_title':
 				var scores = this.get_og_title_score();
 				break;
+			case 'swp_pinterest_description':
+				var scores = this.get_pinterest_description_score();
+				break;
 		}
 		return scores;
 	}
@@ -654,6 +657,130 @@ class SocialOptimizer {
 		// Update the scores object with our newly calculated values.
 		scores.current_score = Math.ceil( +length_score + +hashtag_score + +max_length_score );
 		scores.percent       = Math.ceil( scores.current_score / scores.max_score * 100 );
+		scores.messages      = this.sort_messages(scores.messages);
+
+		// Return the fully realized scored object.
+		return scores;
+	}
+
+	get_pinterest_description_score() {
+		var key = 'swp_pinterest_description';
+
+		/**
+		 * This will setup the default scores object with some filler data. This
+		 * data will be updated as we move throughout this method and then it
+		 * will eventually be returned at the end.
+		 *
+		 * @type object
+		 */
+		var scores = {
+			percent: 0,
+			current_score: 0,
+			max_score: this.field_data[key]['max_score'],
+			messages: []
+		}
+
+		// These variables will be gathered from the field and will be used below.
+		var input_text   = jQuery('#'+key).val();
+		var input_length = input_text.length;
+		var max_length   = this.field_data[key]['max_length'];
+		var ideal_length = this.field_data[key]['length'];
+		var name = this.field_data[key]['name'];
+
+		/**
+		 * This section will check the length of the field and compare it to the
+		 * ideal. If it is below 70 characters, we'll divide to length by that
+		 * number to come up with a percentage. For example, the user might be
+		 * 95% of the way there. If they are over 100, we'll divide the input
+		 * length into 100. So for example, if they have 105, they are 5% over.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( input_length < 100 ) {
+			var length_percent = input_length / 100;
+		} else if (input_length < 200 ) {
+			var length_percent = 200 / input_length;
+		} else {
+			var length_percent = 1;
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(length_percent * 100),
+			priority: 1,
+			label: 'The recommended length of the '+name+' is 100 - 200 characters. Yours is ' + input_length + '.'
+		});
+
+
+		/**
+		 * This portion of the code will count the number of hashtags that the
+		 * user has included in their description. The ideal number is 5 - 15 so
+		 * anything above or below that will reduce their score as a percentage.
+		 *
+		 * The resulting variable, hashtag_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		let hashtag_count = (input_text.split('#').length - 1);
+		if( hashtag_count < 5 ) {
+			var hashtag_percent = hashtag_count / 5;
+		} else if ( hashtag_count > 15 ) {
+			var hashtag_percent = 15 / hashtag_count;
+		} else {
+			var hashtag_percent = 1;
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(hashtag_percent * 100),
+			priority: 2,
+			label: 'For maximum visibility, you should include 5 to 15 hashtags in your pinterest description. You have '+hashtag_count+'.'
+		})
+
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 200
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < input_length && input_length < max_length ) {
+			var max_length_percent = 1;
+		} else if (input_length > max_length ) {
+			var max_length_percent = 0;
+		} else {
+			var max_length_percent = 0;
+		}
+
+		// Generate the message associated with this ranking factor.
+		scores.messages.push({
+			code: this.get_alert_color(max_length_percent * 100),
+			priority: 10,
+			label: 'The absolute maximum length for this field is '+max_length+' characters. Yours is ' + input_length + ' characters.'
+		})
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		let factors          = 3;
+		let hashtag_score    = this.calculate_subscores( hashtag_percent, factors, scores.max_score );
+		let max_length_score = this.calculate_subscores( max_length_percent, factors, scores.max_score );
+		let length_score     = this.calculate_subscores( length_percent, factors, scores.max_score );
+
+		// Update the scores object with our newly calculated values.
+		scores.current_score = Math.round( +length_score + +max_length_score + +hashtag_score );
+		scores.percent       = Math.round( scores.current_score / scores.max_score * 100 );
 		scores.messages      = this.sort_messages(scores.messages);
 
 		// Return the fully realized scored object.
@@ -1110,7 +1237,7 @@ class SocialOptimizer {
 	 */
 	get_max_scores(field = 0) {
 
-		if( 1 == jQuery('#swp_twitter_use_open_graph').val() ) {
+		if(jQuery('#swp_twitter_use_open_graph').is(':checked')) {
 			var max_grades = {
 				swp_og_image: 20,
 				swp_og_title: 15,
