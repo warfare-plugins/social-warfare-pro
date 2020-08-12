@@ -360,7 +360,10 @@ class SocialOptimizer {
 		 * the factors to come up with our total score for this field.
 		 *
 		 */
-		var word_count = input_text.split(" ").length - 1;
+		var word_count = input_text.split(" ").length;
+		if( input_length === 0 ) {
+			word_count = 0;
+		}
 		if( word_count < 5 ) {
 			var words_percent = word_count / 5;
 		} else {
