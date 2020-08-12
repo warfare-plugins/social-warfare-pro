@@ -218,7 +218,6 @@ class SocialOptimizer {
 
 		// Update the visual UI's that the user can see.
 		this.update_total_score_badge();
-		console.log(this.scores);
 	}
 
 
