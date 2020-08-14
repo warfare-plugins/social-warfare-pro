@@ -122,12 +122,35 @@ class SocialOptimizer {
 	 */
 	activate_listeners() {
 		self = this;
+
+		/**
+		 * Whenever a user types into the inputs, this will detect it and
+		 * update the scores in real-time.
+		 *
+		 */
 		jQuery('#social_warfare').on('input', 'input, textarea', function() {
 			self.update_scores();
 		});
 
+
+		/**
+		 * This is designed to detect a change in the input for the image fields.
+		 * Whenever a user adds or removes an image, it will wait for the image
+		 * preview to reflect the changes, and then it will render a new set of scores.
+		 *
+		 */
 		jQuery('#social_warfare').on('change', 'input, textarea', function() {
-			self.update_scores();
+			var image_check = setInterval( function() {
+
+				// If the images have not fully rendered, just bail out.
+				if( false === self.are_preview_images_rendered() ) {
+					return;
+				}
+
+				// If the images are rendered, clear this interval and begin running the upate.
+				clearInterval( image_check );
+				self.update_scores();
+			}, 50 );
 		});
 
 
@@ -155,16 +178,17 @@ class SocialOptimizer {
 		// Generate a list of image fields that we'll be looping through to check.
 		var image_fields_keys = [
 			'swp_og_image',
-			'swp_pinterest_image'
+			'swp_pinterest_image',
+			'swp_twitter_card_image'
 		];
 
 		for(const field of image_fields_keys ) {
 
 			// Fetch the image id of the user input image for that field.
-			var image_id = jQuery('input[name="'+field+'[]"]').val();
+			var input = jQuery('input[name="'+field+'[]"]');
 
 			// If there is no ID, that means that no image has been uploaded.
-			if( image_id !== '' ) {
+			if( input.val() !== '' && input.is(':visible') ) {
 
 				// Fetch the image element for the preview element.
 				var image = jQuery('input[name="'+field+'[]"]').siblings('.attachment-preview').find('img');
@@ -173,12 +197,29 @@ class SocialOptimizer {
 				if( image.height() == 0 ) {
 
 					// Return false if it's still at 0.
+					console.log('Preview images have not been rendered yet.')
+					return false;
+				}
+			}
+
+			// If there is no ID, that means that no image has been uploaded.
+			if( input.val() === '' && input.is(':visible') ) {
+
+				// Fetch the image element for the preview element.
+				var image = jQuery('input[name="'+field+'[]"]').siblings('.attachment-preview').find('img');
+
+				// Check if it has a real height it hasn't been removed yet.
+				if( image.height() > 0 ) {
+
+					// Return false if it's still at 0.
+					console.log('Images are not yet removed. Waiting.');
 					return false;
 				}
 			}
 		}
 
 		// Return true if we haven't returned false up above.
+		console.log('Images are rendered. Initialize the sidebar');
 		return true;
 	}
 
@@ -218,6 +259,9 @@ class SocialOptimizer {
 
 		// Update the visual UI's that the user can see.
 		this.update_total_score_badge();
+
+		// Trigger an event letting the rest of the application know about the update.
+		jQuery(document).trigger('scores_updated');
 	}
 
 
@@ -1292,6 +1336,7 @@ class SocialOptimizer {
 
 		// Bail out if we don't have the Gutenberg objects we need.
 		if('undefined' === typeof wp.plugins ) {
+			console.log('The wp.plugins object is not available.');
 			return;
 		}
 
@@ -1398,64 +1443,192 @@ class SocialOptimizer {
 		return color_class;
 	}
 
+
+	/**
+	 * The number_format() method will add commas as thousand separators.
+	 *
+	 * @since  4.1.0 | 13 AUG 2020 | Created
+	 * @param  {number} num The number to be formatted.
+	 * @return {string}     The formatted number
+	 */
 	number_format(num) {
 		return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 	}
 
 }
 
+
+/**
+ * The SWPSidebar class is a React Component class that will control the
+ * overall layout of the sidebar. It's primary purposes are to render the sidebar
+ * html and to listen for certain updates to the forms so that it can then
+ * trigger a new render as needed.
+ *
+ * @since   4.1.0 | 14 AUG 2020 | Created
+ * @extends React.Component
+ *
+ */
 class SWPSidebar extends React.Component {
+
+
+	/**
+	 * The magic constructor will run when the class is instantiated. When it
+	 * does, it will run the React.Component parent constructor which will import
+	 * all of the props that have been passed into it. It will then set up
+	 * some event listeners so that it can rerender the sidebar if certain things
+	 * change.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  {object} props The object props
+	 * @return void
+	 *
+	 */
 	constructor(props) {
+
+		// Call the parent constructor
 		super(props);
+
+		// Here we bind "this" to make it accessible within our methods.
 		this.update_sidebar = this.update_sidebar.bind(this);
+
+		// If the Twitter toggle gets changed, we update the entire sidebar since
+		// it will be switching between 6 and 9 fields to grade.
 		let toggle = document.getElementById('swp_twitter_use_open_graph');
 		if( null !== toggle ) {
 			toggle.onchange = this.update_sidebar;
 		}
 	}
 
+
+	/**
+	 * The update_sidebar() method will update the scores and then rerender the
+	 * entire sidebar. Right now this only runs with the Twitter toggle changes
+	 * because we will switch between 6 and 9 fields that make up the 100% grade.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	update_sidebar() {
 		SocialOptimizer.update_scores();
 		this.forceUpdate();
 	}
 
-	render() {
-		let elements = [];
 
+	/**
+	 * The render() method will return a set of React elements to be rendered to
+	 * the screen. It defines what this element will look like. This is the
+	 * mandatory method for these React.Component subclasses.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  void
+	 * @return {object} The react elements that comprise this element's html output.
+	 *
+	 */
+	render() {
+
+		// We'll be creating an array of section elements to return to the caller.
+		let sections = [];
+
+		// Loop through every field for which we have a score.
 		for( const field_key of Object.keys( self.scores ) ) {
+
+			// Skip the total, that is a different element.
 			if( field_key === 'total' ) continue;
-			let element = wp.element.createElement( SWPSidebarSection, { field_key: field_key, messages: self.scores[field_key].messages } );
-			elements.push(element);
+
+			// Render the sidebar "section" associated with this field.
+			let section = wp.element.createElement( SWPSidebarSection, { field_key: field_key, messages: self.scores[field_key].messages } );
+
+			// Add this to our array of sections.
+			sections.push(section);
 		}
-		return elements;
+
+		// Return the array of section elements.
+		return sections;
 	}
 }
 
+
+/**
+ * The SWPSidebarSection class is React.Component that will define how each
+ * Sidebar section is rendered. Each portion of the sidebar that corresponds to
+ * a specific field being graded is called a "section".
+ *
+ * The overall sidebar is made up of sections.
+ * Each section contains a header element and then "messages".
+ *
+ * @since   4.1.0 | 14 AUG 2020 | Created
+ * @extends React.Component
+ *
+ */
 class SWPSidebarSection extends React.Component {
+
+
+	/**
+	 * The magic constructor will run when the class is instantiated. When it
+	 * does, it will run the React.Component parent constructor which will import
+	 * all of the props that have been passed into it. It will then set up
+	 * some event listeners so that it can rerender the sidebar if certain things
+	 * change.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  {object} props The object props
+	 * @return void
+	 *
+	 */
 	constructor(props) {
+
+		// Run the React.Component parent constructor.
 		super(props);
+
+		// Set the default state of our 'visible' prop.
 		this.props.visible = 'hidden';
 		this.setState({visible:'hidden'});
-		this.toggle = this.toggle.bind(this);
-		this.adjust_focus = this.adjust_focus.bind(this);
 
-		jQuery(document).on('focus', '#social_warfare textarea, #social_warfare input', this.adjust_focus);
-		jQuery(document).on('change', '#social_warfare textarea, #social_warfare input', this.adjust_focus );
+		// Here we bind 'this' so that it is accessible within our methods.
+		this.focus_toggle = this.focus_toggle.bind(this);
+		this.focus = this.focus.bind(this);
+
+		// This will trigger our methods whenever the inputs are focused or changed.
+		jQuery(document).on('focus', '#social_warfare textarea, #social_warfare input', this.focus);
+		jQuery(document).on('change', '#social_warfare textarea, #social_warfare input', this.focus );
 	}
 
-	adjust_focus( event ) {
 
+	/**
+	 * The focus() method will run whenever one of our fields is interacted with.
+	 * If the field belongs to this section, this section will become visible.
+	 * Otherwise, this section will hide.
+	 *
+	 * This creates the effect of all of the sections closing except for the
+	 * section associated with the field the user is working in. Hence, it focuses
+	 * the entire sidebar on the section that is relevent to what they are working on.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  {object} event The event that triggered this method.
+	 * @return void
+	 *
+	 */
+	focus(event) {
+
+		// If the event was triggered by this section's field, show it.
 		if(jQuery(event.target).is('#'+this.props.field_key) || jQuery(event.target).is('[name="'+this.props.field_key+'"]')) {
+
+			// Update the 'visible' prop and then update the state triggering a new render.
 			this.props.visible = 'visible';
 			this.setState({visible:this.props.visible});
+
+		// If the event was triggered by another section's field, hide this section.
 		} else {
+
+			// Update the 'visible' prop and then update the state triggering a new render.
 			this.props.visible = 'hidden';
 			this.setState({visible:this.props.visible});
 		}
-
 	}
 
-	toggle() {
+	focus_toggle() {
 		if( 'visible' === this.props.visible ) {
 			this.props.visible = 'hidden';
 		} else {
@@ -1497,7 +1670,7 @@ class SWPScoreBadge extends React.Component {
 
 		this.update = this.update.bind(this);
 		this.setState({score: this.props.score});
-		let interval = setInterval( this.update, 50);
+		jQuery(document).on('scores_updated', this.update );
 	}
 
 	update() {
@@ -1529,7 +1702,7 @@ class SWPScoreMessages extends React.Component {
 
 		this.update = this.update.bind(this);
 		this.setState({messages: this.props.messages});
-		let interval = setInterval( this.update, 50);
+		jQuery(document).on('scores_updated', this.update );
 	}
 
 	update() {
@@ -1557,7 +1730,4 @@ class SWPScoreMessages extends React.Component {
 
 jQuery(document).ready( function() {
 	SocialOptimizer = new SocialOptimizer();
-
-	setTimeout(function() {
-	}, 5000 );
 });
