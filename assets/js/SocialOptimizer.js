@@ -1360,6 +1360,7 @@ class SocialOptimizer {
 
 	}
 
+	// Deprecated
 	rax_generate_sidebar_sections() {
 		let fields = ['swp_og_image'];
 		let elements = [];
@@ -1645,7 +1646,7 @@ class SWPSidebarSection extends React.Component {
 		let element =
 		wp.element.createElement( 'div', { className: 'sidebar_section_wrapper ' + this.props.field_key },
 			[
-				wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.toggle },
+				wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.focus_toggle },
 					[
 						wp.element.createElement('div', {className:'score_title ' + this.props.field_key}, SocialOptimizer.field_data[this.props.field_key].name ),
 						wp.element.createElement(SWPScoreBadge, {
