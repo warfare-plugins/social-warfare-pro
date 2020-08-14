@@ -1339,7 +1339,7 @@ class SocialOptimizer {
 			console.log('The wp.plugins object is not available.');
 			return;
 		}
-
+		console.log('Registered the Social Optimizer sidebar plugin now.');
 		// this.rax_generate_sidebar();
 		this.plugin = wp.plugins.registerPlugin( 'social-warfare-pro-sidebar', {
 		    render: function() {
