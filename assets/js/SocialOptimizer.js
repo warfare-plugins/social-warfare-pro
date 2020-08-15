@@ -1585,7 +1585,10 @@ class SWPSidebarSection extends React.Component {
 
 		// Set the default state of our 'visible' prop.
 		this.props.visible = 'hidden';
-		this.setState({visible:'hidden'});
+		this.setState({
+			visible:'hidden',
+			scores: SocialOptimizer.scores[this.props.field_key]
+		});
 
 		// Here we bind 'this' so that it is accessible within our methods.
 		this.focus_toggle = this.focus_toggle.bind(this);
@@ -1618,14 +1621,22 @@ class SWPSidebarSection extends React.Component {
 
 			// Update the 'visible' prop and then update the state triggering a new render.
 			this.props.visible = 'visible';
-			this.setState({visible:this.props.visible});
+			this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+			this.setState({
+				visible:this.props.visible,
+				scores: SocialOptimizer.scores[this.props.field_key]
+			});
 
 		// If the event was triggered by another section's field, hide this section.
 		} else {
 
 			// Update the 'visible' prop and then update the state triggering a new render.
 			this.props.visible = 'hidden';
-			this.setState({visible:this.props.visible});
+			this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+			this.setState({
+				visible:this.props.visible,
+				scores: SocialOptimizer.scores[this.props.field_key]
+			});
 		}
 	}
 
@@ -1635,7 +1646,11 @@ class SWPSidebarSection extends React.Component {
 		} else {
 			this.props.visible = 'visible';
 		}
-		this.setState({visible:this.props.visible});
+		this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+		this.setState({
+			visible:this.props.visible,
+			scores: SocialOptimizer.scores[this.props.field_key]
+		});
 	}
 
 	render() {
