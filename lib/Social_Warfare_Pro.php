@@ -105,8 +105,10 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		new SWP_Pro_Follow_Network_Loader();
 		new SWP_Pro_Follow_Widget();
 		new SWP_Pro_Link_Manager();
-		// new SWP_Pro_Analytics();
 		new SWP_Pro_Script();
+
+		// Coming in v4.2.0
+		// new SWP_Pro_Analytics();
 
 		if( true == is_admin() ) {
 			new SWP_Meta_Box_Loader();

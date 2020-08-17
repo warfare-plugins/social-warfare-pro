@@ -368,20 +368,26 @@ class SocialOptimizer {
 
 
 		/**
-		 * This section will check the length of the tweet and compare it to the
-		 * ideal. If it is below 70 characters, we'll divide to length by that
-		 * number to come up with a percentage. For example, the user might be
-		 * 95% of the way there. If they are over 100, we'll divide the input
-		 * length into 100. So for example, if they have 105, they are 5% over.
+		 * This section will check the length of the input and compare it to the
+		 * ideal. If they are over 55, we'll count each character over as
+		 * 3 characters and then divide the input length into 55. So this is not
+		 * just a percentage. Your score actually goes down quite rapidly as
+		 * you go past the recommended length.
 		 *
 		 * The resulting variable, length_percent, will be used below as one of
 		 * the factors to come up with our total score for this field.
 		 *
 		 */
-		if( 0 < input_length && input_length < ideal_length ) {
+
+		// Greater than zero but less than the ideal length.
+		if( 0 < input_length && input_length <= ideal_length ) {
 			var length_percent = 1;
+
+		// No input at all.
 		} else if ( input_length === 0 ) {
 			var length_percent = 0;
+
+		// Input is too long.
 		} else {
 			var length_percent = ideal_length / (ideal_length + ((input_length - ideal_length) * 3));
 		}
@@ -404,11 +410,10 @@ class SocialOptimizer {
 		 *
 		 */
 		var word_count = input_text.split(" ").length;
-		if( input_length === 0 ) {
-			word_count = 0;
-		}
-		if( word_count < 5 ) {
-			var words_percent = word_count / 5;
+		if( input_length == 0 ) {
+			var words_percent = 0;
+		} else if( word_count < 5 ) {
+			var words_percent = 1;
 		} else {
 			var words_percent = 5 / word_count;
 		}
@@ -1616,93 +1621,169 @@ class SWPSidebarSection extends React.Component {
 	 */
 	focus(event) {
 
+		// Update the 'visible' and 'messages' props
+		this.props.visible  = 'hidden';
+		this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+
 		// If the event was triggered by this section's field, show it.
 		if(jQuery(event.target).is('#'+this.props.field_key) || jQuery(event.target).is('[name="'+this.props.field_key+'"]')) {
 
-			// Update the 'visible' prop and then update the state triggering a new render.
-			this.props.visible = 'visible';
-			this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
-			this.setState({
-				visible:this.props.visible,
-				scores: SocialOptimizer.scores[this.props.field_key]
-			});
-
-		// If the event was triggered by another section's field, hide this section.
-		} else {
-
-			// Update the 'visible' prop and then update the state triggering a new render.
-			this.props.visible = 'hidden';
-			this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
-			this.setState({
-				visible:this.props.visible,
-				scores: SocialOptimizer.scores[this.props.field_key]
-			});
+			// Update the 'visible' prop
+			this.props.visible  = 'visible';
 		}
+
+		// Setting the state will trigger a rerender of the element.
+		this.setState({
+			visible:this.props.visible,
+			messages: this.props.messages
+		});
 	}
 
+
+	/**
+	 * The focus_toggle() method will make this section toggle the visibility
+	 * on or off whenever the header section is clicked on.
+	 *
+	 * @since  4.1.0 | 15 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	focus_toggle() {
+
+		// Whatever visibility state is in, switch it to the other.
 		if( 'visible' === this.props.visible ) {
 			this.props.visible = 'hidden';
 		} else {
 			this.props.visible = 'visible';
 		}
+
+		// Update the messages prop so that we don't revert to a previous state.
 		this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+
+		// Update the state so that it forces the render() method to run.
 		this.setState({
 			visible:this.props.visible,
-			scores: SocialOptimizer.scores[this.props.field_key]
+			messages: SocialOptimizer.scores[this.props.field_key].messages
 		});
 	}
 
+
+	/**
+	 * The render() method will return a set of React elements to be rendered to
+	 * the screen. It defines what this element will look like. This is the
+	 * mandatory method for these React.Component subclasses.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  void
+	 * @return {object} The react elements that comprise this element's html output.
+	 *
+	 */
 	render() {
+
+		// If, for some reason, the visible props isn't set, we'll give it a default.
 		if( 'undefined' === typeof this.props.visible ) {
 			this.props.visible = 'hidden';
 		}
 
 		let element =
-		wp.element.createElement( 'div', { className: 'sidebar_section_wrapper ' + this.props.field_key },
-			[
-				wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.focus_toggle },
-					[
-						wp.element.createElement('div', {className:'score_title ' + this.props.field_key}, SocialOptimizer.field_data[this.props.field_key].name ),
-						wp.element.createElement(SWPScoreBadge, {
-							section:this.props.field_key,
-							score: SocialOptimizer.scores[this.props.field_key].current_score,
-							max_score: SocialOptimizer.scores[this.props.field_key].max_score
-						}),
-					]
-				),
-				wp.element.createElement('div', {className: 'section_messages_wrapper ' + this.props.visible} ,
-					wp.element.createElement(SWPScoreMessages, { section:this.props.field_key, messages: this.props.messages })
-				)
-			]
-		);
+		wp.element.createElement( 'div', { className: 'sidebar_section_wrapper ' + this.props.field_key }, [
+			wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.focus_toggle }, [
+				wp.element.createElement('div', {className:'score_title ' + this.props.field_key}, SocialOptimizer.field_data[this.props.field_key].name ),
+				wp.element.createElement(SWPScoreBadge, {
+					section:this.props.field_key,
+					score: SocialOptimizer.scores[this.props.field_key].current_score,
+					max_score: SocialOptimizer.scores[this.props.field_key].max_score
+				}),
+			]),
+			wp.element.createElement('div', {className: 'section_messages_wrapper ' + this.props.visible} ,
+				wp.element.createElement(SWPScoreMessages, { section:this.props.field_key, messages: this.props.messages })
+			)
+		]);
 		return element;
 	}
 }
 
+
+/**
+ * The SWPScoreBadge class is a child class of React.Component that controls the
+ * rendering and updating of the colored and numbered score badges throughout
+ * the sidebar. This will generate it in the right color and with the correct
+ * score listed in it.
+ *
+ * @since   4.1.0 | 17 AUG 2020 | Created
+ * @extends React.Component
+ *
+ */
 class SWPScoreBadge extends React.Component {
+
+
+	/**
+	 * The magic constructor will run when the class is instantiated. When it
+	 * does, it will run the React.Component parent constructor which will import
+	 * all of the props that have been passed into it. It will then set up
+	 * some event listeners so that it can rerender the sidebar if certain things
+	 * change.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  {object} props The object props
+	 * @return void
+	 *
+	 */
 	constructor(props) {
+
+		// Call the parent constructor
 		super(props);
 
+		// Bind 'this' to our methods.
 		this.update = this.update.bind(this);
+
+		// Setup the initial score state.
 		this.setState({score: this.props.score});
+
+		// Whenever the scores are updated, trigger our update method.
 		jQuery(document).on('scores_updated', this.update );
 	}
 
+
+	/**
+	 * The update method will run whenever the score changes and will ultimately
+	 * result in the element being rerendered.
+	 *
+	 * @since  4.1.0 | 17 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	update() {
 
+		// If the scores property for this section doesn't exist, bail early.
 		if('undefined' === typeof SocialOptimizer.scores[this.props.section] ) {
 			return;
 		}
 
+		// Pull in the score for this section.
 		if( this.props.section == 'total' ) {
 			this.props.score = SocialOptimizer.scores.total;
 		} else {
 			this.props.score = SocialOptimizer.scores[this.props.section].current_score;
 		}
+
+		// Updating the state will trigger a rerender.
 		this.setState({score: this.props.score});
 	}
 
+
+	/**
+	 * The render() method will return a set of React elements to be rendered to
+	 * the screen. It defines what this element will look like. This is the
+	 * mandatory method for these React.Component subclasses.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  void
+	 * @return {object} The react elements that comprise this element's html output.
+	 *
+	 */
 	render() {
 		return wp.element.createElement('div', {className:'score_rating ' + self.get_alert_color(this.props.score/this.props.max_score*100) }, [
 			wp.element.createElement('div', {className:'score_rating_top'}, this.props.score ),
@@ -1713,28 +1794,77 @@ class SWPScoreBadge extends React.Component {
 
 class SWPScoreMessages extends React.Component {
 
+
+	/**
+	 * The magic constructor will run when the class is instantiated. When it
+	 * does, it will run the React.Component parent constructor which will import
+	 * all of the props that have been passed into it. It will then set up
+	 * some event listeners so that it can rerender the sidebar if certain things
+	 * change.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  {object} props The object props
+	 * @return void
+	 *
+	 */
 	constructor(props) {
+
+		// Call the parent constructor
 		super(props);
 
+		// Bind 'this' to our methods.
 		this.update = this.update.bind(this);
+
+		// Setup the initial messages state.
 		this.setState({messages: this.props.messages});
+
+		// Whenever the scores are updated, trigger our update method.
 		jQuery(document).on('scores_updated', this.update );
 	}
 
+
+	/**
+	 * The update method will run whenever the score changes and will ultimately
+	 * result in the element being rerendered.
+	 *
+	 * @since  4.1.0 | 17 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	update() {
+
+		// If the scores data for this section doesn't exist, bail out.
 		if('undefined' === typeof SocialOptimizer.scores[this.props.section] ) {
 			return;
 		}
 
+		// Update the messages prop with the updated array of messages.
 		this.props.messages = SocialOptimizer.scores[this.props.section].messages;
+
+		// Setting the state will force a rerender of the element.
 		this.setState({score: SocialOptimizer.scores.messages});
 	}
 
+
+	/**
+	 * The render() method will return a set of React elements to be rendered to
+	 * the screen. It defines what this element will look like. This is the
+	 * mandatory method for these React.Component subclasses.
+	 *
+	 * @since  4.1.0 | 14 AUG 2020 | Created
+	 * @param  void
+	 * @return {object} The react elements that comprise this element's html output.
+	 *
+	 */
 	render() {
+
+		// If for some reason, we don't have the messages prop, bail out early.
 		if('undefined' == typeof this.props.messages ) {
 			return null;
 		}
 
+		// Loop through and create a paragraph React.Component for each message.
 		let elements = [];
 		this.props.messages.forEach(function(message) {
 			let element = wp.element.createElement('p', {className: 'individual-tip ' + message.code}, message.label);
@@ -1744,6 +1874,7 @@ class SWPScoreMessages extends React.Component {
 	}
 }
 
+// Fire up the whole thing, right here.
 jQuery(document).ready( function() {
 	SocialOptimizer = new SocialOptimizer();
 });

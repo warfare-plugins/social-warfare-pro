@@ -214,6 +214,7 @@
 	background: #f3f4f5;
 	border-bottom: 1px solid #e2e4e7;
 	cursor: pointer;
+	user-select: none;
 }
 
 .social-warfare-sidebar .sidebar_section_wrapper .section-title-wrapper .score_title {
