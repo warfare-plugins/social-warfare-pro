@@ -197,7 +197,6 @@ class SocialOptimizer {
 				if( image.height() == 0 ) {
 
 					// Return false if it's still at 0.
-					console.log('Preview images have not been rendered yet.')
 					return false;
 				}
 			}
@@ -212,14 +211,12 @@ class SocialOptimizer {
 				if( image.height() > 0 ) {
 
 					// Return false if it's still at 0.
-					console.log('Images are not yet removed. Waiting.');
 					return false;
 				}
 			}
 		}
 
 		// Return true if we haven't returned false up above.
-		console.log('Images are rendered. Initialize the sidebar');
 		return true;
 	}
 
@@ -413,7 +410,7 @@ class SocialOptimizer {
 		if( input_length == 0 ) {
 			var words_percent = 0;
 		} else if( word_count < 5 ) {
-			var words_percent = 1;
+			var words_percent = word_count / 5;
 		} else {
 			var words_percent = 5 / word_count;
 		}
@@ -1341,10 +1338,8 @@ class SocialOptimizer {
 
 		// Bail out if we don't have the Gutenberg objects we need.
 		if('undefined' === typeof wp.plugins ) {
-			console.log('The wp.plugins object is not available.');
 			return;
 		}
-		console.log('Registered the Social Optimizer sidebar plugin now.');
 		// this.rax_generate_sidebar();
 		this.plugin = wp.plugins.registerPlugin( 'social-warfare-pro-sidebar', {
 		    render: function() {
