@@ -1,0 +1,18 @@
+.swpmb-taxonomy-add,
+.swpmb-taxonomy-add-form {
+	margin-top: 6px;
+}
+.swpmb-taxonomy-add-button {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: #0073aa;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.swpmb-taxonomy-add-button:hover {
+	color: #00a0d2;
+}
+.swpmb-taxonomy-add-form.swpmb-hidden {
+	display: none;
+}

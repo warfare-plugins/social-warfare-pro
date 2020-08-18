@@ -1,0 +1,66 @@
+.swpmb-image-wrapper .swpmb-uploaded:empty {
+	display: none;
+}
+.swpmb-image-wrapper .swpmb-uploaded:not(:empty) {
+	display: block;
+	margin: -8px 0 0 -8px;
+	overflow: hidden;
+}
+/* Re-add WP core UI style to make sure frontend works */
+.swpmb-image-item {
+	position: relative;
+	float: left;
+	padding: 8px;
+	margin: 0;
+	color: #444;
+	cursor: pointer;
+	list-style: none;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	width: 25%;
+	box-sizing: border-box;
+}
+.swpmb-image-item.thumbnail {
+	width: 150px;
+}
+.swpmb-image-item.medium {
+	width: 300px;
+}
+.swpmb-image-item.large {
+	width: 1024px;
+}
+
+.swpmb-image-actions {
+	position: absolute;
+	z-index: 2;
+	right: 12px;
+	top: 12px;
+	opacity: 0;
+	transition: opacity .2s;
+	color: #fff;
+}
+.swpmb-image-edit,
+.swpmb-image-delete {
+	color: inherit;
+	text-decoration: none;
+}
+.swpmb-image-overlay {
+	position: absolute;
+	z-index: 1;
+	top: 8px;
+	bottom: 8px;
+	left: 8px;
+	right: 8px;
+	background: #000;
+	opacity: 0;
+	transition: opacity .2s;
+}
+.swpmb-image-item:hover .swpmb-image-actions {
+	opacity: 1;
+}
+.swpmb-image-item:hover .swpmb-image-overlay {
+	opacity: .6;
+}

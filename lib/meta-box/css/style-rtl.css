@@ -1,7 +1,11 @@
 .swpmb-label, .swpmb-input{
-    float: right;
+	float: right;
 }
 label.error{
-    padding-left: auto;
-    padding-right: 3px;
+	padding-left: auto;
+	padding-right: 3px;
+}
+.swpmb-button.remove-clone {
+	right: auto;
+	left: 0;
 }

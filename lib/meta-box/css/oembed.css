@@ -1,0 +1,11 @@
+.swpmb-oembed-wrapper .spinner {
+	float: none;
+	vertical-align: top;
+	display: inline-block;
+}
+.swpmb-embed-media {
+	margin-top: 1em;
+}
+.swpmb-embed-media iframe {
+	max-width: 100%;
+}

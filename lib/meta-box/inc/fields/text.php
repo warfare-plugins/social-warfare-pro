@@ -1,47 +1,54 @@
 <?php
 /**
+ * The text field.
+ *
+ * @package Meta Box
+ */
+
+/**
  * Text field class.
  */
-class SWPMB_Text_Field extends SWPMB_Input_Field
-{
+class SWPMB_Text_Field extends SWPMB_Input_Field {
 	/**
-	 * Normalize parameters for field
+	 * Normalize parameters for field.
 	 *
-	 * @param array $field
+	 * @param array $field Field parameters.
 	 * @return array
 	 */
-	static function normalize( $field )
-	{
+	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 
-		$field = wp_parse_args( $field, array(
-			'size'        => 30,
-			'maxlength'   => false,
-			'pattern'     => false,
-		) );
+		$field = wp_parse_args(
+			$field,
+			array(
+				'size'      => 30,
+				'maxlength' => false,
+				'pattern'   => false,
+			)
+		);
 
 		return $field;
 	}
 
 	/**
-	 * Get the attributes for a field
+	 * Get the attributes for a field.
 	 *
-	 * @param array $field
-	 * @param mixed $value
+	 * @param array $field Field parameters.
+	 * @param mixed $value Meta value.
 	 *
 	 * @return array
 	 */
-	static function get_attributes( $field, $value = null )
-	{
+	public static function get_attributes( $field, $value = null ) {
 		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args( $attributes, array(
-			'size'        => $field['size'],
-			'maxlength'   => $field['maxlength'],
-			'pattern'     => $field['pattern'],
-			'placeholder' => $field['placeholder'],
-		) );
-
-		$attributes['type'] = 'text';
+		$attributes = wp_parse_args(
+			$attributes,
+			array(
+				'size'        => $field['size'],
+				'maxlength'   => $field['maxlength'],
+				'pattern'     => $field['pattern'],
+				'placeholder' => $field['placeholder'],
+			)
+		);
 
 		return $attributes;
 	}

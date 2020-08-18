@@ -1,0 +1,19 @@
+.swpmb-text_list-non-cloneable > .swpmb-input,
+.swpmb-text_list-clone {
+	display: flex;
+	flex-wrap: wrap;
+}
+.swpmb-text_list-non-cloneable > .swpmb-input > label,
+.swpmb-text_list-clone > label {
+	margin: 0 10px 10px 0;
+}
+.swpmb-text_list-non-cloneable > .swpmb-input > label:last-child,
+.swpmb-text_list-clone > label:last-child {
+	margin-right: 0;
+}
+
+.swpmb-text-list-label {
+	font-weight: 600;
+	display: block;
+	margin-bottom: 5px;
+}

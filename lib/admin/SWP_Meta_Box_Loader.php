@@ -57,12 +57,13 @@ class SWP_Meta_Box_Loader {
 		// )
 		//
 
+
 		$heading = array(
-			'name'  => 'Share Customization',
+			'name'  => 'Optimize for Social',
 			'id'    => 'swp_meta_box_heading',
 			'type'  => 'heading',
 			'class' => 'heading  swpmb-full-width',
-			'desc'  => 'Make sure your content is shared exactly the way you want it to be shared by customizing the fields below. Let\'s face it. Nobody else is going to take the time to carefully craft titles and descriptions for your content when they share it to their timelines on social media. With Social Warfare, that doesn\'t matter. If you take a moment to carefully craft your post\'s images, titles and descriptions here, then these will be pre-filled for your visitors when they share your posts online. ',
+			'desc'  => $this->generate_score_html() . '<p class="social_optimize_description">Make sure your content is shared exactly the way you want it to be shared by customizing the fields below. Let\'s face it. Nobody else is going to take the time to carefully craft titles and descriptions for your content when they share it to their timelines on social media. With Social Warfare, that doesn\'t matter. If you take a moment to carefully craft your post\'s images, titles and descriptions here, then these will be pre-filled for your visitors when they share your posts online.</p> ',
 		);
 
 
@@ -74,13 +75,14 @@ class SWP_Meta_Box_Loader {
 			'type'  => 'image_advanced',
 			'class' => 'open-graph swpmb-left',
 			'max_file_uploads' => 1,
+			'image_size' => 'full'
 		);
 
 		// Setup the Open Graph title.
 		$open_graph_title = array(
 			'name'  => __( 'Open Graph Title','social-warfare' ),
 			'desc'  => __( 'Add a title that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
-			'placeholder' => 'Write your awesome title here...',
+			'placeholder' => 'The Greatest Blog Post in the History of the World',
 			'id'    => $prefix . 'og_title',
 			'type'  => 'text',
 			'class' => 'open-graph swpmb-right',
@@ -90,7 +92,8 @@ class SWP_Meta_Box_Loader {
 		// Setup the Open Graph description.
 		$open_graph_description = array(
 			'name'  => __( 'Open Graph Description','social-warfare' ),
-			'placeholder'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others.','social-warfare' ),
+			'desc'  => __( 'Add a description that will populate the open graph meta tag which will be used when users share your content onto Facebook, LinkedIn, and others.','social-warfare' ),
+			'placeholder' => __( 'Foursquare and seven years ago, a new blogger set forth...','social-warfare' ),
 			'id'    => $prefix . 'og_description',
 			'class' => 'open-graph swpmb-right',
 			'type'  => 'textarea',
@@ -104,12 +107,13 @@ class SWP_Meta_Box_Loader {
 			'type'  => 'image_advanced',
 			'class' => 'twitter swpmb-left',
 			'max_file_uploads' => 1,
+			'image_size' => 'full'
 		);
 
 		// Setup the Twitter Card title.
 		$twitter_title = array(
 			'name'  => __( 'Twitter Card Title','social-warfare' ),
-			'placeholder'  => __( 'Add a title that will populate the Twitter Card meta tag which will be used when users share your content onto Twitter. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
+			'desc'  => __( 'Add a title that will populate the Twitter Card meta tag which will be used when users share your content onto Twitter. If nothing is provided here, we will use the post title as a backup.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_title',
 			'type'  => 'text',
 			'class' => $prefix . 'twitter_card_title twitter swpmb-right',
@@ -119,7 +123,7 @@ class SWP_Meta_Box_Loader {
 		// Setup the Twitter Card Description description.
 		$twitter_description = array(
 			'name'  => __( 'Twitter Card Description','social-warfare' ),
-			'placeholder'  => __( 'Add a description that will populate the Twitter Card description meta tag which will be used when users share your content onto Twitter.','social-warfare' ),
+			'desc'  => __( 'Add a description that will populate the Twitter Card description meta tag which will be used when users share your content onto Twitter.','social-warfare' ),
 			'id'    => $prefix . 'twitter_card_description',
 			'class' => $prefix . 'twitter_card_description twitter swpmb-right',
 			'type'  => 'textarea',
@@ -139,11 +143,14 @@ class SWP_Meta_Box_Loader {
 
 		$open_graph_toggle = array(
 			'id'    => 'swp_twitter_use_open_graph',
-			'type'  => 'toggle',
+			'type'  => 'switch',
 			'name'  => __( 'Use Open Graph for Twitter Card?', 'social-warfare'),
 			'desc'	=> '',
-			'value'=> '',
+			'std'=> 1,
 			'class' => 'twitter_og_toggle swpmb-left',
+			'on_label' => 'On',
+			'off_label' => 'Off',
+			'style' => 'square'
 		);
 
 		// Setup the pinterest optimized image.
@@ -154,11 +161,13 @@ class SWP_Meta_Box_Loader {
 			'class' => $prefix . 'large_image pinterest swpmb-left',
 			'type'  => 'image_advanced',
 			'max_file_uploads' => 99,
+			'image_size' => 'full'
 		);
 
 		$pinterest_description = array(
 			'name'  => __( 'Pinterest Description','social-warfare' ),
-			'placeholder'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
+			'desc'  => __( 'Craft a customized description that will be used when this post is shared on Pinterest. Leave this blank to use the title of the post.','social-warfare' ),
+			'placeholder' => __( 'Rockin\' out on the Pinterest description...', 'social-warfare' ),
 			'id'    => $prefix . 'pinterest_description',
 			'class' => $prefix . 'pinterest_descriptionWrapper pinterest swpmb-right',
 			'type'  => 'textarea',
@@ -278,7 +287,7 @@ class SWP_Meta_Box_Loader {
 		$meta_boxes[0]['fields'][] = $other_post_options;
 		$meta_boxes[0]['fields'][] = $post_location;
 		$meta_boxes[0]['fields'][] = $float_location;
-		$meta_boxes[0]['fields'][] = $reset_button;
+		// $meta_boxes[0]['fields'][] = $reset_button;
 		// $meta_boxes[0]['fields'][] = $twitter_handle_box;
 
 		return $meta_boxes;
@@ -358,4 +367,10 @@ class SWP_Meta_Box_Loader {
 	public function after_meta_boxes( $meta_box ) {
 		return $meta_box;
 	}
+
+	public function generate_score_html() {
+		$html = '<div class="social_score_wrapper"><div class="score_title">Optimize for Social</div><div class="score_rating"><div class="score_rating_top">0</div><div class="score_rating_bottom">100</div></div><div class="swp_clearfix"></div></div>';
+		return $html;
+	}
+
 }

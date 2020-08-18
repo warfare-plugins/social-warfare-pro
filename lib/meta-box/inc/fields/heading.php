@@ -1,45 +1,43 @@
 <?php
 /**
+ * The heading field which displays a simple heading text.
+ *
+ * @package Meta Box
+ */
+
+/**
  * Heading field class.
  */
-class SWPMB_Heading_Field extends SWPMB_Field
-{
+class SWPMB_Heading_Field extends SWPMB_Field {
 	/**
-	 * Enqueue scripts and styles
-	 *
-	 * @return void
+	 * Enqueue scripts and styles.
 	 */
-	static function admin_enqueue_scripts()
-	{
-		// wp_enqueue_style( 'swpmb-heading', SWPMB_CSS_URL . 'heading.css', array(), SWP_VERSION );
+	public static function admin_enqueue_scripts() {
+		wp_enqueue_style( 'swpmb-heading', SWPMB_CSS_URL . 'heading.css', array(), SWPMB_VER );
 	}
 
 	/**
-	 * Show begin HTML markup for fields
+	 * Show begin HTML markup for fields.
 	 *
-	 * @param mixed $meta
-	 * @param array $field
+	 * @param mixed $meta  Meta value.
+	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
-	static function begin_html( $meta, $field )
-	{
+	public static function begin_html( $meta, $field ) {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
-		return sprintf( '<h1%s>%s</h1>', $attributes, $field['name'] );
+		return sprintf( '<h4%s>%s</h4>', $attributes, $field['name'] );
 	}
 
 	/**
-	 * Show end HTML markup for fields
+	 * Show end HTML markup for fields.
 	 *
-	 * @param mixed $meta
-	 * @param array $field
+	 * @param mixed $meta  Meta value.
+	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
-	static function end_html( $meta, $field )
-	{
-		$id = $field['id'] ? " id='{$field['id']}-description'" : '';
-
-		return $field['desc'] ? "<p{$id}'>{$field['desc']}</p>" : '';
+	public static function end_html( $meta, $field ) {
+		return self::input_description( $field );
 	}
 }

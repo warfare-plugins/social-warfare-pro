@@ -1,45 +1,47 @@
 <?php
 /**
  * Validation module.
+ *
  * @package Meta Box
  */
 
 /**
  * Validation class.
  */
-class SWPMB_Validation
-{
+class SWPMB_Validation {
+
 	/**
 	 * Add hooks when module is loaded.
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		add_action( 'swpmb_after', array( $this, 'rules' ) );
-		add_action( 'swpmb_enqueue_scripts', array( $this, 'scripts' ) );
+		add_action( 'swpmb_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
 
 	/**
 	 * Output validation rules of each meta box.
-	 * The rules are outputted in [data-rules] attribute of an hidden <script> and will be converted into JSON by JS.
-	 * @param SWP_Meta_Box $object Meta Box object
+	 * The rules are outputted in [data-validation] attribute of an hidden <script> and will be converted into JSON by JS.
+	 *
+	 * @param SWPMB_Meta_Box $object Meta Box object.
 	 */
-	public function rules( SWP_Meta_Box $object )
-	{
-		if ( ! empty( $object->meta_box['validation'] ) )
-		{
-			echo '<script type="text/html" class="swpmb-validation-rules" data-rules="' . esc_attr( json_encode( $object->meta_box['validation'] ) ) . '"></script>';
+	public function rules( SWPMB_Meta_Box $object ) {
+		if ( ! empty( $object->meta_box['validation'] ) ) {
+			echo '<script type="text/html" class="swpmb-validation" data-validation="' . esc_attr( wp_json_encode( $object->meta_box['validation'] ) ) . '"></script>';
 		}
 	}
 
 	/**
 	 * Enqueue scripts for validation.
 	 */
-	public function scripts()
-	{
-		wp_enqueue_script( 'jquery-validate', SWPMB_JS_URL . 'jquery.validate.min.js', array( 'jquery' ), SWP_VERSION, true );
-		wp_enqueue_script( 'swpmb-validate', SWPMB_JS_URL . 'validate.js', array( 'jquery-validate' ), SWP_VERSION, true );
-		wp_localize_script( 'swpmb-validate', 'swpmbValidate', array(
-			'summaryMessage' => __( 'Please correct the errors highlighted below and try again.', 'social-warfare' ),
-		) );
+	public function enqueue() {
+		wp_enqueue_script( 'swpmb-validation', SWPMB_JS_URL . 'validation.min.js', array( 'jquery', 'rwmb' ), SWPMB_VER, true );
+
+		SWPMB_Helpers_Field::localize_script_once(
+			'swpmb-validation',
+			'rwmbValidation',
+			array(
+				'message' => esc_html__( 'Please correct the errors highlighted below and try again.', 'meta-box' ),
+			)
+		);
 	}
 }
