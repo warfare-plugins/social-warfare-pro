@@ -243,6 +243,15 @@ class SWP_Pro_Social_Optimizer {
 		return $scores;
 	}
 
+
+	/**
+	 * The get_image_score() method will calculate the scores for image fields.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @param  string $field The name of the field being graded.
+	 * @return array  An array of score data.
+	 *
+	 */
 	private function get_image_score( $field ) {
 
 		// Establish our default $scores array.
@@ -260,12 +269,21 @@ class SWP_Pro_Social_Optimizer {
 			return $scores;
 		}
 
+		/**
+		 *
+		 * Aspect Ratio
+		 *
+		 * This will examine the image's aspect ratio and compare it to the
+		 * ideal aspect ratior for this field.
+		 *
+		 */
+
 		// Fetch the top and bottom fields of the ratio number.
-		$numerator = $this->field_data[$field]['numerator'];
+		$numerator   = $this->field_data[$field]['numerator'];
 		$denominator = $this->field_data[$field]['denominator'];
 
 		// Calculate the image ratio and the desired image ratio.
-		$aspect_ratio = $image['width'] / $image['height'];
+		$aspect_ratio         = $image['width'] / $image['height'];
 		$desired_aspect_ratio = $numerator / $denominator;
 
 		// Calculate how far from the ideal ratio our image is.
@@ -274,6 +292,15 @@ class SWP_Pro_Social_Optimizer {
 			$ratio_percent = $desired_aspect_ratio / $aspect_ratio;
 		}
 
+
+		/**
+		 *
+		 * Height & Width
+		 *
+		 * This will examine the height and width of the image and compare it to
+		 * the ideals for this image.
+		 *
+		 */
 		$width_percent = $height_percent = 0.5;
 		if( $image['width'] < $this->field_data[$field]['width'] ) {
 			$width_percent = $image['width'] / $this->field_data[$field]['width'] * 0.5;
@@ -286,20 +313,29 @@ class SWP_Pro_Social_Optimizer {
 		$size_percent = $width_percent + $height_percent;
 
 
+		/**
+		 * Minimum Size
+		 *
+		 * This will check if the image meets the minimum size requirements.
+		 * Further down, this will be used to zeroize the entire score if this
+		 * check fails.
+		 *
+		 */
 		$min_size = 1;
 		if( $image['width'] < 200 || $image['height'] < 200 ) {
-			$min_size = 0;
+			return $scores;
 		}
 
 
+		// The number of factors in this score.
 		$factors     = 2;
+
+		// Convert the percentages into points.
 		$ratio_score = $this->calculate_subscores( $ratio_percent, $factors, $scores['max_score']);
 		$size_score  = $this->calculate_subscores( $size_percent, $factors, $scores['max_score']);
 
-		if( 1 === $min_size ) {
-			$scores['current_score'] = round( $ratio_score + $size_score );
-			$scores['percent'] = round( $scores['current_score'] / $scores['max_score'] );
-		}
+		$scores['current_score'] = round( $ratio_score + $size_score );
+		$scores['percent'] = round( $scores['current_score'] / $scores['max_score'] );
 
 		return $scores;
 
