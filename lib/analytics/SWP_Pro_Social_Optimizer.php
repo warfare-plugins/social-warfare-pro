@@ -25,6 +25,13 @@ class SWP_Pro_Social_Optimizer {
 	public $post_id = 0;
 
 
+	public $scores = array(
+		'total' => 0
+	);
+
+
+	public $fields = array();
+
 	/**
 	 * The local $field_data property will contain all of the data for each of
 	 * the fields that are being graded. This contains things like the maximum
@@ -127,32 +134,23 @@ class SWP_Pro_Social_Optimizer {
 
 		$this->post_id = $post_id;
 		$this->establish_maximum_scores();
+		$this->update_score();
 		var_dump($this);
 	}
 
 	public function update_score() {
 
+		foreach( $this->fields as $field ) {
+			$this->scores[$field] = $this->get_individual_score( $field );
+			$this->scores['total'] =+ $this->scores[$field]['current_score'];
+		}
+
+		$this->scores['total'] = round($this->scores['total']);
+
 	}
 
 	private function cache_score() {
 
-	}
-
-
-	/**
-	 * The get_field() method is a shortcut method for get_post_meta(). Since
-	 * we'll be using the same post id and we'll always only want one field
-	 * being returned, that makes the first and third parameters reduntant. This
-	 * method eliminates that. Just name the field you want, and it will return it.
-	 *
-	 * @since  4.2.0 | 20 AUG 2020 | Created
-	 * @see    https://developer.wordpress.org/reference/functions/get_post_meta/
-	 * @param  string $name The name of the meta field you want.
-	 * @return mixed  The value of the meta field from get_post_meta()
-	 *
-	 */
-	private function get_field($name) {
-		return get_post_meta( $this->post_id, $name, true );
 	}
 
 
@@ -199,6 +197,120 @@ class SWP_Pro_Social_Optimizer {
 		// Loop through and add each one to our existing $field_data property.
 		foreach( $max_grades as $key => $value ) {
 			$this->field_data[$key]['max_grade'] = $value;
+			$this->fields[] = $key;
 		}
 	}
+
+	private function get_individual_score( $field ) {
+
+		switch( $this->field_data[$field]['type'] ) {
+			case 'image':
+				$scores = $this->get_image_score( $field );
+				break;
+			case 'input':
+				// $scores = $this->get_input_score();
+				break;
+		}
+		return $scores;
+	}
+
+	private function get_image_score( $field ) {
+
+		// Establish our default $scores array.
+		$scores = array(
+			'percent' => 0,
+			'current_score' => 0,
+			'max_score' => $this->field_data[$field]['max_grade']
+		);
+
+		// Fetch the image data.
+		$image = $this->get_image($field);
+
+		// Bail with default values (zeroes) if there is no image.
+		if( false === $image ) {
+			return $scores;
+		}
+
+		// Fetch the top and bottom fields of the ratio number.
+		$numerator = $this->field_data[$field]['numerator'];
+		$denominator = $this->field_data[$field]['denominator'];
+
+		// Calculate the image ratio and the desired image ratio.
+		$aspect_ratio = $image['width'] / $image['height'];
+		$desired_aspect_ratio = $numerator / $denominator;
+
+		// Calculate how far from the ideal ratio our image is.
+		$ratio_percent = $aspect_ratio / $desired_aspect_ratio;
+		if( $aspect_ratio > $desired_aspect_ratio ) {
+			$ratio_percent = $desired_aspect_ratio / $aspect_ratio;
+		}
+
+		$width_percent = $height_percent = 0.5;
+		if( $image['width'] < $this->field_data[$field]['width'] ) {
+			$width_percent = $image['width'] / $this->field_data[$field]['width'] * 0.5;
+		}
+
+		if( $image['height'] < $this->field_data[$field]['height'] ) {
+			$height_percent = $image['height'] / $this->field_data[$field]['height'] * 0.5;
+		}
+
+		$size_percent = $width_percent + $height_percent;
+
+
+		$min_size = 1;
+		if( $image['width'] < 200 || $image['height'] < 200 ) {
+			$min_size = 0;
+		}
+
+
+		$factors     = 2;
+		$ratio_score = $this->calculate_subscores( $ratio_percent, $factors, $scores['max_score']);
+		$size_score  = $this->calculate_subscores( $size_percent, $factors, $scores['max_score']);
+
+		if( 1 === $min_size ) {
+			$scores['current_score'] = round( $ratio_score + $size_score );
+			$scores['percent'] = round( $scores['current_score'] / $scores['max_score'] );
+		}
+
+		return $scores;
+
+	}
+
+	private function calculate_subscores( $percent, $factors, $max_score ) {
+		return $percent * $max_score / $factors;
+	}
+
+
+	/**
+	 * The get_field() method is a shortcut method for get_post_meta(). Since
+	 * we'll be using the same post id and we'll always only want one field
+	 * being returned, that makes the first and third parameters reduntant. This
+	 * method eliminates that. Just name the field you want, and it will return it.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @see    https://developer.wordpress.org/reference/functions/get_post_meta/
+	 * @param  string $name The name of the meta field you want.
+	 * @return mixed  The value of the meta field from get_post_meta()
+	 *
+	 */
+	private function get_field($name) {
+		return get_post_meta( $this->post_id, $name, true );
+	}
+
+	private function get_image( $field ) {
+		$image_id = $this->get_field($field);
+
+		if( empty( $image_id ) ) {
+			return false;
+		}
+
+		$temp_image = wp_get_attachment_image_src( $image_id, 'full' );
+		$image = array(
+			'url' => $temp_image[0],
+			'width' => $temp_image[1],
+			'height' => $temp_image[2]
+		);
+		return $image;
+	}
+
 }
