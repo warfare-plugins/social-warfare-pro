@@ -138,15 +138,30 @@ class SWP_Pro_Social_Optimizer {
 		var_dump($this);
 	}
 
+
+	/**
+	 * The update_score() method will cycle through all of the fields, tabulate
+	 * their scores, and add them up to create our total score for the post.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public function update_score() {
 
+		// Loop through each of the fields.
 		foreach( $this->fields as $field ) {
+
+			// Get the score for this individual field.
 			$this->scores[$field] = $this->get_individual_score( $field );
+
+			// Update the total score.
 			$this->scores['total'] =+ $this->scores[$field]['current_score'];
 		}
 
+		// Round the total score to the nearest whole number.
 		$this->scores['total'] = round($this->scores['total']);
-
 	}
 
 	private function cache_score() {
