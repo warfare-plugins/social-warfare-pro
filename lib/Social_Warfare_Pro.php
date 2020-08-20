@@ -108,7 +108,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 		new SWP_Pro_Script();
 
 		// Coming in v4.2.0
-		// new SWP_Pro_Analytics();
+		new SWP_Pro_Analytics();
 
 		if( true == is_admin() ) {
 			new SWP_Meta_Box_Loader();

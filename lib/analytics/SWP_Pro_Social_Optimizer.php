@@ -64,7 +64,7 @@ class SWP_Pro_Social_Optimizer {
 		),
 
 		// The Twitter Card Title
-		'swp_twitter_card_title' = array(
+		'swp_twitter_card_title' => array(
 			'name' => 'Twitter Card Title',
 			'type' => 'input',
 			'length' => 55,
@@ -111,7 +111,7 @@ class SWP_Pro_Social_Optimizer {
 			'denominator' => '3',
 		),
 
-		// The Pinterest Description Field 
+		// The Pinterest Description Field
 		'swp_pinterest_description' => array(
 			'name' => 'Pinterest Description',
 			'type' => 'input',
@@ -121,7 +121,10 @@ class SWP_Pro_Social_Optimizer {
 	);
 
 	public function __construct( $post_id ) {
+		$this->post_id = $post_id;
 
+		$this->establish_maximum_scores();
+		var_dump($this);
 	}
 
 	public function calculate_score() {
@@ -129,6 +132,10 @@ class SWP_Pro_Social_Optimizer {
 	}
 
 	public function cache_score() {
+
+	}
+
+	public function establish_maximum_scores() {
 
 	}
 }
