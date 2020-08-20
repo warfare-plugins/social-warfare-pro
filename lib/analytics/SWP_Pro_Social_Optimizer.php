@@ -121,21 +121,66 @@ class SWP_Pro_Social_Optimizer {
 	);
 
 	public function __construct( $post_id ) {
+		if( is_admin() ) {
+			return;
+		}
+		
 		$this->post_id = $post_id;
-
 		$this->establish_maximum_scores();
 		var_dump($this);
 	}
 
-	public function calculate_score() {
+	public function update_score() {
 
 	}
 
-	public function cache_score() {
+	private function cache_score() {
 
 	}
 
-	public function establish_maximum_scores() {
+	private function get_field($name) {
+		return get_post_meta( $this->post_id, $name, true );
+	}
 
+
+	/**
+	 * The establish_maximum_scores() method will provide the baseline for how
+	 * many points each field can be worth. These scores need to always add up
+	 * to 100 points. As such, if the Twitter card fields are activated we will
+	 * have 9 fields adding up to 100 versus 6 fields without them. So this
+	 * allows us to check that field and assign those maximum values accordingly.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 */
+	private function establish_maximum_scores() {
+
+		if( true == $this->get_field('swp_twitter_use_open_graph') ) {
+			$max_grades = array(
+				'swp_og_image' => 20,
+				'swp_og_title' => 15,
+				'swp_og_description' => 15,
+				'swp_custom_tweet' => 15,
+				'swp_pinterest_image' => 20,
+				'swp_pinterest_description' => 15
+			);
+		} else {
+			$max_grades = array(
+				'swp_og_image' => 15,
+				'swp_og_title' => 10,
+				'swp_og_description' => 10,
+				'swp_custom_tweet' => 10,
+				'swp_twitter_card_image' => 10,
+				'swp_twitter_card_title' => 10,
+				'swp_twitter_card_description' => 10,
+				'swp_pinterest_image' => 15,
+				'swp_pinterest_description' => 10
+			);
+		}
+
+		foreach( $max_grades as $key => $value ) {
+			$this->field_data[$key]['max_grade'] = $value;
+		}
 	}
 }
