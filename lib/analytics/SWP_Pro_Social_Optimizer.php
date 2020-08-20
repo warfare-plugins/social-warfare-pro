@@ -124,7 +124,7 @@ class SWP_Pro_Social_Optimizer {
 		if( is_admin() ) {
 			return;
 		}
-		
+
 		$this->post_id = $post_id;
 		$this->establish_maximum_scores();
 		var_dump($this);
@@ -153,9 +153,11 @@ class SWP_Pro_Social_Optimizer {
 	 * @since  4.2.0 | 20 AUG 2020 | Created
 	 * @param  void
 	 * @return void
+	 * 
 	 */
 	private function establish_maximum_scores() {
 
+		// If the Twitter fields don't exist, we have 6 fields.
 		if( true == $this->get_field('swp_twitter_use_open_graph') ) {
 			$max_grades = array(
 				'swp_og_image' => 20,
@@ -165,6 +167,8 @@ class SWP_Pro_Social_Optimizer {
 				'swp_pinterest_image' => 20,
 				'swp_pinterest_description' => 15
 			);
+
+		// If they do exist, we have all 9 fields to grade.
 		} else {
 			$max_grades = array(
 				'swp_og_image' => 15,
@@ -179,6 +183,7 @@ class SWP_Pro_Social_Optimizer {
 			);
 		}
 
+		// Loop through and add each one to our existing $field_data property.
 		foreach( $max_grades as $key => $value ) {
 			$this->field_data[$key]['max_grade'] = $value;
 		}
