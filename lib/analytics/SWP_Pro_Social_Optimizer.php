@@ -216,12 +216,26 @@ class SWP_Pro_Social_Optimizer {
 		}
 	}
 
+
+	/**
+	 * The get_individual_score() method will calculate and return the score for
+	 * any one of the given fields.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @param  string $field The name of the field being graded.
+	 * @return array  An array of score data.
+	 *
+	 */
 	private function get_individual_score( $field ) {
 
 		switch( $this->field_data[$field]['type'] ) {
+
+			// If the field is an image field.
 			case 'image':
 				$scores = $this->get_image_score( $field );
 				break;
+
+			// If the field is an input field.
 			case 'input':
 				// $scores = $this->get_input_score();
 				break;
