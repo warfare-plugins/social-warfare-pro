@@ -1512,7 +1512,7 @@ class SWPSidebar extends React.Component {
 	 *
 	 */
 	update_sidebar() {
-		SocialOptimizer.update_scores();
+		socialWarfare.SocialOptimizer.update_scores();
 		this.forceUpdate();
 	}
 
@@ -1587,7 +1587,7 @@ class SWPSidebarSection extends React.Component {
 		this.props.visible = 'hidden';
 		this.setState({
 			visible:'hidden',
-			scores: SocialOptimizer.scores[this.props.field_key]
+			scores: socialWarfare.SocialOptimizer.scores[this.props.field_key]
 		});
 
 		// Here we bind 'this' so that it is accessible within our methods.
@@ -1618,7 +1618,7 @@ class SWPSidebarSection extends React.Component {
 
 		// Update the 'visible' and 'messages' props
 		this.props.visible  = 'hidden';
-		this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+		this.props.messages = socialWarfare.SocialOptimizer.scores[this.props.field_key].messages;
 
 		// If the event was triggered by this section's field, show it.
 		if(jQuery(event.target).is('#'+this.props.field_key) || jQuery(event.target).is('[name="'+this.props.field_key+'"]')) {
@@ -1654,12 +1654,12 @@ class SWPSidebarSection extends React.Component {
 		}
 
 		// Update the messages prop so that we don't revert to a previous state.
-		this.props.messages = SocialOptimizer.scores[this.props.field_key].messages;
+		this.props.messages = socialWarfare.SocialOptimizer.scores[this.props.field_key].messages;
 
 		// Update the state so that it forces the render() method to run.
 		this.setState({
 			visible:this.props.visible,
-			messages: SocialOptimizer.scores[this.props.field_key].messages
+			messages: socialWarfare.SocialOptimizer.scores[this.props.field_key].messages
 		});
 	}
 
@@ -1684,11 +1684,11 @@ class SWPSidebarSection extends React.Component {
 		let element =
 		wp.element.createElement( 'div', { className: 'sidebar_section_wrapper ' + this.props.field_key }, [
 			wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.focus_toggle }, [
-				wp.element.createElement('div', {className:'score_title ' + this.props.field_key}, SocialOptimizer.field_data[this.props.field_key].name ),
+				wp.element.createElement('div', {className:'score_title ' + this.props.field_key}, socialWarfare.SocialOptimizer.field_data[this.props.field_key].name ),
 				wp.element.createElement(SWPScoreBadge, {
 					section:this.props.field_key,
-					score: SocialOptimizer.scores[this.props.field_key].current_score,
-					max_score: SocialOptimizer.scores[this.props.field_key].max_score
+					score: socialWarfare.SocialOptimizer.scores[this.props.field_key].current_score,
+					max_score: socialWarfare.SocialOptimizer.scores[this.props.field_key].max_score
 				}),
 			]),
 			wp.element.createElement('div', {className: 'section_messages_wrapper ' + this.props.visible} ,
@@ -1753,15 +1753,15 @@ class SWPScoreBadge extends React.Component {
 	update() {
 
 		// If the scores property for this section doesn't exist, bail early.
-		if('undefined' === typeof SocialOptimizer.scores[this.props.section] ) {
+		if('undefined' === typeof socialWarfare.SocialOptimizer.scores[this.props.section] ) {
 			return;
 		}
 
 		// Pull in the score for this section.
 		if( this.props.section == 'total' ) {
-			this.props.score = SocialOptimizer.scores.total;
+			this.props.score = socialWarfare.SocialOptimizer.scores.total;
 		} else {
-			this.props.score = SocialOptimizer.scores[this.props.section].current_score;
+			this.props.score = socialWarfare.SocialOptimizer.scores[this.props.section].current_score;
 		}
 
 		// Updating the state will trigger a rerender.
@@ -1830,15 +1830,15 @@ class SWPScoreMessages extends React.Component {
 	update() {
 
 		// If the scores data for this section doesn't exist, bail out.
-		if('undefined' === typeof SocialOptimizer.scores[this.props.section] ) {
+		if('undefined' === typeof socialWarfare.SocialOptimizer.scores[this.props.section] ) {
 			return;
 		}
 
 		// Update the messages prop with the updated array of messages.
-		this.props.messages = SocialOptimizer.scores[this.props.section].messages;
+		this.props.messages = socialWarfare.SocialOptimizer.scores[this.props.section].messages;
 
 		// Setting the state will force a rerender of the element.
-		this.setState({score: SocialOptimizer.scores.messages});
+		this.setState({score: socialWarfare.SocialOptimizer.scores.messages});
 	}
 
 
@@ -1871,5 +1871,6 @@ class SWPScoreMessages extends React.Component {
 
 // Fire up the whole thing, right here.
 jQuery(document).ready( function() {
-	SocialOptimizer = new SocialOptimizer();
+	window.socialWarfare = window.socialWarfare || {};
+	socialWarfare.SocialOptimizer = new SocialOptimizer();
 });
