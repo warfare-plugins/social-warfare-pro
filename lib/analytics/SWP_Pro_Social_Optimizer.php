@@ -138,6 +138,19 @@ class SWP_Pro_Social_Optimizer {
 
 	}
 
+
+	/**
+	 * The get_field() method is a shortcut method for get_post_meta(). Since
+	 * we'll be using the same post id and we'll always only want one field
+	 * being returned, that makes the first and third parameters reduntant. This
+	 * method eliminates that. Just name the field you want, and it will return it.
+	 *
+	 * @since  4.2.0 | 20 AUG 2020 | Created
+	 * @see    https://developer.wordpress.org/reference/functions/get_post_meta/
+	 * @param  string $name The name of the meta field you want.
+	 * @return mixed  The value of the meta field from get_post_meta()
+	 *
+	 */
 	private function get_field($name) {
 		return get_post_meta( $this->post_id, $name, true );
 	}
@@ -153,7 +166,7 @@ class SWP_Pro_Social_Optimizer {
 	 * @since  4.2.0 | 20 AUG 2020 | Created
 	 * @param  void
 	 * @return void
-	 * 
+	 *
 	 */
 	private function establish_maximum_scores() {
 
