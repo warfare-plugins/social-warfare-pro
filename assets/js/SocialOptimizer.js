@@ -432,9 +432,9 @@ class SocialOptimizer {
 		 * of the factors to come up with our total score for this field.
 		 *
 		 */
-		if( 0 < input_length && input_length < 95 ) {
+		if( 0 < input_length && input_length < 280 ) {
 			var max_length_percent = 1;
-		} else if (input_length > 95 ) {
+		} else if (input_length > 280 ) {
 			var max_length_percent = 0;
 		} else {
 			var max_length_percent = 0;

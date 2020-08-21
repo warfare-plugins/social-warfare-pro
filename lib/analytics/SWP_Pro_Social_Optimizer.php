@@ -192,6 +192,19 @@ class SWP_Pro_Social_Optimizer {
 				$scores = $this->get_input_score( $field );
 				break;
 		}
+
+		switch( $field ) {
+			case 'swp_custom_tweet':
+				$scores = $this->get_custom_tweet_score( $field );
+				break;
+			case 'swp_og_title':
+				$scores = $this->get_og_title_score( $field );
+				break;
+			case 'swp_pinterest_description':
+				$scores = $this->get_pinterest_description_score( $field );
+				break;
+		}
+
 		return $scores;
 	}
 
@@ -371,6 +384,326 @@ class SWP_Pro_Social_Optimizer {
 
 		// Return the scores data.
 		return $scores;
+	}
+
+
+	/**
+	 * The get_custom_tweet_score() will calculate the score for the custom
+	 * tweet input box. This will use a few factors to obtain this score:
+	 *
+	 * 1. The ideal length of a tweet is between 71 and 100 characters.
+	 * 2. The ideal number of hashtags is 2.
+	 * 3. A tweet cannot exceed 280 characters.
+	 *
+	 * @since  4.2.0 | 21 AUG 2020 | Created
+	 * @param  string $field The name of the field
+	 * @return array The scores object for this field.
+	 *
+	 */
+	private function get_custom_tweet_score( $field ) {
+
+		// Establish our default $scores array.
+		$scores = array(
+			'percent' => 0,
+			'current_score' => 0,
+			'max_score' => $this->field_data[$field]['max_grade']
+		);
+
+		// Fetch and organize the data used in the calculations.
+		$input_text   = $this->get_field( $field );
+		$input_length = strlen( $input_text );
+		$max_length   = $this->field_data[$field]['max_length'];
+		$ideal_length = $this->field_data[$field]['length'];
+
+
+		/**
+		 * This section will check the length of the tweet and compare it to the
+		 * ideal. If it is below 70 characters, we'll divide to length by that
+		 * number to come up with a percentage. For example, the user might be
+		 * 95% of the way there. If they are over 100, we'll divide the input
+		 * length into 100. So for example, if they have 105, they are 5% over.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 70 < $input_length && $input_length < 100 ) {
+			$length_percent = 1;
+		} elseif (0 < $input_length && $input_length < 70 ) {
+			$length_percent = $input_length / 70;
+		} elseif ( $input_length > 70 ) {
+			$length_percent = 100 / $input_length;
+		} else {
+			$length_percent = 0;
+		}
+
+
+		/**
+		 * This portion of the code will count the number of hashtags that the
+		 * user has included in their tweet. The ideal number is 2 so anything
+		 * above or below that will reduce their score as a percentage.
+		 *
+		 * The resulting variable, hashtag_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		$hashtag_count = substr_count( $input_text, '#' );
+		if( $hashtag_count > 2 ) {
+			$hashtag_percent = 2 / $hashtag_count;
+		} elseif ( $hashtag_count == 0 ) {
+			$hashtag_percent = 0;
+		} else {
+			$hashtag_percent = $hashtag_count / 2;
+		}
+
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 280
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+ 		$max_length_percent = 0;
+		if( 0 < $input_length && $input_length < 280 ) {
+			$max_length_percent = 1;
+		}
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		$factors          = 3;
+		$max_length_score = $this->calculate_subscores( $max_length_percent, $factors, $scores['max_score'] );
+		$length_score     = $this->calculate_subscores( $length_percent, $factors, $scores['max_score'] );
+		$hashtag_score    = $this->calculate_subscores( $hashtag_percent, $factors, $scores['max_score'] );
+
+		// Update the scores object with our newly calculated values.
+		$scores['current_score'] = round( $length_score + $hashtag_score + $max_length_score );
+		$scores['percent']       = round( $scores['current_score'] / $scores['max_score'] * 100 );
+
+		// Return the fully realized scores array.
+		return $scores;
+	}
+
+
+	/**
+	 * The get_og_title_score() method will calculate the score for the Open
+	 * Graph title field on the page. It will use the following ranking factors:
+	 *
+	 * 1. The ideal number of words is 5.
+	 * 2. The ideal number of characters is 55 or fewer.
+	 * 3. The maximum number of characters is 95 or fewer.
+	 *
+	 * @since  4.2.0 | 21 AUG 2020 | Created
+	 * @param  string $field The name of the field.
+	 * @return array The scores array.
+	 *
+	 */
+	private function get_og_title_score( $field ) {
+
+		// Establish our default $scores array.
+		$scores = array(
+			'percent' => 0,
+			'current_score' => 0,
+			'max_score' => $this->field_data[$field]['max_grade']
+		);
+
+		// Fetch and organize the data used in the calculations.
+		$input_text   = $this->get_field( $field );
+		$input_length = strlen( $input_text );
+		$max_length   = $this->field_data[$field]['max_length'];
+		$ideal_length = $this->field_data[$field]['length'];
+
+
+		/**
+		 * This section will check the length of the input and compare it to the
+		 * ideal. If they are over the ideal, we'll count each character over as
+		 * 3 characters and then divide the input length into the ideal. So this
+		 * is not just a percentage. Your score actually goes down quite rapidly as
+		 * you go past the recommended length.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < $input_length && $input_length <= $ideal_length ) {
+			$length_percent = 1;
+		} elseif ( $input_length === 0 ) {
+			$length_percent = 0;
+		} else {
+			$length_percent = $ideal_length / ($ideal_length + (($input_length - $ideal_length) * 3));
+		}
+
+
+		/**
+		 * This section will check the word count of the field and compare to
+		 * the ideal number of words. We will then divide the actual number by
+		 * the ideal number to come up with a percentage score.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		$word_count = str_word_count( $input_text );
+		if( $input_length == 0 ) {
+			$words_percent = 0;
+		} elseif( $word_count < 5 ) {
+			$words_percent = $word_count / 5;
+		} else {
+			$words_percent = 5 / $word_count;
+		}
+
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 280
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < $input_length && $input_length < 280 ) {
+			$max_length_percent = 1;
+		} elseif ( $input_length > 280 ) {
+			$max_length_percent = 0;
+		} else {
+			$max_length_percent = 0;
+		}
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		$factors          = 3;
+		$max_length_score = $this->calculate_subscores( $max_length_percent, $factors, $scores['max_score'] );
+		$length_score     = $this->calculate_subscores( $length_percent, $factors, $scores['max_score'] );
+		$words_score      = $this->calculate_subscores( $words_percent, $factors, $scores['max_score'] );
+
+		// Update the scores object with our newly calculated values.
+		$scores['current_score'] = round( $length_score + $max_length_score + $words_score );
+		$scores['percent']       = round( $scores['current_score'] / $scores['max_score'] * 100 );
+
+		// Return the fully realized scored object.
+		return $scores;
+	}
+
+
+	/**
+	 * The get_og_description_score() method will calculate the score for the Open
+	 * Graph description field on the page. It will use the following ranking factors:
+	 *
+	 * 1. The ideal number of characters is 60 or fewer.
+	 * 2. The maximum number of characters is 200 or fewer.
+	 *
+	 * @since  4.2.0 | 21 AUG 2020 | Created
+	 * @param  string $field The name of the field
+	 * @return array The scores array.
+	 *
+	 */
+	private function get_pinterest_description_score( $field ) {
+
+		// Establish our default $scores array.
+		$scores = array(
+			'percent' => 0,
+			'current_score' => 0,
+			'max_score' => $this->field_data[$field]['max_grade']
+		);
+
+		// Fetch and organize the data used in the calculations.
+		$input_text   = $this->get_field( $field );
+		$input_length = strlen( $input_text );
+		$max_length   = $this->field_data[$field]['max_length'];
+		$ideal_length = $this->field_data[$field]['length'];
+
+		/**
+		 * This section will check the length of the field and compare it to the
+		 * ideal. If it is below 70 characters, we'll divide to length by that
+		 * number to come up with a percentage. For example, the user might be
+		 * 95% of the way there. If they are over 100, we'll divide the input
+		 * length into 100. So for example, if they have 105, they are 5% over.
+		 *
+		 * The resulting variable, length_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		if( $input_length < 100 ) {
+			$length_percent = $input_length / 100;
+		} elseif ( $input_length > 200 ) {
+			$length_percent = 200 / $input_length;
+		} else {
+			$length_percent = 1;
+		}
+
+
+		/**
+		 * This portion of the code will count the number of hashtags that the
+		 * user has included in their description. The ideal number is 5 - 15 so
+		 * anything above or below that will reduce their score as a percentage.
+		 *
+		 * The resulting variable, hashtag_percent, will be used below as one of
+		 * the factors to come up with our total score for this field.
+		 *
+		 */
+		$hashtag_count = substr_count( $input_text, '#' );
+		if( $hashtag_count < 5 ) {
+			$hashtag_percent = $hashtag_count / 5;
+		} elseif ( $hashtag_count > 15 ) {
+			$hashtag_percent = 15 / $hashtag_count;
+		} else {
+			$hashtag_percent = 1;
+		}
+
+
+		/**
+		 * This portion of the code will check to ensure that the user has filled
+		 * out the tweet and that the tweet does not exceed the maximum of 200
+		 * allowable characters.
+		 *
+		 * The resulting variable, max_length_percent, will be used below as one
+		 * of the factors to come up with our total score for this field.
+		 *
+		 */
+		if( 0 < $input_length && $input_length < $max_length ) {
+			$max_length_percent = 1;
+		} else {
+			$max_length_percent = 0;
+		}
+
+
+		/**
+		 * This will convert each of the raw percentages (0.3) into an integer
+		 * equal to a part of the maximum score for this field. So, if their are
+		 * 3 factors and the maximum score is 15, then each factor can be worth
+		 * as maximum of 5 points. If the user got a 50%, that will make that
+		 * factor worth 2.5 points.
+		 *
+		 */
+		$factors          = 3;
+		$hashtag_score    = $this->calculate_subscores( $hashtag_percent, $factors, $scores['max_score'] );
+		$max_length_score = $this->calculate_subscores( $max_length_percent, $factors, $scores['max_score'] );
+		$length_score     = $this->calculate_subscores( $length_percent, $factors, $scores['max_score'] );
+
+		// Update the scores object with our newly calculated values.
+		$scores['current_score'] = round( $length_score + $max_length_score + $hashtag_score );
+		$scores['percent']       = round( $scores['current_score'] / $scores['max_score'] * 100 );
+
+		// Return the fully realized scored object.
+		return $scores;
+
 	}
 
 
