@@ -128,14 +128,10 @@ class SWP_Pro_Social_Optimizer {
 	);
 
 	public function __construct( $post_id ) {
-		if( is_admin() ) {
-			return;
-		}
-
 		$this->post_id = $post_id;
 		$this->establish_maximum_scores();
 		$this->update_score();
-		var_dump($this);
+		$this->cache_score();
 	}
 
 
@@ -164,8 +160,28 @@ class SWP_Pro_Social_Optimizer {
 		$this->scores['total'] = round($this->scores['total']);
 	}
 
+
+	/**
+	 * The cache_score() method will take the total for this post and store it
+	 * in a custom meta field for the post. This will allow us to run custom
+	 * queries on the database to find the best and worst optimized posts on a
+	 * site.
+	 *
+	 * @since  4.2.0 | 21 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function cache_score() {
 
+		// If we don't have a valid total score, just bail out.
+		if( empty( $this->scores['total'] ) || false === is_numeric( $this->scores['total'] ) ) {
+			return;
+		}
+		
+		// Remove any previous entries and then update the new score into the db.
+		delete_post_meta( $this->post_id, '_swp_optimization_score' );
+		update_post_meta( $this->post_id, '_swp_optimization_score', $this->scores['total'] );
 	}
 
 
@@ -784,11 +800,45 @@ class SWP_Pro_Social_Optimizer {
 
 		$temp_image = wp_get_attachment_image_src( $image_id, 'full' );
 		$image = array(
-			'url' => $temp_image[0],
-			'width' => $temp_image[1],
+			'url'    => $temp_image[0],
+			'width'  => $temp_image[1],
 			'height' => $temp_image[2]
 		);
 		return $image;
+	}
+
+
+	/**
+	 * The get_color() method will convert a percentage into a CSS class that
+	 * corresponds to a color. The method requires an integer between 0 and 100
+	 * that represents the percentage score of some element being graded. This
+	 * will in turn result in a color being rendered that is either red, amber,
+	 * or green.
+	 *
+	 * @since  4.1.0 | 09 AUG 2020 | Created
+	 * @param  integer percent An integer representing the percentage score being visualized.
+	 * @return string          'red', 'amber', or 'green' depending on the score.
+	 *
+	 */
+	public static function get_color( $percent ) {
+
+		// If the percent is passed in as a decimal, multiply it by 100.
+		if( $percent < 1 ) {
+			$percent = $percent * 100;
+		}
+
+		switch(true) {
+			case ($percent < 60):
+				$color_class = 'red';
+				break;
+			case ($percent < 80):
+				$color_class = 'amber';
+				break;
+			default:
+				$color_class = 'green';
+				break;
+		}
+		return $color_class;
 	}
 
 }

@@ -1,5 +1,9 @@
 // main:../admin_pro.scss
 
+$red   : #ee464f;
+$amber : #f4812c;
+$green : #71C069;
+
 .swpmb-heading-wrapper.heading h1 {
 	display:none;
 }
@@ -20,6 +24,7 @@
 	color: #555;
 	display:none;
 }
+
 #social_warfare {
 	.swpmb-switch-label {
 		height:40px;
@@ -92,6 +97,24 @@
 			background: #71C069;
 			border: 1px solid darken( #71C069, 10% );
 		}
+	}
+}
+
+.swp_score {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    line-height: 30px;
+	&.green {
+		background: $green;
+	}
+	&.amber {
+		background: $amber;
+	}
+	&.red {
+		background: $red;
 	}
 }
 

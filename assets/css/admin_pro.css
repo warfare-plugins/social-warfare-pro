@@ -89,6 +89,27 @@
 	border: 1px solid #52ad49;
 }
 
+.swp_score {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	text-align: center;
+	color: white;
+	line-height: 30px;
+}
+
+.swp_score.green {
+	background: #71C069;
+}
+
+.swp_score.amber {
+	background: #f4812c;
+}
+
+.swp_score.red {
+	background: #ee464f;
+}
+
 .social_score_wrapper {
 	width: 100%;
 	background: #f3f4f5;
