@@ -89,7 +89,11 @@
 	border: 1px solid #52ad49;
 }
 
-.swp_score {
+td.swp_optimization_score {
+	text-align: center;
+}
+
+td.swp_optimization_score .swp_score {
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
@@ -98,15 +102,15 @@
 	line-height: 30px;
 }
 
-.swp_score.green {
+td.swp_optimization_score .swp_score.green {
 	background: #71C069;
 }
 
-.swp_score.amber {
+td.swp_optimization_score .swp_score.amber {
 	background: #f4812c;
 }
 
-.swp_score.red {
+td.swp_optimization_score .swp_score.red {
 	background: #ee464f;
 }
 

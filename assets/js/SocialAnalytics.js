@@ -1,31 +1,11 @@
 
-window.socialWarfare = window.socialWarfare || {};
-window.socialWarfare.analytics = window.socialWarfare.analytics || {};
+class SocialAnalytics {
 
-(function(window, $) {
-
-	jQuery(document).ready( function() {
-		socialWarfare.analytics.draw_chart();
-	});
-
-	socialWarfare.analytics.get_color = function ( name ) {
-		var colors = {
-			'buffer': '#323b43',
-			'facebook': '#1877f2',
-			'hacker_news': '#d85623',
-			'pinterest': '#e60023',
-			'reddit': '#f04b23',
-			'tumblr': '#39475d',
-			'twitter': '#1da1f2',
-			'vk': '#4a76a8',
-			'yummly': '#e26426',
-		};
-
-		return colors[name];
+	constructor() {
+		this.draw_chart();
 	}
 
-	socialWarfare.analytics.draw_chart = function() {
-
+	draw_chart() {
 		if( jQuery('#analytics_chart').length === 0 ) {
 			return;
 		}
@@ -56,7 +36,7 @@ window.socialWarfare.analytics = window.socialWarfare.analytics || {};
 						},
 					],
 					"fill":false,
-					"borderColor":socialWarfare.analytics.get_color('facebook'),
+					"borderColor":this.get_color('facebook'),
 					"lineTension":0.3
 				}]
 			},
@@ -74,7 +54,26 @@ window.socialWarfare.analytics = window.socialWarfare.analytics || {};
 		});
 	}
 
+	get_color( name ) {
+		var colors = {
+			'buffer': '#323b43',
+			'facebook': '#1877f2',
+			'hacker_news': '#d85623',
+			'pinterest': '#e60023',
+			'reddit': '#f04b23',
+			'tumblr': '#39475d',
+			'twitter': '#1da1f2',
+			'vk': '#4a76a8',
+			'yummly': '#e26426',
+		};
+
+		return colors[name];
+	}
+}
 
 
 
-})(this, jQuery);
+jQuery(document).ready( function() {
+	window.socialWarfare = window.socialWarfare || {};
+	socialWarfare.SocialAnalytics = new SocialAnalytics;
+});

@@ -91,7 +91,7 @@ class SWP_Pro_Analytics_Columns {
 	 *
 	 */
     public function make_optimization_score_sortable( $columns ) {
-    	$columns['swp_optimization_score'] = 'Social Score';
+    	$columns['swp_optimization_score'] = array('Social Score', 'desc');
     	return $columns;
     }
 
@@ -111,13 +111,45 @@ class SWP_Pro_Analytics_Columns {
 	 		return;
 	 	}
 
-		// Bail if we're not supposed to be ordering by social shares.
+		// Bail if we're not supposed to be ordering by social scores.
 		if ( 'Social Score' !== $query->get( 'orderby' ) ) {
 			return;
 		}
 
 		// Order by the _total_shares using a numeric interpretation of the value.
- 		$query->set( 'meta_key', '_swp_optimization_score' );
- 		$query->set( 'orderby', 'meta_value_num' );
+ 		// $query->set( 'meta_key', '_swp_optimization_score' );
+ 		// $query->set( 'orderby', 'meta_value_num' );
+
+		$query->set( 'meta_query', array(
+		    // Note: Here the 'relation' defaults to AND.
+
+		    // Clause 1, unnamed.
+		    array(
+		        'relation'             => 'OR',
+
+		        // Sub-clause 1, named my_column_exists:
+		        // Query posts that do have the metadata _my_column.
+		        '_swp_optimization_score_exists'     => array(
+		            'key'     => '_swp_optimization_score', // meta key
+		            'compare' => 'EXISTS',
+		            'type'    => 'NUMERIC',
+		        ),
+
+		        // Sub-clause 2, named my_column_not_exists:
+		        // OR that do NOT have the metadata.
+		        '_swp_optimization_score_not_exists' => array(
+		            'key'     => '_swp_optimization_score', // meta key
+		            'compare' => 'NOT EXISTS',
+		            'type'    => 'NUMERIC',
+		        ),
+		    ),
+
+		    // Clause 2, unnamed.
+		    // Include the existing meta queries.
+		    (array) $query->get( 'meta_query' ),
+		) );
+
+		$order = $query->get('order');
+		$query->set( 'orderby', array( '_swp_optimization_score_not_exists' => $order) );
 	}
 }

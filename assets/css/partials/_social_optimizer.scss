@@ -99,22 +99,24 @@ $green : #71C069;
 		}
 	}
 }
-
-.swp_score {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    text-align: center;
-    color: white;
-    line-height: 30px;
-	&.green {
-		background: $green;
-	}
-	&.amber {
-		background: $amber;
-	}
-	&.red {
-		background: $red;
+td.swp_optimization_score {
+	text-align:center;
+	.swp_score {
+	    width: 30px;
+	    height: 30px;
+	    border-radius: 50%;
+	    text-align: center;
+	    color: white;
+	    line-height: 30px;
+		&.green {
+			background: $green;
+		}
+		&.amber {
+			background: $amber;
+		}
+		&.red {
+			background: $red;
+		}
 	}
 }
 
