@@ -2,69 +2,65 @@
 class SocialAnalytics {
 
 	constructor() {
-		this.draw_chart();
+		this.draw_charts();
 	}
 
-	draw_chart() {
-		if( jQuery('#analytics_chart').length === 0 ) {
+	draw_charts() {
+
+		var canvases = jQuery('.swp_analytics_chart');
+		if( canvases.length === 0 ) {
 			return;
 		}
 
-		var analytics_chart = document.getElementById('analytics_chart').getContext('2d');
 
-		var myLineChart = new Chart(analytics_chart, {
-			"type": 'line',
-			"data": {
-				"datasets":[{
-					"label":"Facebook",
-					"data":[
-						{
-							t: '2020.08.01',
-							y: 15
-						},
-						{
-							t: '2020.08.02',
-							y: 8
-						},
-						{
-							t: '2020.08.03',
-							y: 12
-						},
-						{
-							t: '2020.08.05',
-							y: 14
-						},
-					],
-					"fill":false,
-					"borderColor":this.get_color('facebook'),
-					"lineTension":0.3
-				}]
-			},
-			"options": {
-				'maintainAspectRatio': false,
-				scales: {
-					xAxes: [{
-						type: 'time',
-						time: {
-							unit: 'day'
+		canvases.each( function() {
+			var key = jQuery(this).data('key');
+			var canvas = this.getContext('2d');
+			console.log(chart_data[key]);
+			var new_chart = new Chart(canvas, {
+				"type": 'line',
+				"data": {
+					"datasets": chart_data[key]
+				},
+				"options": {
+					'maintainAspectRatio': false,
+					scales: {
+						xAxes: [{
+							type: 'time',
+							time: {
+								unit: 'day'
+							}
+						}]
+					},
+					tooltips: {
+						callbacks: {
+							title: function( tooltipItem, data ) {
+								var label = new Date( tooltipItem[0].label );
+								label     = label.toLocaleDateString("en-EN", {month: "short", day: "2-digit", year: "numeric"});
+								return label;
+							}
 						}
-					}]
+					}
 				}
-			}
+			});
+
+
 		});
+
 	}
 
 	get_color( name ) {
 		var colors = {
-			'buffer': '#323b43',
-			'facebook': '#1877f2',
-			'hacker_news': '#d85623',
-			'pinterest': '#e60023',
-			'reddit': '#f04b23',
-			'tumblr': '#39475d',
-			'twitter': '#1da1f2',
-			'vk': '#4a76a8',
-			'yummly': '#e26426',
+			'buffer'        : '#323b43',
+			'facebook'      : '#1877f2',
+			'hacker_news'   : '#d85623',
+			'pinterest'     : '#e60023',
+			'reddit'        : '#f04b23',
+			'tumblr'        : '#39475d',
+			'twitter'       : '#1da1f2',
+			'vk'            : '#4a76a8',
+			'yummly'        : '#e26426',
+			'social_warfare': '#ee464f'
 		};
 
 		return colors[name];
