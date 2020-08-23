@@ -6,7 +6,7 @@ class SocialAnalytics {
 	}
 
 	draw_charts() {
-
+		var self = this;
 		var canvases = jQuery('.swp_analytics_chart');
 		if( canvases.length === 0 ) {
 			return;
@@ -28,7 +28,17 @@ class SocialAnalytics {
 						xAxes: [{
 							type: 'time',
 							time: {
-								unit: 'day'
+								unit: 'day',
+								stepSize: 7
+							},
+							ticks: {
+							}
+						}],
+						yAxes: [{
+							ticks: {
+								callback: function(value, index, values) {
+									return self.number_format(value);
+								}
 							}
 						}]
 					},
@@ -47,6 +57,10 @@ class SocialAnalytics {
 
 		});
 
+	}
+
+	number_format(x) {
+	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 }
 
