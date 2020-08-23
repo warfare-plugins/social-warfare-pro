@@ -6,6 +6,9 @@ class SWP_Pro_Analytics_Chart {
 	private $scope    = 'total_shares';
 	private $interval = 'total';
 	private $classes  = '';
+	private $range    = 30;
+	private $height   = 400;
+	private $step_size = 7;
 
 	private $networks = array();
 	private $html = '';
@@ -88,7 +91,7 @@ class SWP_Pro_Analytics_Chart {
 				break;
 		}
 
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2>'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$chart_type.'" style="width:100%; height:400px"></canvas></div></div>';
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$chart_type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$chart_type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 
 	}
 
@@ -161,8 +164,8 @@ class SWP_Pro_Analytics_Chart {
 			$datasets[] = array(
 				'label'                => $name,
 				'data'                 => $data,
-				'fill'                 => true,
-				'borderWidth'          => 1,
+				'fill'                 => false,
+				'borderWidth'          => 3,
 				'borderColor'          => $this->get_color($network),
 				'backgroundColor'      => $this->get_color($network, ($this->interval == 'daily' ? 1 : 0.7 )),
 				'pointBackgroundColor' => $this->get_color($network),
@@ -176,11 +179,11 @@ class SWP_Pro_Analytics_Chart {
 
 	private function fetch_from_database() {
 		global $wpdb;
-		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL 30 DAY ORDER BY date ASC", OBJECT );
+		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range DAY ORDER BY date ASC", OBJECT );
 	}
 
 	private function generate_chart_js() {
-		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = ' . json_encode($this->datasets) .'</script>';
+		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.'}</script>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {

@@ -1,0 +1,52 @@
+// main:../admin_pro.scss
+
+.social-warfare_page_social-warfare-analytics {
+	.sw-admin-tab {
+		h2 {
+			background: #f3f4f5;
+			padding: 15px;
+			border-radius:10px;
+			font-size:18px;
+			color:#555555;
+			&:before {
+				font-family: 'dashicons';
+				margin: 1px 15px -2px 5px;
+				line-height: 18px;
+				display: block;
+				float: left;
+				font-size: 20px;
+			}
+			&.line_chart:before {
+				content: "\f239";
+			}
+			&.bar_chart:before {
+				content: "\f185";
+			}
+		}
+	}
+
+	.sw-header-wrapper {
+		margin: -20px 0 20px 0;
+		padding: 0;
+	}
+
+	.sw-top-menu {
+		.sw-header-logo-pro {
+		    height: 46px;
+		    margin-top: 18px;
+		    float: left;
+		    margin-right: 20px;
+		}
+	}
+}
+
+#swp_analytics_widget {
+	.inside {
+		h2 {
+			font-size:18px;
+			background: #f3f4f5;
+			padding:8px;
+			margin:20px 0;
+		}
+	}
+}

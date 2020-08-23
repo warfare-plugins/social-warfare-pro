@@ -20,7 +20,7 @@ class SocialAnalytics {
 			var new_chart = new Chart(canvas, {
 				"type": type,
 				"data": {
-					"datasets": chart_data[key]
+					"datasets": chart_data[key].datasets
 				},
 				"options": {
 					'maintainAspectRatio': false,
@@ -29,7 +29,7 @@ class SocialAnalytics {
 							type: 'time',
 							time: {
 								unit: 'day',
-								stepSize: 7
+								stepSize: chart_data[key].stepSize
 							},
 							ticks: {
 							}

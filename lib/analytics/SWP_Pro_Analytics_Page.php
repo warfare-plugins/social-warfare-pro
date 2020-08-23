@@ -12,6 +12,18 @@
 class SWP_Pro_Analytics_Page {
 
 
+	private $tabs = array(
+		array(
+			'key' => 'trends',
+			'name' => 'Sitewide Trends'
+		),
+		array(
+			'key' => 'posts',
+			'name' => 'Posts Analysis'
+		),
+	);
+
+
 	/**
 	 * The constrcutor will fire everything up by simply adding our
 	 * generate_admin_page() to the admin_menu() hook.
@@ -52,7 +64,7 @@ class SWP_Pro_Analytics_Page {
 		);
 
 		// Queue up our method for registering CSS stylesheets.
-		add_action( 'admin_print_styles-' . $swp_analytics_menu, array( $this, 'admin_css' ) );
+		add_action( 'admin_print_styles-' . $swp_analytics_menu, array( $this, 'enqueue_assets' ) );
 	}
 
 
@@ -64,7 +76,7 @@ class SWP_Pro_Analytics_Page {
 	* @return void
 	*
 	*/
-	public function admin_css() {
+	public function enqueue_assets() {
 
 		// The .min.css or .css suffix.
 		$suffix     = SWP_Script::get_suffix();
@@ -74,6 +86,21 @@ class SWP_Pro_Analytics_Page {
 			'swp_admin_options_css',
 			SWP_PLUGIN_URL . "/assets/css/admin-options-page{$suffix}.css",
 			array(),
+			SWP_VERSION
+		);
+
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'jquery-effects-core' );
+		wp_enqueue_script( 'jquery-ui-core' );
+		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_enqueue_script( 'jquery-ui-tooltip' );
+		wp_enqueue_script( 'jquery-ui-widget' );
+		wp_enqueue_script( 'jquery-ui-position' );
+		wp_enqueue_media();
+		wp_enqueue_script(
+			'swp_admin_options_js',
+			SWP_PLUGIN_URL . "/assets/js/admin-options-page{$suffix}.js",
+			array( 'jquery', 'social_warfare_script' ),
 			SWP_VERSION
 		);
 	}
@@ -89,34 +116,61 @@ class SWP_Pro_Analytics_Page {
 	 *
 	 */
 	public function render_html() {
-		$html = '<div class="sw-admin-wrapper">';
+		$this->html = '<div class="sw-admin-wrapper">';
 
-		$chart = new SWP_Pro_Analytics_Chart();
-		$html .= $chart->set_classes('sw-col-460')
-				       ->render_html();
+		$this->html .= $this->generate_header_menu();
 
+		foreach( $this->tabs as $tab ) {
+			$this->html .= '<div id="swp_'.$tab['key'].'" class="sw-admin-tab sw-grid sw-col-940">';
+			$method_name = 'generate_' . $tab['key'] . '_tab';
+			$this->$method_name();
+			$this->html .= '</div>';
+		}
+
+
+		echo $this->html;
+	}
+
+	private function generate_posts_tab() {
+		$this->html .= 'Hello World';
+	}
+
+	private function generate_trends_tab() {
 		$chart = new SWP_Pro_Analytics_Chart();
-		$html .= $chart->set_classes('sw-col-460 sw-fit')
-		               ->set_interval('daily')
+		$this->html .= $chart->set_classes('sw-col-460')
 					   ->render_html();
 
-		$html .= '<div class="sw-clearfix"></div>';
-
 		$chart = new SWP_Pro_Analytics_Chart();
-		$html .= $chart->set_classes('sw-col-460')
-		               ->set_scope('all')
-					   ->render_html();
-
-		$chart = new SWP_Pro_Analytics_Chart();
-		$html .= $chart->set_classes('sw-col-460 sw-fit')
-		               ->set_scope('all')
+		$this->html .= $chart->set_classes('sw-col-460 sw-fit')
 					   ->set_interval('daily')
 					   ->render_html();
 
-		$html .= '<div class="sw-clearfix"></div>';
-		$html .= '</div>';
+		$this->html .= '<div class="sw-clearfix"></div>';
 
-		echo $html;
+		$chart = new SWP_Pro_Analytics_Chart();
+		$this->html .= $chart->set_classes('sw-col-460')
+					   ->set_scope('all')
+					   ->render_html();
+
+		$chart = new SWP_Pro_Analytics_Chart();
+		$this->html .= $chart->set_classes('sw-col-460 sw-fit')
+					   ->set_scope('all')
+					   ->set_interval('daily')
+					   ->render_html();
+
+		$this->html .= '<div class="sw-clearfix"></div>';
+	}
+
+	private function generate_header_menu() {
+
+		$this->html .= '<div class="sw-header-wrapper"><div class="sw-grid sw-col-940 sw-top-menu"><div class="sw-grid sw-col-700"><img class="sw-header-logo-pro" src="/wp-content/plugins/social-warfare/assets/images/admin-options-page/social-warfare-pro-light.png"><ul class="sw-header-menu">';
+
+		$i = 0;
+		foreach( $this->tabs as $tab ) {
+			$this->html .= '<li class="'.($i++ === 0 ? 'sw-active-tab' : '' ).'"><a class="sw-tab-selector" href="#" data-link="swp_'.$tab['key'].'"><span>'.$tab['name'].'</span></a></li>';
+		}
+
+		$this->html.= '</ul></div><div class="sw-grid sw-col-220 sw-fit"></div><div class="sw-clearfix"></div></div></div>';
 	}
 
 }
