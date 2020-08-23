@@ -15,10 +15,10 @@ class SocialAnalytics {
 
 		canvases.each( function() {
 			var key = jQuery(this).data('key');
+			var type = jQuery(this).data('type');
 			var canvas = this.getContext('2d');
-			console.log(chart_data[key]);
 			var new_chart = new Chart(canvas, {
-				"type": 'line',
+				"type": type,
 				"data": {
 					"datasets": chart_data[key]
 				},
@@ -47,23 +47,6 @@ class SocialAnalytics {
 
 		});
 
-	}
-
-	get_color( name ) {
-		var colors = {
-			'buffer'        : '#323b43',
-			'facebook'      : '#1877f2',
-			'hacker_news'   : '#d85623',
-			'pinterest'     : '#e60023',
-			'reddit'        : '#f04b23',
-			'tumblr'        : '#39475d',
-			'twitter'       : '#1da1f2',
-			'vk'            : '#4a76a8',
-			'yummly'        : '#e26426',
-			'social_warfare': '#ee464f'
-		};
-
-		return colors[name];
 	}
 }
 

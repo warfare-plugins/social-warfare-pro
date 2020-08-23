@@ -68,8 +68,8 @@ class SWP_Pro_Analytics_Page {
 
 		// The .min.css or .css suffix.
 		$suffix     = SWP_Script::get_suffix();
-		$wp_scripts = wp_scripts();
 
+		// Enqueue the admin-options-page.css file so we can just reuse that file.
 		wp_enqueue_style(
 			'swp_admin_options_css',
 			SWP_PLUGIN_URL . "/assets/css/admin-options-page{$suffix}.css",
@@ -90,43 +90,143 @@ class SWP_Pro_Analytics_Page {
 	 */
 	public function render_html() {
 		$html = '<div class="sw-admin-wrapper">';
-		$html .= $this->generate_total_shares_chart('sitewide_total_shares', 'total_shares', 0, 'sw-col-460');
-		$html .= $this->generate_total_shares_chart('sitewide_network_shares', 'all', 0, 'sw-col-460 sw-fit');
+		$html .= $this->generate_chart( 'total_shares', 'sw-col-460');
+		$html .= $this->generate_chart( 'total_shares', 'sw-col-460 sw-fit', 0, 'daily');
+		$html .= '<div class="sw-clearfix"></div>';
+		$html .= $this->generate_chart( 'all', 'sw-col-460');
+		$html .= $this->generate_chart( 'all', 'sw-col-460 sw-fit', 0, 'daily');
 		$html .= '<div class="sw-clearfix"></div>';
 		$html .= '</div>';
 
 		echo $html;
 	}
 
-	private function generate_total_shares_chart( $chart_key, $networks, $post_id = 0, $classes ) {
 
-		$html     = $this->generate_canvas( $chart_key, $classes );
-		$networks = $this->filter_networks( $networks );
-		$datasets = $this->generate_chart_datasets( $post_id, $networks );
-		$html    .= $this->generate_chart_js($chart_key, $datasets);
+	/**
+	 * The generate_chart() method is the one-stop shop for all of our charts.
+	 * Given just a few parameters, this method can easily generate any and all
+	 * charts that we'll need for a our analytics suite.
+	 *
+	 * @since  4.2.0 | 22 AUG 2020 | Created
+	 * @param  string  $networks   'all','total_shares', or an individual network
+	 *                             key such as 'facebook'.
+	 * @param  string  $classes    CSS grid classes for the parent container.
+	 * @param  integer $post_id    The id of the post. 0 for sitewide stats.
+	 * @param  string  $count_type 'total' or 'daily' for daily change.
+	 * @return string  The generated html.
+	 *
+	 */
+	public function generate_chart( $networks, $classes, $post_id = 0, $count_type = 'total' ) {
+
+		// Create a unique key to tie the canvas to the JS variable.
+		$chart_key = 'chart_' . substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 5 );
+
+		$this->generate_chart_title( $post_id, $networks, $count_type );
+
+		// Generate the html wrapper and canvas element.
+		$html      = $this->generate_canvas( $chart_key, $classes, $count_type );
+
+		// Create an array of networks to display on this chart.
+		$networks  = $this->filter_networks( $networks );
+
+		// Generate the datasets that will be used for the chart's javascript.
+		$datasets  = $this->generate_chart_datasets( $post_id, $networks, $count_type );
+
+		// Generate the charts javascript.
+		$html     .= $this->generate_chart_js($chart_key, $datasets);
 
 		return $html;
 	}
 
-	private function generate_chart_datasets( $post_id, $filtered_networks ) {
+
+	private function generate_chart_title( $post_id, $networks, $count_type ) {
+		global $swp_social_networks;
+		unset($this->chart_title);
+
+		$prefix = $start = $middle = $end = '';
+
+		switch( $post_id ) {
+			case 0:
+				$start = 'Sitewide ';
+				break;
+		}
+
+		switch( $networks ) {
+			case 'all':
+				$middle = 'Network Shares ';
+				break;
+			case 'total_shares':
+				$middle = 'Total Shares ';
+				break;
+			default:
+				$middle = $swp_social_networks[$networks]->name . ' ';
+				break;
+		}
+
+		switch( $count_type ) {
+			case 'daily':
+				$prefix = 'Daily ';
+				break;
+			case 'total':
+				$end = 'Over Time ';
+				break;
+		}
+
+		$this->chart_title = $prefix . $start . $middle . $end;
+	}
+
+	/**
+	 * The generate_chart_datasets() method will generate an array of data that
+	 * corresponds to the 'datasets' property of the chart.js object that will
+	 * be created to render the chart. This will contain everything needed to
+	 * tell the chart exactly how to render.
+	 *
+	 * @since  4.2.0 | 22 AUG 2020 | Created
+	 * @param  integer $post_id           The post id.
+	 * @param  array   $filtered_networks An array of social networks.
+	 * @param  string  $count_type        'total' or 'daily'
+	 * @return array   $datasets          The datasets array.
+	 *
+	 */
+	private function generate_chart_datasets( $post_id, $filtered_networks, $count_type ) {
 		global $swp_social_networks;
 
+		// Fetch the data from the database.
 		$results  = $this->fetch_from_database( $post_id );
+
+		// Loop through each network and create a dataset for it.
 		foreach( $filtered_networks as $network ) {
+
+			// If there is no data for this network, skip it.
 			if( false === isset($results[0]->{$network} ) ) {
 				continue;
 			}
 
+			// Get the name of the network from the global Social_Network object.
 			$name = 'Total Shares';
 			if( isset( $swp_social_networks[$network] ) ) {
 				$name = $swp_social_networks[$network]->name;
 			}
 
 			$data = array();
+			unset($last_count);
 			foreach( $results as $row ) {
+				$count = $row->{$network};
+				if( $count_type === 'daily' ) {
+					if( false === isset( $last_count ) ) {
+						$count = 0;
+					} else {
+						$count = $row->{$network} - $last_count;
+						if( $count < 0 ) {
+							$count = 0;
+						}
+					}
+					$last_count = $row->{$network};
+				}
+
 				$data[] = array(
 					't' => $row->date,
-					'y' => $row->{$network}
+					'y' => $count
 				);
 			}
 
@@ -135,6 +235,7 @@ class SWP_Pro_Analytics_Page {
 				'data'        => $data,
 				'fill'        => false,
 				'borderColor' => $this->get_color($network),
+				'backgroundColor' => $this->get_color($network),
 				'lineTension' => 0.3
 			);
 		}
@@ -158,18 +259,30 @@ class SWP_Pro_Analytics_Page {
 					}
 				}
 				break;
+			default:
+				$new_networks[] = $networks;
+				break;
 		}
 		return $new_networks;
 	}
 
-	private function generate_canvas( $chart_key, $classes ) {
+	private function generate_canvas( $chart_key, $classes, $count_type ) {
 
-		return '<div class="sw-grid '.$classes.'"><canvas class="swp_analytics_chart" data-key="'.$chart_key.'" style="width:100%; height:400px"></canvas></div>';
+		switch($count_type) {
+			case 'daily':
+				$chart_type = 'bar';
+				break;
+			default:
+				$chart_type = 'line';
+				break;
+		}
+
+		return '<div class="sw-grid '.$classes.'"><h2>'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$chart_key.'" data-type="'.$chart_type.'" style="width:100%; height:400px"></canvas></div></div>';
 	}
 
 	private function fetch_from_database( $post_id ) {
 		global $wpdb;
-		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $post_id ORDER BY date ASC", OBJECT );
+		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $post_id AND date > CURDATE() - INTERVAL 30 DAY ORDER BY date ASC", OBJECT );
 	}
 
 	private function generate_chart_js( $chart_key, $data ) {
