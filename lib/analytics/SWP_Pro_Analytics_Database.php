@@ -121,6 +121,7 @@ class SWP_Pro_Analytics_Database {
 		 *
 		 */
 		$data = array();
+		$format = array();
 
 
 		/**
@@ -133,6 +134,8 @@ class SWP_Pro_Analytics_Database {
 		$data['post_id'] = $post_id;
 		$data['date']    = $date = date('Y-m-d');
 
+		$format['post_id'] = '%d';
+		$format['date'] = '%s';
 
 		/**
 		 * We need to clean up and process the $shares array. We do this to
@@ -152,11 +155,11 @@ class SWP_Pro_Analytics_Database {
 			}
 
 			// Add this share count to our $data array to be sent to the database.
-			$data[$network] = $counts[$network];
+			$data[$network] = (int) $counts[$network];
 		}
 
 		// Here we'll manually tack on the 'total_shares' to our $data array.
-		$data['total_shares'] = $counts['total_shares'];
+		$data['total_shares'] = (int) $counts['total_shares'];
 
 
 		/**
@@ -166,6 +169,7 @@ class SWP_Pro_Analytics_Database {
 		 */
 		$query = "SELECT * FROM $table_name WHERE post_id = $post_id && date = '$date'";
 		$previous_entry = $wpdb->get_results( $query );
+
 
 		/**
 		 * If there is already an existing entry for this post on this day, then
@@ -203,6 +207,7 @@ class SWP_Pro_Analytics_Database {
 		$networks = $this->get_valid_networks();
 		$networks[] = 'total';
 
+
 		/**
 		 * In this section we'll loop through each of the valid networks, and
 		 * we'll reach into the postmeta database and get the sum of all of the
@@ -226,7 +231,6 @@ class SWP_Pro_Analytics_Database {
 
 		$network_shares['total_shares'] = $network_shares['total'];
 		unset($network_shares['total']);
-
 		$this->record_share_counts( 0, $network_shares );
 	}
 
@@ -248,9 +252,12 @@ class SWP_Pro_Analytics_Database {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		// If the table already exists, bail out.
-		if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name) {
+		if(get_option('swp_analytics_database_version') === SWPP_VERSION ) {
 			return;
 		}
+
+		// Make the version dependant on the current version of the pro plugin.
+		add_option('swp_analytics_database_version', SWPP_VERSION );
 
 		// This will return an array of networks that support share counts.
 		$networks = $this->get_valid_networks();
@@ -263,7 +270,7 @@ class SWP_Pro_Analytics_Database {
 		 */
 		$networks_string = '';
 		foreach( $networks as $network ) {
-			$networks_string .= "$network int(15) DEFAULT 0," . PHP_EOL;
+			$networks_string .= "$network bigint(32) DEFAULT 0," . PHP_EOL;
 		}
 
 
@@ -276,7 +283,7 @@ class SWP_Pro_Analytics_Database {
 		  id int(15) NOT NULL AUTO_INCREMENT,
 		  date date DEFAULT '0000-00-00' NOT NULL,
 		  post_id int(15) NOT NULL,
-		  total_shares int(15) DEFAULT 0,
+		  total_shares bigint(32) DEFAULT 0,
 		  $networks_string
 		  PRIMARY KEY  (id)
 		) $charset_collate;";

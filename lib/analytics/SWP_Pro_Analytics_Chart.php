@@ -179,7 +179,8 @@ class SWP_Pro_Analytics_Chart {
 
 	private function fetch_from_database() {
 		global $wpdb;
-		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range DAY ORDER BY date ASC", OBJECT );
+		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range DAY ORDER BY date ASC", OBJECT );
+		return $results;
 	}
 
 	private function generate_chart_js() {

@@ -173,12 +173,12 @@ class SWP_Pro_Social_Optimizer {
 	 *
 	 */
 	private function cache_score() {
-
+		
 		// If we don't have a valid total score, just bail out.
 		if( empty( $this->scores['total'] ) || false === is_numeric( $this->scores['total'] ) ) {
 			return;
 		}
-		
+
 		// Remove any previous entries and then update the new score into the db.
 		delete_post_meta( $this->post_id, '_swp_optimization_score' );
 		update_post_meta( $this->post_id, '_swp_optimization_score', $this->scores['total'] );

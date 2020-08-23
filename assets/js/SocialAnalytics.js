@@ -45,9 +45,12 @@ class SocialAnalytics {
 					tooltips: {
 						callbacks: {
 							title: function( tooltipItem, data ) {
-								var label = new Date( tooltipItem[0].label );
-								label     = label.toLocaleDateString("en-EN", {month: "short", day: "2-digit", year: "numeric"});
+								var label = new Date( tooltipItem[0].label + ' 0:0:0 GMT' );
+								label     = label.toLocaleDateString("en-EN", {month: "short", day: "2-digit", year: "numeric", timeZone: 'UTC'});
 								return label;
+							},
+							label: function( tooltipItem, data ) {
+								return data.datasets[tooltipItem.datasetIndex].label + ': ' + self.number_format(tooltipItem.value);
 							}
 						}
 					}
