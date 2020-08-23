@@ -213,7 +213,8 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 			$analytics = array(
 				'Pro_Analytics',
 				'Pro_Analytics_Database',
-				'Pro_Analytics_Widget'
+				'Pro_Analytics_Widget',
+				'Pro_Analytics_Chart'
 			);
 			$this->load_files( '/lib/analytics/', $analytics);
 
