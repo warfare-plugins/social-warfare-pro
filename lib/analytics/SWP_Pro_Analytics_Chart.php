@@ -15,6 +15,8 @@ class SWP_Pro_Analytics_Chart {
 	/**
 	 * The Post ID. Use 0 to get sitewide totals.
 	 *
+	 * Can be set in the following manner: $Chart->set_post_id(10);
+	 *
 	 * @var integer
 	 *
 	 */
@@ -25,6 +27,12 @@ class SWP_Pro_Analytics_Chart {
 	 * The Scope. This can be set to 'total_shares', 'all', or the key of any
 	 * network (e.g. 'facebook'). This will determine which networks are displayed
 	 * on the chart.
+	 *
+	 * Valid values include: 'total_shares', 'all', 'facebook', 'twitter',
+	 *                       'pinterest' (as well as any other network that
+	 *                       supports share counts).
+	 *
+	 * Can be set in the following manner: $Chart->set_scope('all');
 	 *
 	 * @var string
 	 *
@@ -38,6 +46,10 @@ class SWP_Pro_Analytics_Chart {
 	 * by using 'total', or it can be set to daily (how many shares has the post
 	 * gained each day).
 	 *
+	 * Valid values include: 'total', 'daily'
+	 *
+	 * Can be set in the following manner: $Chart->set_interval('daily');
+	 *
 	 * @var string
 	 *
 	 */
@@ -48,37 +60,142 @@ class SWP_Pro_Analytics_Chart {
 	 * The CSS classes. The css classes will be appended to the parent container
 	 * and can therefore be used to control the layout, spacing, etc.
 	 *
+	 * Can be set in the following manner: $Chart->set_classes('a_class another_class');
+	 *
 	 * @var string
 	 *
 	 */
 	private $classes  = '';
+
+
+	/**
+	 * The date range. This will determine how many days past (starting from today)
+	 * will be included in the query. 7 days will result in the past week. 30
+	 * would be the past month.
+	 *
+	 * Can be set in the following manner: $Chart->set_range(7);
+	 *
+	 * @var integer
+	 *
+	 */
 	private $range    = 30;
+
+
+	/**
+	 * The Height of the Container. The charts need to have a height explicitly
+	 * provided via the parent container that wraps around the canvas element.
+	 * We'll use this attribute to determine the height. We'll add 'px' when we
+	 * apply it to the html so don't add them to this value. Just use an integer.
+	 *
+	 * Can be set in the following manner: $Chart->set_height(200);
+	 *
+	 * @var integer
+	 *
+	 */
 	private $height   = 400;
+
+
+	/**
+	 * The Step Size. This will determine how often we show the date labels
+	 * across the X Axis (across the bottom) of the chart. On a 30 day chart,
+	 * that would be 30 dates crammed in along the bottom. It would look better
+	 * to just display the date once a week and they can hover and read the
+	 * tooltip for anything in between.
+	 *
+	 * Can be set in the following manner: $Chart->set_step_size(3);
+	 *
+	 * @var integer
+	 *
+	 */
 	private $step_size = 7;
 
+
+	/**
+	 * The Networks Array. This will contain the unique key associated with each
+	 * social network (including 'total_shares') for which we have share data.
+	 * This is populated internally based on the value of $this->scope.
+	 *
+	 * @see $this->scope
+	 * @var array
+	 *
+	 */
 	private $networks = array();
+
+
+	/**
+	 * The HTML. This will contain the html for the chart. This will also include
+	 * the <script> that accompanies the chart that will contain the chart data.
+	 * This will all be compiled, then at the end we can just "retun $this->html".
+	 *
+	 * @var string
+	 *
+	 */
 	private $html = '';
 
+
+	/**
+	 * The constructor. The SWP_Pro_Analytics_Chart object can have it's
+	 * properties set in one of two ways:
+	 *
+	 * 1. You can pass in arguments as an associative array. Each argument passed
+	 *    will become a local property of the Chart object.
+	 * 2. You can use set_property(value) to set any of the properties. Simply
+	 *    change the name of the method after the underscore to include the
+	 *    property name and pass in the desired value (e.g. set_interval('daily'));
+	 *
+	 * @since  4.2.0 | 23 AUG 2020 | Created
+	 * @param  array $args An associate array of arguments.
+	 * @return void
+	 *
+	 */
 	public function __construct( $args = array() ) {
 
-		$this->chart_key = 'chart_' . substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 5 );
-
+		// Loop through the args and assign them to local properties.
 		foreach( $args as $key => $value ) {
 			$this->{$key} = $value;
 		}
+
+
+		/**
+		 * Generate a unique chart key. This will be used to tie the canvas
+		 * element to an indice in our data array in the <script> tag. This way
+		 * the chart renderer can grab the right data with which to populate the
+		 * chart.
+		 *
+		 * @var string
+		 *
+		 */
+		$this->chart_key = 'chart_' . substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 5 );
 	}
 
+
+	/**
+	 * The _call method will allow us to create dynamic setters for all of our
+	 * class properties. We'll also return $this so that we can chain them
+	 * together to make setting up our class really swift and easy before
+	 * rendering out the html.
+	 *
+	 * @param  string $name  The name of the method being called (set_scope());
+	 * @param  mixed  $value The $value passed into the method.
+	 * @return object $this  Allows for method chaining.
+	 *
+	 */
 	public function __call( $name, $value ) {
 
+		// If it's not a setter being called, bail out early.
 		if( false === strpos( $name, 'set_' ) ) {
 			return;
 		}
 
+		// Remove the 'set_' prefix to get the property name.
 		$name = str_replace( 'set_', '', $name );
 
+		// If the property exists, update it with the new value.
 		if( isset( $this->{$name} ) ) {
 			$this->{$name} = $value[0];
 		}
+
+		// Return the Chart object to allow for method chaining.
 		return $this;
 	}
 
