@@ -338,6 +338,16 @@ class SWP_Pro_Analytics_Chart {
 		$this->chart_title = $prefix . $start . $middle . $end;
 	}
 
+
+	/**
+	 * The generate_canvas() method creates the actual html for the canvas
+	 * element. This is what will be sent to the browser for the JS to work with.
+	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 * 
+	 */
 	private function generate_canvas() {
 		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 
