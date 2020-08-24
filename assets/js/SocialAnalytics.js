@@ -31,6 +31,7 @@ class SocialAnalytics {
 								unit: 'day',
 								stepSize: chart_data[key].stepSize
 							},
+							offset: chart_data[key].offset,
 							ticks: {
 							}
 						}],

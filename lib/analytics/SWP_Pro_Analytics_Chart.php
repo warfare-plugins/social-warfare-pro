@@ -110,6 +110,10 @@ class SWP_Pro_Analytics_Chart {
 	private $step_size = 7;
 
 
+	private $offset = false;
+	private $type = 'line';
+
+
 	/**
 	 * The Networks Array. This will contain the unique key associated with each
 	 * social network (including 'total_shares') for which we have share data.
@@ -175,6 +179,7 @@ class SWP_Pro_Analytics_Chart {
 	 * together to make setting up our class really swift and easy before
 	 * rendering out the html.
 	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
 	 * @param  string $name  The name of the method being called (set_scope());
 	 * @param  mixed  $value The $value passed into the method.
 	 * @return object $this  Allows for method chaining.
@@ -199,7 +204,19 @@ class SWP_Pro_Analytics_Chart {
 		return $this;
 	}
 
+
+	/**
+	 * The render_html() class will use all of the values from the class
+	 * properties and then render out the html and JS needed to display the
+	 * chart on the page for the user.
+	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
+	 * @param  void
+	 * @return string The string of rendered html.
+	 *
+	 */
 	public function render_html() {
+		$this->establish_chart_type();
 		$this->generate_chart_title();
 		$this->generate_canvas();
 		$this->filter_networks();
@@ -208,53 +225,71 @@ class SWP_Pro_Analytics_Chart {
 		return $this->html;
 	}
 
+
+	private function establish_chart_type() {
+		switch($this->interval) {
+			case 'daily':
+				$this->type = 'bar';
+				$this->offset = true;
+				break;
+			default:
+				$this->type = 'line';
+				break;
+		}
+	}
+
+	/**
+	 * The generate_chart_title() method will look at what the parameters are
+	 * for the chart and generate a title that explains what the chart is.
+	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function generate_chart_title() {
 		global $swp_social_networks;
-
 		$prefix = $start = $middle = $end = '';
 
+		// Examine the post_id
 		switch( $this->post_id ) {
 			case 0:
 				$start = 'Sitewide ';
 				break;
 		}
 
+		// Examine the scope.
 		switch( $this->scope ) {
 			case 'all':
 				$middle = 'Network Shares ';
 				break;
 			case 'total_shares':
-				$middle = 'Total Shares ';
+				$middle = 'Shares ';
 				break;
 			default:
 				$middle = $swp_social_networks[$this->scope]->name . ' ';
 				break;
 		}
 
+		// Examine the interval
 		switch( $this->interval ) {
 			case 'daily':
 				$prefix = 'Daily ';
 				break;
 			case 'total':
-				$end = 'Over Time ';
+				$prefix = 'Total ';
 				break;
 		}
 
+		// Compile the title
 		$this->chart_title = $prefix . $start . $middle . $end;
 	}
 
 	private function generate_canvas() {
 
-		switch($this->interval) {
-			case 'daily':
-				$chart_type = 'bar';
-				break;
-			default:
-				$chart_type = 'line';
-				break;
-		}
 
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$chart_type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$chart_type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
+
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 
 	}
 
@@ -343,11 +378,20 @@ class SWP_Pro_Analytics_Chart {
 	private function fetch_from_database() {
 		global $wpdb;
 		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range DAY ORDER BY date ASC", OBJECT );
+
+		if( count( $results ) < 2 ) {
+			$this->warning = 'Please allow some time for the plugin to collect analytics data. We want at least 2 days worth of data to begin displaying charts.';
+		}
+
+		if( count( $results ) < 7 && $this->step_size == 7 ) {
+			$this->step_size = 1;
+		}
+
 		return $results;
 	}
 
 	private function generate_chart_js() {
-		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.'}</script>';
+		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).'}</script>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {
