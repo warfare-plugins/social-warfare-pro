@@ -1,10 +1,56 @@
 <?php
 
+/**
+ * The SWP_Pro_Analytics_Chart class is used to create charts throughout the
+ * admin area that display analytics data to the user. These will instantiate
+ * a chart object, allow for the use of setters and then render out the html and
+ * javascript needed to render an html5 canvas chart using chart.js.
+ *
+ * @since 4.2.0 | 23 AUG 2020 | Created
+ *
+ */
 class SWP_Pro_Analytics_Chart {
 
+
+	/**
+	 * The Post ID. Use 0 to get sitewide totals.
+	 *
+	 * @var integer
+	 *
+	 */
 	private $post_id  = 0;
+
+
+	/**
+	 * The Scope. This can be set to 'total_shares', 'all', or the key of any
+	 * network (e.g. 'facebook'). This will determine which networks are displayed
+	 * on the chart.
+	 *
+	 * @var string
+	 *
+	 */
 	private $scope    = 'total_shares';
+
+
+	/**
+	 * The interval. This determines what is displayed on each point along the
+	 * X axis. It can be set to total shares (how many shares does the post have)
+	 * by using 'total', or it can be set to daily (how many shares has the post
+	 * gained each day).
+	 *
+	 * @var string
+	 *
+	 */
 	private $interval = 'total';
+
+
+	/**
+	 * The CSS classes. The css classes will be appended to the parent container
+	 * and can therefore be used to control the layout, spacing, etc.
+	 *
+	 * @var string
+	 *
+	 */
 	private $classes  = '';
 	private $range    = 30;
 	private $height   = 400;
@@ -169,7 +215,7 @@ class SWP_Pro_Analytics_Chart {
 				'borderColor'          => $this->get_color($network),
 				'backgroundColor'      => $this->get_color($network, ($this->interval == 'daily' ? 1 : 0.7 )),
 				'pointBackgroundColor' => $this->get_color($network),
-				'lineTension'          => 0.4,
+				// 'lineTension'          => 0.4,
 				'pointBorderWidth'     => 0,
 				'pointHitRadius'       => 3
 			);
