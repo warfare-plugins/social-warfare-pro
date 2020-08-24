@@ -13,6 +13,20 @@ class SWP_Pro_Analytics_Chart {
 
 
 	/**
+	 * The unique chart key. This will be used to tie the canvas element to an
+	 * indice in our data array in the script tag. This way the chart renderer
+	 * can grab the right data with which to populate the chart.
+	 *
+	 * While this property is automatically generated within the constructor, it
+	 * can be overriden using the $Chart->set_chart_key('some_key') method.
+	 *
+	 * @var string
+	 *
+	 */
+	private $chart_key = '';
+
+
+	/**
 	 * The Post ID. Use 0 to get sitewide totals.
 	 *
 	 * Can be set in the following manner: $Chart->set_post_id(10);
@@ -46,7 +60,9 @@ class SWP_Pro_Analytics_Chart {
 	 * by using 'total', or it can be set to daily (how many shares has the post
 	 * gained each day).
 	 *
-	 * Valid values include: 'total', 'daily'
+	 * Valid values include:
+	 * total: This will result in a line chart being rendered.
+	 * daily: This will result in a bar chart being rendered.
 	 *
 	 * Can be set in the following manner: $Chart->set_interval('daily');
 	 *
@@ -110,7 +126,32 @@ class SWP_Pro_Analytics_Chart {
 	private $step_size = 7;
 
 
+	/**
+	 * The $offset property is used to create extra spacing around the left and
+	 * right edges of the chart. This must be switched to 'true' for bar charts
+	 * or else the left-most and right-most bars (or series of bars) will be
+	 * horizontally centered on the edge effectively hiding half of the bar off
+	 * of the edge of the chart.
+	 *
+	 * @var boolean
+	 *
+	 */
 	private $offset = false;
+
+
+	/**
+	 * The $type property refers to the type of chart that will be rendered.
+	 * This is determined using the establish_chart_type() method which will look
+	 * at the $interval property and determine whether this should be a line
+	 * chart or a bar chart.
+	 *
+	 * In essence, if we are displaying the trend of total shares over time,
+	 * we'll use a line chart. If we are displaying the daily change in shares,
+	 * we'll use a bar chart.
+	 *
+	 * @var string
+	 *
+	 */
 	private $type = 'line';
 
 
@@ -162,7 +203,7 @@ class SWP_Pro_Analytics_Chart {
 
 		/**
 		 * Generate a unique chart key. This will be used to tie the canvas
-		 * element to an indice in our data array in the <script> tag. This way
+		 * element to an indice in our data array in the script tag. This way
 		 * the chart renderer can grab the right data with which to populate the
 		 * chart.
 		 *
@@ -226,6 +267,17 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 
+	/**
+	 * The establish_chart_type() method will determine whether or not this is a
+	 * line chart (default) or a bar chart. If the interval for the data is set
+	 * to 'daily' then we will render out a bar chart. Otherwise, we'll leave it
+	 * set to line chart.
+	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
+	 * @see    $this->interval
+	 * @param  void
+	 * @return void
+	 */
 	private function establish_chart_type() {
 		switch($this->interval) {
 			case 'daily':
@@ -237,6 +289,7 @@ class SWP_Pro_Analytics_Chart {
 				break;
 		}
 	}
+
 
 	/**
 	 * The generate_chart_title() method will look at what the parameters are
@@ -286,9 +339,6 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 	private function generate_canvas() {
-
-
-
 		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 
 	}
@@ -301,11 +351,11 @@ class SWP_Pro_Analytics_Chart {
 			case 'all':
 				global $swp_social_networks;
 				foreach( $swp_social_networks as $network ) {
-					if( in_array($network->key, array('more') ) ) {
+					if( in_array($network->key, array('more','email','print') ) ) {
 						continue;
 					}
 
-					if( $network->is_active() ) {
+					if( $network->is_active() && 0 !== $network->get_api_link('') ) {
 						$networks[] = $network->key;
 					}
 				}
@@ -359,6 +409,16 @@ class SWP_Pro_Analytics_Chart {
 				);
 			}
 
+			/**
+			 * We fetched an extra date from the database so that we could use it
+			 * to determine the daily increase. Here we'll remove it. On bar charts,
+			 * the first day will always be zeroes without doing this.
+			 *
+			 */
+			if( $this->interval === 'daily' || count($data) > $this->range ) {
+				array_shift($data);
+			}
+
 			$datasets[] = array(
 				'label'                => $name,
 				'data'                 => $data,
@@ -377,7 +437,7 @@ class SWP_Pro_Analytics_Chart {
 
 	private function fetch_from_database() {
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range DAY ORDER BY date ASC", OBJECT );
+		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range + 1 DAY ORDER BY date ASC", OBJECT );
 
 		if( count( $results ) < 2 ) {
 			$this->warning = 'Please allow some time for the plugin to collect analytics data. We want at least 2 days worth of data to begin displaying charts.';

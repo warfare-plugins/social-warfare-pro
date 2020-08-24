@@ -403,11 +403,21 @@ td.swp_optimization_score .swp_score.red {
 	margin-right: 20px;
 }
 
+#swp_analytics_widget .inside {
+	margin-top: 0;
+}
+
 #swp_analytics_widget .inside h2 {
 	font-size: 18px;
 	background: #f3f4f5;
-	padding: 8px;
-	margin: 20px 0;
+	padding: 10px 12px;
+	margin: 20px -12px;
+	border-top: 1px solid #eeeeee;
+	border-bottom: 1px solid #eeeeee;
+}
+
+#swp_analytics_widget .inside .sw-grid:first-child h2 {
+	margin-top: 0;
 }
 
 /*# sourceMappingURL=admin_pro.css.map */
