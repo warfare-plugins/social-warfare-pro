@@ -458,33 +458,56 @@ class SWP_Pro_Analytics_Chart {
 	 *
 	 */
 	private function generate_canvas() {
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>';
-		$this->html .= $this->generate_timeframe_buttons();
-		$this->html .= '<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
-
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 	}
 
+
+	/**
+	 * The filter_networks() method will generate an array of networks that will
+	 * be displayed on this chart. This will remove all networks that do not
+	 * support share counts as well as buttons that are listed in the networks
+	 * array that aren't actually networks (e.g. print or more buttons).
+	 *
+	 * The generated array will contain the unique key that corresponds to each
+	 * network (e.g. array('total_shares', 'facebook', 'twitter') ).
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function filter_networks() {
+
+		// Use the scope to determine which networks are being requested.
 		switch( $this->scope ) {
+
+			// If the scope is total shares, only show the total shares.
 			case 'total_shares':
 				$networks = array('total_shares');
 				break;
+
+			// If the scope is all, we show all networks except total shares.
 			case 'all':
 				global $swp_social_networks;
-				foreach( $swp_social_networks as $network ) {
-					if( in_array($network->key, array('more','email','print') ) ) {
-						continue;
-					}
 
+				// Loop through all networks, eliminate those that don't support
+				// counts or are inactive.
+				foreach( $swp_social_networks as $network ) {
+
+					// If the networks is active and supports share counts.
 					if( $network->is_active() && 0 !== $network->get_api_link('') ) {
 						$networks[] = $network->key;
 					}
 				}
 				break;
+
+			// If it's anything else, we assume they passed in a specific network.
 			default:
 				$networks[] = $this->scope;
 				break;
 		}
+
+		// Store the results in the $networks property.
 		$this->networks = $networks;
 	}
 
