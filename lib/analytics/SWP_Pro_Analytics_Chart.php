@@ -485,14 +485,15 @@ class SWP_Pro_Analytics_Chart {
 			$datasets[] = array(
 				'label'                => $name,
 				'data'                 => $data,
-				'fill'                 => false,
+				'fill'                 => true,
 				'borderWidth'          => 3,
 				'borderColor'          => $this->get_color($network),
-				'backgroundColor'      => $this->get_color($network, ($this->interval == 'daily' ? 1 : 0.7 )),
+				'backgroundColor'      => $this->get_color($network, ($this->interval == 'daily' ? 1 : 0.05 )),
 				'pointBackgroundColor' => $this->get_color($network),
-				// 'lineTension'          => 0.4,
-				'pointBorderWidth'     => 0,
-				'pointHitRadius'       => 3
+				'pointBorderColor'     => '#ffffff',
+				'pointBorderWidth'     => 2,
+				'pointRadius'          => 6,
+				'pointHitRadius'       => 20
 			);
 		}
 		$this->datasets = $datasets;
@@ -512,7 +513,7 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 	private function generate_chart_js() {
-		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).', range: '.$this->range.'}</script>';
+		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).', range: '.$this->range.', type: '.json_encode($this->type).'}</script>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {

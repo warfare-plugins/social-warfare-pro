@@ -19,7 +19,6 @@ class SocialAnalytics {
 			var key         = jQuery(this).data('key');
 			var type        = jQuery(this).data('type');
 			var canvas      = this.getContext('2d');
-
 			self.filter_data(key);
 			self.charts[key] = new Chart(canvas, {
 				"type": type,
@@ -37,15 +36,22 @@ class SocialAnalytics {
 							},
 							offset: self.chart_data[key].offset,
 							ticks: {
+								min: 0
 							}
 						}],
 						yAxes: [{
 							ticks: {
 								callback: function(value, index, values) {
 									return self.number_format(value);
-								}
+								},
+								beginAtZero: (self.chart_data[key].type === 'bar' ? true : false ),
 							}
 						}]
+					},
+					legend: {
+						labels: {
+							usePointStyle: true,
+						}
 					},
 					tooltips: {
 						callbacks: {
