@@ -239,6 +239,14 @@ class SWP_Pro_Analytics_Database {
 	 * The create_database() method will be used to handle the initial creation
 	 * and setup of a table that we'll use to store all of the analytics data.
 	 *
+	 * Some notes on swp_analytics_database_version:
+	 *
+	 * We'll use an autoloaded option in the database so that we don't have to 
+	 * build out a 'on activation' class to handle database tasks when the plugin
+	 * is updated and installed. Instead, we'll simply check to see if our option
+	 * is current, and then bail out if it is. If it doesn't exist or isn't
+	 * current, then we'll create the database or update it.
+	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
 	 * @param  void
 	 * @return void

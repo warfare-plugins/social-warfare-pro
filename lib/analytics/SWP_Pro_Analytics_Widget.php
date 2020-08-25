@@ -51,8 +51,8 @@ class SWP_Pro_Analytics_Widget {
 		 * 1. widget_id   (string) (Required) Widget ID (used in the 'id' attribute for the widget).
 		 * 2. widget_name (string) (Required) Title of the widget.
 		 * 3. callback    (callable) (Required) Function that fills the widget
-		 *                 with the desired content. The function should echo
-		 *                 its output.
+		 *                with the desired content. The function should echo
+		 *                its output.
 		 *
 		 */
 		wp_add_dashboard_widget('swp_analytics_widget', 'Analytics by Social Warfare', array( $this, 'render_html' ) );
