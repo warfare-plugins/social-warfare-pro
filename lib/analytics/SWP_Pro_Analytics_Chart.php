@@ -363,22 +363,29 @@ class SWP_Pro_Analytics_Chart {
 			array(
 				'name' => '3 Months',
 				'range' => 91,
-				'min_range' => 30
+				'min_range' => 30,
+				'banned' => array('bar')
 			),
 			array(
 				'name' => 'Year-to-Date',
 				'range' => date('z') + 1,
-				'min_range' => 0
+				'min_range' => 0,
+				'banned' => array('bar')
 			),
 			array(
 				'name' => 'Year',
 				'range' => 365,
-				'min_range' => 91
+				'min_range' => 91,
+				'banned' => array('bar')
 			)
 		);
 
 		$html = '<div class="sw-timeframes">';
 		foreach( $timeframes as $timeframe ) {
+			if( isset( $timeframe['banned'] ) && in_array( $this->type, $timeframe['banned'] ) ) {
+				continue;
+			}
+
 			$html .= '<div class="sw-chart-timeframe '.($this->range === $timeframe['range'] ? 'active' : '').'" data-range="'.$timeframe['range'].'" data-chart="'.$this->chart_key.'">'.$timeframe['name'].'</div>';
 		}
 		$html .= '</div>';

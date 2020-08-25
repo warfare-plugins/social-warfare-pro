@@ -143,6 +143,7 @@ class SWP_Pro_Analytics_Page {
 		$chart = new SWP_Pro_Analytics_Chart();
 		$this->html .= $chart->set_classes('sw-col-460 sw-fit')
 					   ->set_interval('daily')
+					   ->set_range(7)
 					   ->render_html();
 
 		$this->html .= '<div class="sw-clearfix"></div>';
@@ -156,6 +157,7 @@ class SWP_Pro_Analytics_Page {
 		$this->html .= $chart->set_classes('sw-col-460 sw-fit')
 					   ->set_scope('all')
 					   ->set_interval('daily')
+					   ->set_range(7)
 					   ->render_html();
 
 		$this->html .= '<div class="sw-clearfix"></div>';
