@@ -25,6 +25,7 @@ class SWP_Pro_Analytics_Widget {
 					  ->set_height(200)
 					  ->set_scope('all')
 					  ->set_interval('daily')
+					  ->set_show_timeframes(false)
 					  ->render_html();
 
   		$chart = new SWP_Pro_Analytics_Chart();
@@ -33,6 +34,7 @@ class SWP_Pro_Analytics_Widget {
 					  ->set_step_size(1)
   					  ->set_height(200)
   					  ->set_scope('all')
+					  ->set_show_timeframes(false)
   					  ->render_html();
 
 

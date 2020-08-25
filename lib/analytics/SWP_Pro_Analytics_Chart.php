@@ -155,6 +155,9 @@ class SWP_Pro_Analytics_Chart {
 	private $type = 'line';
 
 
+	private $show_timeframes = true;
+
+
 	/**
 	 * The Networks Array. This will contain the unique key associated with each
 	 * social network (including 'total_shares') for which we have share data.
@@ -257,8 +260,9 @@ class SWP_Pro_Analytics_Chart {
 	 *
 	 */
 	public function render_html() {
+		$this->fetch_from_database( $this->post_id );
 		$this->establish_chart_type();
-		$this->generate_chart_title();
+		$this->establish_chart_title();
 		$this->generate_canvas();
 		$this->filter_networks();
 		$this->generate_chart_datasets();
@@ -300,7 +304,7 @@ class SWP_Pro_Analytics_Chart {
 	 * @return void
 	 *
 	 */
-	private function generate_chart_title() {
+	private function establish_chart_title() {
 		global $swp_social_networks;
 		$prefix = $start = $middle = $end = '';
 
@@ -339,6 +343,48 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 
+	private function generate_timeframe_buttons() {
+
+		if( $this->show_timeframes == false ) {
+			return;
+		}
+
+		$timeframes = array(
+			array(
+				'name' => 'Week',
+				'range' => 7,
+				'min_range' => 0
+			),
+			array(
+				'name' => 'Month',
+				'range' => 30,
+				'min_range' => 7
+			),
+			array(
+				'name' => '3 Months',
+				'range' => 91,
+				'min_range' => 30
+			),
+			array(
+				'name' => 'Year-to-Date',
+				'range' => date('z') + 1,
+				'min_range' => 0
+			),
+			array(
+				'name' => 'Year',
+				'range' => 365,
+				'min_range' => 91
+			)
+		);
+
+		$html = '';
+		foreach( $timeframes as $timeframe ) {
+			$html .= '<div class="sw-chart-timeframe '.($this->range === $timeframe['range'] ? 'active' : '').'" data-range="'.$timeframe['range'].'" data-chart="'.$this->chart_key.'">'.$timeframe['name'].'</div>';
+		}
+
+		return $html;
+	}
+
 	/**
 	 * The generate_canvas() method creates the actual html for the canvas
 	 * element. This is what will be sent to the browser for the JS to work with.
@@ -346,10 +392,12 @@ class SWP_Pro_Analytics_Chart {
 	 * @since  4.2.0 | 24 AUG 2020 | Created
 	 * @param  void
 	 * @return void
-	 * 
+	 *
 	 */
 	private function generate_canvas() {
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>';
+		$this->html .= $this->generate_timeframe_buttons();
+		$this->html .= '<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 
 	}
 
@@ -380,14 +428,11 @@ class SWP_Pro_Analytics_Chart {
 	private function generate_chart_datasets() {
 		global $swp_social_networks;
 
-		// Fetch the data from the database.
-		$results  = $this->fetch_from_database( $this->post_id );
-
 		// Loop through each network and create a dataset for it.
 		foreach( $this->networks as $network ) {
 
 			// If there is no data for this network, skip it.
-			if( false === isset($results[0]->{$network} ) ) {
+			if( false === isset($this->results[0]->{$network} ) ) {
 				continue;
 			}
 
@@ -399,7 +444,7 @@ class SWP_Pro_Analytics_Chart {
 
 			$data = array();
 			unset($last_count);
-			foreach( $results as $row ) {
+			foreach( $this->results as $row ) {
 				$count = $row->{$network};
 				if( $this->interval === 'daily' ) {
 					if( false === isset( $last_count ) ) {
@@ -447,21 +492,19 @@ class SWP_Pro_Analytics_Chart {
 
 	private function fetch_from_database() {
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id AND date > CURDATE() - INTERVAL $this->range + 1 DAY ORDER BY date ASC", OBJECT );
+		$this->results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id ORDER BY date ASC", OBJECT );
 
-		if( count( $results ) < 2 ) {
+		if( count( $this->results ) < 2 ) {
 			$this->warning = 'Please allow some time for the plugin to collect analytics data. We want at least 2 days worth of data to begin displaying charts.';
 		}
 
-		if( count( $results ) < 7 && $this->step_size == 7 ) {
+		if( count( $this->results ) < 7 && $this->step_size == 7 ) {
 			$this->step_size = 1;
 		}
-
-		return $results;
 	}
 
 	private function generate_chart_js() {
-		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).'}</script>';
+		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).', range: '.$this->range.'}</script>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {
