@@ -1,8 +1,29 @@
-
+/**
+ * The SocialAnalytics class will control all of the javascript on the Socal
+ * Analytics submenu page in the admin area. This will instantiate all of our
+ * charts as well.
+ *
+ * @since  4.2.0 | 25 AUG 2020 | Created
+ *
+ */
 class SocialAnalytics {
 
+	/**
+	 * The class is instantiated on the jQuery(document).ready() event. At this
+	 * time this constructor will run and begin rendering the charts, registering
+	 * click handlers, and anything else that needs done.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	constructor() {
+
+		// Render any charts that exist on the page.
 		this.draw_charts();
+
+		// Handle any clicks on our timeframe buttons.
 		jQuery(document).on('click', '.sw-chart-timeframe', this.update_timeframe.bind(this) );
 	}
 
