@@ -51,6 +51,8 @@ class SocialAnalytics {
 					legend: {
 						labels: {
 							usePointStyle: true,
+							fontSize: 12,
+							padding:20
 						}
 					},
 					tooltips: {
@@ -61,9 +63,16 @@ class SocialAnalytics {
 								return label;
 							},
 							label: function( tooltipItem, data ) {
-								return data.datasets[tooltipItem.datasetIndex].label + ': ' + self.number_format(tooltipItem.value);
+								console.log(data.datasets[tooltipItem.datasetIndex].label);
+								return data.datasets[tooltipItem.datasetIndex].label + ': ' + self.number_format(tooltipItem.value) + ' shares';
 							}
-						}
+						},
+						cornerRadius: 3,
+						titleFontSize:15,
+						bodyFontSize: 14,
+						xPadding: 15,
+						yPadding: 15,
+						usePointStyle: true
 					}
 				}
 			});

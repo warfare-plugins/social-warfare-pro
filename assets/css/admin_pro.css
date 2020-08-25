@@ -450,4 +450,9 @@ td.swp_optimization_score .swp_score.red {
 	margin-top: 0;
 }
 
+.chartjs-tooltip-key {
+	border-radius: 5px;
+	border: none;
+}
+
 /*# sourceMappingURL=admin_pro.css.map */
