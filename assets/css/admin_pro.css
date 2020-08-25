@@ -391,23 +391,31 @@ td.swp_optimization_score .swp_score.red {
 	content: "\f185";
 }
 
-.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-chart-timeframe {
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-timeframes {
+	text-align: center;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-timeframes .sw-chart-timeframe {
 	display: inline-block;
 	padding: 3px 10px;
 	border: 1px dashed #ccc;
-	margin: 5px;
+	margin: 10px 5px 5px 5px;
 	border-radius: 3px;
 	color: #555;
 	cursor: pointer;
 }
 
-.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-chart-timeframe.invalid {
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-timeframes .sw-chart-timeframe:first-of-type {
+	margin-left: 0;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-timeframes .sw-chart-timeframe.invalid {
 	color: #ddd;
 	border-color: #ddd;
 	cursor: default;
 }
 
-.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-chart-timeframe.active {
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .sw-timeframes .sw-chart-timeframe.active {
 	border: 1px solid #ccc;
 	color: black;
 	background: #f3f4f5;

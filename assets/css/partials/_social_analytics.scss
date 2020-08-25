@@ -23,23 +23,29 @@
 				content: "\f185";
 			}
 		}
-		.sw-chart-timeframe {
-			display: inline-block;
-		    padding: 3px 10px;
-		    border: 1px dashed #ccc;
-		    margin: 5px;
-		    border-radius: 3px;
-		    color: #555;
-		    cursor: pointer;
-			&.invalid {
-				color:#ddd;
-				border-color:#ddd;
-				cursor:default;
-			}
-			&.active {
-				border: 1px solid #ccc;
-				color:black;
-				background: #f3f4f5;
+		.sw-timeframes {
+			text-align:center;
+			.sw-chart-timeframe {
+				display: inline-block;
+			    padding: 3px 10px;
+			    border: 1px dashed #ccc;
+			    margin: 10px 5px 5px 5px;
+			    border-radius: 3px;
+			    color: #555;
+			    cursor: pointer;
+				&:first-of-type {
+					margin-left:0;
+				}
+				&.invalid {
+					color:#ddd;
+					border-color:#ddd;
+					cursor:default;
+				}
+				&.active {
+					border: 1px solid #ccc;
+					color:black;
+					background: #f3f4f5;
+				}
 			}
 		}
 	}

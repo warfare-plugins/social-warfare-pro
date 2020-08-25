@@ -377,10 +377,11 @@ class SWP_Pro_Analytics_Chart {
 			)
 		);
 
-		$html = '';
+		$html = '<div class="sw-timeframes">';
 		foreach( $timeframes as $timeframe ) {
 			$html .= '<div class="sw-chart-timeframe '.($this->range === $timeframe['range'] ? 'active' : '').'" data-range="'.$timeframe['range'].'" data-chart="'.$this->chart_key.'">'.$timeframe['name'].'</div>';
 		}
+		$html .= '</div>';
 
 		return $html;
 	}
