@@ -368,9 +368,19 @@ class SWP_Meta_Box_Loader {
 		return $meta_box;
 	}
 
+
+	/**
+	 * The generate_score_html() method will create the html for the heading that
+	 * will feature the circular score on the right hand side. Clicking on this
+	 * header
+	 *
+	 * @since  4.1.0 | 15 AUG 2020 | Created
+	 * @param  void
+	 * @return string The string of rendered html.
+	 *
+	 */
 	public function generate_score_html() {
 		$html = '<div class="social_score_wrapper"><div class="score_title">Optimize for Social</div><div class="score_rating"><div class="score_rating_top">0</div><div class="score_rating_bottom">100</div></div><div class="swp_clearfix"></div></div>';
 		return $html;
 	}
-
 }

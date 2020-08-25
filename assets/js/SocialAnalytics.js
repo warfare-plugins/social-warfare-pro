@@ -63,7 +63,6 @@ class SocialAnalytics {
 								return label;
 							},
 							label: function( tooltipItem, data ) {
-								console.log(data.datasets[tooltipItem.datasetIndex].label);
 								return data.datasets[tooltipItem.datasetIndex].label + ': ' + self.number_format(tooltipItem.value) + ' shares';
 							}
 						},
@@ -72,7 +71,6 @@ class SocialAnalytics {
 						bodyFontSize: 14,
 						xPadding: 15,
 						yPadding: 15,
-						usePointStyle: true
 					}
 				}
 			});
@@ -118,13 +116,7 @@ class SocialAnalytics {
 }
 
 
-
 jQuery(document).ready( function() {
 	window.socialWarfare = window.socialWarfare || {};
 	socialWarfare.SocialAnalytics = new SocialAnalytics;
-
-	// This is how to trigger a new time range once we add buttons.
-	setTimeout( function() {
-	//	socialWarfare.SocialAnalytics.update_chart(chart_key, 1);
-	}, 3000)
 });

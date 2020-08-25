@@ -530,8 +530,12 @@ class SWP_Pro_Analytics_Chart {
 
 			$data = array();
 			unset($last_count);
+
+			// Loop through the db results and put them into the $data array.
 			foreach( $this->results as $row ) {
 				$count = $row->{$network};
+
+				// If this is a daily/bar chart, we'll need to calculate the daily change.
 				if( $this->interval === 'daily' ) {
 					if( false === isset( $last_count ) ) {
 						$count = 0;
@@ -544,6 +548,7 @@ class SWP_Pro_Analytics_Chart {
 					$last_count = $row->{$network};
 				}
 
+				// This is the data array that will be passed to the JS.
 				$data[] = array(
 					't' => $row->date,
 					'y' => $count
@@ -560,6 +565,14 @@ class SWP_Pro_Analytics_Chart {
 				array_shift($data);
 			}
 
+
+			/**
+			 * The $datasets variable is used by chart JS. This will be set and
+			 * then JSON encoded so that it can be easily handed over to the JS.
+			 *
+			 * @var array
+			 *
+			 */
 			$datasets[] = array(
 				'label'                => $name,
 				'data'                 => $data,
@@ -574,6 +587,8 @@ class SWP_Pro_Analytics_Chart {
 				'pointHitRadius'       => 20
 			);
 		}
+
+		// Store it in a local property for easy access.
 		$this->datasets = $datasets;
 	}
 

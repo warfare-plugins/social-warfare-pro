@@ -70,6 +70,12 @@
 	border-radius: 0;
 }
 
+#social_warfare #swp_meta_box_heading-description {
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
 #social_warfare .swpmb-heading-wrapper h4 {
 	display: none;
 }
