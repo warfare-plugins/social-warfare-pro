@@ -155,6 +155,14 @@ class SWP_Pro_Analytics_Chart {
 	private $type = 'line';
 
 
+	/**
+	 * The $show_timeframes toggles whether or not the timeframe buttons at the
+	 * top of the chart should be displayed to the user. If true, they are shown.
+	 * If false, they are no rendered.
+	 *
+	 * @var boolean
+	 *
+	 */
 	private $show_timeframes = true;
 
 
@@ -254,6 +262,10 @@ class SWP_Pro_Analytics_Chart {
 	 * properties and then render out the html and JS needed to display the
 	 * chart on the page for the user.
 	 *
+	 * Many of these methods are saved to run after the instantiation to allow
+	 * for the caller to use setters in order to setup the chart as they wish
+	 * prior to this render process kicking in.
+	 *
 	 * @since  4.2.0 | 24 AUG 2020 | Created
 	 * @param  void
 	 * @return string The string of rendered html.
@@ -343,12 +355,46 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 
+	/**
+	 * The generate_timeframe_buttons() method is designed to create the html
+	 * for the buttons at the top of the chart that allow the user to change the
+	 * timeframe that is being displayed inside of the chart's viewport.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function generate_timeframe_buttons() {
 
+
+		/**
+		 * Timeframe buttons can be turned on or off by setting the local
+		 * $show_timeframes to true or false. It is on by default. This checks
+		 * that variable and just bails out if they are turned off for this chart.
+		 *
+		 */
 		if( $this->show_timeframes == false ) {
 			return;
 		}
 
+
+		/**
+		 * The $timeframes variable is an array of timeframes that will displayed
+		 * as buttons to the user. We will loop through this array to create
+		 * each of the buttons. The key => value sets will provide the information
+		 * needed to render the html for each button.
+		 *
+		 * The following key => value pairs may be included:
+		 * name:      The text that will be displayed on the button.
+		 * range:     The number of days (starting with today) to display on the chart.
+		 * min_range: The minimum number of days available in the data in order
+		 *            for this button to displayed as an option.
+		 * banned:    An array of chart types on which we will not display this button.
+		 *
+		 * @var array
+		 *
+		 */
 		$timeframes = array(
 			array(
 				'name' => 'Week',
@@ -380,16 +426,25 @@ class SWP_Pro_Analytics_Chart {
 			)
 		);
 
+		// Setup the wrapper element. This allows us to center the buttons using CSS.
 		$html = '<div class="sw-timeframes">';
+
+		// Loop through and render each timeframe button.
 		foreach( $timeframes as $timeframe ) {
+
+			// If this button is banned from this chart, skip it.
 			if( isset( $timeframe['banned'] ) && in_array( $this->type, $timeframe['banned'] ) ) {
 				continue;
 			}
 
+			// Put together the html for this button.
 			$html .= '<div class="sw-chart-timeframe '.($this->range === $timeframe['range'] ? 'active' : '').'" data-range="'.$timeframe['range'].'" data-chart="'.$this->chart_key.'">'.$timeframe['name'].'</div>';
 		}
+
+		// Close the wrapper element.
 		$html .= '</div>';
 
+		// Return the rendered html.
 		return $html;
 	}
 
