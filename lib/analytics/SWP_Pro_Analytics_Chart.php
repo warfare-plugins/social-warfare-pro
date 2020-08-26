@@ -189,6 +189,17 @@ class SWP_Pro_Analytics_Chart {
 	private $html = '';
 
 
+	/**
+	 * Insuffient Data
+	 *
+	 * If there is not enough data yet populated into the database to properly
+	 * display this chart, then this property will be toggled to true. This will
+	 * allow us to display something else presumably with a message to the user
+	 * letting them know why there is no chart there.
+	 *
+	 * @var boolean
+	 *
+	 */
 	private $insufficient_data = false;
 
 
@@ -196,6 +207,11 @@ class SWP_Pro_Analytics_Chart {
 	 * The query results property will store the results of each query in an
 	 * associative array. This way if we end up making any queries a second time,
 	 * we can just reuse the results from the first time we made the query.
+	 *
+	 * This is a static property which means that it will persist across all
+	 * charts that are generated on any given page load. We'll simply use a base64
+	 * encoding of the query itself to create a unique, but repeatable indice for
+	 * the array.
 	 *
 	 * @var array
 	 *
@@ -512,6 +528,18 @@ class SWP_Pro_Analytics_Chart {
 		$this->networks = $networks;
 	}
 
+
+	/**
+	 * The generate_chart_datasets() method will take the results from the
+	 * database and convert it into a format that can be used by the Javascript
+	 * chart.js functions/classes.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @see    $this->datasets
+	 * @param  void
+	 * @return void Generated data is stored in $this->datasets
+	 *
+	 */
 	private function generate_chart_datasets() {
 		global $swp_social_networks;
 
@@ -679,12 +707,30 @@ class SWP_Pro_Analytics_Chart {
 		}
 	}
 
+
+	/**
+	 * The fetch_cached_query() method will check to see if this query to the
+	 * database has already been made. If so, the results of that query will be
+	 * stored in our $cached_queries static property so we'll simply pull it out
+	 * and reuse it on this chart.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @see    self::$cached_queries
+	 * @param  string $query The sql query to be executed.
+	 * @return mixed  The stored results of the query on success; false on failure.
+	 *
+	 */
 	private function fetch_cached_query( $query ) {
 
+		// Generate a unique and repeatable key for this query.
 		$query_key = base64_encode($query);
+
+		// If the query has not already been executed and stored, return false.
 		if( empty(self::$cached_queries[$query_key]) ) {
 			return false;
 		}
+
+		// If the query is already run, return the stored results.
 		return self::$cached_queries[$query_key];
 	}
 
