@@ -41,13 +41,18 @@ class SocialAnalytics {
 			var type        = jQuery(this).data('type');
 			var canvas      = this.getContext('2d');
 			self.filter_data(key);
+
+			if( type === 'bar' ) {
+				console.log(self.chart_data[key]);
+			}
+
 			self.charts[key] = new Chart(canvas, {
-				"type": type,
-				"data": {
-					"datasets": self.chart_data[key].datasets
+				type: type,
+				data: {
+					datasets: self.chart_data[key].datasets
 				},
-				"options": {
-					'maintainAspectRatio': false,
+				options: {
+					maintainAspectRatio: false,
 					scales: {
 						xAxes: [{
 							type: 'time',
@@ -72,8 +77,8 @@ class SocialAnalytics {
 					legend: {
 						labels: {
 							usePointStyle: true,
-							fontSize: 12,
-							padding:20
+							fontSize     : 12,
+							padding      : 20
 						}
 					},
 					tooltips: {
@@ -87,11 +92,11 @@ class SocialAnalytics {
 								return data.datasets[tooltipItem.datasetIndex].label + ': ' + self.number_format(tooltipItem.value) + ' shares';
 							}
 						},
-						cornerRadius: 3,
-						titleFontSize:15,
-						bodyFontSize: 14,
-						xPadding: 15,
-						yPadding: 15,
+						cornerRadius : 3,
+						titleFontSize: 15,
+						bodyFontSize : 14,
+						xPadding     : 15,
+						yPadding     : 15,
 					}
 				}
 			});

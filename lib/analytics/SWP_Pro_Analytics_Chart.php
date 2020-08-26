@@ -189,6 +189,20 @@ class SWP_Pro_Analytics_Chart {
 	private $html = '';
 
 
+	private $insufficient_data = false;
+
+
+	/**
+	 * The query results property will store the results of each query in an
+	 * associative array. This way if we end up making any queries a second time,
+	 * we can just reuse the results from the first time we made the query.
+	 *
+	 * @var array
+	 *
+	 */
+	private static $cached_queries = array();
+
+
 	/**
 	 * The constructor. The SWP_Pro_Analytics_Chart object can have it's
 	 * properties set in one of two ways:
@@ -448,19 +462,6 @@ class SWP_Pro_Analytics_Chart {
 		return $html;
 	}
 
-	/**
-	 * The generate_canvas() method creates the actual html for the canvas
-	 * element. This is what will be sent to the browser for the JS to work with.
-	 *
-	 * @since  4.2.0 | 24 AUG 2020 | Created
-	 * @param  void
-	 * @return void
-	 *
-	 */
-	private function generate_canvas() {
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
-	}
-
 
 	/**
 	 * The filter_networks() method will generate an array of networks that will
@@ -592,21 +593,138 @@ class SWP_Pro_Analytics_Chart {
 		$this->datasets = $datasets;
 	}
 
+
+	/**
+	 * The fetch_from_database() method will fetch our historical database from
+	 * the database so that we can populate the charts with that data.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @see    global $wpdb documentation:
+	 *         https://developer.wordpress.org/reference/classes/wpdb/
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function fetch_from_database() {
 		global $wpdb;
-		$this->results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id ORDER BY date ASC", OBJECT );
 
-		if( count( $this->results ) < 2 ) {
-			$this->warning = 'Please allow some time for the plugin to collect analytics data. We want at least 2 days worth of data to begin displaying charts.';
+
+		/**
+		 * If the chart is showing timeframe buttons, then we'll want to fetch
+		 * all of the historical record. Then the data will be delivered to the
+		 * frontend and the JS functions can filter it on the fly to create 7-day,
+		 * 30-day, etc., views for the user.
+		 *
+		 * If the chart has those buttons turned off, then only fetch as much
+		 * data as is needed to fill the chart to the requested timeframe. Instead
+		 * of fetching all record, we'll just fetch 7, 30, etc. There will be no
+		 * options for the user to change timeframes on this chart.
+		 *
+		 * @var string
+		 *
+		 */
+		$time_clause = '';
+		if( false === $this->show_timeframes ) {
+			$time_clause = " AND date > DATE_SUB(NOW(), INTERVAL $this->range + 1 DAY) ";
 		}
 
+		/**
+		 * Since we'll be reusing the queried results (see "Understanding the
+		 * Query Cache" below), we won't filter out any columns. This will allow
+		 * us to reuse the same results for multiple charts if the results
+		 * contain the data for those multiple charts.
+		 *
+		 */
+		$query = "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = $this->post_id $time_clause ORDER BY date ASC";
+
+
+		/**
+		 * Understanding the Query Cache
+		 *
+		 * Whenever we query the database, we'll store the results in a static
+		 * local property of this class. This will allow it to persist across
+		 * all instances essentially acting as a cache. As such, we'll first
+		 * check to see if another chart has already used this set of data and
+		 * pull it from that local property. If it doesn't exist, then we'll get
+		 * it from the database and stuff it into that local property.
+		 *
+		 * @see self::$cached_queries
+		 * @see $this->fetch_cached_query()
+		 * @see $this->store_cached_query()
+		 *
+		 */
+		if(false === ( $this->results = $this->fetch_cached_query($query) ) ) {
+			$this->results = $wpdb->get_results( $query, OBJECT );
+			$this->store_cached_query( $query, $this->results );
+		}
+
+
+		/**
+		 * We want to make sure that we have at least two points of data before
+		 * proceeding. For bar charts, we'll need at least two because we use a
+		 * simple math formular based on yesterday's and today's shares to
+		 * determine the daily increase. Therefore if we don't have 2 days worth
+		 * of data, we don't have enough to even make a single point on the chart.
+		 *
+		 * @see $this->insufficient_data
+		 *
+		 */
+		if( count( $this->results ) <= 10 ) {
+			$this->insufficient_data = true;
+		}
+
+		// Decrease the step size if there are only a handful of results to show.
 		if( count( $this->results ) < 7 && $this->step_size == 7 ) {
 			$this->step_size = 1;
 		}
 	}
 
+	private function fetch_cached_query( $query ) {
+
+		$query_key = base64_encode($query);
+		if( empty(self::$cached_queries[$query_key]) ) {
+			return false;
+		}
+		return self::$cached_queries[$query_key];
+	}
+
+	private function store_cached_query( $query, $results ) {
+		$query_key = base64_encode($query);
+		self::$cached_queries[$query_key] = $this->results;
+	}
+
 	private function generate_chart_js() {
+
+		if( true === $this->insufficient_data ) {
+			return;
+		}
+
 		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).', range: '.$this->range.', type: '.json_encode($this->type).'}</script>';
+	}
+
+
+
+	/**
+	 * The generate_canvas() method creates the actual html for the canvas
+	 * element. This is what will be sent to the browser for the JS to work with.
+	 *
+	 * @since  4.2.0 | 24 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
+	private function generate_canvas() {
+		if( true === $this->insufficient_data ) {
+			$this->html .= $this->generate_insufficient_data_warning();
+			return;
+		}
+
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
+	}
+
+
+	private function generate_insufficient_data_warning() {
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><div class="insufficient_data" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"><h3>Insuffient Data</h3><p>There is currently not enough data to display this chart. Generally speaking, we need at least 2 days worth of data before we begin displaying charts.</p></div></div></div>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {
