@@ -790,11 +790,15 @@ class SWP_Pro_Analytics_Chart {
 	 *
 	 */
 	private function generate_canvas() {
+
+		// If we don't have enough data, we won't be rendering a chart.
+		// Instead, we'll generate a warning to the user and then bail out.
 		if( true === $this->insufficient_data ) {
 			$this->html .= $this->generate_insufficient_data_warning();
 			return;
 		}
 
+		// If we do have enough data, then render a canvas element.
 		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><canvas class="swp_analytics_chart" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"></canvas></div></div>';
 	}
 
