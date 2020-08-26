@@ -803,6 +803,19 @@ class SWP_Pro_Analytics_Chart {
 	}
 
 
+	/**
+	 * The generate_insufficient_data_warning() method will generate a div, a
+	 * header and some text that informs the user that the current chart does
+	 * not have enough data to be drawn for them. Generally they will see this
+	 * for the first 48 hours after we begin collecting analytics data. We
+	 * basically need at least 2 days worth of data in order to display these
+	 * charts so during those first two days, they will see this notice instead.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function generate_insufficient_data_warning() {
 		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div class="insufficient_data" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"><h3>Insuffient Data</h3><p>There is currently not enough data to display this chart. Generally speaking, we need at least 2 days worth of data before we begin displaying charts.</p></div></div>';
 	}
