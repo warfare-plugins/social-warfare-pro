@@ -439,6 +439,29 @@ td.swp_optimization_score .swp_score.red {
 	margin-right: 20px;
 }
 
+.social-warfare_page_social-warfare-analytics .insufficient_data {
+	background: #efefef;
+	border-radius: 10px;
+	display: table;
+	margin-top: 10px;
+	vertical-align: middle;
+}
+
+.social-warfare_page_social-warfare-analytics .insufficient_data h3 {
+	font-size: 35px;
+	color: #777;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 141px;
+}
+
+.social-warfare_page_social-warfare-analytics .insufficient_data p {
+	text-align: center;
+	font-size: 16px;
+	padding: 0 75px;
+	color: #777;
+}
+
 #swp_analytics_widget .inside {
 	margin-top: 0;
 }
@@ -454,6 +477,29 @@ td.swp_optimization_score .swp_score.red {
 
 #swp_analytics_widget .inside .sw-grid:first-child h2 {
 	margin-top: 0;
+}
+
+#swp_analytics_widget .insufficient_data {
+	background: #efefef;
+	border-radius: 10px;
+	display: table;
+	margin-top: 10px;
+	vertical-align: middle;
+}
+
+#swp_analytics_widget .insufficient_data h3 {
+	font-size: 25px;
+	color: #777;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 25px;
+}
+
+#swp_analytics_widget .insufficient_data p {
+	text-align: center;
+	font-size: 14px;
+	padding: 0 15px;
+	color: #777;
 }
 
 .chartjs-tooltip-key {

@@ -669,7 +669,7 @@ class SWP_Pro_Analytics_Chart {
 		 * @see $this->insufficient_data
 		 *
 		 */
-		if( count( $this->results ) <= 10 ) {
+		if( count( $this->results ) <= 1 ) {
 			$this->insufficient_data = true;
 		}
 
@@ -724,7 +724,7 @@ class SWP_Pro_Analytics_Chart {
 
 
 	private function generate_insufficient_data_warning() {
-		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2>'.$this->generate_timeframe_buttons().'<div><div class="insufficient_data" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"><h3>Insuffient Data</h3><p>There is currently not enough data to display this chart. Generally speaking, we need at least 2 days worth of data before we begin displaying charts.</p></div></div></div>';
+		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div class="insufficient_data" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"><h3>Insuffient Data</h3><p>There is currently not enough data to display this chart. Generally speaking, we need at least 2 days worth of data before we begin displaying charts.</p></div></div>';
 	}
 
 	private function get_color( $name, $opacity = 1 ) {
@@ -741,6 +741,14 @@ class SWP_Pro_Analytics_Chart {
 			'total_shares' => 'rgba(238, 70, 79, '.$opacity.')'
 		);
 		return $colors[$name];
+	}
+
+	public function get_status() {
+		$this->fetch_from_database( $this->post_id );
+		if( $this->insufficient_data === true ) {
+			return false;
+		}
+		return true;
 	}
 
 }

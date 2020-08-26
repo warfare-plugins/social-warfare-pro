@@ -63,6 +63,28 @@
 		    margin-right: 20px;
 		}
 	}
+
+	.insufficient_data {
+	    background: #efefef;
+	    border-radius: 10px;
+	    display: table;
+	    margin-top: 10px;
+	    vertical-align: middle;
+		h3 {
+			font-size: 35px;
+		    color: #777;
+		    font-weight: bold;
+		    text-align: center;
+		    margin-top: 141px;
+		}
+		p {
+			text-align: center;
+			font-size: 16px;
+			padding: 0 75px;
+			color: #777;
+		}
+	}
+
 }
 
 #swp_analytics_widget {
@@ -80,6 +102,26 @@
 			h2 {
 				margin-top:0;
 			}
+		}
+	}
+	.insufficient_data {
+		background: #efefef;
+		border-radius: 10px;
+		display: table;
+		margin-top: 10px;
+		vertical-align: middle;
+		h3 {
+			font-size: 25px;
+			color: #777;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 25px;
+		}
+		p {
+			text-align: center;
+			font-size: 14px;
+			padding: 0 15px;
+			color: #777;
 		}
 	}
 }

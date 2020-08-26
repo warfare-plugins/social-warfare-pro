@@ -55,6 +55,21 @@ class SWP_Pro_Analytics_Widget {
 		 *                its output.
 		 *
 		 */
+
+		$chart = new SWP_Pro_Analytics_Chart();
+ 		$status = $chart->set_classes('sw-col-940 sw-fit')
+ 					   ->set_range(7)
+ 					   ->set_step_size(1)
+ 					   ->set_height(200)
+ 					   ->set_scope('all')
+ 					   ->set_interval('daily')
+ 					   ->set_show_timeframes(false)
+ 					   ->get_status();
+
+		if( false === $status ) {
+			return;
+		}
+		
 		wp_add_dashboard_widget('swp_analytics_widget', 'Analytics by Social Warfare', array( $this, 'render_html' ) );
 	}
 
