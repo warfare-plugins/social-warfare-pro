@@ -820,6 +820,19 @@ class SWP_Pro_Analytics_Chart {
 		$this->html .= '<div class="sw-grid '.$this->classes.'"><h2 class="'.$this->type.'_chart">'.$this->chart_title.'</h2><div class="insufficient_data" data-key="'.$this->chart_key.'" data-type="'.$this->type.'" style="width:100%; height:'.$this->height.'px"><h3>Insuffient Data</h3><p>There is currently not enough data to display this chart. Generally speaking, we need at least 2 days worth of data before we begin displaying charts.</p></div></div>';
 	}
 
+
+	/**
+	 * The get_color() method contains all of the color codes for the networks.
+	 * These will be used to populate the fields that are used by the chart.js
+	 * system. In turn, this will color the lines and bars according to the
+	 * official color of each network.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  string  $name    The snake_cased name of the network.
+	 * @param  float   $opacity A number between 0 and 1 representing the desired opacity.
+	 * @return string  The rgba() color code for the desired network.
+	 * 
+	 */
 	private function get_color( $name, $opacity = 1 ) {
 		$colors = array(
 			'buffer'       => 'rgba(50, 59, 67, '.$opacity.')',
