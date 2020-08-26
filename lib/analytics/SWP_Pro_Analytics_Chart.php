@@ -745,19 +745,36 @@ class SWP_Pro_Analytics_Chart {
 	 * @param  string $query   The sql query being executed
 	 * @param  array  $results The array of results from the query.
 	 * @return void
-	 * 
+	 *
 	 */
 	private function store_cached_query( $query, $results ) {
+
+		// Generate a unique and repeatable key for this query.
 		$query_key = base64_encode($query);
+
+		// Store the results in our static property for later use.
 		self::$cached_queries[$query_key] = $this->results;
 	}
 
+
+	/**
+	 * The generate_chart_js() method will create the script tag that is populated
+	 * with some variables that the chart.js functions/classes can use in order
+	 * to render out the charts. This is how we pass our data to the chart.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function generate_chart_js() {
 
+		// If we don't have enough data, we won't be rendering a chart.
 		if( true === $this->insufficient_data ) {
 			return;
 		}
 
+		// Compile the html to be output for this chart.
 		$this->html .= '<script>var chart_data = chart_data || {}; chart_data.'.$this->chart_key.' = {datasets:' . json_encode($this->datasets) .',stepSize:'.$this->step_size.', offset: '.json_encode($this->offset).', range: '.$this->range.', type: '.json_encode($this->type).'}</script>';
 	}
 
