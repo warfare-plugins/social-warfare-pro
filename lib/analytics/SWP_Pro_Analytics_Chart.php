@@ -734,6 +734,19 @@ class SWP_Pro_Analytics_Chart {
 		return self::$cached_queries[$query_key];
 	}
 
+
+	/**
+	 * The store_cached_query() method will take the results of an executed
+	 * query and store those results in our static property so that if any other
+	 * charts use the same data, we won't need to query the database a second time.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @see    self::$cached_queries
+	 * @param  string $query   The sql query being executed
+	 * @param  array  $results The array of results from the query.
+	 * @return void
+	 * 
+	 */
 	private function store_cached_query( $query, $results ) {
 		$query_key = base64_encode($query);
 		self::$cached_queries[$query_key] = $this->results;
