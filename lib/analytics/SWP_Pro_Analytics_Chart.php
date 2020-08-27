@@ -623,8 +623,28 @@ class SWP_Pro_Analytics_Chart {
 
 
 	/**
-	 * The fetch_from_database() method will fetch our historical database from
-	 * the database so that we can populate the charts with that data.
+	 * The fetch_from_database() method will fetch our historical data from
+	 * the database so that we can populate the charts with that data. This will
+	 * also cache the results of database queries in the memory to reduce the
+	 * number of calls into the database.
+	 *
+	 * Process Notes:
+	 * 1. It will store the results of each query in the self::$cached_queries
+	 *    array. This is a private static property that allows us to reuse data
+	 *    without having to keep going back into the database.
+	 *
+	 * 2. It will aslo store the results of the query in the $this->results
+	 *    property. This property is unique to each chart and will be used to
+	 *    generate the chart data.
+	 *
+	 * 3. It will set $this->insufficient_data to false if it does not find at
+	 *    least 2 days worth of data. This will result in the chart not being
+	 *    rendered.
+	 *
+	 * 4. It will automatically change the $this->step_size if we have very small
+	 *    amounts of data. This means that the X Axis labels (dates across the
+	 *    bottom) will appear on every tick instead of only once per week.
+	 *
 	 *
 	 * @since  4.2.0 | 25 AUG 2020 | Created
 	 * @see    global $wpdb documentation:
@@ -831,7 +851,7 @@ class SWP_Pro_Analytics_Chart {
 	 * @param  string  $name    The snake_cased name of the network.
 	 * @param  float   $opacity A number between 0 and 1 representing the desired opacity.
 	 * @return string  The rgba() color code for the desired network.
-	 * 
+	 *
 	 */
 	private function get_color( $name, $opacity = 1 ) {
 		$colors = array(
@@ -849,11 +869,43 @@ class SWP_Pro_Analytics_Chart {
 		return $colors[$name];
 	}
 
+
+	/**
+	 * The get_status() method will check to see if we have enough data in the
+	 * database to populate this chart. If we have not yet gathered at least 2
+	 * days worth of data, we will not be rendering a chart. This is a public
+	 * method that we can use to get a true/false so that we can take action as
+	 * needed if a chart is not going to be getting rendered.
+	 *
+	 * @since  4.2.0 | 25 AUG 2020 | Created
+	 * @see    $this->fetch_from_database()
+	 * @see    $this->insufficient_data
+	 * @param  void
+	 * @return boolean True if the chart can be rendered; false if not.
+	 *
+	 */
 	public function get_status() {
+
+
+		/**
+		 * This will run the query against the database to see how much data is
+		 * there. Since we save all of the queries in a static property, it's
+		 * better to call this method and make the actual query. This way the
+		 * results of this query will be reused when it goes to compile the
+		 * actual chart rather than fetching a new dataset from the database.
+		 *
+		 * This method will populate the $this->results and, if necessary, it
+		 * will modify the $this->insufficient_data and set it to true.
+		 *
+		 */
 		$this->fetch_from_database( $this->post_id );
+
+		// If we have insufficient data...
 		if( $this->insufficient_data === true ) {
 			return false;
 		}
+
+		// If we have enough data...
 		return true;
 	}
 
