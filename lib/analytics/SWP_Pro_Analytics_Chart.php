@@ -908,5 +908,4 @@ class SWP_Pro_Analytics_Chart {
 		// If we have enough data...
 		return true;
 	}
-
 }
