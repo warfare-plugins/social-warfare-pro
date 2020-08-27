@@ -45,17 +45,18 @@ class SWP_Pro_Analytics_Widget {
 
 
 		/**
-		 * The wp_add_dashbaord_widget() function will add our widget to the page.
+		 * Since the charts re-use any data they get from the database, it won't
+		 * use any extra calls to the database to instantiate the chart now,
+		 * check if we have enough data to render a widget. After we know that
+		 * we can bail out and refuse to create a widget at all, or proceed and
+		 * create the chart object all over again...all without hitting the
+		 * database again.
 		 *
-		 * It requires 3 parameters:
-		 * 1. widget_id   (string) (Required) Widget ID (used in the 'id' attribute for the widget).
-		 * 2. widget_name (string) (Required) Title of the widget.
-		 * 3. callback    (callable) (Required) Function that fills the widget
-		 *                with the desired content. The function should echo
-		 *                its output.
+		 * The final method, get_status, will return a true or false letting us
+		 * know if the chart has enough data to be rendered. If it has not yet
+		 * collected at least 2 days worth of data, it will not be rendered.
 		 *
 		 */
-
 		$chart = new SWP_Pro_Analytics_Chart();
  		$status = $chart->set_classes('sw-col-940 sw-fit')
  					   ->set_range(7)
@@ -66,10 +67,23 @@ class SWP_Pro_Analytics_Widget {
  					   ->set_show_timeframes(false)
  					   ->get_status();
 
+		// Bail out if we don't have enough data.
 		if( false === $status ) {
 			return;
 		}
-		
+
+
+		/**
+		 * The wp_add_dashbaord_widget() function will add our widget to the page.
+		 *
+		 * It requires 3 parameters:
+		 * 1. widget_id   (string) (Required) Widget ID (used in the 'id' attribute for the widget).
+		 * 2. widget_name (string) (Required) Title of the widget.
+		 * 3. callback    (callable) (Required) Function that fills the widget
+		 *                with the desired content. The function should echo
+		 *                its output.
+		 *
+		 */
 		wp_add_dashboard_widget('swp_analytics_widget', 'Analytics by Social Warfare', array( $this, 'render_html' ) );
 	}
 
