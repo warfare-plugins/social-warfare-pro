@@ -302,8 +302,8 @@ class SWP_Pro_Analytics_Chart {
 	 *
 	 */
 	public function render_html() {
-		$this->fetch_from_database( $this->post_id );
 		$this->establish_chart_type();
+		$this->fetch_from_database( $this->post_id );
 		$this->establish_chart_title();
 		$this->generate_canvas();
 		$this->filter_networks();
@@ -721,10 +721,7 @@ class SWP_Pro_Analytics_Chart {
 			$this->insufficient_data = true;
 		}
 
-		// Decrease the step size if there are only a handful of results to show.
-		if( count( $this->results ) < 7 && $this->step_size == 7 ) {
-			$this->step_size = 1;
-		}
+		$this->establish_step_size();
 	}
 
 
@@ -867,6 +864,30 @@ class SWP_Pro_Analytics_Chart {
 			'total_shares' => 'rgba(238, 70, 79, '.$opacity.')'
 		);
 		return $colors[$name];
+	}
+
+
+	private function establish_step_size() {
+
+		if( $this->step_size !== 7 ) {
+			return;
+		}
+
+		if( $this->type === 'bar' ) {
+			$this->step_size = 1;
+			return;
+		}
+
+		// Decrease the step size if there are only a handful of results to show.
+		if( count( $this->results ) < 7 ) {
+			$this->step_size = 1;
+		} elseif ( count( $this->results ) < 10 ) {
+			$this->step_size = 2;
+		} elseif ( count( $this->results ) < 15 ) {
+			$this->step_size = 3;
+		} elseif ( count( $this->results ) < 21 ) {
+			$this->step_size = 4;
+		}
 	}
 
 

@@ -214,11 +214,26 @@ class SocialAnalytics {
 		let range     = jQuery(event.target).data('range');
 		let chart_key = jQuery(event.target).data('chart');
 
+		// Update the data being displayed on the chart.
 		socialWarfare.SocialAnalytics.update_chart(chart_key, range );
+
+		// Change which timeframe button appears to be active on the screen.
 		jQuery(event.target).parent().find('.sw-chart-timeframe').removeClass('active');
 		jQuery(event.target).addClass('active');
 	}
 
+
+	/**
+	 * The update_chart() method will take the newly selected date range,
+	 * filter the date down to only that range, and then rerender the chart
+	 * based on the new data.
+	 *
+	 * @since  4.2.0 | 29 AUG 2020 | Created
+	 * @param  string  chart_key The unique id corresponding to a chart on the page.
+	 * @param  integer range     The number of days to display on the chart.
+	 * @return void
+	 *
+	 */
 	update_chart( chart_key, range ) {
 		chart_data[chart_key].range = range;
 		this.filter_data(chart_key);
@@ -241,7 +256,7 @@ class SocialAnalytics {
 	}
 }
 
-
+// Kick everything off once the page is loaded.
 jQuery(document).ready( function() {
 	window.socialWarfare = window.socialWarfare || {};
 	socialWarfare.SocialAnalytics = new SocialAnalytics;
