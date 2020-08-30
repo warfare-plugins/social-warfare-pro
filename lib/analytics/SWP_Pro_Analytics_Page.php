@@ -219,6 +219,31 @@ class SWP_Pro_Analytics_Page {
 
 	private function generate_posts_tab() {
 		$html = 'Hello World';
+		$html .= $this->generate_total_shares();
+		return $html;
+	}
+
+	private function generate_total_shares() {
+		global $wpdb, $swp_social_networks;
+		$html = '';
+
+		$query = "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = 0 ORDER BY date DESC LIMIT 1";
+		$results = $wpdb->get_row( $query, OBJECT );
+
+		$html .= '<div class="swp-flex-row">';
+		foreach( $results as $key => $value ) {
+			if( in_array( $key, array('id','date','post_id') ) ) {
+				continue;
+			}
+
+			if( 'total_shares' !== $key && false === $swp_social_networks[$key]->is_active() ) {
+				continue;
+			}
+
+			$html .= '<div class="swp-total-share">'.$value.'</div>';
+
+		}
+		$html .= '</div>';
 		return $html;
 	}
 

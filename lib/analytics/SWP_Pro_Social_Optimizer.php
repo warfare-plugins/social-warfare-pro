@@ -173,7 +173,7 @@ class SWP_Pro_Social_Optimizer {
 	 *
 	 */
 	private function cache_score() {
-		
+
 		// If we don't have a valid total score, just bail out.
 		if( empty( $this->scores['total'] ) || false === is_numeric( $this->scores['total'] ) ) {
 			return;
@@ -182,6 +182,32 @@ class SWP_Pro_Social_Optimizer {
 		// Remove any previous entries and then update the new score into the db.
 		delete_post_meta( $this->post_id, '_swp_optimization_score' );
 		update_post_meta( $this->post_id, '_swp_optimization_score', $this->scores['total'] );
+
+
+		/**
+		 * This portion of the code will calculate and record the "improvement
+		 * potential" for the post. We will take the number of shares and
+		 * multiply it by the amount they are short of 100 points. Hence a post
+		 * with 50 shares, and an optimization score of 0, will get a priority
+		 * score of 5,000 (50 * 100). This post would be a higher priority to
+		 * optimize than a post with 10 shares and an optimization score of 10
+		 * (900 = 10 * 90 ).
+		 *
+		 * By adding it to a meta field, we'll be able to query posts and order
+		 * them by this field.
+		 * 
+		 */
+		$total_shares = get_post_meta( $this->post_id, '_total_shares', true );
+		if( false === $total_shares ) {
+			$total_shares = 0;
+		}
+
+		$optimization_potential = (int) $total_shares * ( 100 - (int) $this->scores['total'] );
+
+		// Remove any previous entries and then update the new score into the db.
+		delete_post_meta( $this->post_id, '_swp_optimization_potential' );
+		update_post_meta( $this->post_id, '_swp_optimization_potential', $optimization_potential );
+
 	}
 
 
