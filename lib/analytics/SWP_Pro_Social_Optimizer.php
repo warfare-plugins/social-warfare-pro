@@ -193,21 +193,23 @@ class SWP_Pro_Social_Optimizer {
 		 * optimize than a post with 10 shares and an optimization score of 10
 		 * (900 = 10 * 90 ).
 		 *
+		 * Priority = shares * (100 - optimization_score)
+		 *
 		 * By adding it to a meta field, we'll be able to query posts and order
 		 * them by this field.
-		 * 
+		 *
 		 */
 		$total_shares = get_post_meta( $this->post_id, '_total_shares', true );
 		if( false === $total_shares ) {
 			$total_shares = 0;
 		}
 
+		// Calculate the post's optimization potential.
 		$optimization_potential = (int) $total_shares * ( 100 - (int) $this->scores['total'] );
 
 		// Remove any previous entries and then update the new score into the db.
 		delete_post_meta( $this->post_id, '_swp_optimization_potential' );
 		update_post_meta( $this->post_id, '_swp_optimization_potential', $optimization_potential );
-
 	}
 
 

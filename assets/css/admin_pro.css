@@ -427,6 +427,141 @@ td.swp_optimization_score .swp_score.red {
 	background: #f3f4f5;
 }
 
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-flex-row {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-flex-row .swp-flex-item {
+	flex: 1;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share {
+	text-align: center;
+	margin: 20px;
+	padding: 30px;
+	background: yellow;
+	color: white;
+	border-radius: 10px;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share:first-child {
+	margin-left: 0;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share:last-child {
+	margin-right: 0;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share i.icon {
+	font-variant: normal;
+	font-style: normal;
+	display: block;
+	height: 40px;
+	margin-top: 30px;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share i.icon:before {
+	font-family: 'sw-icon-font';
+	font-size: 75px;
+	font-weight: 60px;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share i.icon.total_shares:before {
+	content: 'K';
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share .title {
+	font-size: 14px;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share .value {
+	font-size: 25px;
+	line-height: 35px;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.total_shares {
+	background-color: #ee464f;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.total_shares i.icon:before {
+	content: "K";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.facebook {
+	background-color: #1877f2;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.facebook i.icon:before {
+	content: "k";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.pinterest {
+	background-color: #e60023;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.pinterest i.icon:before {
+	content: "A";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.twitter {
+	background-color: #1da1f2;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.twitter i.icon:before {
+	content: "N";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.buffer {
+	background-color: #323b43;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.buffer i.icon:before {
+	content: "d";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.hacker_news {
+	background-color: #d85623;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.hacker_news i.icon:before {
+	content: "o";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.reddit {
+	background-color: #f04b23;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.reddit i.icon:before {
+	content: "E";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.tumblr {
+	background-color: #39475d;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.tumblr i.icon:before {
+	content: "M";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.vk {
+	background-color: #4a76a8;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.vk i.icon:before {
+	content: "R";
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.yummly {
+	background-color: #e26426;
+}
+
+.social-warfare_page_social-warfare-analytics .sw-admin-tab .swp-total-share.yummly i.icon:before {
+	content: "Y";
+}
+
 .social-warfare_page_social-warfare-analytics .sw-header-wrapper {
 	margin: -20px 0 20px 0;
 	padding: 0;
@@ -460,6 +595,86 @@ td.swp_optimization_score .swp_score.red {
 	font-size: 16px;
 	padding: 0 75px;
 	color: #777;
+}
+
+.social-warfare_page_social-warfare-analytics p {
+	font-size: 15px;
+	padding: 10px;
+	line-height: 2;
+}
+
+.social-warfare_page_social-warfare-analytics .optimization_distribution {
+	margin: 20px 0;
+}
+
+.social-warfare_page_social-warfare-analytics .optimization_distribution .swp-flex-item {
+	padding: 30px 0;
+	text-align: center;
+	font-size: 20px;
+	color: white;
+}
+
+.social-warfare_page_social-warfare-analytics .optimization_distribution .swp-flex-item.green {
+	background: #71C069;
+}
+
+.social-warfare_page_social-warfare-analytics .optimization_distribution .swp-flex-item.amber {
+	background: #f4812c;
+}
+
+.social-warfare_page_social-warfare-analytics .optimization_distribution .swp-flex-item.red {
+	background: #ee464f;
+}
+
+.social-warfare_page_social-warfare-analytics table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.social-warfare_page_social-warfare-analytics table tr:nth-child(even) {
+	background-color: #f3f4f5;
+}
+
+.social-warfare_page_social-warfare-analytics table tr th {
+	text-align: left;
+	padding: 10px;
+}
+
+.social-warfare_page_social-warfare-analytics table tr th.swp_optimization_score {
+	text-align: center;
+}
+
+.social-warfare_page_social-warfare-analytics table tr th.social_shares {
+	text-align: center;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td {
+	font-size: 20px;
+	line-height: 40px;
+	padding: 10px;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td.swp_optimization_score {
+	font-size: 14px;
+	text-align: center;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td.swp_optimization_score div {
+	display: inline-block;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td.social_shares {
+	text-align: center;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td a {
+	color: #444444;
+	text-decoration: none;
+}
+
+.social-warfare_page_social-warfare-analytics table tr td a:hover {
+	color: #333333;
+	text-decoration: underline;
 }
 
 #swp_analytics_widget .inside {

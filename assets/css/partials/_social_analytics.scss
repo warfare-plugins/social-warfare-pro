@@ -48,6 +48,61 @@
 				}
 			}
 		}
+		.swp-flex-row {
+			display:flex;
+			width:100%;
+			flex-direction:row;
+			justify-content:space-between;
+			.swp-flex-item {
+				flex:1;
+			}
+		}
+		.swp-total-share {
+			text-align:center;
+			margin:20px;
+			padding:30px;
+			background:yellow;
+			color:white;
+			border-radius:10px;
+			&:first-child {
+				margin-left:0;
+			}
+			&:last-child {
+				margin-right:0;
+			}
+			i.icon {
+				font-variant:normal;
+				font-style:normal;
+				display:block;
+			    height: 40px;
+			    margin-top: 30px;
+				&:before {
+					font-family:'sw-icon-font';
+					font-size:75px;
+					font-weight:60px;
+
+				}
+				&.total_shares:before {
+					content:'K';
+				}
+			}
+			.title {
+				font-size:14px;
+			}
+			.value {
+				font-size:25px;
+				line-height:35px;
+			}
+			$networks: ('total_shares', 'facebook', 'pinterest', 'twitter', 'buffer', 'hacker_news', 'reddit', 'tumblr', 'vk', 'yummly');
+			@each $key in $networks {
+				&.#{$key} {
+					background-color: map-get( $network_colors, $key );
+					i.icon:before {
+						content: map-get( $network_icons, $key );
+					}
+				}
+			}
+		}
 	}
 
 	.sw-header-wrapper {
@@ -82,6 +137,74 @@
 			font-size: 16px;
 			padding: 0 75px;
 			color: #777;
+		}
+	}
+
+	p {
+		font-size:15px;
+		padding:10px;
+		line-height:2;
+	}
+
+	.optimization_distribution {
+		margin:20px 0;
+		.swp-flex-item {
+		    padding: 30px 0;
+		    text-align: center;
+		    font-size: 20px;
+			color:white;
+			&.green {
+				background: $green;
+			}
+			&.amber {
+				background: $amber;
+			}
+			&.red {
+				background: $red;
+			}
+		}
+	}
+
+	table {
+		width:100%;
+		border-collapse:collapse;
+		tr{
+			&:nth-child(even) {
+				background-color: #f3f4f5;
+			}
+			th {
+				text-align:left;
+				padding:10px;
+				&.swp_optimization_score {
+					text-align:center;
+				}
+				&.social_shares {
+					text-align:center;
+				}
+			}
+			td {
+				font-size:20px;
+				line-height:40px;
+				padding:10px;
+				&.swp_optimization_score {
+					font-size: 14px;
+					text-align: center;
+					div {
+						display:inline-block;
+					}
+				}
+				&.social_shares {
+					text-align:center;
+				}
+				a {
+					color: #444444;
+					text-decoration:none;
+					&:hover {
+						color:#333333;
+						text-decoration:underline;
+					}
+				}
+			}
 		}
 	}
 

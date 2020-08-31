@@ -23,7 +23,7 @@ class SWP_Pro_Analytics_Page {
 	 */
 	private $tabs = array(
 		'trends' => 'Sitewide Trends',
-		'posts' => 'Posts Analysis'
+	 	'posts' => 'Posts Analysis'
 	);
 
 
@@ -188,6 +188,7 @@ class SWP_Pro_Analytics_Page {
 
 	private function generate_trends_tab() {
 		$html = '';
+		$html .= $this->generate_total_shares();
 
 		$chart = new SWP_Pro_Analytics_Chart();
 		$html .= $chart->set_classes('sw-col-460')
@@ -218,8 +219,100 @@ class SWP_Pro_Analytics_Page {
 	}
 
 	private function generate_posts_tab() {
-		$html = 'Hello World';
-		$html .= $this->generate_total_shares();
+		$html = '';
+		$html .= $this->generate_optimization_distribution();
+		$html .= $this->generate_most_shared_posts();
+		$html .= $this->generate_priority_posts();
+		return $html;
+	}
+
+	private function generate_optimization_distribution() {
+
+		$args = array(
+			'post_type' => 'post',
+			'nopaging'  => true
+		);
+
+		$colors = array(
+			'green' => 0,
+			'amber' => 0,
+			'red'   => 0,
+		);
+
+		$WP_Query = new WP_Query( $args );
+		if( $WP_Query->have_posts() ) {
+			while( $WP_Query->have_posts() ) {
+				$WP_Query->the_post();
+				$score = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
+				$color = SWP_Pro_Social_Optimizer::get_color( $score );
+				$colors[$color]++;
+			}
+		}
+
+		$html = '<h2>Optimized Posts Distribution</h2><div class="optimization_distribution swp-flex-row"><div class="swp-flex-item green" style="flex:'.$colors['green'].';">'.number_format( $colors['green'] ).'</div><div class="swp-flex-item amber" style="flex:'.$colors['amber'].';">'.number_format( $colors['amber'] ).'</div><div class="swp-flex-item red" style="flex:'.$colors['red'].';">'.number_format( $colors['red'] ).'</div></div>';
+		return $html;
+	}
+
+
+	private function generate_most_shared_posts() {
+		$html = '';
+		$html .= '<div class="sw-grid sw-col-460"><h2>Most Shared Posts</h2><p>The following posts have been shared more than any others on your site. How can you learn from these posts and repeat this success with other posts?';
+
+		$args = array(
+			'post_type'      => 'post',
+			'orderby'        => 'meta_value_num',
+			'meta_key'       => '_total_shares',
+			'order'          => 'DESC',
+			'posts_per_page' => 10
+		);
+
+		$WP_Query = new WP_Query( $args );
+		$html .= $this->generate_posts_table( $WP_Query );
+		$html .= '</div>';
+		return $html;
+	}
+
+	private function generate_priority_posts() {
+		$html = '';
+		$html .= '<div class="sw-grid sw-col-460 sw-fit"><h2>Highest Priority Posts to Optimize</h2><p>The following posts have the most shares and are the least socially optimized. That makes them the highest priority for improvement and optimization.';
+
+		$args = array(
+			'post_type'      => 'post',
+			'orderby'        => 'meta_value_num',
+			'meta_key'       => '_swp_optimization_potential',
+			'order'          => 'DESC',
+			'posts_per_page' => 10
+		);
+
+		$WP_Query = new WP_Query( $args );
+		$html .= $this->generate_posts_table( $WP_Query );
+		$html .= '</div>';
+		return $html;
+	}
+
+	private function generate_posts_table( $WP_Query ) {
+		$html = '';
+		if( $WP_Query->have_posts() ) {
+			$html .= '<table>';
+			$html .= '<tr><th>Post Title</th><th class="social_shares">Social Shares</th><th class="swp_optimization_score">Optimization Score</th></tr>';
+			while( $WP_Query->have_posts() ) {
+				$WP_Query->the_post();
+
+				$total_shares = number_format( get_post_meta( get_the_ID(), '_total_shares', true ) );
+				$score = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
+				$color_code = SWP_Pro_Social_Optimizer::get_color( $score );
+
+				$html .= '<tr>';
+				$html .= '<td><a href="'.get_edit_post_link(get_the_ID()).'">' . get_the_title() . '</a></td>';
+				$html .= '<td class="social_shares">' . $total_shares . '</td>';
+				$html .= '<td class="swp_optimization_score"><div class="swp_score ' . $color_code . '">' . $score . '</div></td>';
+				$html .= '</tr>';
+			}
+			$html .= '</table>';
+		} else {
+			$html .= 'Sorry';
+		}
+		wp_reset_postdata();
 		return $html;
 	}
 
@@ -240,7 +333,13 @@ class SWP_Pro_Analytics_Page {
 				continue;
 			}
 
-			$html .= '<div class="swp-total-share">'.$value.'</div>';
+			if( 'total_shares' === $key ) {
+				$title = 'Total Shares';
+			} else {
+				$title = $swp_social_networks[$key]->name;
+			}
+
+			$html .= '<div class="swp-total-share swp-flex-item '.$key.'"><i class="icon '.$key.'"></i><div class="title">'.$title.'</div><div class="value">'.number_format( $value ).'</div></div>';
 
 		}
 		$html .= '</div>';
