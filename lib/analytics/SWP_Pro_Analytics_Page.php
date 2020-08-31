@@ -254,21 +254,50 @@ class SWP_Pro_Analytics_Page {
 		return $html;
 	}
 
+
+	/**
+	 * The generate_optimization_distribution() method will display a full-width
+	 * chart that showcases how many posts fall into each optimization category.
+	 * The chart uses flex:x; to distribute the width of each section into a
+	 * chart like distribution such that if 50% of the posts are in the green
+	 * category, then it will take up 50% of the width of the container.
+	 *
+	 * @since  4.2.0 | 31 AUG 2020 | Created
+	 * @param  void
+	 * @return string The string of rendered html.
+	 *
+	 */
 	private function generate_optimization_distribution() {
 
-		$args = array(
-			'post_type' => 'post',
-			'nopaging'  => true
-		);
-
+		/**
+		 * The $colors array will contain 3 indices corresponding to the 3 colors
+		 * used to display grades on our system. As we loop through the posts,
+		 * whichever grade the post falls into will iterate the value in that
+		 * indice up one level. We will then know how many posts are in each
+		 * color grade category.
+		 *
+		 * @var array
+		 *
+		 */
 		$colors = array(
 			'green' => 0,
 			'amber' => 0,
 			'red'   => 0,
 		);
 
+		// The arguments used to fetch posts from the WP_Query() class.
+		$args = array(
+			'post_type' => 'post',
+			'nopaging'  => true    // Fetch ALL posts.
+		);
+
+		// Fetch the posts from the WP_Query class.
 		$WP_Query = new WP_Query( $args );
+
+		// Check to ensure that we have some matching posts.
 		if( $WP_Query->have_posts() ) {
+
+			// Loop through the posts and iterate up the color category counter.
 			while( $WP_Query->have_posts() ) {
 				$WP_Query->the_post();
 				$score = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
@@ -277,9 +306,13 @@ class SWP_Pro_Analytics_Page {
 			}
 		}
 
+		// The heading tag and the opening flex wrapper container.
 		$html = '<h2>Optimized Posts Distribution</h2><div class="optimization_distribution swp-flex-row">';
 
+		// Loop through each of the three colors and add a section for it.
 		foreach( $colors as $key => $value ) {
+
+			// Skip this color if it has zero posts in it.
 			if( $value === 0 ) {
 				continue;
 			}
