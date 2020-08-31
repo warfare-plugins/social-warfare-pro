@@ -147,7 +147,9 @@
 	}
 
 	.optimization_distribution {
-		margin:20px 0;
+		margin:20px 0 50px 0;
+		border-radius:10px;
+		overflow:hidden;
 		.swp-flex-item {
 		    padding: 30px 0;
 		    text-align: center;

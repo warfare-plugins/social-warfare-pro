@@ -604,7 +604,9 @@ td.swp_optimization_score .swp_score.red {
 }
 
 .social-warfare_page_social-warfare-analytics .optimization_distribution {
-	margin: 20px 0;
+	margin: 20px 0 50px 0;
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 .social-warfare_page_social-warfare-analytics .optimization_distribution .swp-flex-item {
