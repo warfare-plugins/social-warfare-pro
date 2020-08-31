@@ -249,7 +249,15 @@ class SWP_Pro_Analytics_Page {
 			}
 		}
 
-		$html = '<h2>Optimized Posts Distribution</h2><div class="optimization_distribution swp-flex-row"><div class="swp-flex-item green" style="flex:'.$colors['green'].';">'.number_format( $colors['green'] ).'</div><div class="swp-flex-item amber" style="flex:'.$colors['amber'].';">'.number_format( $colors['amber'] ).'</div><div class="swp-flex-item red" style="flex:'.$colors['red'].';">'.number_format( $colors['red'] ).'</div></div>';
+		$html = '<h2>Optimized Posts Distribution</h2><div class="optimization_distribution swp-flex-row">';
+
+		foreach( $colors as $key => $value ) {
+			if( $value === 0 ) {
+				continue;
+			}
+			$html .= '<div class="swp-flex-item '.$key.'" style="flex:'.$value.';">'.number_format( $value ).'</div>';
+		}
+		$html .= '</div>';
 		return $html;
 	}
 
@@ -298,7 +306,7 @@ class SWP_Pro_Analytics_Page {
 			while( $WP_Query->have_posts() ) {
 				$WP_Query->the_post();
 
-				$total_shares = number_format( get_post_meta( get_the_ID(), '_total_shares', true ) );
+				$total_shares = SWP_Utility::kilomega( get_post_meta( get_the_ID(), '_total_shares', true ) );
 				$score = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
 				$color_code = SWP_Pro_Social_Optimizer::get_color( $score );
 

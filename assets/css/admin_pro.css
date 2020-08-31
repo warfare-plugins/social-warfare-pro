@@ -651,9 +651,9 @@ td.swp_optimization_score .swp_score.red {
 }
 
 .social-warfare_page_social-warfare-analytics table tr td {
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 40px;
-	padding: 10px;
+	padding: 5px 10px;
 }
 
 .social-warfare_page_social-warfare-analytics table tr td.swp_optimization_score {
