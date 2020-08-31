@@ -186,14 +186,29 @@ class SWP_Pro_Analytics_Page {
 		return $html;
 	}
 
+
+	/**
+	 * The generate_trends_tab() will compile the html for the trends tab. This
+	 * will contain the total shares boxes, and a bunch of charts showcasing
+	 * and highlighting the sitewide trends.
+	 *
+	 * @since  4.2.0 | 31 AUG 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	private function generate_trends_tab() {
 		$html = '';
-		$html .= $this->generate_total_shares();
 
+		// Generate the sitewide shares boxes.
+		$html .= $this->generate_total_shares_boxes();
+
+		// Generate the "Total Sitewide Shares" line chart.
 		$chart = new SWP_Pro_Analytics_Chart();
 		$html .= $chart->set_classes('sw-col-460')
 					   ->render_html();
 
+		// Generate the "Daily Sitewide Shares" bar chart.
 		$chart = new SWP_Pro_Analytics_Chart();
 		$html .= $chart->set_classes('sw-col-460 sw-fit')
 					   ->set_interval('daily')
@@ -202,11 +217,13 @@ class SWP_Pro_Analytics_Page {
 
 		$html .= '<div class="sw-clearfix"></div>';
 
+		// Generate the "Total Sitewide Network Shares" line chart.
 		$chart = new SWP_Pro_Analytics_Chart();
 		$html .= $chart->set_classes('sw-col-460')
 					   ->set_scope('all')
 					   ->render_html();
 
+		// Generate the "Daily Sitewide Network Shares" chart.
 		$chart = new SWP_Pro_Analytics_Chart();
 		$html .= $chart->set_classes('sw-col-460 sw-fit')
 					   ->set_scope('all')
@@ -324,7 +341,7 @@ class SWP_Pro_Analytics_Page {
 		return $html;
 	}
 
-	private function generate_total_shares() {
+	private function generate_total_shares_boxes() {
 		global $wpdb, $swp_social_networks;
 		$html = '';
 
