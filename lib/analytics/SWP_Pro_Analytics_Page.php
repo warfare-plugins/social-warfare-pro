@@ -194,7 +194,7 @@ class SWP_Pro_Analytics_Page {
 	 *
 	 * @since  4.2.0 | 31 AUG 2020 | Created
 	 * @param  void
-	 * @return void
+	 * @return string The generated string of html.
 	 *
 	 */
 	private function generate_trends_tab() {
@@ -235,6 +235,17 @@ class SWP_Pro_Analytics_Page {
 		return $html;
 	}
 
+
+	/**
+	 * The generate_posts_tab() will render the html for the "Posts Analysis"
+	 * tab. This will display share and share optimization information about the
+	 * website's posts.
+	 *
+	 * @since  4.2.0 | 31 AUG 2020 | Created
+	 * @param  void
+	 * @return string The string of html.
+	 *
+	 */
 	private function generate_posts_tab() {
 		$html = '';
 		$html .= $this->generate_optimization_distribution();
