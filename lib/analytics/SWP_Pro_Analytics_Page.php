@@ -401,33 +401,59 @@ class SWP_Pro_Analytics_Page {
 		// Close up the html wrapper for this section.
 		$html .= '</div>';
 
-		// Return the rendered HTML. 
+		// Return the rendered HTML.
 		return $html;
 	}
 
+
+	/**
+	 * The generate_posts_table() method will take an instantiated WP_Query
+	 * object and return the html for a table displaying those posts.
+	 *
+	 * @since  4.2.0 | 01 SEP 2020 | Created
+	 * @param  object $WP_Query An instantiated WP_Query object.
+	 * @return string The string of html for the posts table.
+	 *
+	 */
 	private function generate_posts_table( $WP_Query ) {
 		$html = '';
+
+		// Check if the query returned any results.
 		if( $WP_Query->have_posts() ) {
+
+			// Open up the table and fill in the header section.
 			$html .= '<table>';
 			$html .= '<tr><th>Post Title</th><th class="social_shares">Social Shares</th><th class="swp_optimization_score">Optimization Score</th></tr>';
+
+			// Loop through and make an entry row for each post in the loop.
 			while( $WP_Query->have_posts() ) {
 				$WP_Query->the_post();
 
+				// Fetch the data that we'll be displaying alongside the post title
 				$total_shares = SWP_Utility::kilomega( get_post_meta( get_the_ID(), '_total_shares', true ) );
-				$score = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
-				$color_code = SWP_Pro_Social_Optimizer::get_color( $score );
+				$score        = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
+				$color_code   = SWP_Pro_Social_Optimizer::get_color( $score );
 
+				// Put together the table row for this post.
 				$html .= '<tr>';
 				$html .= '<td><a href="'.get_edit_post_link(get_the_ID()).'">' . get_the_title() . '</a></td>';
 				$html .= '<td class="social_shares">' . $total_shares . '</td>';
 				$html .= '<td class="swp_optimization_score"><div class="swp_score ' . $color_code . '">' . $score . '</div></td>';
 				$html .= '</tr>';
 			}
+
+			// Close up the table container.
 			$html .= '</table>';
+
+		// This is what we'll display if no posts were returned from the query.
 		} else {
 			$html .= 'Sorry';
 		}
+
+		// Always reset the postdata after running a custom query.
 		wp_reset_postdata();
+
+		// Return the rendered html to the caller.
 		return $html;
 	}
 
