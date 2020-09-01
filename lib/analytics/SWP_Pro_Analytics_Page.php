@@ -366,10 +366,24 @@ class SWP_Pro_Analytics_Page {
 		return $html;
 	}
 
+
+	/**
+	 * The generate_priority_posts() method will create the html for the table
+	 * of posts that are sorted by optimization priority. These are the posts
+	 * with the most shares and the least amount of social optimization.
+	 *
+	 * @since  4.2.0 | 01 SEP 2020 | Created
+	 * @param  void
+	 * @return string The string of html for this section
+	 *
+	 */
 	private function generate_priority_posts() {
 		$html = '';
+
+		// Open the html wrapper, add a heading and description.
 		$html .= '<div class="sw-grid sw-col-460 sw-fit"><h2>Highest Priority Posts to Optimize</h2><p>The following posts have the most shares and are the least socially optimized. That makes them the highest priority for improvement and optimization.';
 
+		// The args for the WP_Query
 		$args = array(
 			'post_type'      => 'post',
 			'orderby'        => 'meta_value_num',
@@ -378,9 +392,16 @@ class SWP_Pro_Analytics_Page {
 			'posts_per_page' => 10
 		);
 
+		// Fetch the posts from WP_Query class.
 		$WP_Query = new WP_Query( $args );
+
+		// Build the table using the WP_Query object that we created.
 		$html .= $this->generate_posts_table( $WP_Query );
+
+		// Close up the html wrapper for this section.
 		$html .= '</div>';
+
+		// Return the rendered HTML. 
 		return $html;
 	}
 
