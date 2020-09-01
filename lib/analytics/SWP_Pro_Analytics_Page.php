@@ -316,17 +316,35 @@ class SWP_Pro_Analytics_Page {
 			if( $value === 0 ) {
 				continue;
 			}
+
+			// Create the flex item for this color category with the count inside.
 			$html .= '<div class="swp-flex-item '.$key.'" style="flex:'.$value.';">'.number_format( $value ).'</div>';
 		}
+
+		// Close up the flex wrapper.
 		$html .= '</div>';
+
+		// Return the generated html.
 		return $html;
 	}
 
 
+	/**
+	 * The generate_most_shared_posts() method will generate the html for the
+	 * table that displays the most shared posts on the site.
+	 *
+	 * @since  4.2.0 | 01 SEP 2020 | Created
+	 * @param  void
+	 * @return string The string of rendered html.
+	 *
+	 */
 	private function generate_most_shared_posts() {
 		$html = '';
+
+		// Open the html wrapper, add a heading and description.
 		$html .= '<div class="sw-grid sw-col-460"><h2>Most Shared Posts</h2><p>The following posts have been shared more than any others on your site. How can you learn from these posts and repeat this success with other posts?';
 
+		// Query the posts to find the ones we want to display.
 		$args = array(
 			'post_type'      => 'post',
 			'orderby'        => 'meta_value_num',
@@ -335,9 +353,16 @@ class SWP_Pro_Analytics_Page {
 			'posts_per_page' => 10
 		);
 
+		// Pass our query args into WP_Query and get our posts.
 		$WP_Query = new WP_Query( $args );
+
+		// Pass the WP_Query object into our method for generating the table.
 		$html .= $this->generate_posts_table( $WP_Query );
+
+		// Close up the html wrapper for this section.
 		$html .= '</div>';
+
+		// Return the rendered html.
 		return $html;
 	}
 
