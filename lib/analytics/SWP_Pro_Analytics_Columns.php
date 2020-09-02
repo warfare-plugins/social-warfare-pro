@@ -72,7 +72,7 @@ class SWP_Pro_Analytics_Columns {
 
 		// Get the share count, format it, echo it to the screen.
 		$score = get_post_meta( $post_ID , '_swp_optimization_score' , true );
-		if( empty( $score ) ) {
+		if( empty( $score ) || false === $score ) {
 			$score = 0;
 		}
 
