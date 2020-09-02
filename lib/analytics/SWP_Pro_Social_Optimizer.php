@@ -850,6 +850,10 @@ class SWP_Pro_Social_Optimizer {
 	 */
 	public static function get_color( $percent ) {
 
+		if( empty( $percent ) || false == $percent ) {
+			$percent = 0;
+		}
+
 		// If the percent is passed in as a decimal, multiply it by 100.
 		if( $percent < 1 ) {
 			$percent = $percent * 100;

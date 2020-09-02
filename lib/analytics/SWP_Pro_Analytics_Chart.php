@@ -579,7 +579,7 @@ class SWP_Pro_Analytics_Chart {
 
 				// This is the data array that will be passed to the JS.
 				$data[] = array(
-					't' => date( 'D, d M Y H:i:s O',  strtotime( $row->date ) ),
+					't' => date( 'd F Y',  strtotime( $row->date ) ),
 					'y' => $count
 				);
 			}
