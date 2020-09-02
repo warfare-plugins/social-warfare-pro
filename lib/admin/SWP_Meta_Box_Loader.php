@@ -287,7 +287,7 @@ class SWP_Meta_Box_Loader {
 		$meta_boxes[0]['fields'][] = $other_post_options;
 		$meta_boxes[0]['fields'][] = $post_location;
 		$meta_boxes[0]['fields'][] = $float_location;
-		// $meta_boxes[0]['fields'][] = $reset_button;
+		$meta_boxes[0]['fields'][] = $reset_button;
 		// $meta_boxes[0]['fields'][] = $twitter_handle_box;
 
 		return $meta_boxes;
