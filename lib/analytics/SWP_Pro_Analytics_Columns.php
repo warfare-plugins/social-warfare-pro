@@ -71,13 +71,13 @@ class SWP_Pro_Analytics_Columns {
 		}
 
 		// Get the share count, format it, echo it to the screen.
-		$score = get_post_meta( $post_ID , '_swp_optimization_score' , true );
+		$score = get_post_meta( $post_ID, '_swp_optimization_score', true );
 		if( empty( $score ) || false === $score ) {
 			$score = 0;
 		}
 
 		$color_code = SWP_Pro_Social_Optimizer::get_color( $score );
-		echo '<div class="swp_score ' . $color_code . '">' . $score . '</div>';
+		echo '<div class="swp_score ' . $color_code . '">' . number_format( $score ) . '</div>';
 		return;
 	}
 
