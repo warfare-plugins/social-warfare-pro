@@ -432,6 +432,8 @@ class SWP_Pro_Analytics_Page {
 				// Fetch the data that we'll be displaying alongside the post title
 				$total_shares = SWP_Utility::kilomega( get_post_meta( get_the_ID(), '_total_shares', true ) );
 				$score        = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
+				if( false == $score ) $score = 0;
+
 				$color_code   = SWP_Pro_Social_Optimizer::get_color( $score );
 
 				// Put together the table row for this post.
