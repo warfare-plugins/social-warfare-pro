@@ -850,7 +850,7 @@ class SWP_Pro_Social_Optimizer {
 	 */
 	public static function get_color( $percent ) {
 
-		if( empty( $percent ) || false == $percent ) {
+		if( empty( $percent ) || false == $percent || '?' === $percent ) {
 			$percent = 0;
 		}
 

@@ -432,7 +432,11 @@ class SWP_Pro_Analytics_Page {
 				// Fetch the data that we'll be displaying alongside the post title
 				$total_shares = SWP_Utility::kilomega( get_post_meta( get_the_ID(), '_total_shares', true ) );
 				$score        = get_post_meta( get_the_ID(), '_swp_optimization_score', true );
-				if( false == $score ) $score = 0;
+				$title        = '';
+				if( false == $score ) {
+					$score = '?';
+					$title = 'A score for this post has not yet been calculated.';
+				}
 
 				$color_code   = SWP_Pro_Social_Optimizer::get_color( $score );
 
@@ -440,7 +444,7 @@ class SWP_Pro_Analytics_Page {
 				$html .= '<tr>';
 				$html .= '<td><a href="'.get_edit_post_link(get_the_ID()).'">' . get_the_title() . '</a></td>';
 				$html .= '<td class="social_shares">' . $total_shares . '</td>';
-				$html .= '<td class="swp_optimization_score"><div class="swp_score ' . $color_code . '">' . $score . '</div></td>';
+				$html .= '<td class="swp_optimization_score" title="'.$title.'"><div class="swp_score ' . $color_code . '">' . $score . '</div></td>';
 				$html .= '</tr>';
 			}
 
