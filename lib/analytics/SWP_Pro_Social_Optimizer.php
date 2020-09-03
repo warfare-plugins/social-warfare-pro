@@ -807,6 +807,19 @@ class SWP_Pro_Social_Optimizer {
 		}
 	}
 
+
+	/**
+	 * The calculate_subscores() method takes the subscore percent, number of
+	 * factors, and the max score for the field, and calculates how many points
+	 * this specific factor for the field is worth.
+	 *
+	 * @since  4.2.0 | 03 SEP 2020 | Created
+	 * @param  float   $percent   The percentage score that the factor achieved.
+	 * @param  integer $factors   The number of factors in this field's score.
+	 * @param  integer $max_score The maximum number of points a field is worth.
+	 * @return float              The calculated score.
+	 *
+	 */
 	private function calculate_subscores( $percent, $factors, $max_score ) {
 		return $percent * $max_score / $factors;
 	}
@@ -828,19 +841,39 @@ class SWP_Pro_Social_Optimizer {
 		return get_post_meta( $this->post_id, $name, true );
 	}
 
+
+	/**
+	 * The get_image() method will fetch the image information for the image
+	 * associated with one of the fields on the page. It will then return an
+	 * associative array containing image data that can be used to calculate
+	 * the size and aspect ratio of the image.
+	 *
+	 * @since  4.2.0 | 03 SEP 2020 | Created
+	 * @todo   Make sure it handles fields with multiple images.
+	 * @param  string $field The key corresponding to a field.
+	 * @return array  An array of image data.
+	 *
+	 */
 	private function get_image( $field ) {
+
+		// Fetch the current value of the field.
 		$image_id = $this->get_field($field);
 
+		// If the image is empty, return false.
 		if( empty( $image_id ) ) {
 			return false;
 		}
 
+
+		// Fetch the image data and convert it into an associative array.
 		$temp_image = wp_get_attachment_image_src( $image_id, 'full' );
 		$image = array(
 			'url'    => $temp_image[0],
 			'width'  => $temp_image[1],
 			'height' => $temp_image[2]
 		);
+
+		// Return the image data.
 		return $image;
 	}
 
