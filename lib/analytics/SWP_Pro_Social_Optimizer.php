@@ -161,6 +161,15 @@ class SWP_Pro_Social_Optimizer {
 	}
 
 
+	public function get_score() {
+		if( false === empty( $this->scores['total'] ) ) {
+			return $this->scores['total'];
+		}
+
+		return 0;
+	}
+
+
 	/**
 	 * The cache_score() method will take the total for this post and store it
 	 * in a custom meta field for the post. This will allow us to run custom
@@ -175,7 +184,7 @@ class SWP_Pro_Social_Optimizer {
 	private function cache_score() {
 
 		// If we don't have a valid total score, just bail out.
-		if( empty( $this->scores['total'] ) || false === is_numeric( $this->scores['total'] ) ) {
+		if( false === isset( $this->scores['total'] ) || false === is_numeric( $this->scores['total'] ) ) {
 			return;
 		}
 
@@ -835,6 +844,36 @@ class SWP_Pro_Social_Optimizer {
 		return $image;
 	}
 
+
+	public static function fetch_score( $post_id ) {
+
+		$score = get_post_meta( $post_id, '_swp_optimization_score', true );
+
+		if( empty( $score ) || false === $score ) {
+			$Optimizer = new SWP_Pro_Social_Optimizer( $post_id );
+			$score = $Optimizer->get_score();
+		}
+
+		return $score;
+	}
+
+
+	public static function update_empty_scores() {
+		global $wpdb;
+
+		$post_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_swp_optimization_potential' AND meta_value != ''" );
+
+		$args = array(
+			'post_type' => 'post',
+			'post__not_in' => $post_ids,
+			'nopaging' => true
+		);
+
+		$posts = query_posts( $args );
+		foreach( $posts as $Post ) {
+			self::fetch_score( $Post->ID );
+		}
+	}
 
 	/**
 	 * The get_color() method will convert a percentage into a CSS class that

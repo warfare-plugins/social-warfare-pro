@@ -63,22 +63,19 @@ class SWP_Pro_Analytics_Columns {
 	 * @return void                The number is echoed to the screen.
 	 *
 	 */
-	public function populate_optimization_score_column( $column_name, $post_ID ) {
+	public function populate_optimization_score_column( $column_name, $post_id ) {
 
 		// Exit if we're not processing our own column.
 		if ( $column_name !== 'swp_optimization_score' ) {
 			return;
 		}
 
-		// Get the share count, format it, echo it to the screen.
-		$score = get_post_meta( $post_ID, '_swp_optimization_score', true );
-		if( empty( $score ) || false === $score ) {
-			$score = 0;
-		}
-
+		// Get the post score and its corresponding color code.
+		$score      = SWP_Pro_Social_Optimizer::fetch_score( $post_id );
 		$color_code = SWP_Pro_Social_Optimizer::get_color( $score );
+
+		// Echo out the color-coded score bubble.
 		echo '<div class="swp_score ' . $color_code . '">' . number_format( $score ) . '</div>';
-		return;
 	}
 
 
