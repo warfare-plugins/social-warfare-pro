@@ -988,6 +988,7 @@ class SWP_Pro_Social_Optimizer {
 			$percent = $percent * 100;
 		}
 
+		// Select the right color class based on the number passed in.
 		switch(true) {
 			case ($percent < 60):
 				$color_class = 'red';
@@ -999,6 +1000,8 @@ class SWP_Pro_Social_Optimizer {
 				$color_class = 'green';
 				break;
 		}
+
+		// Return the color to the caller.
 		return $color_class;
 	}
 
