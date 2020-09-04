@@ -161,11 +161,31 @@ class SWP_Pro_Social_Optimizer {
 	}
 
 
+	/**
+ 	 * The get_score() method allows us to request the current score of the post
+ 	 * after the SWP_Pro_Social_Optimizer object has been fully initialized. In
+ 	 * other words, it will return the score of the post being graded by the
+ 	 * current instantiation of this class.
+	 *
+	 * Disambiguation:
+	 * fetch_score( $post_id ) is a public static method that allows you to
+	 *     fetch the score of any post by passing in the post id.
+	 * get_score() is a public, non-static method that allows you to get the
+	 *     score from the currently instantiated SWP_Pro_Social_Optimizer object.
+	 *
+	 * @since  4.2.0 | 02 SEP 2020 | Created
+	 * @param  void
+	 * @return integer  The score of the post.
+	 *
+	 */
 	public function get_score() {
+
+		// If we have a total score, return it.
 		if( false === empty( $this->scores['total'] ) ) {
 			return $this->scores['total'];
 		}
 
+		// If not, return 0.
 		return 0;
 	}
 
@@ -878,31 +898,68 @@ class SWP_Pro_Social_Optimizer {
 	}
 
 
+	/**
+	 * The fetch_score() method allows us a publicly accessible method for
+	 * retrieving the current score of a post. It will pull the score from the
+	 * meta field, but if it does not exist, it will instantiate the optimizer
+	 * and grade the post. Either way, this method will always produce a score
+	 * that can be returned to the caller.
+	 *
+	 * Disambiguation:
+	 * fetch_score( $post_id ) is a public static method that allows you to
+	 *     fetch the score of any post by passing in the post id.
+	 * get_score() is a public, non-static method that allows you to get the
+	 *     score from the currently instantiated SWP_Pro_Social_Optimizer object.
+	 *
+	 * @since  4.2.0 | 03 SEP 2020 | Created
+	 * @see    $this->get_score()
+	 * @param  integer $post_id The ID of the post being scored.
+	 * @return integer          The 0 - 100 score of the post.
+	 *
+	 */
 	public static function fetch_score( $post_id ) {
 
+		// Fetch the previously calculated score of the post.
 		$score = get_post_meta( $post_id, '_swp_optimization_score', true );
 
+		// If the score is empty or false (doesn't exist), create a score for it.
 		if( empty( $score ) || false === $score ) {
 			$Optimizer = new SWP_Pro_Social_Optimizer( $post_id );
 			$score = $Optimizer->get_score();
 		}
 
+		// Return the score to the caller.
 		return $score;
 	}
 
 
+	/**
+	 * The update_empty_scores() method will seek out any posts on the site that
+	 * don't currently have an optimization score and will preemptively
+	 * calculate a score for that post.
+	 *
+	 * @since  4.2.0 | 03 SEP 2020 | Created
+	 * @param  void
+	 * @return void
+	 *
+	 */
 	public static function update_empty_scores() {
 		global $wpdb;
 
+		// Fetch the post id's for all the posts that already have scores.
 		$post_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_swp_optimization_potential' AND meta_value != ''" );
 
+		// Fetch the posts that aren't in the list of id's above.
 		$args = array(
 			'post_type' => 'post',
 			'post__not_in' => $post_ids,
 			'nopaging' => true
 		);
 
+		// Fetch the posts into an array.
 		$posts = query_posts( $args );
+
+		// Loop through the array of posts and fetch a score for each one.
 		foreach( $posts as $Post ) {
 			self::fetch_score( $Post->ID );
 		}
@@ -927,7 +984,7 @@ class SWP_Pro_Social_Optimizer {
 		}
 
 		// If the percent is passed in as a decimal, multiply it by 100.
-		if( $percent < 1 ) {
+		if( $percent > 0 && $percent < 1 ) {
 			$percent = $percent * 100;
 		}
 
