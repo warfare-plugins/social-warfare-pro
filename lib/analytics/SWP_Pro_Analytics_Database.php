@@ -241,7 +241,7 @@ class SWP_Pro_Analytics_Database {
 	 *
 	 * Some notes on swp_analytics_database_version:
 	 *
-	 * We'll use an autoloaded option in the database so that we don't have to 
+	 * We'll use an autoloaded option in the database so that we don't have to
 	 * build out a 'on activation' class to handle database tasks when the plugin
 	 * is updated and installed. Instead, we'll simply check to see if our option
 	 * is current, and then bail out if it is. If it doesn't exist or isn't
@@ -265,7 +265,7 @@ class SWP_Pro_Analytics_Database {
 		}
 
 		// Make the version dependant on the current version of the pro plugin.
-		add_option('swp_analytics_database_version', SWPP_VERSION );
+		update_option('swp_analytics_database_version', SWPP_VERSION );
 
 		// This will return an array of networks that support share counts.
 		$networks = $this->get_valid_networks();
@@ -298,6 +298,7 @@ class SWP_Pro_Analytics_Database {
 
 		// This file must be included to use dbDelta or it will throw errors.
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		var_dump($sql);
 		dbDelta( $sql );
 	}
 
