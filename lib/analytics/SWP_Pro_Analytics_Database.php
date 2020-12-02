@@ -298,7 +298,7 @@ class SWP_Pro_Analytics_Database {
 
 		// This file must be included to use dbDelta or it will throw errors.
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		var_dump($sql);
+
 		dbDelta( $sql );
 	}
 
