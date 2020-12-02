@@ -558,11 +558,17 @@ class SWP_Pro_Analytics_Chart {
 			}
 
 			$data = array();
-			unset($last_count);
+			$last_count = 0;
 
 			// Loop through the db results and put them into the $data array.
 			foreach( $this->results as $row ) {
-				$count = $row->{$network};
+
+				// Use the previous count if one is not available for this date.
+				$count = $last_count;
+				if( isset( $row->{$network} ) ) {
+					$count = $last_count = $row->{$network};
+				}
+
 
 				// If this is a daily/bar chart, we'll need to calculate the daily change.
 				if( $this->interval === 'daily' ) {
