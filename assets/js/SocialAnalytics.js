@@ -67,12 +67,13 @@ class SocialAnalytics {
 			// Skip this chart if it does not have valid data available. If this
 			// fails to happen, it ends up throwing JS errors later that break
 			// the page.
-			if( 'undefined' === typeof this.chart_data[key].datasets || null === this.chart_data[key].datasets ) {
+			console.log(this);
+		//	if( 'undefined' === typeof this.chart_data[key].datasets || null === this.chart_data[key].datasets ) {
 
 				// This is the $(selector).each() equivelent of "continue" and
 				// is used to move it onto the next iteration of the loop.
-				return true;
-			}
+		//		return true;
+		//	}
 
 			// Filter the data so it displays the default timeframe.
 			self.filter_data(key);
