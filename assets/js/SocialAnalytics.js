@@ -188,10 +188,7 @@ class SocialAnalytics {
 
 		// Loop through each set of data for the chart.
 		var i = 0;
-		console.log('This:');
-		console.log(this);
-		console.log('Chart_Data:');
-		console.log(this.chart_data);
+
 		this.chart_data[chart_key].datasets.forEach( function( dataset ) {
 
 			// Calculate the start and end indexes of the array.
