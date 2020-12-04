@@ -470,6 +470,10 @@ class SWP_Pro_Analytics_Page {
 		$query = "SELECT * FROM {$wpdb->prefix}swp_analytics WHERE post_id = 0 ORDER BY date DESC LIMIT 1";
 		$results = $wpdb->get_row( $query, OBJECT );
 
+		if( empty( $results ) ) {
+			return;
+		}
+
 		$html .= '<div class="swp-flex-row">';
 		foreach( $results as $key => $value ) {
 			if( in_array( $key, array('id','date','post_id') ) ) {
