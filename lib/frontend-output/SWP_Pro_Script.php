@@ -44,7 +44,7 @@ class SWP_Pro_Script extends SWP_Script {
 		wp_enqueue_script(
 			'chartjs',
 			SWPP_PLUGIN_URL . "/assets/js/chart{$suffix}.js",
-			array( 'jquery' ),
+			array( 'jquery', 'social_warfare_script' ),
 			SWPP_VERSION
 		);
 
@@ -56,12 +56,14 @@ class SWP_Pro_Script extends SWP_Script {
 		);
 
 		if( $screen == 'post-new.php' || $screen == 'post.php' ) {
-			wp_enqueue_script(
-				'swp_post_meta',
-				SWPP_PLUGIN_URL . "/assets/js/SocialOptimizer{$suffix}.js",
-				array( 'jquery', 'social_warfare_script' ),
-				SWPP_VERSION
-			);
+			if( function_exists('has_blocks') && has_blocks() === true ) {
+				wp_enqueue_script(
+					'swp_post_meta',
+					SWPP_PLUGIN_URL . "/assets/js/SocialOptimizer{$suffix}.js",
+					array( 'jquery', 'social_warfare_script' ),
+					SWPP_VERSION
+				);
+			}
 		}
 	}
 }
