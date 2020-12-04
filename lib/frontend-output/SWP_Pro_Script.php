@@ -41,19 +41,21 @@ class SWP_Pro_Script extends SWP_Script {
 			SWPP_VERSION
 		);
 
-		wp_enqueue_script(
-			'chartjs',
-			SWPP_PLUGIN_URL . "/assets/js/chart{$suffix}.js",
-			array( 'jquery', 'social_warfare_script' ),
-			SWPP_VERSION
-		);
+		if( in_array( $screen, array('index.php', 'social-warfare_page_social-warfare-analytics' ) ) ) {
+			wp_enqueue_script(
+				'chartjs',
+				SWPP_PLUGIN_URL . "/assets/js/chart{$suffix}.js",
+				array( 'jquery', 'social_warfare_script' ),
+				SWPP_VERSION
+			);
 
-		wp_enqueue_script(
-			'swp_analytics',
-			SWPP_PLUGIN_URL . "/assets/js/SocialAnalytics{$suffix}.js",
-			array( 'jquery', 'chartjs', 'social_warfare_script' ),
-			SWPP_VERSION
-		);
+			wp_enqueue_script(
+				'swp_analytics',
+				SWPP_PLUGIN_URL . "/assets/js/SocialAnalytics{$suffix}.js",
+				array( 'jquery', 'chartjs', 'social_warfare_script' ),
+				SWPP_VERSION
+			);
+		}
 
 		if( $screen == 'post-new.php' || $screen == 'post.php' ) {
 			if( function_exists('has_blocks') && has_blocks() === true ) {
