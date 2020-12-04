@@ -64,6 +64,11 @@ class SocialAnalytics {
 			// Fetch the 2d context of the canvas element so that we can work on it.
 			var canvas      = this.getContext('2d');
 
+			// Skip this chart if it does not have valid data available.
+			if( 'undefined' === typeof this.chart_data[key].datasets || null === this.chart_data[key].datasets ) {
+				return true;
+			}
+
 			// Filter the data so it displays the default timeframe.
 			self.filter_data(key);
 
