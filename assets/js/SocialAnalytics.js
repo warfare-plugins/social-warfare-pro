@@ -64,6 +64,17 @@ class SocialAnalytics {
 			// Fetch the 2d context of the canvas element so that we can work on it.
 			var canvas      = this.getContext('2d');
 
+			// Skip this chart if it does not have valid data available. If this
+			// fails to happen, it ends up throwing JS errors later that break
+			// the page.
+
+		//	if( 'undefined' === typeof this.chart_data[key].datasets || null === this.chart_data[key].datasets ) {
+
+				// This is the $(selector).each() equivelent of "continue" and
+				// is used to move it onto the next iteration of the loop.
+		//		return true;
+		//	}
+		//
 			// Filter the data so it displays the default timeframe.
 			self.filter_data(key);
 
@@ -177,6 +188,7 @@ class SocialAnalytics {
 
 		// Loop through each set of data for the chart.
 		var i = 0;
+
 		this.chart_data[chart_key].datasets.forEach( function( dataset ) {
 
 			// Calculate the start and end indexes of the array.

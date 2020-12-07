@@ -3,7 +3,7 @@ Contributors: holas84, dustinwstout, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
 Tested up to: 5.5
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -193,6 +193,16 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 4.2.1 (07 DEC 2020) =
+The 4.2 release was a major release that introduced a whole suite of social analytics
+tools. As you might imagine with a release featuring that many new features, and
+new lines of code, there were a few hiccups along the way. But we've spent the weekend
+getting them all fixed right up and now here we are with 4.2.1.
+
+* Fix for broken admin pages due to some JS errors on the analytics charts.
+* Fix for division by zero errors in the social optimizer PHP file.
+* Fix for a few other minor bugs and glitches.
 
 = 4.2.0 (02 DEC 2020) =
 * BRAND NEW!!! A whole suite of social analytics tools!

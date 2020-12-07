@@ -201,6 +201,7 @@ class SWP_Pro_Analytics_Chart {
 	 *
 	 */
 	private $insufficient_data = false;
+    private $insufficient_networks = false;
 
 
 	/**
@@ -524,6 +525,11 @@ class SWP_Pro_Analytics_Chart {
 				break;
 		}
 
+		if( empty( $networks ) ) {
+			$networks = 'none';
+			$this->insufficient_networks = true;
+		}
+
 		// Store the results in the $networks property.
 		$this->networks = $networks;
 	}
@@ -542,6 +548,10 @@ class SWP_Pro_Analytics_Chart {
 	 */
 	private function generate_chart_datasets() {
 		global $swp_social_networks;
+
+		if( $this->get_status() === false ) {
+			return;
+		}
 
 		// Loop through each network and create a dataset for it.
 		foreach( $this->networks as $network ) {
@@ -816,7 +826,7 @@ class SWP_Pro_Analytics_Chart {
 
 		// If we don't have enough data, we won't be rendering a chart.
 		// Instead, we'll generate a warning to the user and then bail out.
-		if( true === $this->insufficient_data ) {
+		if( false === $this->get_status() ) {
 			$this->html .= $this->generate_insufficient_data_warning();
 			return;
 		}
@@ -914,6 +924,8 @@ class SWP_Pro_Analytics_Chart {
 	public function get_status() {
 
 
+		$this->filter_networks();
+
 		/**
 		 * This will run the query against the database to see how much data is
 		 * there. Since we save all of the queries in a static property, it's
@@ -929,6 +941,11 @@ class SWP_Pro_Analytics_Chart {
 
 		// If we have insufficient data...
 		if( $this->insufficient_data === true ) {
+			return false;
+		}
+
+		// If we have insufficient networks...
+		if( $this->insufficient_networks === true ) {
 			return false;
 		}
 

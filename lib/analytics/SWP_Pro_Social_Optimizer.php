@@ -307,6 +307,21 @@ class SWP_Pro_Social_Optimizer {
 			return $scores;
 		}
 
+
+		/**
+		 * Minimum Size
+		 *
+		 * This will check if the image meets the minimum size requirements.
+		 * Further down, this will be used to zeroize the entire score if this
+		 * check fails.
+		 *
+		 */
+		$min_size = 1;
+		if( $image['width'] < 200 || $image['height'] < 200 ) {
+			return $scores;
+		}
+
+
 		/**
 		 *
 		 * Aspect Ratio
