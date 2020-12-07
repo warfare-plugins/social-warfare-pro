@@ -194,7 +194,7 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
-= 4.2.0 (07 DEC 2020) =
+= 4.2.1 (07 DEC 2020) =
 * Fix for broken admin pages due to some JS errors on the analytics charts.
 * Fix for division by zero errors in the social optimizer PHP file.
 * Fix for a few other minor bugs and glitches.
