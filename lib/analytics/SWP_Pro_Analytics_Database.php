@@ -261,7 +261,8 @@ class SWP_Pro_Analytics_Database {
  		$force_db_update = SWP_Utility::debug( 'force_db_update' );
 
 
-		// If the table already exists, bail out.
+		// If the table already exists, bail out. Continue on to the setup if we
+		// are on a new database version or if we are forcing a datbaase update. 
 		if(get_option('swp_analytics_database_version') === SWPP_VERSION && false === $force_db_update ) {
 			return;
 		}
