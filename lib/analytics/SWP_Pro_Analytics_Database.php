@@ -258,9 +258,11 @@ class SWP_Pro_Analytics_Database {
 		// Setup the table name and fetch the existing charset.
 		$table_name      = self::$table_name;
 		$charset_collate = $wpdb->get_charset_collate();
+ 		$force_db_update = SWP_Utility::debug( 'force_db_update' );
+
 
 		// If the table already exists, bail out.
-		if(get_option('swp_analytics_database_version') === SWPP_VERSION ) {
+		if(get_option('swp_analytics_database_version') === SWPP_VERSION && false === $force_db_update ) {
 			return;
 		}
 
@@ -322,11 +324,13 @@ class SWP_Pro_Analytics_Database {
 		// Pull in the global variable containing all of the network objects.
 		global $swp_social_networks;
 
+		$forced_networks = array( 'twitter', 'facebook' );
+
 		// Loop through all of the registered social networks in the system.
 		foreach( $swp_social_networks as $network ) {
 
 			// Don't add networks that don't support share counts from the API's.
-			if( 0 === $network->get_api_link('') && $network->key !== 'twitter' ) {
+			if( 0 === $network->get_api_link('') && !in_array( $network->key, $forced_networks ) ) {
 				continue;
 			}
 
