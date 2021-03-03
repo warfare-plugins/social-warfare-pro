@@ -107,6 +107,17 @@ class SWP_Pro_Analytics_Database {
 		$this->setup_database();
 
 
+		/**
+		 * If we have somehow gotten this far and the table does not exist,
+		 * we'll need to bail out. We need the analytics table to put this
+		 * data into or else it will throw errors.
+		 *
+		 */
+		if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+			return;
+		}
+
+
 		if( 0 !== $post_id ) {
 			$this->update_sitewide_shares();
 		}
@@ -239,13 +250,41 @@ class SWP_Pro_Analytics_Database {
 	 * The create_database() method will be used to handle the initial creation
 	 * and setup of a table that we'll use to store all of the analytics data.
 	 *
-	 * Some notes on swp_analytics_database_version:
+	 * PROBLEMS ENCOUNTERED (SOLVED)
 	 *
-	 * We'll use an autoloaded option in the database so that we don't have to
-	 * build out a 'on activation' class to handle database tasks when the plugin
-	 * is updated and installed. Instead, we'll simply check to see if our option
-	 * is current, and then bail out if it is. If it doesn't exist or isn't
-	 * current, then we'll create the database or update it.
+	 * The following problems have been encountered, but are solved via the
+	 * system of automatic database updates that are described below.
+	 *
+	 * Problem #1: The system goes to record a share and it triggers an error
+	 * because the database is missing a required column (e.g. facebook), and
+	 * therefore the incoming data fails to import and it instead throws an SQL
+	 * error when checked. This then results in the plugin halting the recording
+	 * of data in an ongoing manner. 
+	 *
+	 * AUTOMATIC UPDATES
+	 *
+	 * Some notes on swp_analytics_database_version, and how the database will
+	 * automatically update itself to the latest version.
+	 *
+	 * We're going to use a couple of autoloaded options in order to compare
+	 * the current version of the database to the version that is needed in
+	 * order to operate properly.
+	 *
+	 * 1. First, we're going to check the actual columns. We'll pull the names
+	 * of all of the networks for which we'll want to record shares and check to
+	 * see if the database currently has those columns built into it.
+	 *
+	 * 2. Second, we'll check the version number of the database. The version
+	 * number will always reflect the version number of the plugin. As such, any
+	 * time the plugin gets updated, it will make this comparison fail and it
+	 * will therefore attempt to update the database structure. This will
+	 * ultimately prove to be redundant in some cases, but allows us to make any
+	 * changes we want in between versions because this will auto run when updated.
+	 *
+	 * 3. Third, we'll check to see if the use has activated ?swp_debug=force_db_update
+	 * via a URL paramter. This will trigger this method to go ahead and update
+	 * the database structure to the latest version.
+	 *
 	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
 	 * @param  void
@@ -261,17 +300,22 @@ class SWP_Pro_Analytics_Database {
  		$force_db_update = SWP_Utility::debug( 'force_db_update' );
 
 
+		$networks         = $this->get_valid_networks();
+		$previous_columns = unserialize( get_option('swp_analytics_database_columns') );
+		$database_version = get_option('swp_analytics_database_version');
+
 		// If the table already exists, bail out. Continue on to the setup if we
-		// are on a new database version or if we are forcing a datbaase update. 
-		if(get_option('swp_analytics_database_version') === SWPP_VERSION && false === $force_db_update ) {
+		// are on a new database version or if we are forcing a datbaase update.
+		if( $networks == $previous_columns &&
+		    SWPP_VERSION == $database_version &&
+			false === $force_db_update ) {
 			return;
 		}
 
 		// Make the version dependant on the current version of the pro plugin.
 		update_option('swp_analytics_database_version', SWPP_VERSION );
+		update_option('swp_analytics_database_columns', serialize( $networks ) );
 
-		// This will return an array of networks that support share counts.
-		$networks = $this->get_valid_networks();
 
 		/**
 		 * This will loop through the array of valid networks and generate a
