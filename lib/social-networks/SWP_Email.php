@@ -57,13 +57,13 @@ class SWP_Email extends SWP_Social_Network {
 	public function generate_share_link( $post_data ) {
 
 		// Collect the Title
-		$subject = get_post_meta( $post_data['ID'] , 'nc_og_title' , true );
+		$subject = get_post_meta( $post_data['ID'] , 'swp_og_title' , true );
 		if ( false == $subject ) :
 			$subject = $post_data['post_title'];
 		endif;
 
 		// Collect the Description
-		$body = get_post_meta( $post_data['ID'] , 'nc_og_description' , true );
+		$body = get_post_meta( $post_data['ID'] , 'swp_og_description' , true );
 		if ( false == $body ) :
 			$body = SWP_Utility::get_the_excerpt( $post_data['ID'] );
 		endif;
