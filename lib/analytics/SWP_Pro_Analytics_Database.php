@@ -259,34 +259,23 @@ class SWP_Pro_Analytics_Database {
 	 * because the database is missing a required column (e.g. facebook), and
 	 * therefore the incoming data fails to import and it instead throws an SQL
 	 * error when checked. This then results in the plugin halting the recording
-	 * of data in an ongoing manner. 
+	 * of data in an ongoing manner.
 	 *
 	 * AUTOMATIC UPDATES
 	 *
 	 * Some notes on swp_analytics_database_version, and how the database will
 	 * automatically update itself to the latest version.
 	 *
-	 * We're going to use a couple of autoloaded options in order to compare
-	 * the current version of the database to the version that is needed in
-	 * order to operate properly.
-	 *
-	 * 1. First, we're going to check the actual columns. We'll pull the names
-	 * of all of the networks for which we'll want to record shares and check to
-	 * see if the database currently has those columns built into it.
-	 *
-	 * 2. Second, we'll check the version number of the database. The version
-	 * number will always reflect the version number of the plugin. As such, any
-	 * time the plugin gets updated, it will make this comparison fail and it
-	 * will therefore attempt to update the database structure. This will
-	 * ultimately prove to be redundant in some cases, but allows us to make any
-	 * changes we want in between versions because this will auto run when updated.
-	 *
-	 * 3. Third, we'll check to see if the use has activated ?swp_debug=force_db_update
-	 * via a URL paramter. This will trigger this method to go ahead and update
-	 * the database structure to the latest version.
+	 * We're going to use an autloaded option to compare whether or not the
+	 * current version of the table matches the table that the system needs.
+	 * We'll do that by compiling the "create table" SQL statement, and then
+	 * use that statement in a comparison to the existing table. If they match,
+	 * then we already have what we need. If they don't match, it will update or
+	 * create the table.
 	 *
 	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
+	 * @since  4.3.0 | 03 MAR 2020 | Added check for database version via SQL.
 	 * @param  void
 	 * @return void
 	 *
@@ -298,23 +287,7 @@ class SWP_Pro_Analytics_Database {
 		$table_name      = self::$table_name;
 		$charset_collate = $wpdb->get_charset_collate();
  		$force_db_update = SWP_Utility::debug( 'force_db_update' );
-
-
-		$networks         = $this->get_valid_networks();
-		$previous_columns = unserialize( get_option('swp_analytics_database_columns') );
-		$database_version = get_option('swp_analytics_database_version');
-
-		// If the table already exists, bail out. Continue on to the setup if we
-		// are on a new database version or if we are forcing a datbaase update.
-		if( $networks == $previous_columns &&
-		    SWPP_VERSION == $database_version &&
-			false === $force_db_update ) {
-			return;
-		}
-
-		// Make the version dependant on the current version of the pro plugin.
-		update_option('swp_analytics_database_version', SWPP_VERSION );
-		update_option('swp_analytics_database_columns', serialize( $networks ) );
+		$networks        = $this->get_valid_networks();
 
 
 		/**
@@ -342,6 +315,22 @@ class SWP_Pro_Analytics_Database {
 		  $networks_string
 		  PRIMARY KEY  (id)
 		) $charset_collate;";
+
+
+		/**
+		 * We'll create a "Database Version" based on the sql used to create or
+		 * update the database. Basically, if the database already exists from
+		 * the current sql statement, then we don't need to update it. If it
+		 * doesn't exist in a manner that matches this SQL statement, then we
+		 * need to create it or update it.
+		 *
+		 */
+		$database_version = md5($sql);
+		if( $database_version === get_option('swp_analytics_database_version') ) {
+			return;
+		}
+
+		update_option('swp_analytics_database_version', $database_version );
 
 		// This file must be included to use dbDelta or it will throw errors.
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
