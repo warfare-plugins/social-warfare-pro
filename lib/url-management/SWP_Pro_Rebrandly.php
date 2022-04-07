@@ -90,6 +90,11 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 
 		// Process the response.
 		$response = json_decode($result, true);
+		// Check for shortUrl before adding prefix.
+		// Undefined index: shortUrl #832
+		if ( ! isset( $response['shortUrl'] ) ) {
+			return $url;
+		}
 		$response['shortUrl'] = $this->add_prefix( $response['shortUrl'] );
 
 		if( isset( $response['shortUrl'] ) ) {
