@@ -59,6 +59,21 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 	}
 
 
+	/**
+	 * Create a new Rebrandly short URL
+	 *
+	 * This is the method used to interface with the Rebrandly API with regard to creating
+	 * new shortened URL's via their service.
+	 *
+	 * @since  4.0.0 | 25 JUL 2019 | Created.
+	 * @since  4.0.0 | 25 JUL 2019 | Added title to shortline creation process.
+	 * @since  4.3.0 | 21 APR 2022 | Fix - Undefined index: shortUrl
+	 * @param  string $url          The URL to be shortened.
+	 * @param  string $post_id      The ID of the post this link belongs to.
+	 * @param  string $network      The social network this link will be used on.
+	 * @return string               The shortened URL.
+	 *
+	 */
 	public function generate_new_shortlink( $url, $post_id, $network = false ) {
 
 		if( $this->get_existing_link( $url, $post_id ) ) {
@@ -90,6 +105,11 @@ class SWP_Pro_Rebrandly extends SWP_Link_Shortener {
 
 		// Process the response.
 		$response = json_decode($result, true);
+
+		// Check for shortUrl before adding prefix.
+		if ( ! isset( $response['shortUrl'] ) ) {
+			return $url;
+		}
 		$response['shortUrl'] = $this->add_prefix( $response['shortUrl'] );
 
 		if( isset( $response['shortUrl'] ) ) {
