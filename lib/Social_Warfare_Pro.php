@@ -275,6 +275,20 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'FW_Periscope',
 			);
 			$this->load_files( '/lib/follow-widget/networks/', $follow_widget_networks );
+
+
+			/**
+			 * The Update Checker
+			 *
+			 * This loads the class which will in turn load all other class that are
+			 * needed in order to properly check for updates for addons.
+			 *
+			 */
+			$update_checker = array(
+				'Plugin_Updater',
+			);
+			$this->load_files( '/lib/update-checker/', $follow_widget_networks );
+			require_once SWPP_PLUGIN_DIR . '/lib/update-checker/puc/plugin-update-checker.php';
 		}
 
 
