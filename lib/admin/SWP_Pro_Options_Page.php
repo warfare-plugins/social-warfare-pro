@@ -193,7 +193,7 @@ class SWP_Pro_Options_Page extends SWP_Options_Page {
 				->set_premium( 'pro' );
 
 
-			$cross_domain_html = '<div class="sw-grid sw-col-940 sw-fit sw-option-container cross_domain_recovery_description_wrapper" </div>';
+			$cross_domain_html = '<div class="sw-grid sw-col-940 sw-fit sw-option-container cross_domain_recovery_description_wrapper">';
 				$cross_domain_html .= '<p class="sw-subtitle">If you\'ve migrated your website from one domain to another, fill in these two fields to activate cross-domain share recovery.</p>';
 			$cross_domain_html .= '</div>';
 
