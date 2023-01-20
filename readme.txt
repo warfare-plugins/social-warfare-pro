@@ -3,7 +3,7 @@ Contributors: holas84, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
 Tested up to: 5.8
-Stable tag: 4.2.1
+Stable tag: 4.4.0
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -193,6 +193,21 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 4.4.0 (10 JAN 2023) =
+This update provides a nice, robust audit of the plugin. It ensures that the
+plugin remains in full compliance with the latest WordPress requirements for
+inclusion in the WordPress repository.
+
+* Removed the Update Checker from Free into Pro only.
+* Removed cURL calls in leiu of WordPress built in calls.
+* Ensure user has permission to make AJAX calls.
+* Removed <? php short tags.
+* Sanitize all inputs that come from outside sources.
+* Moved the CSS for jQuery UI to an internal asset.
+* Removed all branded logos from the header banner.
+* Removed the word WordPress from the beginning of the plugin name.
+* Added capability and nonce checks to AJAX calls.
 
 = 4.3.0 (20 JUL 2020) =
 This is a major update to the Facebook share checking functionality of the plugin.
