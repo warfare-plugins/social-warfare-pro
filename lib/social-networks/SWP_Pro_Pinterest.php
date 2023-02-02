@@ -352,10 +352,11 @@ class SWP_Pro_Pinterest {
 	 * We are bascially ignoring it and creating our own.
 	 *
 	 * @since 3.5.2 | 08 MAR 2019 | Copied the $pinterest_description logic. See comment.
+	 * @since   4.4 | 02 Feb 2023 | Add default value for $alt.
 	 * @return $html Our version of the markup.
 	 *
 	 */
-	public function classic_editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt ) {
+	public function classic_editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt = "" ) {
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $pinterest_description ) ) {
