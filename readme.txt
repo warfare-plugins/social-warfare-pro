@@ -194,6 +194,10 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 4.4.1 (14 FEB 2023) =
+* Update Version number to 4.4.1.
+* Add default value for $alt parameter for classic_editor_add_pin_description method.
+
 = 4.4.0 (10 JAN 2023) =
 This update provides a nice, robust audit of the plugin. It ensures that the
 plugin remains in full compliance with the latest WordPress requirements for
