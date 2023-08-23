@@ -194,6 +194,9 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 
 == Changelog ==
 
+= 4.4.2 (23 Aug 2023 - pre-release) =
+* Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
+
 = 4.4.1 (14 FEB 2023) =
 * Update Version number to 4.4.1.
 * Add default value for $alt parameter for classic_editor_add_pin_description method.
