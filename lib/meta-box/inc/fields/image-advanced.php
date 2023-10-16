@@ -85,11 +85,14 @@ class SWPMB_Image_Advanced_Field extends SWPMB_Media_Field {
 		return SWPMB_Image_Field::format_single_value( $field, $value, $args, $post_id );
 	}
 
-	/**
-	 * Template for media item.
+    /**
+	 * Template for media item.      
+	 *
+	 * @since  4.4.1  | 21 AUG 2023 | Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
+	 *
 	 */
 	public static function print_templates() {
 		parent::print_templates();
-		require_once SWPMB_INC_DIR . 'templates/image-advanced.php';
+		require SWPMB_INC_DIR . 'templates/image-advanced.php';
 	}
 }

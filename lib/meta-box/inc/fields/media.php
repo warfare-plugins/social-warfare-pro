@@ -228,9 +228,12 @@ class SWPMB_Media_Field extends SWPMB_File_Field {
 	}
 
 	/**
-	 * Template for media item.
+	 * Template for media item.      
+	 *
+	 * @since  4.4.1  | 21 AUG 2023 | Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
+	 *
 	 */
 	public static function print_templates() {
-		require_once SWPMB_INC_DIR . 'templates/media.php';
+		require SWPMB_INC_DIR . 'templates/media.php';
 	}
 }

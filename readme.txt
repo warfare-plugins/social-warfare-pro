@@ -2,8 +2,8 @@
 Contributors: holas84, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
-Tested up to: 5.8
-Stable tag: 4.4.0
+Tested up to: 6.3.1
+Stable tag: 4.4.2
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -29,6 +29,7 @@ You can choose from the top social networks sharing buttons, including:
 * Pinterest
 * LinkedIn
 * Mix
+* Mastodon
 
 You can also choose where you want the share buttons to show up. Choose from the following placement options:
 
@@ -193,6 +194,9 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 4.4.2 (30 AUG 2023) =
+* Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
 
 = 4.4.1 (14 FEB 2023) =
 * Update Version number to 4.4.1.
