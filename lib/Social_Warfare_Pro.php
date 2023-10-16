@@ -198,6 +198,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'Tumblr',
 				'Whatsapp',
 				'Yummly',
+				'Mastodon',
 				'Pro_Pinterest',
 				'Pro_Networks_Loader'
 			);
@@ -273,6 +274,7 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 				'FW_Blogger',
 				'FW_Snapchat',
 				'FW_Periscope',
+				'FW_Mastodon'
 			);
 			$this->load_files( '/lib/follow-widget/networks/', $follow_widget_networks );
 
