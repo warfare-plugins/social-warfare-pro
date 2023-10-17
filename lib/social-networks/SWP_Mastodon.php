@@ -33,7 +33,8 @@ class SWP_Mastodon extends SWP_Social_Network {
         $this->name    = __( 'Mastodon', 'social-warfare' );
         $this->cta     = __( 'Toot', 'social-warfare' );
         $this->key     = 'mastodon';
-        $this->default = 'true';
+        $this->default = 'false';
+        $this->premium = 'pro';
 
         $this->init_social_network();
     }
