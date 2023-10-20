@@ -67,6 +67,7 @@ class SWP_Pro_Networks_Loader {
 			new SWP_Whatsapp();
 			new SWP_Xing();
 			new SWP_Yummly();
+			new SWP_Mastodon();
 	}
 
 }
