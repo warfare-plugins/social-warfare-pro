@@ -194,6 +194,8 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+= 4.4.4 (24 OCT 2023) =
+* Escaped output to prevent potential XSS vulnerabilities.
 
 = 4.4.3 (19 OCT 2023) =
 * Added Mastodon
