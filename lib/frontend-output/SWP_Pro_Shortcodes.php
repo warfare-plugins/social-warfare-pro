@@ -152,6 +152,7 @@ class SWP_Pro_Shortcodes {
 	 * [facebook_shares]
 	 *
 	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @since  4.4.4 | 24 OCT 2023 | Escaped output to prevent potential XSS vulnerabilities
 	 * @param  string $network_key The unique, snake_cased key for the network.
 	 * @return string The formatted string of the share counts.
 	 *
@@ -159,7 +160,7 @@ class SWP_Pro_Shortcodes {
 	protected function fetch_post_shares( $network ) {
 		global $post;
 		$shares = get_post_meta( $post->ID, '_' . $network . '_shares', true );
-		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
+		return esc_html( $shares ? SWP_Utility::kilomega( $shares ) : 0 );
 	}
 
 
@@ -174,6 +175,7 @@ class SWP_Pro_Shortcodes {
 	 * [sitewide_facebook_shares]
 	 *
 	 * @since  4.0.0 | 10 JUL 2019 | Created
+	 * @since  4.4.4 | 24 OCT 2023 | Escaped output to prevent potential XSS vulnerabilities
 	 * @param  string $network The unique, snake_cased key for the network.
 	 * @return string The formatted string of the share counts.
 	 *
@@ -181,7 +183,7 @@ class SWP_Pro_Shortcodes {
 	protected function fetch_sitewide_shares( $network ) {
 		$this->update_sitewide_shares();
 		$network_shares = get_option( 'social_warfare_sitewide_totals' );
-		return SWP_Utility::kilomega( $network_shares[$network] );
+		return esc_html( SWP_Utility::kilomega( $network_shares[$network] ) );
 	}
 
 
