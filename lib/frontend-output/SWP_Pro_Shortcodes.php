@@ -159,7 +159,7 @@ class SWP_Pro_Shortcodes {
 	protected function fetch_post_shares( $network ) {
 		global $post;
 		$shares = get_post_meta( $post->ID, '_' . $network . '_shares', true );
-		return $shares ? SWP_Utility::kilomega( $shares ) : 0;
+		return esc_html( $shares ? SWP_Utility::kilomega( $shares ) : 0 );
 	}
 
 
@@ -181,7 +181,7 @@ class SWP_Pro_Shortcodes {
 	protected function fetch_sitewide_shares( $network ) {
 		$this->update_sitewide_shares();
 		$network_shares = get_option( 'social_warfare_sitewide_totals' );
-		return SWP_Utility::kilomega( $network_shares[$network] );
+		return esc_html( SWP_Utility::kilomega( $network_shares[$network] ) );
 	}
 
 
