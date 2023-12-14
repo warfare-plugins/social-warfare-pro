@@ -1,9 +1,0 @@
-{
-    "type": "ftp",
-    "host": "ftp.warfareplugins.com",
-    "username": "beta@beta.warfareplugins.com",
-    "password": "0Aa3z,Z5x0&_",
-    "port": 21,
-    "remotePath": "/wp-content/plugins/social-warfare-pro",
-    "uploadOnSave": true
-}
