@@ -88,9 +88,6 @@ class SWP_Pro_Analytics_Database {
 	 * record.
 	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
-	 * @since  4.4.5 | 22 DEC 2023 | Fixed a problem when multiple rows with
-	 *                               same post_id and date were inserted.
-	 *                               Do not save rows where all values are zero.
 	 * @param  integer $post_id The integer of the post being updated.
 	 * @param  array   $counts  A key/value set of share counts for each network.
 	 *                          Example: array('facebook' => 55)
@@ -135,15 +132,7 @@ class SWP_Pro_Analytics_Database {
 		 *
 		 */
 		$data = array();
-
-
-		/**
-		 * Total share counts for all available counters including total_shares.
-		 *
-		 * @var integer
-		 *
-		 */
-		$total_counts = 0;
+		$format = array();
 
 
 		/**
@@ -156,6 +145,8 @@ class SWP_Pro_Analytics_Database {
 		$data['post_id'] = $post_id;
 		$data['date']    = $date = date('Y-m-d');
 
+		$format['post_id'] = '%d';
+		$format['date'] = '%s';
 
 		/**
 		 * We need to clean up and process the $shares array. We do this to
@@ -176,46 +167,35 @@ class SWP_Pro_Analytics_Database {
 
 			// Add this share count to our $data array to be sent to the database.
 			$data[$network] = (int) $counts[$network];
-			// Increase $total_counts counter.
-			$total_counts += (int) $counts[$network];
 		}
 
 		// Here we'll manually tack on the 'total_shares' to our $data array.
 		$data['total_shares'] = (int) $counts['total_shares'];
-		// Increase $total_counts counter.
-		$total_counts += (int) $counts['total_shares'];
 
 
 		/**
-		 * If total counts is more than zero, write data into the database.
-		 * If there is already an existing entry for this post on this day, then
-		 * the data will be replaced with the latest data.
-		 * If not, new data will be inserted.
+		 * This is the query that will check to see if any existing entry for
+		 * this post on this day already exists.
 		 *
 		 */
-		if ( $total_counts > 0 ) :
-			$fields  = array();
-			$values = array();
-			$assignments = array();
+		$query = "SELECT * FROM $table_name WHERE post_id = $post_id && date = '$date'";
+		$previous_entry = $wpdb->get_results( $query );
 
-			foreach ( array_keys( $data ) as $key ) {
-				$value = $data[$key];
-				if ( $key == 'date') $value = "'" . $value . "'";
-				if ( is_null( $value ) ) $value = 'NULL';
 
-				$fields[] = '`' . $key . '`';
-				$values[] = $value;
-				if ( $key != 'post_id' && $key != 'date' ) {
-					$assignments[] = '`' . $key . '` = ' . $value;
-				}
-			}
+		/**
+		 * If there is already an existing entry for this post on this day, then
+		 * we'll use the $wpdb->update method and simply update the counts to
+		 * reflect the latest data.
+		 *
+		 */
+		if( !empty( $previous_entry ) ) {
+			$columns_to_match = array( 'post_id' => $post_id, 'date' => $date );
+			$wpdb->update( $table_name, $data, $columns_to_match );
+			return;
+		}
 
-			$insert_fields      = implode( ', ', @fields );
-			$insert_values      = implode( ', ', $values );
-			$update_assignments = implode( ', ', $assignments );
-
-			$wpdb->query( "INSERT INTO $table_name ($insert_fields) VALUES ($insert_values) ON DUPLICATE KEY UPDATE $update;" );
-		endif;
+		// Otherwise we'll insert a new set of share count data.
+		$wpdb->insert( $table_name, $data );
 	}
 
 
@@ -296,7 +276,6 @@ class SWP_Pro_Analytics_Database {
 	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
 	 * @since  4.3.0 | 03 MAR 2020 | Added check for database version via SQL.
-	 * @since  4.4.5 | 22 DEC 2023 | Data cleanup and added post_id__date index.
 	 * @param  void
 	 * @return void
 	 *
@@ -314,39 +293,28 @@ class SWP_Pro_Analytics_Database {
 		/**
 		 * This will loop through the array of valid networks and generate a
 		 * string that can be inserted into the sql query to ensure that we get
-		 * a column for each of the eligible networks and a filter for delete
-		 * query to remove all rows where all values are zero.
+		 * a column for each of the eligible networks.
 		 *
 		 */
 		$networks_string = '';
-		$all_zeros_string = 'total_shares = 0';
 		foreach( $networks as $network ) {
 			$networks_string .= "$network bigint(32) DEFAULT 0," . PHP_EOL;
-			$all_zeros_string .= " AND $network = 0";
 		}
 
 
 		/**
-		 * This is the actual sql query that will be used to create the table
-		 * and unique index in the database. Only last id from unique key
-		 * will be retained.
+		 * This is the actual sql query that will be used to create the table in
+		 * the database.
 		 *
 		 */
-		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+		$sql = "CREATE TABLE $table_name (
 		  id int(15) NOT NULL AUTO_INCREMENT,
 		  date date DEFAULT '0000-00-00' NOT NULL,
 		  post_id int(15) NOT NULL,
 		  total_shares bigint(32) DEFAULT 0,
 		  $networks_string
-		  PRIMARY KEY (id)
-		) $charset_collate;
-		DELETE a FROM $table_name a
-		INNER JOIN (SELECT `post_id`, `date`, MAX(id) AS id_max
-			FROM $table_name GROUP BY `post_id`, `date` HAVING COUNT(*) > 1) b
-			ON b.`post_id` = a.`post_id` AND b.`date` = a.`date`
-		WHERE b.id_max != a.id;
-		CREATE UNIQUE INDEX post_id__date ON $table_name (post_id, date);
-		DELETE FROM $table_name WHERE $all_zeros_string;";
+		  PRIMARY KEY  (id)
+		) $charset_collate;";
 
 
 		/**
