@@ -3,7 +3,7 @@ Contributors: holas84, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
 Tested up to: 6.3.2
-Stable tag: 4.4.4
+Stable tag: 4.4.5.1
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -194,6 +194,16 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+= 4.4.5.1 (11 JAN 2024) =
+* Update SWP_Pro_Analytics_Database.php
+
+= 4.4.5 (10 JAN 2024) =
+* Improved performance in `SWP_Pro_Analytics_Database` with efficient data insertion and update logic using `INSERT ON DUPLICATE KEY UPDATE`.
+* Added checks to prevent storage of redundant data and duplicate entries in the analytics table.
+* Enhanced `setup_database` with automatic updates based on database versioning and optimized table structure with necessary indexes for better performance.
+* Streamlined network fetching in `get_valid_networks` for reduced processing time and improved efficiency.
+* Addressed high database load issues by optimizing database operations and minimizing server resource usage.
+
 = 4.4.4 (24 OCT 2023) =
 * Escaped output to prevent potential XSS vulnerabilities.
 
