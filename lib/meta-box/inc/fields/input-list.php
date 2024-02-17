@@ -1,20 +1,14 @@
 <?php
-/**
- * The input list field which displays choices in a list of inputs.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Input list field class.
+ * The input list field which displays choices in a list of inputs.
  */
 class SWPMB_Input_List_Field extends SWPMB_Choice_Field {
-	/**
-	 * Enqueue scripts and styles
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-input-list', SWPMB_CSS_URL . 'input-list.css', array(), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-input-list', SWPMB_JS_URL . 'input-list.js', array(), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-input-list', SWPMB_CSS_URL . 'input-list.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-input-list', 'path', SWPMB_CSS_DIR . 'input-list.css' );
+		wp_enqueue_script( 'swpmb-input-list', SWPMB_JS_URL . 'input-list.js', [], SWPMB_VER, true );
 	}
 
 	/**
@@ -29,12 +23,12 @@ class SWPMB_Input_List_Field extends SWPMB_Choice_Field {
 		$walker  = new SWPMB_Walker_Input_List( $field, $meta );
 		$output  = self::get_select_all_html( $field );
 		$output .= sprintf(
-			'<ul class="swpmb-input-list%s%s">',
+			'<fieldset class="swpmb-input-list%s%s">',
 			$field['collapse'] ? ' swpmb-collapse' : '',
 			$field['inline'] ? ' swpmb-inline' : ''
 		);
 		$output .= $walker->walk( $options, $field['flatten'] ? -1 : 0 );
-		$output .= '</ul>';
+		$output .= '</fieldset>';
 
 		return $output;
 	}
@@ -49,14 +43,11 @@ class SWPMB_Input_List_Field extends SWPMB_Choice_Field {
 		$field = $field['multiple'] ? SWPMB_Multiple_Values_Field::normalize( $field ) : $field;
 		$field = SWPMB_Input_Field::normalize( $field );
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'collapse'        => true,
-				'inline'          => null,
-				'select_all_none' => false,
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'collapse'        => true,
+			'inline'          => null,
+			'select_all_none' => false,
+		] );
 
 		$field['flatten'] = $field['multiple'] ? $field['flatten'] : true;
 		$field['inline']  = ! $field['multiple'] && ! isset( $field['inline'] ) ? true : $field['inline'];

@@ -1,14 +1,10 @@
 <?php
-/**
- * The select tree field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Select tree field class.
+ * The select tree field.
  */
-class SWPMB_Select_Tree_Field extends SWPMB_Select_Field {
+class SWPMB_Select_Tree_Field extends SWPMB_Select_Advanced_Field {
 	/**
 	 * Get field HTML.
 	 *
@@ -22,13 +18,11 @@ class SWPMB_Select_Tree_Field extends SWPMB_Select_Field {
 		return $options ? $walker->walk( $options ) : '';
 	}
 
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'swpmb-select-tree', SWPMB_CSS_URL . 'select-tree.css', array( 'swpmb-select' ), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-select-tree', SWPMB_JS_URL . 'select-tree.js', array( 'swpmb-select' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-select-tree', SWPMB_CSS_URL . 'select-tree.css', [ 'swpmb-select' ], SWPMB_VER );
+		wp_style_add_data( 'swpmb-select-tree', 'path', SWPMB_CSS_DIR . 'select-tree.css' );
+		wp_enqueue_script( 'swpmb-select-tree', SWPMB_JS_URL . 'select-tree.js', [ 'swpmb-select' ], SWPMB_VER, true );
 	}
 
 	/**

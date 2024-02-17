@@ -1,29 +1,18 @@
 <?php
-/**
- * Video field which uses WordPress media popup to upload and select video.
- *
- * @package Meta Box
- * @since   4.10
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * The video field class.
+ * Video field which uses WordPress media popup to upload and select video.
  */
 class SWPMB_Video_Field extends SWPMB_Media_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'swpmb-video', SWPMB_CSS_URL . 'video.css', array( 'swpmb-media' ), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-video', SWPMB_JS_URL . 'video.js', array( 'swpmb-media' ), SWPMB_VER, true );
-		SWPMB_Helpers_Field::localize_script_once(
-			'swpmb-video',
-			'i18nRwmbVideo',
-			array(
-				'extensions' => wp_get_video_extensions(),
-			)
-		);
+		wp_enqueue_style( 'swpmb-video', SWPMB_CSS_URL . 'video.css', [ 'swpmb-media' ], SWPMB_VER );
+		wp_style_add_data( 'swpmb-video', 'path', SWPMB_CSS_DIR . 'video.css' );
+		wp_enqueue_script( 'swpmb-video', SWPMB_JS_URL . 'video.js', [ 'swpmb-media' ], SWPMB_VER, true );
+		SWPMB_Helpers_Field::localize_script_once( 'swpmb-video', 'i18nRwmbVideo', [
+			'extensions' => wp_get_video_extensions(),
+		] );
 	}
 
 	/**
@@ -49,23 +38,23 @@ class SWPMB_Video_Field extends SWPMB_Media_Field {
 	 *
 	 * @return array|bool False if file not found. Array of image info on success.
 	 */
-	public static function file_info( $file_id, $args = array(), $field = array() ) {
+	public static function file_info( $file_id, $args = [], $field = [] ) {
 		if ( ! get_attached_file( $file_id ) ) {
 			return false;
 		}
 		$attachment = get_post( $file_id );
 		$url        = wp_get_attachment_url( $attachment->ID );
 		$file_type  = wp_check_filetype( $url, wp_get_mime_types() );
-		$data       = array(
+		$data       = [
 			'ID'          => $file_id,
 			'src'         => $url,
 			'type'        => $file_type['type'],
 			'title'       => $attachment->post_title,
 			'caption'     => $attachment->post_excerpt,
 			'description' => $attachment->post_content,
-		);
+		];
 
-		$data['meta'] = array();
+		$data['meta'] = [];
 		$meta         = wp_get_attachment_metadata( $attachment->ID );
 		if ( ! empty( $meta ) ) {
 			foreach ( wp_get_attachment_id3_keys( $attachment ) as $key => $label ) {
@@ -75,15 +64,15 @@ class SWPMB_Video_Field extends SWPMB_Media_Field {
 			}
 
 			if ( ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
-				$data['dimensions'] = array(
+				$data['dimensions'] = [
 					'width'  => $meta['width'],
 					'height' => $meta['height'],
-				);
+				];
 			} else {
-				$data['dimensions'] = array(
+				$data['dimensions'] = [
 					'width'  => 640,
 					'height' => 360,
-				);
+				];
 			}
 		}
 
@@ -120,29 +109,22 @@ class SWPMB_Video_Field extends SWPMB_Media_Field {
 		// Display single video.
 		if ( 1 === count( $value ) ) {
 			$video = reset( $value );
-			return wp_video_shortcode(
-				array(
-					'src'    => $video['src'],
-					'width'  => $video['dimensions']['width'],
-					'height' => $video['dimensions']['height'],
-				)
-			);
+			return wp_video_shortcode( [
+				'src'    => $video['src'],
+				'width'  => $video['dimensions']['width'],
+				'height' => $video['dimensions']['height'],
+			] );
 		}
 
 		// Display multiple videos in a playlist.
-		return wp_playlist_shortcode(
-			array(
-				'ids'  => $ids,
-				'type' => 'video',
-			)
-		);
+		return wp_playlist_shortcode( [
+			'ids'  => $ids,
+			'type' => 'video',
+		] );
 	}
 
 	/**
-	 * Template for media item.      
-	 *
-	 * @since  4.4.1  | 21 AUG 2023 | Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
-	 *
+	 * Template for media item.
 	 */
 	public static function print_templates() {
 		parent::print_templates();

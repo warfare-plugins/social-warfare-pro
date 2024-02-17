@@ -1,21 +1,15 @@
 <?php
-/**
- * The file upload field which allows users to drag and drop files to upload.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * The file upload field class.
+ * The file upload field which allows users to drag and drop files to upload.
  */
 class SWPMB_File_Upload_Field extends SWPMB_Media_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
-		wp_enqueue_style( 'swpmb-upload', SWPMB_CSS_URL . 'upload.css', array( 'swpmb-media' ), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-file-upload', SWPMB_JS_URL . 'file-upload.js', array( 'swpmb-media' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-upload', SWPMB_CSS_URL . 'upload.css', [ 'swpmb-media' ], SWPMB_VER );
+		wp_style_add_data( 'swpmb-upload', 'path', SWPMB_CSS_DIR . 'upload.css' );
+		wp_enqueue_script( 'swpmb-file-upload', SWPMB_JS_URL . 'file-upload.js', [ 'swpmb-media' ], SWPMB_VER, true );
 	}
 
 	/**
@@ -27,28 +21,19 @@ class SWPMB_File_Upload_Field extends SWPMB_Media_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'max_file_size' => 0,
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'max_file_size' => 0,
+		] );
 
-		$field['js_options'] = wp_parse_args(
-			$field['js_options'],
-			array(
-				'maxFileSize' => $field['max_file_size'],
-			)
-		);
+		$field['js_options'] = wp_parse_args( $field['js_options'], [
+			'maxFileSize' => $field['max_file_size'],
+		] );
 
 		return $field;
 	}
 
-    /**
-	 * Template for media item.      
-	 *
-	 * @since  4.4.1  | 21 AUG 2023 | Replaced 'require_once' with 'require' to prevent conflicts with the Elementor plugin.
-	 *
+	/**
+	 * Template for media item.
 	 */
 	public static function print_templates() {
 		parent::print_templates();

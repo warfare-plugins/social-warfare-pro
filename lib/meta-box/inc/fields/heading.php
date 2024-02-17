@@ -1,43 +1,21 @@
 <?php
+defined( 'ABSPATH' ) || die;
+
 /**
  * The heading field which displays a simple heading text.
- *
- * @package Meta Box
- */
-
-/**
- * Heading field class.
  */
 class SWPMB_Heading_Field extends SWPMB_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-heading', SWPMB_CSS_URL . 'heading.css', array(), SWPMB_VER );
+		wp_enqueue_style( 'swpmb-heading', SWPMB_CSS_URL . 'heading.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-heading', 'path', SWPMB_CSS_DIR . 'heading.css' );
 	}
 
-	/**
-	 * Show begin HTML markup for fields.
-	 *
-	 * @param mixed $meta  Meta value.
-	 * @param array $field Field parameters.
-	 *
-	 * @return string
-	 */
-	public static function begin_html( $meta, $field ) {
+	protected static function begin_html( array $field ) : string {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
 		return sprintf( '<h4%s>%s</h4>', $attributes, $field['name'] );
 	}
 
-	/**
-	 * Show end HTML markup for fields.
-	 *
-	 * @param mixed $meta  Meta value.
-	 * @param array $field Field parameters.
-	 *
-	 * @return string
-	 */
-	public static function end_html( $meta, $field ) {
+	protected static function end_html( array $field ) : string {
 		return self::input_description( $field );
 	}
 }

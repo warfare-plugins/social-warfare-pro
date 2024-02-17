@@ -1,14 +1,10 @@
 <?php
-/**
- * The secured password field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Password field class.
+ * The secured password field.
  */
-class SWPMB_Password_Field extends SWPMB_Text_Field {
+class SWPMB_Password_Field extends SWPMB_Input_Field {
 	/**
 	 * Store secured password in the database.
 	 *
