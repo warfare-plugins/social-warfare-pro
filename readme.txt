@@ -2,8 +2,8 @@
 Contributors: holas84, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
-Tested up to: 6.3.2
-Stable tag: 4.4.5.1
+Tested up to: 6.4.3
+Stable tag: 4.4.6
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -194,6 +194,18 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 4.4.6 (21 Feb 2024) =
+* Upgraded to Facebook's Graph API v18.0 for continued functionality and compliance with Facebook's latest API updates.
+* Deprecated older Graph API endpoints (v6.0 and v17.0) removed in line with Facebook's 2-year lifecycle policy.
+* Implemented WordPress coding standards to enhance code quality and consistency throughout the plugin.
+* Fixed syntax errors and updated deprecated functions for improved plugin performance.
+* Strengthened security measures to mitigate potential vulnerabilities.
+* Corrected the display issue of the 'X' Logo, ensuring proper orientation. See https://github.com/warfare-plugins/social-warfare/issues/887 for details.
+* Refactored the `post_json` function for direct cURL usage, improving compatibility with the Bitly API and addressing issues related to link shortening.
+* Resolved the Bitly link generation issue, ensuring reliable creation of short links. More information at https://github.com/warfare-plugins/social-warfare/issues/866.
+* Enhanced CSRF vulnerability protection by implementing user authentication, nonce verification, and secure access secret handling.
+
 = 4.4.5.1 (11 JAN 2024) =
 * Update SWP_Pro_Analytics_Database.php
 
