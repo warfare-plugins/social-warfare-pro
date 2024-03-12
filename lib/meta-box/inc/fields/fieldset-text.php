@@ -1,19 +1,13 @@
 <?php
-/**
- * The text fieldset field, which allows users to enter content for a list of text fields.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Fieldset text class.
+ * The text fieldset field, which allows users to enter content for a list of text fields.
  */
-class SWPMB_Fieldset_Text_Field extends SWPMB_Text_Field {
-	/**
-	 * Enqueue field scripts and styles.
-	 */
+class SWPMB_Fieldset_Text_Field extends SWPMB_Input_Field {
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-fieldset-text', SWPMB_CSS_URL . 'fieldset-text.css', '', SWPMB_VER );
+		wp_enqueue_style( 'swpmb-fieldset-text', SWPMB_CSS_URL . 'fieldset-text.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-fieldset-text', 'path', SWPMB_CSS_DIR . 'fieldset-text.css' );
 	}
 
 	/**
@@ -25,7 +19,7 @@ class SWPMB_Fieldset_Text_Field extends SWPMB_Text_Field {
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$html = array();
+		$html = [];
 		$tpl  = '<p><label>%s</label> %s</p>';
 
 		foreach ( $field['options'] as $key => $label ) {
@@ -34,30 +28,16 @@ class SWPMB_Fieldset_Text_Field extends SWPMB_Text_Field {
 			$html[]                      = sprintf( $tpl, $label, parent::html( $value, $field ) );
 		}
 
-		$out = '<fieldset><legend>' . $field['desc'] . '</legend>' . implode( ' ', $html ) . '</fieldset>';
+		$out = '<fieldset>' . ( $field['desc'] ? '<legend>' . $field['desc'] . '</legend>' : '' ) . implode( ' ', $html ) . '</fieldset>';
 
 		return $out;
 	}
 
-	/**
-	 * Do not show field description.
-	 *
-	 * @param array $field Field parameters.
-	 *
-	 * @return string
-	 */
-	public static function input_description( $field ) {
+	protected static function input_description( array $field ) : string {
 		return '';
 	}
 
-	/**
-	 * Do not show field description.
-	 *
-	 * @param array $field Field parameters.
-	 *
-	 * @return string
-	 */
-	public static function label_description( $field ) {
+	protected static function label_description( array $field ) : string {
 		return '';
 	}
 

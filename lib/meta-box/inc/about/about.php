@@ -1,12 +1,6 @@
 <?php
 /**
  * Add about page for the Meta Box plugin.
- *
- * @package Meta Box
- */
-
-/**
- * About page class.
  */
 class SWPMB_About {
 	/**
@@ -25,42 +19,29 @@ class SWPMB_About {
 		$this->update_checker = $update_checker;
 	}
 
-	/**
-	 * Init hooks.
-	 */
 	public function init() {
 		// Add links to about page in the plugin action links.
-		add_filter( 'plugin_action_links_meta-box/meta-box.php', array( $this, 'plugin_links' ), 20 );
+		add_filter( 'plugin_action_links_meta-box/meta-box.php', [ $this, 'plugin_links' ], 20 );
 
 		// Add a shared top-level admin menu and Dashboard page. Use priority 5 to show Dashboard at the top.
-		add_action( 'admin_menu', array( $this, 'add_menu' ), 5 );
-		add_action( 'admin_menu', array( $this, 'add_submenu' ), 5 );
+		add_action( 'admin_menu', [ $this, 'add_menu' ], 5 );
+		add_action( 'admin_menu', [ $this, 'add_submenu' ], 5 );
 
 		// If no admin menu, then hide the About page.
-		add_action( 'admin_head', array( $this, 'hide_page' ) );
+		add_action( 'admin_head', [ $this, 'hide_page' ] );
 
 		// Redirect to about page after activation.
-		add_action( 'activated_plugin', array( $this, 'redirect' ), 10, 2 );
+		add_action( 'activated_plugin', [ $this, 'redirect' ], 10, 2 );
 	}
 
-	/**
-	 * Add links to About page.
-	 *
-	 * @param array $links Array of plugin links.
-	 *
-	 * @return array
-	 */
-	public function plugin_links( $links ) {
+	public function plugin_links( array $links ): array {
 		$links[] = '<a href="' . esc_url( $this->get_menu_link() ) . '">' . esc_html__( 'About', 'meta-box' ) . '</a>';
 		if ( ! $this->update_checker->has_extensions() ) {
-			$links[] = '<a href="https://metabox.io/pricing/" style="color: #39b54a; font-weight: bold">' . esc_html__( 'Go Pro', 'meta-box' ) . '</a>';
+			$links[] = '<a href="https://elu.to/mpp" style="color: #39b54a; font-weight: bold">' . esc_html__( 'Go Pro', 'meta-box' ) . '</a>';
 		}
 		return $links;
 	}
 
-	/**
-	 * Register admin page.
-	 */
 	public function add_menu() {
 		if ( ! $this->has_menu() ) {
 			return;
@@ -75,9 +56,6 @@ class SWPMB_About {
 		);
 	}
 
-	/**
-	 * Add submenu for the About page.
-	 */
 	public function add_submenu() {
 		$parent_menu = $this->has_menu() ? 'meta-box' : $this->get_parent_menu();
 		$about       = add_submenu_page(
@@ -86,29 +64,15 @@ class SWPMB_About {
 			__( 'Dashboard', 'meta-box' ),
 			'activate_plugins',
 			'meta-box',
-			array( $this, 'render' )
+			[ $this, 'render' ]
 		);
-		add_action( "load-$about", array( $this, 'load_about' ) );
+		add_action( "load-$about", [ $this, 'enqueue' ] );
 	}
 
-	/**
-	 * Functions and hooks for about page.
-	 */
-	public function load_about() {
-		$this->enqueue();
-		add_filter( 'admin_footer_text', array( $this, 'change_footer_text' ) );
-	}
-
-	/**
-	 * Hide about page from the admin menu.
-	 */
 	public function hide_page() {
 		remove_submenu_page( $this->get_parent_menu(), 'meta-box' );
 	}
 
-	/**
-	 * Render admin page.
-	 */
 	public function render() {
 		?>
 		<div class="wrap">
@@ -119,7 +83,11 @@ class SWPMB_About {
 							<?php
 							include __DIR__ . '/sections/welcome.php';
 							include __DIR__ . '/sections/tabs.php';
-							include __DIR__ . '/sections/getting-started.php';
+							if ( $this->update_checker->has_extensions() ) {
+								include __DIR__ . '/sections/getting-started-pro.php';
+							} else {
+								include __DIR__ . '/sections/getting-started.php';
+							}
 							include __DIR__ . '/sections/extensions.php';
 							include __DIR__ . '/sections/support.php';
 							do_action( 'swpmb_about_tabs_content' );
@@ -129,6 +97,7 @@ class SWPMB_About {
 					<div id="postbox-container-1" class="postbox-container">
 						<?php
 						include __DIR__ . '/sections/products.php';
+						include __DIR__ . '/sections/review.php';
 						if ( ! $this->update_checker->has_extensions() ) {
 							include __DIR__ . '/sections/upgrade.php';
 						}
@@ -140,20 +109,9 @@ class SWPMB_About {
 		<?php
 	}
 
-	/**
-	 * Enqueue CSS and JS.
-	 */
 	public function enqueue() {
-		wp_enqueue_style( 'meta-box-about', SWPMB_URL . 'inc/about/css/about.css', array(), SWPMB_VER );
-		wp_enqueue_script( 'meta-box-about', SWPMB_URL . 'inc/about/js/about.js', array( 'jquery' ), SWPMB_VER, true );
-	}
-
-	/**
-	 * Change WordPress footer text on about page.
-	 */
-	public function change_footer_text() {
-		// Translators: %1$s - link to review form.
-		echo wp_kses_post( sprintf( __( 'Please rate <strong>Meta Box</strong> <a href="%1$s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%1$s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the Meta Box team!', 'meta-box' ), 'https://wordpress.org/support/view/plugin-reviews/meta-box?filter=5#new-post' ) );
+		wp_enqueue_style( 'meta-box-about', SWPMB_URL . 'inc/about/css/about.css', [], SWPMB_VER );
+		wp_enqueue_script( 'meta-box-about', SWPMB_URL . 'inc/about/js/about.js', [ 'jquery' ], SWPMB_VER, true );
 	}
 
 	/**
@@ -175,43 +133,23 @@ class SWPMB_About {
 		die;
 	}
 
-	/**
-	 * Get link to the plugin admin menu.
-	 *
-	 * @return string
-	 */
-	protected function get_menu_link() {
+	private function get_menu_link(): string {
 		$menu = $this->has_menu() ? 'admin.php?page=meta-box' : $this->get_parent_menu() . '?page=meta-box';
 		return admin_url( $menu );
 	}
 
-	/**
-	 * Get default parent menu, which is Plugins.
-	 *
-	 * @return string
-	 */
-	protected function get_parent_menu() {
+	private function get_parent_menu(): string {
 		return 'plugins.php';
 	}
 
-	/**
-	 * Check if the plugin has a top-level admin menu.
-	 *
-	 * @return bool
-	 */
-	protected function has_menu() {
+	private function has_menu(): bool {
 		return apply_filters( 'swpmb_admin_menu', false );
 	}
 
-	/**
-	 * Check if Meta Box is bundled by TGM Activation Class.
-	 *
-	 * @return bool
-	 */
-	protected function is_bundled() {
+	private function is_bundled(): bool {
 		// @codingStandardsIgnoreLine
 		foreach ( $_REQUEST as $key => $value ) {
-			if ( false !== strpos( $key, 'tgmpa' ) || ( ! is_array( $value ) && false !== strpos( $value, 'tgmpa' ) ) ) {
+			if ( str_contains( $key, 'tgmpa' ) || ( is_string( $value ) && str_contains( $value, 'tgmpa' ) ) ) {
 				return true;
 			}
 		}

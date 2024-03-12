@@ -1,20 +1,14 @@
 <?php
-/**
- * The image select field which behaves similar to the radio field but uses images as options.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * The image select field class.
+ * The image select field which behaves similar to the radio field but uses images as options.
  */
 class SWPMB_Image_Select_Field extends SWPMB_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-image-select', SWPMB_CSS_URL . 'image-select.css', array(), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-image-select', SWPMB_JS_URL . 'image-select.js', array( 'jquery' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-image-select', SWPMB_CSS_URL . 'image-select.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-image-select', 'path', SWPMB_CSS_DIR . 'image-select.css' );
+		wp_enqueue_script( 'swpmb-image-select', SWPMB_JS_URL . 'image-select.js', [ 'jquery' ], SWPMB_VER, true );
 	}
 
 	/**
@@ -25,17 +19,14 @@ class SWPMB_Image_Select_Field extends SWPMB_Field {
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$html = array();
-		$tpl  = '<label class="swpmb-image-select"><img src="%s"><input type="%s" class="swpmb-image_select" name="%s" value="%s"%s></label>';
-
-		$meta = (array) $meta;
+		$html    = [];
+		$meta    = (array) $meta;
 		foreach ( $field['options'] as $value => $image ) {
-			$html[] = sprintf(
-				$tpl,
+			$attributes = self::get_attributes( $field, $value );
+			$html[]     = sprintf(
+				'<label class="swpmb-image-select"><img src="%s"><input %s%s></label>',
 				$image,
-				$field['multiple'] ? 'checkbox' : 'radio',
-				$field['field_name'],
-				$value,
+				self::render_attributes( $attributes ),
 				checked( in_array( $value, $meta ), true, false )
 			);
 		}
@@ -51,9 +42,26 @@ class SWPMB_Image_Select_Field extends SWPMB_Field {
 	 */
 	public static function normalize( $field ) {
 		$field                = parent::normalize( $field );
+		$field['options']     = $field['options'] ?? [];
 		$field['field_name'] .= $field['multiple'] ? '[]' : '';
 
 		return $field;
+	}
+
+	/**
+	 * Get the attributes for a field.
+	 *
+	 * @param array $field Field parameters.
+	 * @param mixed $value Meta value.
+	 * @return array
+	 */
+	public static function get_attributes( $field, $value = null ) {
+		$attributes          = parent::get_attributes( $field, $value );
+		$attributes['id']    = false;
+		$attributes['type']  = $field['multiple'] ? 'checkbox' : 'radio';
+		$attributes['value'] = $value;
+
+		return $attributes;
 	}
 
 	/**

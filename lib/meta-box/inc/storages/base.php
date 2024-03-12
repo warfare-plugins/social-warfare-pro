@@ -1,15 +1,10 @@
 <?php
-/**
- * Base storage
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Class SWPMB_Base_Storage
+ * Base storage.
  */
 class SWPMB_Base_Storage implements SWPMB_Storage_Interface {
-
 	/**
 	 * Object type.
 	 *

@@ -1,26 +1,20 @@
 <?php
+defined( 'ABSPATH' ) || die;
+
 /**
  * The color field which uses WordPress color picker to select a color.
- *
- * @package Meta Box
  */
-
-/**
- * Color field class.
- */
-class SWPMB_Color_Field extends SWPMB_Text_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
+class SWPMB_Color_Field extends SWPMB_Input_Field {
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-color', SWPMB_CSS_URL . 'color.css', array( 'wp-color-picker' ), SWPMB_VER );
+		wp_enqueue_style( 'swpmb-color', SWPMB_CSS_URL . 'color.css', [ 'wp-color-picker' ], SWPMB_VER );
+		wp_style_add_data( 'swpmb-color', 'path', SWPMB_CSS_DIR . 'color.css' );
 
-		$dependencies = array( 'wp-color-picker' );
+		$dependencies = [ 'wp-color-picker' ];
 		$args         = func_get_args();
 		$field        = reset( $args );
 		if ( ! empty( $field['alpha_channel'] ) ) {
-			wp_enqueue_script( 'wp-color-picker-alpha', SWPMB_JS_URL . 'wp-color-picker-alpha/wp-color-picker-alpha.min.js', array( 'wp-color-picker' ), SWPMB_VER, true );
-			$dependencies = array( 'wp-color-picker-alpha' );
+			wp_enqueue_script( 'wp-color-picker-alpha', SWPMB_JS_URL . 'wp-color-picker-alpha/wp-color-picker-alpha.min.js', [ 'wp-color-picker' ], SWPMB_VER, true );
+			$dependencies = [ 'wp-color-picker-alpha' ];
 		}
 		wp_enqueue_script( 'swpmb-color', SWPMB_JS_URL . 'color.js', $dependencies, SWPMB_VER, true );
 	}
@@ -33,22 +27,16 @@ class SWPMB_Color_Field extends SWPMB_Text_Field {
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args(
-			$field,
-			array(
-				'alpha_channel' => false,
-				'js_options'    => array(),
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'alpha_channel' => false,
+			'js_options'    => [],
+		] );
 
-		$field['js_options'] = wp_parse_args(
-			$field['js_options'],
-			array(
-				'defaultColor' => false,
-				'hide'         => true,
-				'palettes'     => true,
-			)
-		);
+		$field['js_options'] = wp_parse_args( $field['js_options'], [
+			'defaultColor' => false,
+			'hide'         => true,
+			'palettes'     => true,
+		] );
 
 		$field = parent::normalize( $field );
 
@@ -65,16 +53,14 @@ class SWPMB_Color_Field extends SWPMB_Text_Field {
 	 */
 	public static function get_attributes( $field, $value = null ) {
 		$attributes         = parent::get_attributes( $field, $value );
-		$attributes         = wp_parse_args(
-			$attributes,
-			array(
-				'data-options' => wp_json_encode( $field['js_options'] ),
-			)
-		);
+		$attributes         = wp_parse_args( $attributes, [
+			'data-options' => wp_json_encode( $field['js_options'] ),
+		] );
 		$attributes['type'] = 'text';
 
 		if ( $field['alpha_channel'] ) {
-			$attributes['data-alpha'] = 'true';
+			$attributes['data-alpha-enabled']    = 'true';
+			$attributes['data-alpha-color-type'] = 'hex';
 		}
 
 		return $attributes;

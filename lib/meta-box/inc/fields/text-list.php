@@ -1,19 +1,13 @@
 <?php
-/**
- * The text list field which allows users to enter multiple texts.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Text list field class.
+ * The text list field which allows users to enter multiple texts.
  */
 class SWPMB_Text_List_Field extends SWPMB_Multiple_Values_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-text-list', SWPMB_CSS_URL . 'text-list.css', '', SWPMB_VER );
+		wp_enqueue_style( 'swpmb-text-list', SWPMB_CSS_URL . 'text-list.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-text-list', 'path', SWPMB_CSS_DIR . 'text-list.css' );
 	}
 
 	/**
@@ -28,17 +22,21 @@ class SWPMB_Text_List_Field extends SWPMB_Multiple_Values_Field {
 		if ( empty( $field['options'] ) ) {
 			return '';
 		}
-		$html  = array();
-		$input = '<label><span class="swpmb-text-list-label">%s</span> <input type="text" class="swpmb-text-list" name="%s" value="%s" placeholder="%s"></label>';
+		$html  = [];
+		$input = '<label><span class="swpmb-text-list-label">%s</span> <input %s></label>';
+
+		$attributes         = self::get_attributes( $field, $meta );
+		$attributes['type'] = 'text';
 
 		$count = 0;
 		foreach ( $field['options'] as $placeholder => $label ) {
+			$attributes['value']       = $meta[ $count ] ?? '';
+			$attributes['placeholder'] = $placeholder;
+
 			$html[] = sprintf(
 				$input,
 				$label,
-				$field['field_name'],
-				isset( $meta[ $count ] ) ? esc_attr( $meta[ $count ] ) : '',
-				esc_attr( $placeholder )
+				self::render_attributes( $attributes )
 			);
 			$count ++;
 		}
@@ -74,7 +72,7 @@ class SWPMB_Text_List_Field extends SWPMB_Multiple_Values_Field {
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
 		$filtered = array_filter( $new );
-		return count( $filtered ) ? $new : array();
+		return count( $filtered ) ? $new : [];
 	}
 
 	/**

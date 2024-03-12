@@ -1,20 +1,14 @@
 <?php
-/**
- * The select field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Select field class.
+ * The select field.
  */
 class SWPMB_Select_Field extends SWPMB_Choice_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-select', SWPMB_CSS_URL . 'select.css', array(), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-select', SWPMB_JS_URL . 'select.js', array( 'jquery' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-select', SWPMB_CSS_URL . 'select.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-select', 'path', SWPMB_CSS_DIR . 'select.css' );
+		wp_enqueue_script( 'swpmb-select', SWPMB_JS_URL . 'select.js', [ 'jquery' ], SWPMB_VER, true );
 	}
 
 	/**
@@ -51,12 +45,9 @@ class SWPMB_Select_Field extends SWPMB_Choice_Field {
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 		$field = $field['multiple'] ? SWPMB_Multiple_Values_Field::normalize( $field ) : $field;
-		$field = wp_parse_args(
-			$field,
-			array(
-				'select_all_none' => false,
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'select_all_none' => false,
+		] );
 
 		return $field;
 	}
@@ -71,12 +62,9 @@ class SWPMB_Select_Field extends SWPMB_Choice_Field {
 	 */
 	public static function get_attributes( $field, $value = null ) {
 		$attributes = parent::get_attributes( $field, $value );
-		$attributes = wp_parse_args(
-			$attributes,
-			array(
-				'multiple' => $field['multiple'],
-			)
-		);
+		$attributes = wp_parse_args( $attributes, [
+			'multiple' => $field['multiple'],
+		] );
 
 		return $attributes;
 	}

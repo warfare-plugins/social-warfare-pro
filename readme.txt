@@ -2,8 +2,8 @@
 Contributors: holas84, webinator, warfareplugins, cdegraff1
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
-Tested up to: 6.3.2
-Stable tag: 4.4.5.1
+Tested up to: 6.5
+Stable tag: 4.4.6
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -194,6 +194,16 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+
+= 4.4.6 (12 Mar 2024) =
+* Introduced a caching mechanism for analytics data, significantly reducing database load and enhancing page load speeds. Further details at https://github.com/warfare-plugins/social-warfare/issues/826.
+* Optimized the `record_share_counts` method to eliminate redundant database updates, now incorporating checks against existing data for efficiency.
+* Deployed transient caching for social share counts, effectively minimizing database query frequency and its performance impact.
+* Implemented strategic database query optimizations, including indexing recommendations, to accelerate query processing.
+* Strengthened error handling and validation in the analytics update workflow, safeguarding data accuracy and integrity.
+* Refactored analytics data management to bolster maintainability and alignment with WordPress coding standards.
+* Addressed the post-preview anomaly in Social Warfare Pro, rectifying the 'undefined' URL or page not found error, as documented at https://github.com/warfare-plugins/social-warfare/issues/897.
+
 = 4.4.5.1 (11 JAN 2024) =
 * Update SWP_Pro_Analytics_Database.php
 

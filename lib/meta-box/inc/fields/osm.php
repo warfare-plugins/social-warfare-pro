@@ -1,33 +1,20 @@
 <?php
+defined( 'ABSPATH' ) || die;
+
 /**
  * The Open Street Map field.
- *
- * @package Meta Box
- * @since   4.15.0
- */
-
-/**
- * Open Street Map field class.
  */
 class SWPMB_OSM_Field extends SWPMB_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		// Because map is a hosted service, it's ok to use hosted Leaflet scripts.
-		wp_enqueue_style( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css', array(), '1.5.1' );
-		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.js', array(), '1.5.1', true );
+		self::enqueue_map_assets();
 
-		wp_enqueue_style( 'swpmb-osm', SWPMB_CSS_URL . 'osm.css', array( 'leaflet' ), SWPMB_VER );
-		wp_enqueue_script( 'swpmb-osm', SWPMB_JS_URL . 'osm.js', array( 'jquery', 'jquery-ui-autocomplete', 'leaflet' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-osm', SWPMB_CSS_URL . 'osm.css', [ 'leaflet' ], SWPMB_VER );
+		wp_style_add_data( 'swpmb-osm', 'path', SWPMB_CSS_DIR . 'osm.css' );
+		wp_enqueue_script( 'swpmb-osm', SWPMB_JS_URL . 'osm.js', [ 'jquery', 'jquery-ui-autocomplete', 'leaflet' ], SWPMB_VER, true );
 
-		SWPMB_Helpers_Field::localize_script_once(
-			'swpmb-osm',
-			'SWPMB_Osm',
-			array(
-				'no_results_string' => __( 'No results found', 'meta-box' ),
-			)
-		);
+		SWPMB_Helpers_Field::localize_script_once( 'swpmb-osm', 'SWPMB_Osm', [
+			'no_results_string' => __( 'No results found', 'meta-box' ),
+		] );
 	}
 
 	/**
@@ -45,14 +32,17 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 			esc_attr( $address )
 		);
 
+		$attributes          = self::get_attributes( $field, $meta );
+		$attributes['type']  = 'hidden';
+		$attributes['value'] = $meta;
+
 		$html .= sprintf(
 			'<div class="swpmb-osm-canvas" data-default-loc="%s" data-region="%s" data-language="%s"></div>
-			<input type="hidden" name="%s" class="swpmb-osm-coordinate" value="%s">',
+			<input %s>',
 			esc_attr( $field['std'] ),
 			esc_attr( $field['region'] ),
 			esc_attr( $field['language'] ),
-			esc_attr( $field['field_name'] ),
-			esc_attr( $meta )
+			self::render_attributes( $attributes )
 		);
 
 		$html .= '</div>';
@@ -69,15 +59,12 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'std'           => '',
-				'address_field' => '',
-				'language'      => '',
-				'region'        => '',
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'std'           => '',
+			'address_field' => '',
+			'language'      => '',
+			'region'        => '',
+		] );
 
 		return $field;
 	}
@@ -93,7 +80,7 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 	 *
 	 * @return mixed Array(latitude, longitude, zoom)
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value                               = parent::get_value( $field, $args, $post_id );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
 		return compact( 'latitude', 'longitude', 'zoom' );
@@ -109,7 +96,7 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 	 *
 	 * @return string HTML output of the field
 	 */
-	public static function the_value( $field, $args = array(), $post_id = null ) {
+	public static function the_value( $field, $args = [], $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
 		return self::render_map( $value, $args );
 	}
@@ -117,47 +104,42 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 	/**
 	 * Render a map in the frontend.
 	 *
-	 * @param array $location The [latitude, longitude[, zoom]] location.
-	 * @param array $args     Additional arguments for the map.
+	 * @param string $location The "latitude,longitude[,zoom]" location.
+	 * @param array  $args     Additional arguments for the map.
 	 *
 	 * @return string
 	 */
-	public static function render_map( $location, $args = array() ) {
+	public static function render_map( $location, $args = [] ) {
 		list( $latitude, $longitude, $zoom ) = explode( ',', $location . ',,' );
 		if ( ! $latitude || ! $longitude ) {
 			return '';
 		}
 
-		$args = wp_parse_args(
-			$args,
-			array(
-				'latitude'     => $latitude,
-				'longitude'    => $longitude,
-				'width'        => '100%',
-				'height'       => '480px',
-				'marker'       => true, // Display marker?
-				'marker_title' => '', // Marker title, when hover.
-				'info_window'  => '', // Content of info window (when click on marker). HTML allowed.
-				'js_options'   => array(),
-				'zoom'         => $zoom,
-			)
-		);
+		$args = wp_parse_args( $args, [
+			'latitude'     => $latitude,
+			'longitude'    => $longitude,
+			'width'        => '100%',
+			'height'       => '480px',
+			'marker'       => true, // Display marker?
+			'marker_title' => '', // Marker title, when hover.
+			'info_window'  => '', // Content of info window (when click on marker). HTML allowed.
+			'js_options'   => [],
+			'zoom'         => $zoom,
+		] );
 
-		wp_enqueue_style( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css', array(), '1.5.1' );
-		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.js', array(), '1.5.1', true );
-		wp_enqueue_script( 'swpmb-osm-frontend', SWPMB_JS_URL . 'osm-frontend.js', array( 'jquery', 'leaflet' ), SWPMB_VER, true );
+		self::enqueue_map_assets();
+		wp_enqueue_script( 'swpmb-osm-frontend', SWPMB_JS_URL . 'osm-frontend.js', [ 'jquery', 'leaflet' ], SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-osm-frontend', SWPMB_CSS_URL . 'osm-frontend.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-osm-frontend', 'path', SWPMB_CSS_DIR . 'osm-frontend.css' );
 
 		/*
 		 * More Open Street Map options
 		 * @link https://leafletjs.com/reference-1.5.0.html#map-option
 		 */
-		$args['js_options'] = wp_parse_args(
-			$args['js_options'],
-			array(
-				// Default to 'zoom' level set in admin, but can be overwritten.
-				'zoom' => $args['zoom'],
-			)
-		);
+		$args['js_options'] = wp_parse_args( $args['js_options'], [
+			// Default to 'zoom' level set in admin, but can be overwritten.
+			'zoom' => $args['zoom'],
+		] );
 
 		$output = sprintf(
 			'<div class="swpmb-osm-canvas" data-osm_options="%s" style="width:%s;height:%s"></div>',
@@ -166,5 +148,10 @@ class SWPMB_OSM_Field extends SWPMB_Field {
 			esc_attr( $args['height'] )
 		);
 		return $output;
+	}
+
+	private static function enqueue_map_assets() {
+		wp_enqueue_style( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4' );
+		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true );
 	}
 }

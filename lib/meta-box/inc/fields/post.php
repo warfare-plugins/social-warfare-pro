@@ -1,25 +1,15 @@
 <?php
+defined( 'ABSPATH' ) || die;
+
 /**
  * The post field which allows users to select existing posts.
- *
- * @package Meta Box
- */
-
-/**
- * Post field class.
  */
 class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
-	/**
-	 * Add ajax actions callback.
-	 */
 	public static function add_actions() {
-		add_action( 'wp_ajax_swpmb_get_posts', array( __CLASS__, 'ajax_get_posts' ) );
-		add_action( 'wp_ajax_nopriv_swpmb_get_posts', array( __CLASS__, 'ajax_get_posts' ) );
+		add_action( 'wp_ajax_swpmb_get_posts', [ __CLASS__, 'ajax_get_posts' ] );
+		add_action( 'wp_ajax_nopriv_swpmb_get_posts', [ __CLASS__, 'ajax_get_posts' ] );
 	}
 
-	/**
-	 * Query posts via ajax.
-	 */
 	public static function ajax_get_posts() {
 		check_ajax_referer( 'query' );
 
@@ -32,10 +22,10 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 		$field['_original_id'] = $field['id'];
 
 		// Search.
-		$field['query_args']['s'] = $request->filter_post( 'term', FILTER_SANITIZE_STRING );
+		$field['query_args']['s'] = $request->filter_post( 'term' );
 
 		// Pagination.
-		if ( 'query:append' === $request->filter_post( '_type', FILTER_SANITIZE_STRING ) ) {
+		if ( 'query:append' === $request->filter_post( '_type' ) ) {
 			$field['query_args']['paged'] = $request->filter_post( 'page', FILTER_SANITIZE_NUMBER_INT );
 		}
 
@@ -43,7 +33,9 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 		$items = self::query( null, $field );
 		$items = array_values( $items );
 
-		$data = array( 'items' => $items );
+		$items = apply_filters( 'swpmb_ajax_get_posts', $items, $field, $request );
+
+		$data = [ 'items' => $items ];
 
 		// More items for pagination.
 		$limit = (int) $field['query_args']['posts_per_page'];
@@ -61,14 +53,11 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = wp_parse_args(
-			$field,
-			array(
-				'post_type'  => 'post',
-				'parent'     => false,
-				'query_args' => array(),
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'post_type'  => 'post',
+			'parent'     => false,
+			'query_args' => [],
+		] );
 
 		$field['post_type'] = (array) $field['post_type'];
 
@@ -82,16 +71,13 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 			$post_type        = reset( $field['post_type'] );
 			$post_type_object = get_post_type_object( $post_type );
 			if ( ! empty( $post_type_object ) ) {
-				// Translators: %s is the taxonomy singular label.
+				// Translators: %s is the post singular label.
 				$placeholder = sprintf( __( 'Select a %s', 'meta-box' ), strtolower( $post_type_object->labels->singular_name ) );
 			}
 		}
-		$field = wp_parse_args(
-			$field,
-			array(
-				'placeholder' => $placeholder,
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'placeholder' => $placeholder,
+		] );
 
 		// Set parent option, which will change field name to `parent_id` to save as post parent.
 		if ( $field['parent'] ) {
@@ -103,36 +89,26 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 
 		// Set default query args.
 		$posts_per_page      = $field['ajax'] ? 10 : -1;
-		$field['query_args'] = wp_parse_args(
-			$field['query_args'],
-			array(
-				'post_type'      => $field['post_type'],
-				'post_status'    => 'publish',
-				'posts_per_page' => $posts_per_page,
-			)
-		);
+		$field['query_args'] = wp_parse_args( $field['query_args'], [
+			'post_type'      => $field['post_type'],
+			'post_status'    => 'publish',
+			'posts_per_page' => $posts_per_page,
+		] );
 
 		parent::set_ajax_params( $field );
 
 		return $field;
 	}
 
-	/**
-	 * Query posts for field options.
-	 *
-	 * @param  array $meta  Saved meta value.
-	 * @param  array $field Field settings.
-	 * @return array        Field options array.
-	 */
-	public static function query( $meta, $field ) {
-		$args = wp_parse_args(
-			$field['query_args'],
-			array(
-				'no_found_rows'          => true,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-			)
-		);
+	public static function query( $meta, array $field ): array {
+		$args = wp_parse_args( $field['query_args'], [
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'mb_field_id'            => $field['id'],
+		] );
+
+		$meta = wp_parse_id_list( (array) $meta );
 
 		// Query only selected items.
 		if ( ! empty( $field['ajax'] ) && ! empty( $meta ) ) {
@@ -150,20 +126,54 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 			return $options;
 		}
 
-		$query   = new WP_Query( $args );
-		$options = array();
+		// Only search by title.
+		add_filter( 'posts_search', [ __CLASS__, 'search_by_title' ], 10, 2 );
+		$query = new WP_Query( $args );
+		remove_filter( 'posts_search', [ __CLASS__, 'search_by_title' ] );
+
+		$options = [];
 		foreach ( $query->posts as $post ) {
-			$options[ $post->ID ] = array(
+			$label                = $post->post_title ? $post->post_title : __( '(No title)', 'meta-box' );
+			$label                = self::filter( 'choice_label', $label, $field, $post );
+			$options[ $post->ID ] = [
 				'value'  => $post->ID,
-				'label'  => self::filter( 'choice_label', $post->post_title, $field, $post ),
+				'label'  => $label,
 				'parent' => $post->post_parent,
-			);
+			];
 		}
 
 		// Cache the query.
 		wp_cache_set( $cache_key, $options, 'meta-box-post-field' );
 
 		return $options;
+	}
+
+	/**
+	 * Only search posts by title.
+	 * WordPress searches by either title or content which is confused when users can't find their posts.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/posts_search/
+	 */
+	public static function search_by_title( $search, $wp_query ) {
+		global $wpdb;
+		if ( empty( $search ) ) {
+			return $search;
+		}
+		$q      = $wp_query->query_vars;
+		$n      = ! empty( $q['exact'] ) ? '' : '%';
+		$search = [];
+		foreach ( (array) $q['search_terms'] as $term ) {
+			$term     = esc_sql( $wpdb->esc_like( $term ) );
+			$search[] = "($wpdb->posts.post_title LIKE '{$n}{$term}{$n}')";
+		}
+		if ( empty( $search ) ) {
+			return $search;
+		}
+		$search = ' AND (' . implode( ' AND ', $search ) . ') ';
+		if ( ! is_user_logged_in() ) {
+			$search .= " AND ($wpdb->posts.post_password = '') ";
+		}
+		return $search;
 	}
 
 	/**
@@ -186,24 +196,52 @@ class SWPMB_Post_Field extends SWPMB_Object_Choice_Field {
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field   Field parameters.
+	 * @param int   $value   The value.
+	 * @param array $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param ?int  $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
 	public static function format_single_value( $field, $value, $args, $post_id ) {
-		return ! $value ? '' : sprintf(
-			'<a href="%s" title="%s">%s</a>',
-			esc_url( get_permalink( $value ) ),
-			the_title_attribute(
-				array(
-					'post' => $value,
-					'echo' => false,
-				)
-			),
-			get_the_title( $value )
+		if ( empty( $value ) ) {
+			return '';
+		}
+
+		$link = $args['link'] ?? 'view';
+		$text = get_the_title( $value );
+
+		if ( false === $link ) {
+			return $text;
+		}
+		$url = get_permalink( $value );
+		if ( 'edit' === $link ) {
+			$url = get_edit_post_link( $value );
+		}
+
+		return sprintf( '<a href="%s">%s</a>', esc_url( $url ), wp_kses_post( $text ) );
+	}
+
+	public static function add_new_form( array $field ): string {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return '';
+		}
+
+		if ( 1 !== count( $field['post_type'] ) ) {
+			return '';
+		}
+
+		$post_type = reset( $field['post_type'] );
+		if ( ! post_type_exists( $post_type ) ) {
+			return '';
+		}
+
+		$post_type_object = get_post_type_object( $post_type );
+
+		return sprintf(
+			'<a href="#" class="swpmb-post-add-button swpmb-modal-add-button" data-url="%s">%s</a>',
+			admin_url( $post_type === 'post' ? 'post-new.php' : 'post-new.php?post_type=' . $post_type ),
+			esc_html( $post_type_object->labels->add_new_item )
 		);
 	}
 }

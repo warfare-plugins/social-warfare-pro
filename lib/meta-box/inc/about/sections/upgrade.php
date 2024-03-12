@@ -1,11 +1,5 @@
-<?php
-/**
- * Upgrade notice
- *
- * @package Meta Box
- */
+<?php defined( 'ABSPATH' ) || die ?>
 
-?>
 <div class="upgrade">
 	<h3><span class="dashicons dashicons-awards"></span> <?php esc_html_e( 'Upgrade to Meta Box PRO', 'meta-box' ); ?></h3>
 	<p><?php esc_html_e( 'Please upgrade to the PRO plan to unlock more awesome features.', 'meta-box' ); ?></p>
@@ -17,7 +11,7 @@
 		<li><svg class="icon"><use xlink:href="#checkmark-outline"></use></svg><?php esc_html_e( 'Save custom fields in custom tables.', 'meta-box' ); ?></li>
 		<li><svg class="icon"><use xlink:href="#checkmark-outline"></use></svg><?php esc_html_e( 'And much more!', 'meta-box' ); ?></li>
 	</ul>
-	<a class="button button-primary" target="_blank" href="https://metabox.io/pricing/?utm_source=WordPress&utm_medium=link&utm_campaign=plugin"><?php esc_html_e( 'Get Meta Box PRO now', 'meta-box' ); ?></a>
+	<a class="button button-primary" target="_blank" href="https://metabox.io/pricing/?utm_source=dashboard&utm_medium=link&utm_campaign=meta_box"><?php esc_html_e( 'Get Meta Box PRO now', 'meta-box' ); ?></a>
 </div>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
 	<symbol id="checkmark-outline" viewBox="0 0 20 20">

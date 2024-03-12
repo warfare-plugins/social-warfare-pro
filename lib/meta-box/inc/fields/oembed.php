@@ -1,14 +1,10 @@
 <?php
-/**
- * The oEmbed field which allows users to enter oEmbed URLs.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * OEmbed field class.
+ * The oEmbed field which allows users to enter oEmbed URLs.
  */
-class SWPMB_OEmbed_Field extends SWPMB_Text_Field {
+class SWPMB_OEmbed_Field extends SWPMB_Input_Field {
 	/**
 	 * Normalize parameters for field.
 	 *
@@ -18,41 +14,32 @@ class SWPMB_OEmbed_Field extends SWPMB_Text_Field {
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
 
-		$field               = wp_parse_args(
-			$field,
-			array(
-				'not_available_string' => __( 'Embed HTML not available.', 'meta-box' ),
-			)
-		);
-		$field['attributes'] = wp_parse_args(
-			$field['attributes'],
-			array(
-				'data-not-available' => $field['not_available_string'],
-			)
-		);
+		$field               = wp_parse_args( $field, [
+			'not_available_string' => __( 'Embed HTML not available.', 'meta-box' ),
+		] );
+		$field['attributes'] = wp_parse_args( $field['attributes'], [
+			'data-not-available' => $field['not_available_string'],
+		] );
 
 		return $field;
 	}
 
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-oembed', SWPMB_CSS_URL . 'oembed.css', '', SWPMB_VER );
-		wp_enqueue_script( 'swpmb-oembed', SWPMB_JS_URL . 'oembed.js', array( 'jquery', 'underscore' ), SWPMB_VER, true );
+		wp_enqueue_style( 'swpmb-oembed', SWPMB_CSS_URL . 'oembed.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-oembed', 'path', SWPMB_CSS_DIR . 'oembed.css' );
+		wp_enqueue_script( 'swpmb-oembed', SWPMB_JS_URL . 'oembed.js', [ 'jquery', 'underscore', 'swpmb' ], SWPMB_VER, true );
+		wp_localize_script( 'swpmb-oembed', 'swpmbOembed', [
+			'nonce' => wp_create_nonce( 'oembed_get' ),
+		] );
 	}
 
-	/**
-	 * Add actions.
-	 */
 	public static function add_actions() {
-		add_action( 'wp_ajax_swpmb_get_embed', array( __CLASS__, 'wp_ajax_get_embed' ) );
+		add_action( 'wp_ajax_swpmb_get_embed', [ __CLASS__, 'ajax_get_embed' ] );
 	}
 
-	/**
-	 * Ajax callback for returning oEmbed HTML.
-	 */
-	public static function wp_ajax_get_embed() {
+	public static function ajax_get_embed() {
+		check_ajax_referer( 'oembed_get' );
+
 		$request       = swpmb_request();
 		$url           = (string) $request->filter_post( 'url', FILTER_SANITIZE_URL );
 		$not_available = (string) $request->post( 'not_available' );
@@ -76,7 +63,7 @@ class SWPMB_OEmbed_Field extends SWPMB_Text_Field {
 		 * @see  WP_Embed::shortcode()
 		 * @see  wp_embed_defaults()
 		 */
-		$args = array();
+		$args = [];
 		if ( is_admin() ) {
 			$args['width'] = 360;
 		}
