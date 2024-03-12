@@ -1,60 +1,33 @@
 <?php
+defined( 'ABSPATH' ) || die;
+
 /**
  * The Google Maps field.
- *
- * @package Meta Box
- */
-
-/**
- * Map field class.
  */
 class SWPMB_Map_Field extends SWPMB_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-map', SWPMB_CSS_URL . 'map.css', array(), SWPMB_VER );
+		wp_enqueue_style( 'swpmb-map', SWPMB_CSS_URL . 'map.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-map', 'path', SWPMB_CSS_DIR . 'map.css' );
 
-		/**
-		 * Since June 2016, Google Maps requires a valid API key.
-		 *
-		 * @link http://googlegeodevelopers.blogspot.com/2016/06/building-for-scale-updates-to-google.html
-		 * @link https://developers.google.com/maps/documentation/javascript/get-api-key
-		 */
 		$args            = func_get_args();
 		$field           = $args[0];
-		$google_maps_url = add_query_arg(
-			array(
-				'key'      => $field['api_key'],
-				'language' => $field['language'],
-			),
-			'https://maps.google.com/maps/api/js'
-		);
+		$google_maps_url = add_query_arg( [
+			'key'       => $field['api_key'],
+			'language'  => $field['language'],
+			'libraries' => 'places',
+		], 'https://maps.google.com/maps/api/js' );
 
 		/**
 		 * Allows developers load more libraries via a filter.
-		 *
 		 * @link https://developers.google.com/maps/documentation/javascript/libraries
 		 */
 		$google_maps_url = apply_filters( 'swpmb_google_maps_url', $google_maps_url );
-		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), array(), SWPMB_VER, true );
-		wp_enqueue_script(
-			'swpmb-map',
-			SWPMB_JS_URL . 'map.js',
-			array(
-				'jquery-ui-autocomplete',
-				'google-maps',
-			),
-			SWPMB_VER,
-			true
-		);
-		SWPMB_Helpers_Field::localize_script_once(
-			'swpmb-map',
-			'SWPMB_Map',
-			array(
-				'no_results_string' => __( 'No results found', 'meta-box' ),
-			)
-		);
+
+		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), [], SWPMB_VER, true );
+		wp_enqueue_script( 'swpmb-map', SWPMB_JS_URL . 'map.js', [ 'jquery-ui-autocomplete', 'google-maps' ], SWPMB_VER, true );
+		SWPMB_Helpers_Field::localize_script_once( 'swpmb-map', 'SWPMB_Map', [
+			'no_results_string' => __( 'No results found', 'meta-box' ),
+		] );
 	}
 
 	/**
@@ -72,13 +45,16 @@ class SWPMB_Map_Field extends SWPMB_Field {
 			esc_attr( $address )
 		);
 
+		$attributes          = self::get_attributes( $field, $meta );
+		$attributes['type']  = 'hidden';
+		$attributes['value'] = $meta;
+
 		$html .= sprintf(
 			'<div class="swpmb-map-canvas" data-default-loc="%s" data-region="%s"></div>
-			<input type="hidden" name="%s" class="swpmb-map-coordinate" value="%s">',
+			<input %s>',
 			esc_attr( $field['std'] ),
 			esc_attr( $field['region'] ),
-			esc_attr( $field['field_name'] ),
-			esc_attr( $meta )
+			self::render_attributes( $attributes )
 		);
 
 		$html .= '</div>';
@@ -95,19 +71,16 @@ class SWPMB_Map_Field extends SWPMB_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'std'           => '',
-				'address_field' => '',
-				'language'      => '',
-				'region'        => '',
+		$field = wp_parse_args( $field, [
+			'std'           => '',
+			'address_field' => '',
+			'language'      => '',
+			'region'        => '',
 
-				// Default API key, required by Google Maps since June 2016.
-				// Users should overwrite this key with their own key.
-				'api_key'       => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
-			)
-		);
+			// Default API key, required by Google Maps since June 2016.
+			// Users should overwrite this key with their own key.
+			'api_key'       => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
+		] );
 
 		return $field;
 	}
@@ -123,7 +96,7 @@ class SWPMB_Map_Field extends SWPMB_Field {
 	 *
 	 * @return mixed Array(latitude, longitude, zoom)
 	 */
-	public static function get_value( $field, $args = array(), $post_id = null ) {
+	public static function get_value( $field, $args = [], $post_id = null ) {
 		$value                               = parent::get_value( $field, $args, $post_id );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
 		return compact( 'latitude', 'longitude', 'zoom' );
@@ -139,49 +112,43 @@ class SWPMB_Map_Field extends SWPMB_Field {
 	 *
 	 * @return string HTML output of the field
 	 */
-	public static function the_value( $field, $args = array(), $post_id = null ) {
+	public static function the_value( $field, $args = [], $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
-		$args  = wp_parse_args(
-			$args,
-			array(
-				'api_key' => isset( $field['api_key'] ) ? $field['api_key'] : '',
-			)
-		);
+		$args  = wp_parse_args( $args, [
+			'api_key' => $field['api_key'] ?? '',
+		] );
 		return self::render_map( $value, $args );
 	}
 
 	/**
 	 * Render a map in the frontend.
 	 *
-	 * @param array $location The [latitude, longitude[, zoom]] location.
-	 * @param array $args     Additional arguments for the map.
+	 * @param string $location The "latitude,longitude[,zoom]" location.
+	 * @param array  $args     Additional arguments for the map.
 	 *
 	 * @return string
 	 */
-	public static function render_map( $location, $args = array() ) {
+	public static function render_map( $location, $args = [] ) {
 		list( $latitude, $longitude, $zoom ) = explode( ',', $location . ',,' );
 		if ( ! $latitude || ! $longitude ) {
 			return '';
 		}
 
-		$args = wp_parse_args(
-			$args,
-			array(
-				'latitude'     => $latitude,
-				'longitude'    => $longitude,
-				'width'        => '100%',
-				'height'       => '480px',
-				'marker'       => true, // Display marker?
-				'marker_title' => '', // Marker title, when hover.
-				'info_window'  => '', // Content of info window (when click on marker). HTML allowed.
-				'js_options'   => array(),
-				'zoom'         => $zoom,
+		$args = wp_parse_args( $args, [
+			'latitude'     => $latitude,
+			'longitude'    => $longitude,
+			'width'        => '100%',
+			'height'       => '480px',
+			'marker'       => true, // Display marker?
+			'marker_title' => '', // Marker title, when hover.
+			'info_window'  => '', // Content of info window (when click on marker). HTML allowed.
+			'js_options'   => [],
+			'zoom'         => $zoom,
 
-				// Default API key, required by Google Maps since June 2016.
-				// Users should overwrite this key with their own key.
-				'api_key'      => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
-			)
-		);
+			// Default API key, required by Google Maps since June 2016.
+			// Users should overwrite this key with their own key.
+			'api_key'      => 'AIzaSyC1mUh87SGFyf133tpZQJa-s96p0tgnraQ',
+		] );
 
 		$google_maps_url = add_query_arg( 'key', $args['api_key'], 'https://maps.google.com/maps/api/js' );
 
@@ -190,8 +157,8 @@ class SWPMB_Map_Field extends SWPMB_Field {
 		 * @link https://developers.google.com/maps/documentation/javascript/libraries
 		 */
 		$google_maps_url = apply_filters( 'swpmb_google_maps_url', $google_maps_url );
-		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), array(), SWPMB_VER, true );
-		wp_enqueue_script( 'swpmb-map-frontend', SWPMB_JS_URL . 'map-frontend.js', array( 'google-maps', 'jquery' ), SWPMB_VER, true );
+		wp_register_script( 'google-maps', esc_url_raw( $google_maps_url ), [], SWPMB_VER, true );
+		wp_enqueue_script( 'swpmb-map-frontend', SWPMB_JS_URL . 'map-frontend.js', [ 'google-maps', 'jquery' ], SWPMB_VER, true );
 
 		/*
 		 * Google Maps options.
@@ -199,19 +166,16 @@ class SWPMB_Map_Field extends SWPMB_Field {
 		 * This array will be convert to Javascript Object and pass as map options.
 		 * @link https://developers.google.com/maps/documentation/javascript/reference
 		 */
-		$args['js_options'] = wp_parse_args(
-			$args['js_options'],
-			array(
-				// Default to 'zoom' level set in admin, but can be overwritten.
-				'zoom'      => $args['zoom'],
+		$args['js_options'] = wp_parse_args( $args['js_options'], [
+			// Default to 'zoom' level set in admin, but can be overwritten.
+			'zoom'           => $args['zoom'],
 
-				// Map type, see https://developers.google.com/maps/documentation/javascript/reference#MapTypeId.
-				'mapTypeId' => 'ROADMAP',
+			// Map type, see https://developers.google.com/maps/documentation/javascript/reference#MapTypeId.
+			'mapTypeId'      => 'ROADMAP',
 
-				// Open Info Window
-				'openInfoWindow' => false,
-			)
-		);
+			// Open Info Window
+			'openInfoWindow' => false,
+		] );
 
 		$output = sprintf(
 			'<div class="swpmb-map-canvas" data-map_options="%s" style="width:%s;height:%s"></div>',

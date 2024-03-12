@@ -1,12 +1,8 @@
 <?php
-/**
- * The checkbox list field which shows a list of choices and allow users to select multiple options.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Checkbox list field class.
+ * The checkbox list field which shows a list of choices and allow users to select multiple options.
  */
 class SWPMB_Checkbox_List_Field extends SWPMB_Input_List_Field {
 	/**

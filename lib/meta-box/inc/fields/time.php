@@ -1,19 +1,12 @@
 <?php
-/**
- * The time picker field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Time field class.
+ * The time picker field.
  */
 class SWPMB_Time_Field extends SWPMB_Datetime_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		parent::admin_register_scripts();
+		parent::register_assets();
 		wp_enqueue_style( 'jquery-ui-timepicker' );
 		wp_enqueue_script( 'swpmb-time' );
 	}

@@ -1,12 +1,8 @@
 <?php
-/**
- * The abstract choice field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Abstract class for any kind of choice field.
+ * The abstract choice field.
  */
 abstract class SWPMB_Choice_Field extends SWPMB_Field {
 	/**
@@ -28,32 +24,27 @@ abstract class SWPMB_Choice_Field extends SWPMB_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'flatten' => true,
-				'options' => array(),
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'flatten' => true,
+			'options' => [],
+		] );
+
+		// Use callback: function_name format from Meta Box Builder.
+		if ( isset( $field['_callback'] ) && is_callable( $field['_callback'] ) ) {
+			$field['options'] = call_user_func( $field['_callback'] );
+		}
 
 		return $field;
 	}
 
-	/**
-	 * Transform field options into the verbose format.
-	 *
-	 * @param array $options Field options.
-	 *
-	 * @return array
-	 */
-	public static function transform_options( $options ) {
-		$transformed = array();
+	public static function transform_options( $options ) : array {
+		$transformed = [];
 		$options     = (array) $options;
 		foreach ( $options as $value => $label ) {
-			$option = is_array( $label ) ? $label : array(
+			$option = is_array( $label ) ? $label : [
 				'label' => (string) $label,
 				'value' => (string) $value,
-			);
+			];
 			if ( isset( $option['label'] ) && isset( $option['value'] ) ) {
 				$transformed[ $option['value'] ] = (object) $option;
 			}

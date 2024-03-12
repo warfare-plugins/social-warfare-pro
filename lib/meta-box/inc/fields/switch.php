@@ -1,19 +1,13 @@
 <?php
-/**
- * The Switch field.
- *
- * @package Meta Box
- */
+defined( 'ABSPATH' ) || die;
 
 /**
- * Switch field class.
+ * The Switch field.
  */
 class SWPMB_Switch_Field extends SWPMB_Input_Field {
-	/**
-	 * Enqueue scripts and styles.
-	 */
 	public static function admin_enqueue_scripts() {
-		wp_enqueue_style( 'swpmb-switch', SWPMB_CSS_URL . 'switch.css', '', SWPMB_VER );
+		wp_enqueue_style( 'swpmb-switch', SWPMB_CSS_URL . 'switch.css', [], SWPMB_VER );
+		wp_style_add_data( 'swpmb-switch', 'path', SWPMB_CSS_DIR . 'switch.css' );
 	}
 
 	/**
@@ -52,14 +46,11 @@ class SWPMB_Switch_Field extends SWPMB_Input_Field {
 	 */
 	public static function normalize( $field ) {
 		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'style'     => 'rounded',
-				'on_label'  => '',
-				'off_label' => '',
-			)
-		);
+		$field = wp_parse_args( $field, [
+			'style'     => 'rounded',
+			'on_label'  => '',
+			'off_label' => '',
+		] );
 
 		return $field;
 	}
