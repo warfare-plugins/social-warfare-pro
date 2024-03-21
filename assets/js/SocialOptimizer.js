@@ -1584,10 +1584,9 @@ class SWPSidebarSection extends React.Component {
 		super(props);
 
 		// Set the default state of our 'visible' prop.
-		this.props.visible = 'hidden';
 		this.setState({
-			visible:'hidden',
-			scores: socialWarfare.SocialOptimizer.scores[this.props.field_key]
+			visible: props.visible || 'hidden',
+			scores: socialWarfare.SocialOptimizer.scores[props.field_key]
 		});
 
 		// Here we bind 'this' so that it is accessible within our methods.
@@ -1675,12 +1674,6 @@ class SWPSidebarSection extends React.Component {
 	 *
 	 */
 	render() {
-
-		// If, for some reason, the visible props isn't set, we'll give it a default.
-		if( 'undefined' === typeof this.props.visible ) {
-			this.props.visible = 'hidden';
-		}
-
 		let element =
 		wp.element.createElement( 'div', { className: 'sidebar_section_wrapper ' + this.props.field_key }, [
 			wp.element.createElement('div', { className: 'section-title-wrapper', onClick: this.focus_toggle }, [
