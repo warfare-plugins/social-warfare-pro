@@ -3,7 +3,7 @@ Contributors: holas84, webinator, warfareplugins, cdegraff1, andbalashov
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
 Tested up to: 6.5
-Stable tag: 4.4.6.1
+Stable tag: 4.4.6.2
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -194,6 +194,10 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+= 4.4.6.2 (3 Apr 2024) =
+* Implemented stricter attribute sanitization in SWP_Buttons_Panel_Shortcode class to enhance security and mitigate the risk of cross-site scripting (XSS) attacks through shortcode attributes. This update introduces a more rigorous sanitization process for all attributes passed through the shortcode handling mechanism. The `sanitize_attributes` method now applies basic sanitization using `sanitize_text_field`, followed by a secondary sanitization step using a regex pattern to remove any remaining special characters that could be used in malicious injections.
+  - Enhanced `sanitize_attributes` method in SWP_Buttons_Panel_Shortcode class
+  - Added regex pattern to remove special characters from attribute values after initial sanitization
 
 = 4.4.6.1 (21 Mar 2024) =
 * Updated autoloader class names, improving naming conventions and autoload efficiency for better performance and maintainability. Issue #903 (https://github.com/warfare-plugins/social-warfare/issues/903)
