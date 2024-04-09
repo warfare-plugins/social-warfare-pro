@@ -87,24 +87,44 @@ class FacebookApp implements \Serializable
     }
 
     /**
-     * Serializes the FacebookApp entity as a string.
+     * PHP 7.4+ serialization method.
      *
-     * @return string
+     * @return array
      */
-    public function serialize()
+    public function __serialize(): array
     {
-        return implode('|', [$this->id, $this->secret]);
+        return ['id' => $this->id, 'secret' => $this->secret];
     }
 
     /**
-     * Unserializes a string as a FacebookApp entity.
+     * PHP 7.4+ unserialization method.
+     *
+     * @param array $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->__construct($data['id'], $data['secret']);
+    }
+
+    /**
+     * Serializes the FacebookApp entity as a string. (Deprecated)
+     *
+     * @return string
+     * @deprecated Use __serialize() for PHP 7.4+ instead.
+     */
+    public function serialize()
+    {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * Unserializes a string as a FacebookApp entity. (Deprecated)
      *
      * @param string $serialized
+     * @deprecated Use __unserialize() for PHP 7.4+ instead.
      */
     public function unserialize($serialized)
     {
-        list($id, $secret) = explode('|', $serialized);
-
-        $this->__construct($id, $secret);
+        $this->__unserialize(unserialize($serialized));
     }
 }
