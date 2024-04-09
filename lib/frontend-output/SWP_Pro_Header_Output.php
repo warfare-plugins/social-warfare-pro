@@ -36,6 +36,24 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
 class SWP_Pro_Header_Output extends SWP_Header_Output {
 
 	/**
+     * The post object
+     * @var WP_Post
+     */
+    public $post;
+
+    /**
+     * Open Graph data array
+     * @var array
+     */
+    public $open_graph_data;
+
+    /**
+     * Twitter card data array
+     * @var array
+     */
+    public $twitter_card_data;
+	
+	/**
      * Custom color for social buttons.
      * 
      * This color is used as the background color for social buttons when the custom color option is selected.
