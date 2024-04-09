@@ -23,7 +23,97 @@
  */
 class Social_Warfare_Pro extends Social_Warfare_Addon {
 
+	/**
+	 * The human-readable name of the plugin.
+	 *
+	 * This property stores the full, formal name of the plugin, which is displayed
+	 * in the WordPress dashboard, particularly on the plugins page and within the
+	 * Social Warfare settings. It's used for administrative and display purposes,
+	 * helping users identify the plugin.
+	 *
+	 * @since 4.4.6.3
+	 * @var string
+	 */
+	public $name;
 
+	/**
+	 * The unique key identifier for the plugin.
+	 *
+	 * This key serves as a unique identifier for the plugin, utilized internally
+	 * for indexing plugin-related data, options, and settings. It's crucial for
+	 * ensuring that data attributed to this plugin remains distinct and
+	 * non-conflicting with other plugins or the core functionality.
+	 *
+	 * @since 4.4.6.3
+	 * @var string
+	 */
+	public $key;
+
+	/**
+	 * Minimum required version of Social Warfare core plugin.
+	 *
+	 * Specifies the minimum version of Social Warfare core that is required for
+	 * this addon to function properly. If the core plugin version is lower than
+	 * this requirement, the addon may deactivate itself or notify the user to
+	 * upgrade the core plugin to ensure compatibility and prevent errors.
+	 *
+	 * @since 3.0.0
+	 * @var string
+	 */
+	public $core_required;
+
+	/**
+	 * The product ID used for license validation and updates.
+	 *
+	 * This unique numeric ID represents the plugin on Warfare Plugins' store and
+	 * licensing system. It's used during the license key validation process and to
+	 * check for and receive plugin updates. Ensuring the correct product ID helps
+	 * maintain secure and authorized access to updates and support.
+	 *
+	 * @since 3.0.0
+	 * @var int
+	 */
+	public $product_id;
+
+	/**
+	 * URL of the Warfare Plugins store.
+	 *
+	 * The URL pointing to Warfare Plugins' online store. This URL is used primarily
+	 * for making API requests related to plugin updates, license activations, and
+	 * deactivations, facilitating communication between the plugin and the store
+	 * for license and update management.
+	 *
+	 * @since 3.0.0
+	 * @var string
+	 */
+	public $store_url;
+
+	/**
+	 * The current version of the plugin.
+	 *
+	 * Holds the current version number of the plugin, used for version checks,
+	 * particularly when performing updates. It ensures compatibility with the
+	 * core plugin and other addons, and helps manage migrations or upgrades by
+	 * comparing version numbers.
+	 *
+	 * @since 3.0.0
+	 * @var string
+	 */
+	public $version;
+
+	/**
+	 * The main plugin file path.
+	 *
+	 * Stores the absolute file path to the main plugin file. This path is used
+	 * for including plugin files, performing plugin activation or deactivation
+	 * hooks, and for referencing assets relative to the plugin's root directory.
+	 * It is essential for file operations and loading resources.
+	 *
+	 * @since 3.0.0
+	 * @var string
+	 */
+	public $filepath;
+	
 	/**
 	 * The magic method used to instantiate this class.
 	 *
