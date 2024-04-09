@@ -19,6 +19,20 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 
 	/**
+     * The Bitly API access token for authenticating API requests.
+     *
+     * @var string
+     */
+    public $access_token = '';
+
+    /**
+     * The authorization link for Bitly OAuth process.
+     *
+     * @var string
+     */
+    public $authorization_link = '';
+
+	/**
 	 * Class properties that will be used to display and process this particular
 	 * link shortener.
 	 *
