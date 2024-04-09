@@ -35,7 +35,42 @@ if ( class_exists( 'SWP_Header_Output' ) ) :
  */
 class SWP_Pro_Header_Output extends SWP_Header_Output {
 
+	/**
+     * Custom color for social buttons.
+     * 
+     * This color is used as the background color for social buttons when the custom color option is selected.
+     *
+     * @var string
+     */
+    public $custom_color = '';
 
+    /**
+     * Custom color for floating social buttons.
+     * 
+     * Similar to $custom_color but specifically for floating social buttons.
+     *
+     * @var string
+     */
+    public $float_custom_color = '';
+
+    /**
+     * Custom color for the outlines of social buttons.
+     * 
+     * This color is used for the border of social buttons when the custom color outlines option is selected.
+     *
+     * @var string
+     */
+    public $custom_color_outlines = '';
+
+    /**
+     * Custom color for the outlines of floating social buttons.
+     * 
+     * Similar to $custom_color_outlines but specifically for floating social buttons.
+     *
+     * @var string
+     */
+    public $float_custom_color_outlines = '';
+	
 	/**
 	 * The Magic Constructor
 	 *
