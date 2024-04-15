@@ -170,12 +170,13 @@ class Social_Warfare_Pro extends Social_Warfare_Addon {
 
 
 			/**
-			 * We are deferring certain classes to the "wp_loaded" hook because
+			 * We are deferring certain classes to the "wp" hook because
 			 * they need to make use of certin conditional like is_singular()
 			 * which are not available until then.
 			 *
+			 * @since 4.4.6.3 | 15 APR 2024 | Changed the hook from 'wp_loaded' to 'wp' to fix early function call issues.
 			 */
-			add_action( 'wp_loaded', array( $this, 'instantiate_deferred_classes') , 20 );
+			add_action( 'wp', array( $this, 'instantiate_deferred_classes') , 20 );
 
 		}
 	}

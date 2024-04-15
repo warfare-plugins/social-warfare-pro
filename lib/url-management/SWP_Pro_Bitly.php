@@ -50,6 +50,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 	 * the appropriate hooks as needed.
 	 *
 	 * @since  4.0.0 | 17 JUL 2019 | Created
+	 * @since  4.4.6.3 | 15 APR 2024 | Changed the hook from 'wp_loaded' to 'wp' to fix early function call issues.
 	 * @param  void
 	 * @return void
 	 *
@@ -67,7 +68,7 @@ class SWP_Pro_Bitly extends SWP_Link_Shortener {
 
 		parent::__construct();
 
-		add_action( 'wp_loaded', array( $this, 'add_options') , 25 );
+		add_action( 'wp', array( $this, 'add_options') , 25 );
 	}
 
 
