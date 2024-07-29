@@ -114,6 +114,63 @@ abstract class SWP_Pro_Follow_Network {
 
 
 	/**
+	 * A description or label for following the user on this network. This text is
+	 * intended to provide additional context or instruction for the follow button,
+	 * such as "Follow us on Twitter for updates."
+	 *
+	 * @var string
+	 */
+	public $follow_description = '';
+
+	/**
+	 * The primary color associated with this social network. This is typically
+	 * used for the background color of the follow button to match the network's
+	 * branding.
+	 *
+	 * @var string
+	 */
+	public $color_primary = '';
+
+	/**
+	 * An accent color for the social network, often used for the follow button's
+	 * border or text color to complement the primary color and enhance
+	 * readability and aesthetic appeal.
+	 *
+	 * @var string
+	 */
+	public $color_accent = '';
+
+	/**
+	 * A placeholder text that may be displayed in input fields or other
+	 * interactive elements related to the social network. This could be used
+	 * for guiding users in providing necessary information, such as a username
+	 * or hashtag.
+	 *
+	 * @var string
+	 */
+	public $placeholder = '';
+
+	/**
+	 * A unique identifier for the social network. This key is used internally
+	 * to reference and manage social network-specific data and behaviors
+	 * within the plugin's functionality.
+	 *
+	 * @var string
+	 */
+	public $network = '';
+
+	/**
+	 * The username associated with the specific social network. This is crucial
+	 * for constructing the follow link URL or API requests to fetch follow counts.
+	 * Note: This is particularly important for networks like Facebook, where
+	 * a username is necessary to direct users to the correct profile or page.
+	 *
+	 * @var string
+	 */
+	public $username = '';
+
+
+	/**
 	 * Apply network arguments to create $this.
 	 *
 	 * @since 1.0.0 | 26 NOV 2018 | Created.

@@ -64,8 +64,8 @@ class SWP_Pro_Shortcodes {
 			 * response in order to provide these share counts.
 			 *
 			 */
-			add_shortcode( "${network}_shares", array( $this, "display_${network}_share_counts" ) );
-			add_shortcode( "sitewide_${network}_shares", array( $this, "display_sitewide_${network}_share_counts" ) );
+			add_shortcode( "{$network}_shares", array( $this, "display_{$network}_share_counts" ) );
+			add_shortcode( "sitewide_{$network}_shares", array( $this, "display_sitewide_{$network}_share_counts" ) );
 		}
 
 	   add_shortcode( "total_shares", array( $this, "display_total_share_counts" ) );
