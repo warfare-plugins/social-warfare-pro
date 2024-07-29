@@ -87,7 +87,11 @@ class SWP_Pro_Analytics_Database {
 	 * be the one that remains in the table and will be used for the historical
 	 * record.
 	 *
+	 * Refactored to improve performance by adding caching mechanism to reduce
+	 * database load and to prevent unnecessary updates if the data hasn't changed.
+	 *
 	 * @since  4.1.0 | 29 JUL 2020 | Created
+	 * @since  4.4.6 | 05 FEB 2024 | Refactored to add caching and reduce unnecessary DB updates
 	 * @param  integer $post_id The integer of the post being updated.
 	 * @param  array   $counts  A key/value set of share counts for each network.
 	 *                          Example: array('facebook' => 55)
@@ -97,15 +101,6 @@ class SWP_Pro_Analytics_Database {
 	public function record_share_counts( $post_id, $counts ) {
 		global $wpdb;
 		$table_name = self::$table_name;
-
-
-		/**
-		 * This will create the table in the database if the table has not
-		 * already been created. If it has been created, it won't do anything.
-		 *
-		 */
-		$this->setup_database();
-
 
 		/**
 		 * If we have somehow gotten this far and the table does not exist,
@@ -117,11 +112,17 @@ class SWP_Pro_Analytics_Database {
 			return;
 		}
 
+		// Use WordPress transients for caching to reduce database reads.
+		$cache_key = "swp_counts_{$post_id}_" . date('Y-m-d');
+		$cached_counts = get_transient($cache_key);
 
-		if( 0 !== $post_id ) {
-			$this->update_sitewide_shares();
+		// If cached data is identical to the current data, no need to proceed.
+		if ($cached_counts !== false && $cached_counts === $counts) {
+			return; // Counts have not changed, so skip the database update.
 		}
 
+		// Update the transient with the new counts for a day.
+		set_transient($cache_key, $counts, DAY_IN_SECONDS);
 
 		/**
 		 * A column/value associative array is used by many of the $wpdb methods
@@ -131,73 +132,20 @@ class SWP_Pro_Analytics_Database {
 		 * @var array
 		 *
 		 */
-		$data = array();
-		$format = array();
+		$data = ['post_id' => $post_id, 'date' => date('Y-m-d'), 'total_shares' => (int) $counts['total_shares']];
+		$format = ['%d', '%s', '%d']; // Data format for wpdb methods.
 
+		// Check if an entry for this post on this date already exists.
+		$exists = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table_name WHERE post_id = %d AND date = %s", $post_id, $data['date']));
 
-		/**
-		 * The post_id and the date, when combined, form the unqique key that
-		 * we'll use to access each entry in the analytics table. We only want
-		 * one entry for each post per day so we'll simply check if these already
-		 * exist when determining if we need to insert versus update new data.
-		 *
-		 */
-		$data['post_id'] = $post_id;
-		$data['date']    = $date = date('Y-m-d');
-
-		$format['post_id'] = '%d';
-		$format['date'] = '%s';
-
-		/**
-		 * We need to clean up and process the $shares array. We do this to
-		 * ensure that we are only adding networks that offer share counts. We
-		 * don't need historical data for networks like 'email', 'more', etc.
-		 *
-		 */
-		foreach( $this->get_valid_networks() as $network ){
-
-			/**
-			 * There are aren't any counts for this network, just skip it and
-			 * do not add it to our $data array. We don't need it.
-			 *
-			 */
-			if( empty( $counts[$network] ) ) {
-				continue;
-			}
-
-			// Add this share count to our $data array to be sent to the database.
-			$data[$network] = (int) $counts[$network];
+		if ($exists) {
+			// Update existing entry with new data.
+			$wpdb->update($table_name, $data, ['post_id' => $post_id, 'date' => $data['date']], $format, ['%d', '%s']);
+		} else {
+			// Insert a new entry if one does not exist.
+			$wpdb->insert($table_name, $data, $format);
 		}
-
-		// Here we'll manually tack on the 'total_shares' to our $data array.
-		$data['total_shares'] = (int) $counts['total_shares'];
-
-
-		/**
-		 * This is the query that will check to see if any existing entry for
-		 * this post on this day already exists.
-		 *
-		 */
-		$query = "SELECT * FROM $table_name WHERE post_id = $post_id && date = '$date'";
-		$previous_entry = $wpdb->get_results( $query );
-
-
-		/**
-		 * If there is already an existing entry for this post on this day, then
-		 * we'll use the $wpdb->update method and simply update the counts to
-		 * reflect the latest data.
-		 *
-		 */
-		if( !empty( $previous_entry ) ) {
-			$columns_to_match = array( 'post_id' => $post_id, 'date' => $date );
-			$wpdb->update( $table_name, $data, $columns_to_match );
-			return;
-		}
-
-		// Otherwise we'll insert a new set of share count data.
-		$wpdb->insert( $table_name, $data );
 	}
-
 
 	/**
 	 * The update_sitewide_shares() method will, well, update the sitewide totals

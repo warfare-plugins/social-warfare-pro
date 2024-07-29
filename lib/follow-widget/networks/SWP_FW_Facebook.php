@@ -31,7 +31,6 @@ class SWP_FW_Facebook extends SWP_Pro_Follow_Network {
 			'color_accent'        => '#314E84',
 			'url'                 => 'https://facebook.com/swfw_username',
 			'placeholder'		  => 'pageID',
-			'needs_authorization' => true
 		);
 
 		parent::__construct( $network );
