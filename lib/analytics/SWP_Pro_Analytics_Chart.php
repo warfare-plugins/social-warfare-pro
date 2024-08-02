@@ -219,6 +219,21 @@ class SWP_Pro_Analytics_Chart {
 	 */
 	private static $cached_queries = array();
 
+    /**
+     * @var array The query results stored after fetching from the database.
+     */
+    private $results;
+
+    /**
+     * @var string The title of the chart, based on its parameters.
+     */
+    private $chart_title;
+
+    /**
+     * @var array Datasets generated for rendering the chart.
+     */
+    private $datasets;
+
 
 	/**
 	 * The constructor. The SWP_Pro_Analytics_Chart object can have it's

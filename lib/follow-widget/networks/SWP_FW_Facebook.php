@@ -12,6 +12,11 @@
  */
 class SWP_FW_Facebook extends SWP_Pro_Follow_Network {
 
+	/**
+     * The Facebook SDK client instance.
+     * @var Facebook\Facebook
+     */
+    public $client;
 
 	/**
 	 * Applies network-specific data to the SWFW_Follow_Network

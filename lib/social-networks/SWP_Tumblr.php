@@ -16,6 +16,12 @@ if ( class_exists( 'SWP_Social_Network' ) ) :
  */
 class SWP_Tumblr extends SWP_Social_Network {
 
+	/**
+     * The API key for Tumblr.
+     *
+     * @var string
+     */
+    public $api_key = 'PiEjtbt2aJJFIUChMbXTpCnYAmfKQMowd1Z25SWCCS9SfDsa76';
 
 	/**
 	 * The Magic __construct Method
