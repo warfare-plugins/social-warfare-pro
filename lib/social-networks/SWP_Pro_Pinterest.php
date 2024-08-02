@@ -356,7 +356,7 @@ class SWP_Pro_Pinterest {
 	 * @return $html Our version of the markup.
 	 *
 	 */
-	public function classic_editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $size = "", $alt = "" ) {
+	public function classic_editor_add_pin_description( $html, $image_id, $caption, $title, $alignment, $url, $alt = "", $size = "" ) {
 		$pinterest_description = get_post_meta( $image_id, 'swp_pinterest_description', true );
 
 		if ( empty( $pinterest_description ) ) {
