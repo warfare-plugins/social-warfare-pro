@@ -2,22 +2,28 @@
 	margin-top: 0;
 }
 .swpmb-input-list {
-	margin: 0;
 	line-height: 1.8;
+}
+.swpmb-input-list.hidden {
+	display: none;
 }
 .swpmb-input-list .swpmb-input-list {
 	margin-left: 20px;
 }
-.swpmb-input-list li {
-	list-style: none;
-	margin-bottom: 0;
+.swpmb-input-list > label {
+	display: block;
 }
 .swpmb-input-list.swpmb-inline {
 	line-height: inherit;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 12px;
 }
-.swpmb-input-list.swpmb-inline li {
-	display: inline-block;
+
+/* Media modal */
+.attachment-details .compat-attachment-fields .swpmb-input-list > label > input {
+	margin: 0 0.25rem 0 0;
 }
-.swpmb-input-list.swpmb-inline li:not(:last-child) {
-	margin-right: 20px;
+.compat-attachment-fields .swpmb-input-list.swpmb-inline {
+	gap: 10px;
 }

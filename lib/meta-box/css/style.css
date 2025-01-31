@@ -1,0 +1,197 @@
+/* Styles for 'normal' meta boxes
+-------------------------------------------------------------- */
+
+/* Clearfix for field */
+.swpmb-field {
+	display: flex;
+}
+.swpmb-field:not(:last-of-type) {
+	margin: 0 0 12px;
+}
+.swpmb-label {
+	width: 25%;
+}
+.swpmb-input {
+	flex: 1;
+}
+
+.swpmb-label > label {
+	font-weight: 600;
+}
+.swpmb-required {
+	color: #dc3232;
+	font-weight: bold;
+	margin-left: 3px;
+}
+
+.swpmb-input h4 {
+	margin: 0;
+}
+.swpmb-input input:not([size]),
+.swpmb-input-group,
+.swpmb-input select,
+.swpmb-input .select2-container,
+.swpmb-input textarea:not([cols]) {
+	width: 100%;
+	box-sizing: border-box;
+}
+.swpmb-input input[type="checkbox"],
+.swpmb-input input[type="radio"] {
+	width: 1em;
+}
+.swpmb-input input[type="button"] {
+	width: auto;
+}
+.swpmb-input input:not([type="checkbox"]):not([type="radio"]),
+.swpmb-input textarea,
+.swpmb-input select {
+	max-width: 100%;
+	margin-inline: 0;
+}
+.swpmb-textarea {
+	resize: vertical;
+}
+
+/* Clone */
+.swpmb-clone {
+	min-height: 24px;
+	margin-bottom: 12px;
+	padding-right: 24px;
+	position: relative;
+	clear: both;
+	background: #fff;
+}
+.swpmb-clone > input[type='radio'],
+.swpmb-clone > input[type='checkbox'] {
+	margin: 6px 0 0 4px;
+}
+.swpmb-button.remove-clone {
+	text-decoration: none;
+	color: #ccc;
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	transition: color 200ms;
+}
+.swpmb-button.remove-clone .dashicons {
+	font-size: 20px;
+}
+.swpmb-button.remove-clone:hover {
+	color: #dc3232;
+}
+.remove-clone:focus {
+	outline: 0;
+	box-shadow: none;
+}
+.swpmb-button.add-clone {
+	margin-top: 4px;
+}
+.swpmb-clone-icon {
+	cursor: move;
+	background: url(../img/drag_icon.gif) no-repeat;
+	height: 23px;
+	width: 15px;
+	vertical-align: top;
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.swpmb-sort-clone {
+	padding-left: 15px;
+}
+
+.swpmb-clone.swpmb-clone-template {
+	display: none;
+}
+
+/* jQuery validation */
+p.swpmb-error {
+	color: #dc3232;
+	margin: 4px 0;
+	clear: both;
+}
+input.swpmb-error.swpmb-error,
+textarea.swpmb-error,
+select.swpmb-error {
+	border-color: #dc3232;
+	background: #ffebe8;
+}
+
+/* Utilities
+-------------------------------------------------------------- */
+.swpmb-sortable-placeholder {
+	background: #fcf8e3;
+	border: 1px solid #faebcc;
+	display: block;
+}
+
+
+/* Styles for 'side' meta boxes
+-------------------------------------------------------------- */
+#side-sortables .swpmb-field {
+	flex-direction: column;
+}
+#side-sortables .swpmb-label {
+	width: 100%;
+	margin-bottom: 4px;
+}
+
+/* Block editor */
+.edit-post-meta-boxes-area.is-side .inside:has(.swpmb-meta-box) {
+	padding-inline: 16px;
+}
+.edit-post-meta-boxes-area.is-side #poststuff .postbox:has(.swpmb-meta-box) h2.hndle {
+	padding-left: 16px;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+/* Mobile style */
+@media (max-width: 782px) {
+	.swpmb-field {
+		flex-direction: column;
+	}
+	.swpmb-label {
+		width: 100%;
+		margin-bottom: 4px;
+	}
+	.swpmb-input input[type="radio"],
+	.swpmb-input input[type="checkbox"] {
+		width: 1.5625rem;
+	}
+}
+
+/* Seamless style
+--------------------------------------------------------------*/
+.swpmb-seamless {
+	background: none;
+	border: none;
+	box-shadow: none;
+}
+.swpmb-seamless .inside.inside {
+	padding-left: 0;
+	padding-right: 0;
+}
+.postbox.swpmb-seamless .hndle,
+.postbox.swpmb-seamless .handlediv,
+.postbox.swpmb-seamless .postbox-header {
+	display: none;
+}
+.swpmb-seamless .swpmb-clone {
+	background: none;
+}
+
+/* CSS fixes
+--------------------------------------------------------------*/
+/* Fix color picker field is hidden by the post editor at after_title position. https://metabox.io/support/topic/bug-color-picker-field-is-showed-below-the-title-field/ */
+.postarea {
+	position: relative;
+	z-index: 0;
+}
+.swpmb-hidden-wrapper {
+	display: none;
+}

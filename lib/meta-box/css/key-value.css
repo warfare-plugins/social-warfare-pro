@@ -1,0 +1,11 @@
+.swpmb-key_value-clone {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.swpmb-key_value-clone input {
+	flex: 1;
+}
+.swpmb-key_value-clone .remove-clone {
+	position: static;
+}

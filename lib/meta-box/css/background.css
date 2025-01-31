@@ -1,9 +1,11 @@
 .swpmb-background-row {
 	margin-bottom: 5px;
 	display: flex;
+	gap: 5px;
 	flex-wrap: wrap;
 	align-items: flex-start;
 }
+
 .swpmb-background-wrapper .wp-picker-container {
 	position: relative;
 	display: inline-block;

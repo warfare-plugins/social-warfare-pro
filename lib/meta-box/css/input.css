@@ -2,34 +2,28 @@
 	display: flex;
 	align-items: stretch;
 }
-.swpmb-input-group-append,
-.swpmb-input-group-prepend {
+.swpmb-input-group-text {
 	display: flex;
 	align-items: center;
 	padding: 0 8px;
-	background: #ddd;
+	background: #f0f0f0;
+	border: 1px solid #7e8993;
+	border-radius: 4px;
+	white-space: nowrap;
+}
+.swpmb-input-group-text:first-child,
+.swpmb-input-group input:not(:last-child) {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.swpmb-input-group-text:last-child,
+.swpmb-input-group input:not(:first-child) {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 .swpmb-input-group input {
 	margin: 0;
 }
-
-/* Dark version for WordPress >= 5.3 */
-.swpmb-input-dark .swpmb-input-group-append,
-.swpmb-input-dark .swpmb-input-group-prepend {
-	border: 1px solid #7e8993;
-}
-.swpmb-input-dark .swpmb-input-group-append {
-	border-radius: 0 4px 4px 0;
-}
-.swpmb-input-dark .swpmb-input-group-prepend {
-	border-radius: 4px 0 0 4px;
-}
-.swpmb-input-dark input {
-	border-right-width: 0;
-	border-radius: 4px 0 0 4px;
-}
-.swpmb-input-dark .swpmb-input-group-prepend + input {
-	border-left: none;
-	border-right-width: 1px;
-	border-radius: 0 4px 4px 0;
+.swpmb-input-group.swpmb-input-group.swpmb-input-group :not(:first-child) {
+	margin-left: -1px;
 }

@@ -1,5 +1,5 @@
-.swpmb-select-tree {
-	display: inline-block;
+.swpmb-select-tree .swpmb-select-tree {
+	margin-top: 6px;
 }
 
 .swpmb-select-tree.hidden {

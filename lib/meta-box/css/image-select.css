@@ -1,21 +1,31 @@
 .swpmb-image-select {
-	display: inline-block;
 	width: 80px;
 	height: 80px;
 	float: left;
-	margin: 0 10px 10px 0;
+	margin: 0 8px 8px 0;
 	border: 3px solid #d8d8d8;
-	border-radius: 3px;
+	border-radius: 4px;
 	padding: 1px;
+	cursor: pointer;
+
+	--color: #2271b1;
 }
+
+.block-editor-page .swpmb-image-select {
+	--color: var(--wp-admin-theme-color, #2271b1);
+}
+
 .swpmb-image-select img {
 	width: 100%;
 	height: 100%;
+	object-fit: cover;
 }
+
 .swpmb-image-select:hover,
-.swpmb-image-select.swpmb-active {
-	border-color: #0074a2;
+.swpmb-image-select:has(:checked) {
+	border-color: var(--color);
 }
+
 .swpmb-image_select.swpmb-image_select {
 	display: none;
 }
