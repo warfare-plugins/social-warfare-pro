@@ -1,0 +1,14 @@
+.swpmb-icon-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.swpmb-icon-select i {
+    width: 16px;
+}
+
+.swpmb-icon-select svg {
+  width: 16px;
+  height: 16px;
+}

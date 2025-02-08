@@ -191,7 +191,7 @@ class SocialOptimizer {
 			if( input.val() !== '' && input.is(':visible') ) {
 
 				// Fetch the image element for the preview element.
-				var image = jQuery('input[name="'+field+'[]"]').siblings('.attachment-preview').find('img');
+				var image = jQuery('input[name="'+field+'[]"]').siblings('.swpmb-file-icon').find('img');
 
 				// Check if it has a real height or is still at 0.
 				if( image.height() == 0 ) {
@@ -205,7 +205,7 @@ class SocialOptimizer {
 			if( input.val() === '' && input.is(':visible') ) {
 
 				// Fetch the image element for the preview element.
-				var image = jQuery('input[name="'+field+'[]"]').siblings('.attachment-preview').find('img');
+				var image = jQuery('input[name="'+field+'[]"]').siblings('.swpmb-file-icon').find('img');
 
 				// Check if it has a real height it hasn't been removed yet.
 				if( image.height() > 0 ) {
@@ -972,7 +972,7 @@ class SocialOptimizer {
 		};
 
 		// Collect some information about our field so we can use this below.
-		var image  = jQuery('input[name="'+field+'[]"]').siblings('.attachment-preview').find('img');
+		var image  = jQuery('input[name="'+field+'[]"]').siblings('.swpmb-file-icon').find('img');
 
 		// If there is no image, generate a message and then bail.
 		if( image.length === 0 ) {

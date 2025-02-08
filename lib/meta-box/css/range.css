@@ -1,9 +1,17 @@
+.swpmb-range-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.swpmb-range {
+	flex: 1;
+}
 .swpmb-range.swpmb-range,
 .swpmb-range.swpmb-range:hover {
 	vertical-align: middle;
 	padding: 0;
 	border: none;
 }
-.swpmb-output {
+.swpmb-range-output {
 	margin-left: 8px;
 }

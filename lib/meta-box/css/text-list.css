@@ -6,6 +6,7 @@
 .swpmb-text_list-non-cloneable > .swpmb-input > label,
 .swpmb-text_list-clone > label {
 	margin: 0 10px 10px 0;
+	flex: 1;
 }
 .swpmb-text_list-non-cloneable > .swpmb-input > label:last-child,
 .swpmb-text_list-clone > label:last-child {
@@ -15,5 +16,5 @@
 .swpmb-text-list-label {
 	font-weight: 600;
 	display: block;
-	margin-bottom: 5px;
+	margin-bottom: 3px;
 }

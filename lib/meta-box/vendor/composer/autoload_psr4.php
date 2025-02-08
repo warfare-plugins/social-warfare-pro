@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'MetaBox\\Support\\' => array($vendorDir . '/meta-box/support'),
     'MetaBox\\' => array($baseDir . '/src'),
 );
