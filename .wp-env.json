@@ -1,7 +1,7 @@
 {
 	"plugins": [
 		".",
-        "https://downloads.wordpress.org/plugin/social-warfare.zip",
+        "https://github.com/andbalashov/social-warfare/archive/refs/heads/master.zip",
 		"https://downloads.wordpress.org/plugin/plugin-check.1.0.2.zip"
 	],
 	"config": {
