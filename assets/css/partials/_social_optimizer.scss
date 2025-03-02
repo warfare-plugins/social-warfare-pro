@@ -144,7 +144,7 @@ td.swp_optimization_score {
 	    font-size: 18px;
 	    font-weight: bold;
 	    margin: 0 0px 0 15px;
-	    height: 60px;
+	    height: 40px;
 	    line-height: 40px;
 	    padding: 10px;
 		&:before {
@@ -155,12 +155,12 @@ td.swp_optimization_score {
 		}
 	}
 	.score_rating {
-		width: 60px;
+		width: 40px;
 	    display: inline-block;
 	    background: #ee464f;
 		border: 1px solid darken( #ee464f, 10% );
 	    border-radius: 50%;
-	    height: 60px;
+	    height: 40px;
 	    float: right;
 	    text-align: center;
 	    color: white;
