@@ -117,7 +117,7 @@ class SWPMB_Sanitizer {
 		}
 
 		if ( ! str_contains( $value, 'rgb' ) ) {
-			return sanitize_hex_color( $value );
+			return (string) sanitize_hex_color( $value );
 		}
 
 		// rgba value.

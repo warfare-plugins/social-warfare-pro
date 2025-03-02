@@ -35,22 +35,7 @@ class SWPMB_Key_Value_Field extends SWPMB_Input_Field {
 	}
 
 	protected static function begin_html( array $field ) : string {
-		$desc = $field['desc'] ? "<p id='{$field['id']}_description' class='description'>{$field['desc']}</p>" : '';
-
-		if ( empty( $field['name'] ) ) {
-			return '<div class="swpmb-input">' . $desc;
-		}
-
-		return sprintf(
-			'<div class="swpmb-label">
-				<label for="%s">%s</label>
-			</div>
-			<div class="swpmb-input">
-			%s',
-			$field['id'],
-			$field['name'],
-			$desc
-		);
+		return parent::begin_html( $field ) . parent::input_description( $field );
 	}
 
 	protected static function input_description( array $field ) : string {

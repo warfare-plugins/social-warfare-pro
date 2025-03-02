@@ -2,8 +2,8 @@
 Contributors: holas84, webinator, warfareplugins, cdegraff1, goqflash, andbalashov
 Tags: sharing buttons, social media share, floating share buttons, facebook share, google plus share, linkedin share, pin it, pinterest save, mix button, tweet button, twitter share, click to tweet, social sharing buttons, social share, social sharing, social media sharing, wordpress social sharing plugin, social sharing plugin, share buttons, share counts
 Requires at least: 4.5.0
-Tested up to: 6.5
-Stable tag: 4.5.4
+Tested up to: 6.7.2
+Stable tag: 4.5.5
 Requires PHP: 5.6
 License: GNU General Public License v2.0 or later
 
@@ -194,6 +194,13 @@ We have a growing archive of <a href="https://warfareplugins.com/support/" rel="
 > Robert Ryan, Professional Web Designer
 
 == Changelog ==
+= 4.5.5 (28 Feb 2025) =
+* Replaced `strip_tags()` with `wp_strip_all_tags()` and added `esc_html()` for improved security.
+* Enhanced file upload UI with real-time progress bars and better error handling.
+* Refactored JavaScript for better performance and maintainability.
+* Deleted unused JavaScript modules and outdated CSS classes.
+* Ensured compatibility with the latest WordPress version.
+
 = 4.4.6.3 (5 Apr 2024) =
 * Changed the visibility of `$key` property from `private` to `public` to allow external access and manipulation, enhancing the flexibility for class interactions.
 * Changed the visibility of `$user_options` property from `private` to `public`, enabling direct access to user options pulled from the database. This adjustment aims to streamline processes that require external manipulation of user options.

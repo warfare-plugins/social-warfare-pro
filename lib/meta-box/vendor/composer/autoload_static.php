@@ -4,16 +4,21 @@
 
 namespace Composer\Autoload;
 
-class SWP_Composer_Autoloader_Init
+class ComposerStaticInit5a753014a74b69f166bd9adf666c7be8
 {
     public static $prefixLengthsPsr4 = array (
         'M' => 
         array (
+            'MetaBox\\Support\\' => 16,
             'MetaBox\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'MetaBox\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/meta-box/support',
+        ),
         'MetaBox\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -27,9 +32,9 @@ class SWP_Composer_Autoloader_Init
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = SWP_Composer_Autoloader_Init::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = SWP_Composer_Autoloader_Init::$prefixDirsPsr4;
-            $loader->classMap = SWP_Composer_Autoloader_Init::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5a753014a74b69f166bd9adf666c7be8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5a753014a74b69f166bd9adf666c7be8::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5a753014a74b69f166bd9adf666c7be8::$classMap;
 
         }, null, ClassLoader::class);
     }

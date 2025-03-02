@@ -1,5 +1,3 @@
-/* style switch
------------------------------*/
 .swpmb-switch-label {
 	position: relative;
 	display: inline-block;
@@ -9,6 +7,8 @@
 	min-width: 40px;
 	height: 22px;
 	box-sizing: border-box;
+
+	--color: var(--wp-admin-theme-color, #2271b1);
 }
 
 .swpmb-switch.swpmb-switch {
@@ -16,8 +16,8 @@
 }
 
 .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #0073aa;
-	box-shadow: 0 0 1px #0073aa;
+	background-color: var(--color);
+	box-shadow: 0 0 1px var(--color);
 }
 
 .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider:before {
@@ -42,7 +42,6 @@
 	right: 0;
 	bottom: 0;
 	z-index: 15;
-	-webkit-transition: .4s;
 	transition: .4s;
 }
 
@@ -55,7 +54,6 @@
 	bottom: 2px;
 	z-index: 99;
 	background-color: white;
-	-webkit-transition: .4s;
 	transition: .4s;
 	border-radius: 2px;
 }
@@ -83,6 +81,7 @@
 	font-size: 11px;
 	position: relative;
 	z-index: 20;
+	line-height: 18px;
 }
 
 .swpmb-switch-on {
@@ -94,27 +93,27 @@
 }
 
 /* Admin color schemes */
-.admin-color-blue .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #e1a948;
-	box-shadow: 0 0 1px #e1a948;
+.admin-color-blue .swpmb-switch-label  {
+	--color: var(--wp-admin-theme-color, #e1a948);
 }
-.admin-color-coffee .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #c7a589;
-	box-shadow: 0 0 1px #c7a589;
+.admin-color-coffee .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #c7a589);
 }
-.admin-color-ectoplasm .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #a3b745;
-	box-shadow: 0 0 1px #a3b745;
+.admin-color-ectoplasm .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #a3b745);
 }
-.admin-color-midnight .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #e14d43;
-	box-shadow: 0 0 1px #e14d43;
+.admin-color-light .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #04a4cc);
 }
-.admin-color-ocean .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #9ebaa0;
-	box-shadow: 0 0 1px #9ebaa0;
+.admin-color-midnight .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #e14d43);
 }
-.admin-color-sunrise .swpmb-switch:checked + .swpmb-switch-status .swpmb-switch-slider {
-	background-color: #dd823b;
-	box-shadow: 0 0 1px #dd823b;
+.admin-color-modern .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #3858e9);
+}
+.admin-color-ocean .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #9ebaa0);
+}
+.admin-color-sunrise .swpmb-switch-label {
+	--color: var(--wp-admin-theme-color, #dd823b);
 }

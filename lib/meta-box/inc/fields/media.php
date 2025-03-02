@@ -184,6 +184,7 @@ class SWPMB_Media_Field extends SWPMB_File_Field {
 		// Attach the uploaded images to the post if needed.
 		global $wpdb;
 		$ids = implode( ',', $new );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->posts SET post_parent=%d WHERE post_parent=0 AND ID IN ($ids)", $post_id ) );
 
 		return $new;
