@@ -4,7 +4,8 @@
         "https://github.com/andbalashov/social-warfare/archive/refs/heads/master.zip",
 		"https://downloads.wordpress.org/plugin/plugin-check.1.0.2.zip",
 		"https://downloads.wordpress.org/plugin/elementor.3.27.6.zip",
-		"https://downloads.wordpress.org/plugin/meta-box.5.10.7.zip"
+		"https://downloads.wordpress.org/plugin/meta-box.5.10.7.zip",
+		"https://downloads.wordpress.org/plugin/query-monitor.3.17.2.zip"
 	],
 	"themes": [
 		"https://downloads.wordpress.org/theme/hello-elementor.3.3.0.zip"
